@@ -1,0 +1,5045 @@
+{
+  "schema_version": "0.1",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-04T17:22:45+00:00",
+  "site": {
+    "name": "The New York Times",
+    "url": "https://www.nytimes.com",
+    "first_party_domains": [
+      "nyt.com",
+      "nytimes.com",
+      "nytimg.com"
+    ]
+  },
+  "measurement": {
+    "vantage": "local-windows-spain",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 1,
+    "status": "ok",
+    "http_status": 200,
+    "final_url": "https://www.nytimes.com/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 31,
+      "third_party_domains": 8,
+      "tracking_services": 2,
+      "third_party_cookies": 0,
+      "cookies_total": 19,
+      "storage_items": 10
+    },
+    "third_party_domains": [
+      {
+        "domain": "amazon-adsystem.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "datadoghq-browser-agent.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "geoedge.be",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "google.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "googlesyndication.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "googletagmanager.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "gstatic.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "media.net",
+        "passes_seen": 1,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "amazon-adsystem.com",
+        "entity": "Amazon",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "service": "googlesyndication.com",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "service": "googletagmanager.com",
+        "entity": "Google",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 1,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "datadoghq-browser-agent.com",
+        "party": "third",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "media.net",
+        "party": "third",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "nyt.com",
+        "party": "first",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "nytimes.com",
+        "party": "first",
+        "passes_seen": 1,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 31 requests to 8 third-party domains (median of 1 passes).",
+      "evidence": {
+        "requests": 31,
+        "domains": 8
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "2 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: amazon-adsystem.com (Amazon, advertising), googlesyndication.com (Google, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 1,
+            "stable": true
+          },
+          {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 1,
+            "stable": true
+          }
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "blocked",
+      "http_status": 403,
+      "error": null,
+      "final_url": "https://www.nytimes.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 204,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.nytimes.com/",
+          "host": "www.nytimes.com"
+        },
+        {
+          "t_ms": 543,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ct.captcha-delivery.com/c.js",
+          "host": "ct.captcha-delivery.com"
+        },
+        {
+          "t_ms": 685,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://geo.captcha-delivery.com/captcha/",
+          "host": "geo.captcha-delivery.com"
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": []
+    },
+    {
+      "pass": 2,
+      "status": "blocked",
+      "http_status": 403,
+      "error": null,
+      "final_url": "https://www.nytimes.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 141,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.nytimes.com/",
+          "host": "www.nytimes.com"
+        },
+        {
+          "t_ms": 352,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ct.captcha-delivery.com/c.js",
+          "host": "ct.captcha-delivery.com"
+        },
+        {
+          "t_ms": 456,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://geo.captcha-delivery.com/captcha/",
+          "host": "geo.captcha-delivery.com"
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": []
+    },
+    {
+      "pass": 3,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.nytimes.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 120,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.nytimes.com/",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 812,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nyt.com/video-static/betamax/pool-0.3.36-CbJK-W2L.css",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 819,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nyt.com/video-static/betamax/player-0.3.36-BroPhdQ5.css",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 823,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nyt.com/video-static/betamax/cover-0.3.36-eTrf0IGY.css",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 829,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nyt.com/video-static/betamax/poster-0.3.36-Cda1v6Rn.css",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 832,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nyt.com/video-static/betamax/overlay-controls-0.3.36-BN-qu2gk.css",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 836,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nyt.com/video-static/betamax/share-button-0.3.36-C-gtc1Ho.css",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 840,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nyt.com/video-static/betamax/video-feed-0.3.36-Dj_NsoET.css",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 845,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/pool-0.3.36--6Pptceb.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 850,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/betamax-shared-5FjOYNdY.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 854,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/video-element-BtmZreY3.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 859,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/signal-utils-Bb5wl1hz.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 863,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/player-DaNsCDbt.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 866,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/use-error-8M0i7DYK.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 868,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/event-types-BrZZ5qge.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 871,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/identify-user-NlIHKxju.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 884,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/play-blocked-by-user-Dn8T9JcO.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 888,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/reduced-motion-DmxrXP3q.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 894,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/use-player-context-48p3BmCk.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 898,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/cover-0.3.36-B7mhRLX4.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 901,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/poster-0.3.36-DtZ5C73N.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 905,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/image-BwBcILE6.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 911,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/overlay-controls-0.3.36-BuEG5jIi.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 914,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/share-button-sf2GRFpA.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 917,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/use-share-Ly9wbrO-.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 922,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/keyboard-controls-DP4GA8px.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 931,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/video-feed-0.3.36-C2bB56eO.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 965,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://g1.nyt.com/fonts/css/web-fonts.c851560786173ad206e1f76c1901be7e096e8f8b.css",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 970,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/global-BkpZ1gXh.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 982,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/CommentsPanelActual-CZcnunpy.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 994,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/Button-BxXoPQfv.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1006,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/conversationsExperiment-3MRDOTy-.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1020,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/CopyLinkButton-kAw8QUHo.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1023,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/Masthead-DxDdQjRu.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1036,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/Bold-B4IrFkOT.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1046,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/Logo-CeXp1J_9.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1050,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/DesktopLogoNav-FXNN5oHv.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1069,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/Home-BQzom5Ns.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1073,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/CardDeck-CafHGycc.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1077,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/mapInlineUnion-DBWUNpee.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1081,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/ItalicFormat-DOYIYgTZ.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1085,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/ReporterThread-BvwCQg4u.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1088,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/LiveBlogByline-BUVXf0DX.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1090,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/VHS-DQszqKmn.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1114,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/entry/start.Cxq3nWhK.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1119,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/DqGgBOQo.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1124,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/DYJ59R5Z.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1131,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/DLtKKQzk.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1142,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/entry/app.CSie2hNz.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1151,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/BbnpLjGo.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1159,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/ChauSWxv.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1165,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/CwU-e4t8.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1169,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/DXbTA8Dv.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1171,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/nodes/0.B5yPAurb.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1173,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/BQeIrshS.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1176,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/nodes/2.BUpbpvkM.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1180,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/chunks/Ka5juoKT.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1183,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/Cinemagraph-cqow3aLn.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1187,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/watch-feed-CcKccXXL.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1190,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/GreenDiff-B7eYXXO1.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1194,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/assets/Transcript-DWPLxQHq.css",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1197,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/assets/2.DGOveenP.css",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1200,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/30/multimedia/00-nuclear-moon-01-plvq/00-nuclear-moon-01-plvq-threeByTwoSmallAt2X.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1202,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/25/arts/dhsplanesthumb/dhsplanesthumb-smallTwoByThree.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1204,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/04/multimedia/04int-yemen-saudi-01-zkgt/04int-yemen-saudi-01-zkgt-threeByTwoMediumAt2X.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/03/nyregion/03met-cornell-president-topart-01/03met-cornell-president-topart-01-verticalTwoByThree735.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1211,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/01/arts/IT_KLAVAN_BOSTROM_AA_260928_CLIP-02_SOCIAL/IT_KLAVAN_BOSTROM_AA_260928_CLIP-02_SOCIAL-verticalTwoByThree735.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1214,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/smarter-living/wirecutter/PEPPER_THMB/PEPPER_THMB-verticalTwoByThree735.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1216,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/arts/SK_Peter_Still-1_txtlss/SK_Peter_Still-1_txtlss-verticalTwoByThree735.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1219,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2022/11/09/dining/hm-butternut-squash-jook-copy/merlin_216140910_a674b145-b47a-45ef-9fad-95aa0f1215e7-verticalTwoByThree735.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1222,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/main-CRSG3XLD.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1226,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/adslot-JxxI-n9X.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1439,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/15/arts/ivan2/ivan2-smallTwoByThree.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1523,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://a.et.nytimes.com/track",
+          "host": "a.et.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1551,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://eg.nytimes.com/api/v1/events",
+          "host": "eg.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1555,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://a.et.nytimes.com/track",
+          "host": "a.et.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1582,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://als-svc.nytimes.com/als",
+          "host": "als-svc.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1607,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.datadoghq-browser-agent.com/us1/v7/datadog-rum.js",
+          "host": "www.datadoghq-browser-agent.com",
+          "domain": "datadoghq-browser-agent.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1633,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1638,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/vi-assets/static-assets/fides-1182b3743d46b6ae880fe217339d4333.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1672,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://pagead2.googlesyndication.com/tag/js/gpt.js",
+          "host": "pagead2.googlesyndication.com",
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1720,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nyt.com/video-static/betamax/hlsjs-C3kRcXa6.js",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1734,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://static01.nyt.com/ads/tpc-check.html",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1746,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://g1.nyt.com/fonts/css/web-fonts.css",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1752,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/franklin/franklin-normal-700.91eaf6b5642463af4091160b4bbfdfcb.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1769,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/franklin/franklin-normal-600.75739ac267f076931c6da9740386ee6b.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1776,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/franklin/franklin-normal-500.0f4aea3d462cdb64748629efcbbf36bc.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1781,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/cheltenham/cheltenham-normal-700.530cfb72378419eedb60da7e266ad5f1.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1785,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/imperial/imperial-normal-400.6131cd77b6e216c7693ed925f4309ffc.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1789,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/cheltenham/cheltenham-normal-400.a3ed7afe3eaa0a873f3fbd379f8c491b.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1796,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2018/10/10/multimedia/author-selam-gebrekidan/author-selam-gebrekidan-thumbStandard.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1880,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://rumcdn.geoedge.be/b3960cc6-bfd2-4adc-910c-6e917e8a6a0e/grumi-ip.js",
+          "host": "rumcdn.geoedge.be",
+          "domain": "geoedge.be",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1903,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://warp.media.net/js/tags/clientag.js",
+          "host": "warp.media.net",
+          "domain": "media.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1960,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://c.amazon-adsystem.com/aax2/apstag.js",
+          "host": "c.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1990,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://purr.nytimes.com/v2/tcf",
+          "host": "purr.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2066,
+          "method": "GET",
+          "resource_type": "texttrack",
+          "url": "https://vp.nyt.com/video/2026/10/03/178975_1_00vid-rv-dhs-planes_wg_1080p.vtt",
+          "host": "vp.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2148,
+          "method": "GET",
+          "resource_type": "texttrack",
+          "url": "https://vp.nyt.com/video/2026/10/04/180092_1_04vid-yemen-saudi_wg_1080p.vtt",
+          "host": "vp.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2151,
+          "method": "GET",
+          "resource_type": "texttrack",
+          "url": "https://vp.nyt.com/video/2026/09/30/178644_1_00vid-rv-gaslines-russia_wg_1080p.vtt",
+          "host": "vp.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2233,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/cheltenham/cheltenham-normal-300.7ea91ebd036309e1fe756ee3aab272da.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2354,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/cheltenham-small/cheltenham-small-normal-700.1a0b316424cdebd18086b8dbbc768eef.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2370,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/cheltenham-text-cond/cheltenham-text-cond-normal-700.7e78f9e7e6c2e02d82592c4466929fa3.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2400,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static01.nytimes.com/newsgraphics/_l-HTaf6CYlN-Q/_app.D6sschxHOSEImtkMT9RSWL56UKW-LYCIndfJjX0aYwU/immutable/nodes/1.McK5C1UY.js",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2537,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://static01.nyt.com/projects/weather/weather-bots/home-screen-module/homepage-v2.json",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2589,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.nytimes.com/fides/api/v1/privacy-experience",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2655,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/karnak/karnak-normal-700.4a0c7e79ac2f009f12f9106482c961c4.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2663,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://g1.nyt.com/fonts/family/cheltenham-small/cheltenham-small-italic-400.cdfa0ec29cca8c2d2f54c79d898e15c1.woff2",
+          "host": "g1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2823,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/rolldown-runtime-DAXXjFlN.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2836,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/vendor-B6bc9_7H.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2846,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/captureError-DZhg7ppj.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2855,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/OfflineResourceProvider-Ca3trmD3.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2866,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/preview-DfCmMkJr.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2879,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/performance-D6h8QZJQ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2888,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-CFBND6Ll.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2899,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/createFastlyStatsigClientGetters-NYRHQTWu.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2904,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useIsInPreloadedWebview-FD4NpTn0.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2919,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useIsInWebview-BzLSM2KO.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2923,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/DeviceType-BcfHAi9P.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2931,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/router-hooks-eY_KEMKt.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2936,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/withErrorBoundary-C2nmR4JD.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2945,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/lazy-CKhJbO0o.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2970,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/preload-helper-rwLS0AEQ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2995,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/createApolloClient-UofrV4kn.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3000,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Events-CNYpfaSm.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/GTMAdapter-DkhrbCxt.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3108,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/isBrowser-Dkae7dA-.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3112,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/location-CAPRWRkq.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3116,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/getGeolocation-BJYnaZ0g.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3120,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/cookie-1PuYKFpE.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3125,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/getDeviceType-CZu9j55k.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3130,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/user-Bm4HDQ49.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3134,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useAppContext-BCbmPPTo.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3139,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-B4_pHWtd.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3145,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/NYTThemeProvider-CxLNn1_r.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3149,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useTiming-BS0kSAd_.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3153,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/breakpoints-CnkqmFa1.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3157,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AbraContext-BAv8Vc7D.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3162,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/MeterContext-DFDFoY56.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3167,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/MessagingContext-YoXcyasR.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3170,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useMessageSelection-Dk55eDHf.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3178,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Meter-B3e2Fsqf.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3181,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/OverlayContext-CEAtvvUv.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3186,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/getDataForIterate-DpdtQd-A.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3190,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AbraPreloadedContext-nUzYveS6.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3199,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useUserData-BMq9RD3k.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3214,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/subscription-_hBc3Boq.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3229,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useGeolocation-CuAYugNo.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3233,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/StatsigContext-C05bN-Yo.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3237,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/getAppEnvironment-CjTBNvfA.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3244,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/assetsPath.cjs-B4u6SfHi.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3249,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.nytimes.com/fides/api/v1/privacy-experience",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3394,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/timeoutSignal-YzttNH9R.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3434,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://rumcdn.geoedge.be/b3960cc6-bfd2-4adc-910c-6e917e8a6a0e/grumi.js",
+          "host": "rumcdn.geoedge.be",
+          "domain": "geoedge.be",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3483,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://pagead2.googlesyndication.com/pagead/managed/js/gpt/m202609300101/pubads_impl.js",
+          "host": "pagead2.googlesyndication.com",
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3654,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://config.aps.amazon-adsystem.com/configs/3030",
+          "host": "config.aps.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3663,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://c.amazon-adsystem.com/bao-csm/aps-comm/aps_csm.js",
+          "host": "c.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3681,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/breakpoints-Brbd3VsS.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3686,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-BNynggsL.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3691,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/isCrosswordsUrl-CI7ckW9K.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3695,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/urx-BAzK6vhn.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3699,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/urls-DyEq22FN.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3703,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/iterate-DqLG6xm4.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4022,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://hbx.media.net/checksync.php",
+          "host": "hbx.media.net",
+          "domain": "media.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4387,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/postUserPrivacyPref-Cov-6Ek2.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4868,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://a.et.nytimes.com//.status",
+          "host": "a.et.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4954,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dd.nytimes.com/tags.js",
+          "host": "dd.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5134,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/HomeWeb-eCOw9gW4.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5138,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/SuspenseWithErrorBoundary-QV4vetYe.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5143,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CommentsPanel-k76XVDUh.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5147,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/fragments-BzsbhNqM.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5151,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-Dx4kBM-V.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5154,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/color-W0SUgq9P.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5159,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/lib-CzUDB4-Y.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5163,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Masthead-PYLwBdNV.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5165,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AdUtilities-Cgdxp4d8.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5168,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useIsBrowser-DJtTlzvM.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5171,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Intl-ipqdaMLA.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5175,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/addQueryParam-tp2iI0Jo.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5179,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-2vYbwQUg.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5182,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/switchColorTheme-BRnHGOq6.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5185,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/tokens-CCadfGKJ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5189,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Button-BdFQ8ElK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5198,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/disabledSelectors-CcyXWwKK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5201,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/borderWidth-Cj0okKoz.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5204,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/DataTpl-C3sMdDN6.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5209,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/BaseButton-DtGiuk5U.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5214,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/util-CIbaLwqs.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5217,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Spinner-C7yLlKM-.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5220,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/TextButton-TkdafRkN.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5223,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CloseIcon-WYl8-G0O.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5230,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Icon-BU1gAuIT.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5234,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/colorClass-DBbj2390.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5239,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/TypeComponents-GHN_HUnR.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5248,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Typography-ChCvbPVb.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5253,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Flex-BpMagclx.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5262,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ErrorBoundary-CBiwH6hm.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5265,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Button-D_2EwYvK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5269,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/config-DDBC0BML.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5277,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-DG4stJjb.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5285,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/MobileAppCta-DsVLsegp.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5290,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ALL_ACCESS_PROMO_REPEATING_248-BoT0MlIG.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5299,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/types-JJEslU_l.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5303,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useWindowDimensionsOnResize-BMzdT5HB.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5308,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/reducer-Bs1505IK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5316,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useDeviceType-sQxf7O1E.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5328,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Link-DK6woIz_.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5331,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/internationalHomeUtils-Dul_YSVM.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5334,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-DQalwwkE.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5337,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/user-L2WFi1jW.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5339,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/MagicLinkForm-xTyZqwQw.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5346,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Bold-DpvoqhXA.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5352,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useMeter-Gt8P0SBs.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5356,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AuthForm-B-27zXAz.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5363,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-DfgAvOcS.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5368,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-B7N7JBTj.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5372,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/saleUrgencyMessages-CovHh8Kt.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5379,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CONV_TA_SUPERBOWL_SALE_PAID_MEDIA_252-v1c5fzk_.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5382,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/PaymentIndia-BJterU1b.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5385,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/dateTime-DRhaQ4hJ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5388,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/legalTerms-B8pWzC1X.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5391,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/PaymentOptions-SC95Yveb.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5396,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/config-CIrj6da4.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5401,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Legal-B0CIoLcM.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5404,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AIGSurvey-DiI4TMEJ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5411,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/PaymentOptionsV2-BsHPUK60.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5416,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/lottie-react.esm-CM8yDyHS.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5421,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/DynamicVerticalSpacer-dIB_RcAy.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5428,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CONV_GAMES_SALE_EVERGREEN_245-D5GOEijy.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5431,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useMessageSelectionMessageCap-Dy4-8pG3.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5434,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/SaleStrikethrough-Rz1lGQRt.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5437,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ExitLink-BT_Z0jv-.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5440,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useInAndroidWebView-CyMyK-iN.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5444,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Logo-CHAcsrC6.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5450,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/NYTLogo-DNtRIgNW.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5452,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useAbra-D7j95CLq.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5454,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/User-DeQ3xiNc.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5456,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Caret-CAZnr2kx.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5461,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ButtonModal-pvNDJbgL.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5463,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Close-D_OFsqe3.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5465,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useStatsigHooks-Djj-mr-0.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5468,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/dayjs-ChP7sqit.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5470,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/icon-x-14x14-CVK06Aks.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5473,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useSubNavData-D-i3-hY0.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5481,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Home-C10HS168.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5488,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AdRequirements-B3YC6Qnh.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5499,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/getViewportType-iDRJqLB8.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5504,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CaretRightIcon-d8WXnVtT.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5508,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/MoreHorizIcon-DGHqYhKQ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5515,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Box-BD7Q-NAX.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5520,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/LinkBox-CWn-c6um.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5522,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/focus-DCmUoaBo.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5529,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Link-0w0UfWQW.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5533,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/StoryListItemContent-BmFM5MSd.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5537,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/spacing-CFWIHCPm.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5546,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/tokens-l_x0YybO.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5550,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/vi-0NZQ-sV7.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5553,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/date-DIDVTzzu.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5555,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-CfocqFf2.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5560,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/graphql-C6SKuVBM.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5563,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/crops-CHbpLpfh.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5567,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useAds-xjIRZ2Z1.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5571,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/addCommand-Dh3qjovF.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5577,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/eventHandlers-zAQc-01B.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5583,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/getAdReq-DfTXwx5P.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5586,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/util-rbSPLmVL.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5590,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useOffline-T0xmwS13.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5596,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Bylines-4S3HwsVq.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5600,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-By8LwbeQ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5605,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AdHelmet-CeCQANXA.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5612,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/adEventTracking-DSbgGVVw.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5615,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/clientRequirements.inline.cjs-5KClIbVP.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5618,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CardDeck-Ocwcr_yx.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5621,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CaretDownIcon-D_UR6lXv.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5623,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/UnmutedIcon-JD7mP5WL.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5630,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/mapInlineUnion-BNFvHZww.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5632,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-CevrtLT7.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5636,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ItalicFormat-gaGWvxo1.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5645,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AdSlot-D8YfSczU.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5649,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/updateAdReq-kOOADUuE.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5652,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/NativeShareButton-CFbzMmLx.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5655,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ReporterThread-Dl9OpmXB.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5660,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/LiveBlogByline-CLSA01gD.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5663,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Role-CLjxN_Sb.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5666,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/breakpoints-DojE3TO_.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5669,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-Bs17GRd3.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5672,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/crops-CIwHofkk.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5678,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/SliderNavButton-B_Lh2b8H.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5681,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-CidU0jjQ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5683,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/consts-DNO8VWd-.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5685,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ComposedByline-BvsLsrsi.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5688,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Headshots-4PwlDZp0.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5694,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Timestamp-PKK_ST4r.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5697,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/story-DksIFYWC.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5700,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-C9j5ZNyg.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5703,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/image-BwBcILE6-BlVW1eqT.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5715,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/WatchTab-5Ra5tLDz.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5719,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/watch-feed-utils-k7CB-0FZ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5723,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/renditions-D_WmSec6.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5730,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useIntersect-CQh58lRK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5736,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/VHS-C6BXb00A.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5739,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useTargetingData-nzK7o2vT.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5745,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useLoaderData--ltqQQzl.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5749,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useSentryScope-Bnhhd9kx.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5762,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/serverRequirements-DwZe2QYc.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5773,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/getAdUnitPath-BnrlNxI0.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5783,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-DSBckUw8.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5786,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/fragment-BaihTOY5.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5789,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Cinemagraph-Np9_Er8G.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5795,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/BetamaxEndSlate-CbYIiUfa.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5800,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useDebouncedOnResize-DAD4Odh9.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5804,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Video-BkbAgcA6.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5815,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-BQkInLfa.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5822,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/StandardAd-CpuKaGoR.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5829,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ReportModal-D7EjmfrB.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5832,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/watch-feed.module-BoioOHEV.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5835,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CommentButton-C30WKw-c.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5837,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useSpanish-Cz3uDXom.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5839,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/SpeechBubbleIcon-B6K3lozK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5844,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/AssetHelmet-BWCcke-p.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5847,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/collections-BV52Pk_X.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5849,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/poster.es-CViOAxMD.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5852,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/styled-Snos9Jys.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5854,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/gates-XqWQK3CV.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5856,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/isNewerVersion-BxivnahX.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5868,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/TimeToRead-DUxZuhwJ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5887,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/PromoComponent-CvMusRV0.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5914,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/stylnInlineRecircTracking-C7lbdC-9.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5917,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/utils-BI5Sx6VP.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5920,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/lib-DsthOtzn.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5923,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/refreshAds-C25ANLmM.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5927,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/trackAdScripts-BmhOlqCW.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5930,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/LazyLoader-DG8fMi8c.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5932,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Shell-cfU6jNvq.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5935,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/GoogleAccounts-CR3zawBr.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5939,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useOverlayContext-DuQzpdHK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5982,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Footer-BZkY0xib.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5989,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useIntersect-BLrvDUzJ.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5999,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/useFides-DsCMebZi.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6004,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/constants-WL6dwaJY.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6009,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Helmet-B6oNF1v-.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6014,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/usePreferredColorScheme-oBcIi9mb.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6019,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Timestamp-CE-Qk67F.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6024,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CardDeckShareButton-BupasLDV.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6034,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/ShareButton-K81OhjOK.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6049,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/shareTools-BiwTtcv5.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6054,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/CopyLink-DjZR2gg2.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6064,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/VideoShareButton-Bqhq6MSj.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6066,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Placeholders-h_FCvjUE.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6070,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://pagead2.googlesyndication.com/pagead/managed/dict/m202610010101/gpt",
+          "host": "pagead2.googlesyndication.com",
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 6072,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://a.et.nytimes.com/track",
+          "host": "a.et.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6076,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://dd.nytimes.com/js/",
+          "host": "dd.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6137,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://hbxlp.media.net/log",
+          "host": "hbxlp.media.net",
+          "domain": "media.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7023,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/DesktopLogoNav-D7pifJ_e.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 7410,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/NestedNav-BG_wZdsP.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8350,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.nytimes.com/api/market",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8360,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://static01.nytimes.com/statsig/config/$client-BasfMtnVqHD0fEI7mV1O7VkykGye1bute6nczoac1oS.json",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8370,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/WelcomeAd-Ev7CJFHL.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8381,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/chunks/Strikethrough-2qVE2Rtm.js",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8395,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://purr.nytimes.com/v1/purr-cache",
+          "host": "purr.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8436,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://a.nytimes.com/svc/nyt/data-layer",
+          "host": "a.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8462,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://pay.google.com/gp/p/js/pay.js",
+          "host": "pay.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 8468,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://static01.nytimes.com/statsig/config/client-AkrHGgWqd8ygLMakFYSt6a5N7t1RFjTPb6XlY95T3hb.json",
+          "host": "static01.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8478,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://a.nytimes.com/svc/nyt/v2/data-layer",
+          "host": "a.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8512,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8516,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8527,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8813,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://als-svc.nytimes.com/als",
+          "host": "als-svc.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8820,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/27/magazine/27mag-Alt-Cancer-images-02/27mag-Alt-Cancer-images-02-verticalTwoByThree735-v7.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8827,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/04/multimedia/04french-hlwp/04french-hlwp-threeByTwoSmallAt2X.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8832,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2023/01/10/opinion/david-french/david-french-thumbLarge-v2.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 8836,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/04/opinion/04zivot/04zivot-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 9350,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 9692,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://pay.google.com/gp/p/ui/payframe",
+          "host": "pay.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 9962,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-the-morning_144x144-b12a6923b6ad9102b766352261b1a847.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10003,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.nytimes.com/email-images/NYT-Newsletters-TheEvening-Icon.jpg",
+          "host": "static.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10010,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2017/01/29/podcasts/the-daily-album-art/the-daily-album-art-mediumSquare149-v3.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10020,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.nytimes.com/email-images/Newsletter%20Icons/NYT-Newsletters-TheWorld-Icon%20(3).jpg",
+          "host": "static.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10031,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-yourplaces-globalupdate_144x144-c25aba1c2904f301a08ad33183f723c6.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10044,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-canada-letter_144x144-65d899377edbcce9773d31fd03a77e8d.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10057,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-dealbook_144x144-28e8f71aafff426804c3a92b1b176e07.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10065,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.nytimes.com/email-images/Sub_Only_Icons/NYT-OnTech-Icon.png",
+          "host": "static.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10078,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2022/09/28/podcasts/hard-fork-album-art/hard-fork-album-art-mediumSquare149-v2.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10085,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/email-images/newsletters/books/Books-REV.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10090,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-watching_144x144-631a1da177f9fda1a7f4614ad8e607bd.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10100,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2018/03/27/books/book-review-album-art-v2/book-review-album-art-v2-thumbLarge-v3.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10105,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2011/05/20/multimedia/music-popcast/music-popcast-thumbLarge-v3.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10112,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.nytimes.com/email-images/newsletters/Weekender/NYT-TheWeekender-Icon.jpg",
+          "host": "static.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10115,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-well_144x144-433c9d15dc985dded9b705942592c6fb.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10121,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2020/09/21/podcasts/modernlove-logo/modernlove-logo-thumbLarge-v3.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10128,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/01/opinion/Interesting-Times-Interim-Art/Interesting-Times-Interim-Art-thumbLarge.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10132,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2023/11/27/opinion/the-opinions-art/the-opinions-art-thumbLarge.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10138,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2023/04/05/podcasts/ezra-klein-album-art/ezra-klein-album-art-thumbLarge-v3.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10143,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/08/01/podcasts/the-interview-logo/the-interview-logo-thumbLarge.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10148,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2022/10/12/podcasts/headlines-albumartwork-audioapp-2/headlines-albumartwork-audioapp-2-thumbLarge.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10152,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/07/31/podcasts/shows-12-weeks/shows-12-weeks-thumbLarge.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10159,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/08/05/podcasts/shows-newsletter-icon/shows-newsletter-icon-thumbLarge.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10171,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.nytimes.com/email-images/NYT-Newsletters-Serial-Icon-500px.jpg",
+          "host": "static.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10191,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-gameplay_144x144-b6cc5e2a7cc27a43096274a02921329c.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10196,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-games-easymode_144x144-307b8f657d987516abff44220313daae.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10200,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-cooking_144x144-5a8be1ef711d4ba5e66b0be7a2ca8bfe.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10204,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-the-veggie_144x144-f99606e1ca100f88cdfd8d763bf442c5.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-five-weeknight-dishes_144x144-97d51c5d4ba98233667b4057e3d852ab.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10213,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-the-recommendation_144x144-3e66bd6cc82013bd511c31a8f04d4ff7.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10216,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-clean-everything_144x144-97312e349d7284039a2153cb541b7fda.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10220,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.nytimes.com/vi-assets/static-assets/icon-athletic-pulse_144x144-393cbda91e2678278456723b62a9b21f.webp",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10225,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://www.nytimes.com/svc/onsite-messaging/query",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10722,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://a1.nyt.com/analytics/show-ads.js",
+          "host": "a1.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 11208,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 11313,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.gstatic.com/_/mss/boq-payments-consumer/_/js/k=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.en_US.NY-F7V7v-h8.2018.O/am=AAAAADQ/d=1/excm=_b,_tp,payframeview/ed=1/dg=0/wt=2/ujg=1/rs=AMitfrj4M2lmGXTdgbqzYC1HQr6IW0U-Nw/dti=1/m=_b,_tp",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 11400,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://a.et.nytimes.com/track",
+          "host": "a.et.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12480,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/01/multimedia/01xp-adopted-mgjb/01xp-adopted-mgjb-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12490,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/multimedia/02ST-TOM-FORD-PFW-07-lfmz-HP/02ST-TOM-FORD-PFW-07-lfmz-HP-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12500,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/arts/Obits-Sedgwick-d-mobile-promo-copy/Obits-Sedgwick-d-mobile-promo-smallSquare252-v4.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12506,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/01/opinion/01itpod-bostrom/01itpod-bostrom-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12517,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/well/3Well-NOA-geriatric-caregivers/3Well-NOA-geriatric-caregivers-threeByTwoSmallAt2X.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12527,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/04/arts/04CUL-SNL-RECAP-1042026-PIX-2/04CUL-SNL-RECAP-1042026-PIX-2-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12540,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/28/wirecutter/NYK-FOOT-SPAS-FEATURED/NYK-FOOT-SPAS-FEATURED-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12548,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/29/multimedia/29roundtree-REVIEW-images-lqhz/29roundtree-REVIEW-images-lqhz-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12554,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2025/09/22/multimedia/22-FALLBAKING-Baked-Apple-Cider-Donuts-pwmg-copy/22-FALLBAKING-Baked-Apple-Cider-Donuts-pwmg-smallSquare252-v2.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12563,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2022/09/28/podcasts/hard-fork-album-art/hard-fork-album-art-thumbLarge-v2.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12570,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/arts/-0_14-261002_HF_AI-AGENT-PSYCHOSIS_9x16_thumbs/-0_14-261002_HF_AI-AGENT-PSYCHOSIS_9x16_thumbs-smallTwoByThree.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12578,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2023/04/08/podcasts/modernlove-album-art/modernlove-logo-thumbLarge-v3.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12585,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2023/11/03/podcasts/week-in-opinion-art/week-in-opinion-art-thumbLarge-v2.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12596,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2022/11/08/podcasts/pablo-torre-album-art/03the-athletic-podcast-thumbLarge.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12601,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2024/08/14/podcasts/wirecutter-album-art/wirecutter-album-art-thumbLarge.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12609,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/arts/-0_14-261002_HF_AI-AGENT-PSYCHOSIS_9x16_thumbs/-0_14-261002_HF_AI-AGENT-PSYCHOSIS_9x16_thumbs-smallTwoByThree.png",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12837,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12848,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12858,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://samizdat-graphql.nytimes.com/graphql/v2",
+          "host": "samizdat-graphql.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12931,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://vp.nyt.com/video/hlsfmp4/2026/10/02/180058_1_02vid-hf-pilot1-clip1_wg/index-f1-v1-a1.m3u8",
+          "host": "vp.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13215,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/02/arts/02latenight/02latenight-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13221,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/03/multimedia/03-pol-trump-mail-voting-01-tfkb/03-pol-trump-mail-voting-01-tfkb-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13230,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/30/multimedia/30re-exclusive-west-village-01-mtpk/30re-exclusive-west-village-01-mtpk-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13238,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/10/04/opinion/29broughton/29broughton-smallSquare252-v2.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13247,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static01.nyt.com/images/2026/09/29/multimedia/29midterms-huckabee-topart-ktwm/29midterms-huckabee-topart-ktwm-smallSquare252.jpg",
+          "host": "static01.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13264,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.gstatic.com/_/mss/boq-payments-consumer/_/js/k=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.en_US.NY-F7V7v-h8.2018.O/ck=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.GQe9yMUnOfA.L.B1.O/am=AAAAADQ/d=1/exm=_b,_tp/excm=_b,_tp,payframeview/ed=1/wt=2/ujg=1/rs=AMitfrg74TN9YKET6NEBUBBYmAhF3iwkVg/ee=EmZ2Bf:zr1jrb;JsbNhc:Xd8iUd;K5nYTd:ZDZcre;LBgRLc:XVMNvd;Me32dd:MEeYgc;NJ1rfe:yGfSdd;NPKaK:PVlQOd;NSEoX:lazG7b;Pjplud:EEDORb;QGR0gd:Mlhmy;SNUn3:ZwDk9d;ScI3Yc:e7Hzgb;Uvc8o:VDovNc;YIZmRd:A1yn5d;a56pNe:JEfCwb;cEt90b:ws9Tlc;dIoSBb:SpsfSb;dowIGb:ebZ3mb;eBAeSb:zbML3c;iFQyKf:vfuNJf;lOO0Vd:OTA3Ae;oGtAuc:sOXFj;qQEoOc:KUM7Z;qafBPd:yDVVkb;qddgKe:xQtZb;wR5FRb:siKnQd;yEQyxe:p8L0ob;yxTchf:KUM7Z/dti=1/m=uZmJdd",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13322,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://a.et.nytimes.com/track",
+          "host": "a.et.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13492,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://accounts.google.com/gsi/client",
+          "host": "accounts.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13496,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://pay.google.com/gp/p/ui/pay",
+          "host": "pay.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13726,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://www.nytimes.com/statsig/rgstr",
+          "host": "www.nytimes.com",
+          "domain": "nytimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13830,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.gstatic.com/_/mss/boq-payments-consumer/_/js/k=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.en_US.NY-F7V7v-h8.2018.O/ck=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.GQe9yMUnOfA.L.B1.O/am=AAAAADQ/d=1/exm=_b,_tp,uZmJdd/excm=_b,_tp,payframeview/ed=1/wt=2/ujg=1/rs=AMitfrg74TN9YKET6NEBUBBYmAhF3iwkVg/ee=EmZ2Bf:zr1jrb;JsbNhc:Xd8iUd;K5nYTd:ZDZcre;LBgRLc:XVMNvd;Me32dd:MEeYgc;NJ1rfe:yGfSdd;NPKaK:PVlQOd;NSEoX:lazG7b;Pjplud:EEDORb;QGR0gd:Mlhmy;SNUn3:ZwDk9d;ScI3Yc:e7Hzgb;Uvc8o:VDovNc;YIZmRd:A1yn5d;a56pNe:JEfCwb;cEt90b:ws9Tlc;dIoSBb:SpsfSb;dowIGb:ebZ3mb;eBAeSb:zbML3c;iFQyKf:vfuNJf;lOO0Vd:OTA3Ae;oGtAuc:sOXFj;qQEoOc:KUM7Z;qafBPd:yDVVkb;qddgKe:xQtZb;wR5FRb:siKnQd;yEQyxe:p8L0ob;yxTchf:KUM7Z/dti=1/m=Wt6vjf,hhhU8,FCpbqb,WhJNk",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13838,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.gstatic.com/_/mss/boq-payments-consumer/_/js/k=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.en_US.NY-F7V7v-h8.2018.O/ck=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.GQe9yMUnOfA.L.B1.O/am=AAAAADQ/d=1/exm=FCpbqb,WhJNk,Wt6vjf,_b,_tp,hhhU8,uZmJdd/excm=_b,_tp,payframeview/ed=1/wt=2/ujg=1/rs=AMitfrg74TN9YKET6NEBUBBYmAhF3iwkVg/ee=EmZ2Bf:zr1jrb;JsbNhc:Xd8iUd;K5nYTd:ZDZcre;LBgRLc:XVMNvd;Me32dd:MEeYgc;NJ1rfe:yGfSdd;NPKaK:PVlQOd;NSEoX:lazG7b;Pjplud:EEDORb;QGR0gd:Mlhmy;SNUn3:ZwDk9d;ScI3Yc:e7Hzgb;Uvc8o:VDovNc;YIZmRd:A1yn5d;a56pNe:JEfCwb;cEt90b:ws9Tlc;dIoSBb:SpsfSb;dowIGb:ebZ3mb;eBAeSb:zbML3c;iFQyKf:vfuNJf;lOO0Vd:OTA3Ae;oGtAuc:sOXFj;qQEoOc:KUM7Z;qafBPd:yDVVkb;qddgKe:xQtZb;wR5FRb:siKnQd;yEQyxe:p8L0ob;yxTchf:KUM7Z/dti=1/m=byfTOb,lsjVmc,LEikZe,lwddkf,EFQ78c",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13845,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://vp.nyt.com/video/hlsfmp4/2026/10/02/180058_1_02vid-hf-pilot1-clip1_wg/180058_1_02vid-hf-pilot1-clip1_wg_1080p-1.ts",
+          "host": "vp.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 13933,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13948,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13955,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13966,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 13976,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 14003,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 14018,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 14025,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://play.google.com/log",
+          "host": "play.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 14029,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://accounts.google.com/gsi/style",
+          "host": "accounts.google.com",
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 14035,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.gstatic.com/_/mss/boq-payments-consumer/_/js/k=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.en_US.NY-F7V7v-h8.2018.O/ck=boq-payments-consumer.InstantbuyFrontendBuyflowPayframeUi.GQe9yMUnOfA.L.B1.O/am=AAAAADQ/d=1/exm=EFQ78c,FCpbqb,LEikZe,WhJNk,Wt6vjf,_b,_tp,byfTOb,hhhU8,lsjVmc,lwddkf,uZmJdd/excm=_b,_tp,payframeview/ed=1/wt=2/ujg=1/rs=AMitfrg74TN9YKET6NEBUBBYmAhF3iwkVg/ee=EmZ2Bf:zr1jrb;JsbNhc:Xd8iUd;K5nYTd:ZDZcre;LBgRLc:XVMNvd;Me32dd:MEeYgc;NJ1rfe:yGfSdd;NPKaK:PVlQOd;NSEoX:lazG7b;Pjplud:EEDORb;QGR0gd:Mlhmy;SNUn3:ZwDk9d;ScI3Yc:e7Hzgb;Uvc8o:VDovNc;YIZmRd:A1yn5d;a56pNe:JEfCwb;cEt90b:ws9Tlc;dIoSBb:SpsfSb;dowIGb:ebZ3mb;eBAeSb:zbML3c;iFQyKf:vfuNJf;lOO0Vd:OTA3Ae;oGtAuc:sOXFj;qQEoOc:KUM7Z;qafBPd:yDVVkb;qddgKe:xQtZb;wR5FRb:siKnQd;yEQyxe:p8L0ob;yxTchf:KUM7Z/dti=1/m=p3hmRc,LvGhrf,RqjULd",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 14649,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://vp.nyt.com/video/hlsfmp4/2026/10/02/180058_1_02vid-hf-pilot1-clip1_wg/180058_1_02vid-hf-pilot1-clip1_wg_1080p-2.ts",
+          "host": "vp.nyt.com",
+          "domain": "nyt.com",
+          "party": "first",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "nyt-a",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nyt-gdpr",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nyt-purr",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nyt-geo",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nyt.et.dd",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nyt-traceid",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nyt-b-sid",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "sessionActive",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "et-ppvid",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "sessionIndex",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "_dd_s_v2",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "datadome",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "purr-cache",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax"
+        },
+        {
+          "name": "purr-pref-agent",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax"
+        },
+        {
+          "name": "gpp-string",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nyt-jkidd",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "jkidd-s",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": true,
+          "secure": false,
+          "http_only": true,
+          "same_site": "Lax"
+        },
+        {
+          "name": "jkidd-p",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": true,
+          "same_site": "Lax"
+        },
+        {
+          "name": "g_state",
+          "domain": "nytimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        }
+      ],
+      "storage_items": {
+        "local": 8,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "datadoghq-browser-agent.com",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "nyt.com",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "media.net",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "nytimes.com",
+          "party": "first"
+        }
+      ]
+    }
+  ]
+}

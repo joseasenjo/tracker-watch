@@ -1,0 +1,55 @@
+# DRAFT: never run yet. Weekly scan of the outlet list; commits the JSON reports so the
+# repository keeps the history. It does not publish anything to Bluesky or Mastodon.
+name: weekly-scan
+
+on:
+  # Schedule disabled until a manual run (Actions tab > weekly-scan > Run workflow) has been checked.
+  # schedule:
+  #   - cron: "0 5 * * 1"   # Mondays 05:00 UTC; scheduled runs can start a few minutes late
+  workflow_dispatch:
+    inputs:
+      passes:
+        description: "Passes per site"
+        default: "3"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Unit tests
+        run: python -m pytest tests -q
+
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Scan outlets
+        run: >
+          python -m traceguard --sites-file data/sites.json
+          --passes "${{ github.event.inputs.passes || '3' }}"
+          --vantage github-actions-us --out data/runs
+
+      - name: Commit reports
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/runs
+          git diff --cached --quiet || git commit -m "scan: $(date -u +%F)"
+          git push
