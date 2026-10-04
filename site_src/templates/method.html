@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Method{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Method and limits</h1>
+    <p class="sub">What we measure, how, and what the numbers do not say.</p>
+    <div class="steps">
+      <div class="step"><h3>Measure</h3><p>A real Chromium browser loads each page, makes no clicks and gives no consent, and records every request for {{ observe }} seconds. This is repeated {{ passes }} times in fresh browser sessions, and we report the median.</p></div>
+      <div class="step"><h3>Classify</h3><p>A request is third party when its registered domain differs from the site's own (plus the outlet's declared own domains). Hosts are then matched against the list below.</p></div>
+      <div class="step"><h3>Compare</h3><p>Each week is compared with the previous one, only if both were measured under the same conditions, and only changes seen in most passes count.</p></div>
+    </div>
+
+    <h2 style="margin-top:28px">What the numbers mean</h2>
+    <ul>
+      <li><b>Tracking services</b> are the distinct third-party services in our list classified as advertising, analytics, social or audience measurement that were contacted during the observation window. Tag managers, consent tools and paywalls are listed but not counted.</li>
+      <li>The count is <b>before any interaction</b>. A site that blocks everything until you accept shows a low number here; this says nothing about what happens afterwards.</li>
+      <li>Counts describe what was contacted. They do not say what data was sent, why, or whether it was lawful.</li>
+    </ul>
+
+    <h2 id="bands">Bands</h2>
+    <p>For quick reading, the count of tracking services is also shown as a band. The ranges are fixed and public:</p>
+    <div class="table-scroll"><table class="t">
+      <thead><tr><th>Band</th><th>Tracking services contacted</th></tr></thead>
+      <tbody>{% for b in bands %}<tr><td><span class="pill">{{ b.label }}</span></td><td>{{ b.range }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    <ul>
+      <li>A band is a label for a range of a count. It is <b>not</b> a grade of a site's privacy, ethics or legality, and a higher letter does not mean worse behaviour once a visitor has made choices.</li>
+      <li>Only the count measured <b>before any interaction</b> is banded, and only when the confidence is high or medium. Results with low confidence get no band.</li>
+      <li>The classification list is small, so a count is a minimum: a site may contact more services than we recognise. The ranges may change as the list grows; any change will be announced here and in the feed.</li>
+    </ul>
+
+    <h2>Limits</h2>
+    <ul>
+      <li>The measurement runs from <b>{{ vantage }}</b>. Banners, consent walls and redirects differ by country, so results can differ for a reader elsewhere.</li>
+      <li>The classification list is small and hand-built. Domains missing from it appear as “Unclassified” and are not counted. Entries marked <i>inferred</i> rest on request paths or host names, not on a statement by the operator.</li>
+      <li>Ownership of a site's own domains is declared by us and can be wrong. We take the outlet's side when unsure.</li>
+      <li>Some sites refuse automated browsers. We report that instead of bypassing it. A failed pass lowers the <b>confidence</b> of a result: <i>high</i> means every pass worked, <i>medium</i> a majority, <i>low</i> a minority (indicative only, never compared).</li>
+      <li>Script behaviour (canvas reads, geolocation, WebRTC) is recorded with the calling script's domain. These APIs have many legitimate uses.</li>
+    </ul>
+
+    <h2 id="data">Data</h2>
+    <p>Each report is available as JSON from the site page (<code>data/&lt;date&gt;/&lt;site&gt;.json</code>). It includes the measurement conditions (tool version, browser, locale, time zone, vantage, user agent) and the request log of every pass, without query strings or cookie values. Reports are versioned (schema {{ schema }}).</p>
+
+    <h2>Classification list</h2>
+    <p class="sub">{{ tracker_count }} entries. Source: {{ tracker_source }}</p>
+    <div class="table-scroll">
+      <table class="t">
+        <thead><tr><th>Domain</th><th>Operator</th><th>Category</th><th>Basis</th></tr></thead>
+        <tbody>
+        {% for t in trackers %}
+          <tr><td>{{ t.domain }}</td><td>{{ t.entity }}</td><td>{{ t.category|replace('_', ' ') }}</td><td>{{ 'inferred: ' ~ t.evidence if t.evidence else 'public information' }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

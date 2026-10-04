@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker">Last scan: {{ scan_finished }}</span>
+    <h1>Which news sites contact the most tracking services before you click anything?</h1>
+    <p class="lead">Each page is loaded with no clicks and no consent given, three times, and we count the third-party tracking services it contacts. These are counts, not verdicts: read the <a href="{{ root }}method.html">method and its limits</a> before drawing conclusions.</p>
+    <div class="counters">
+      <div class="counter"><b>{{ measured|length }}</b><span>sites measured</span></div>
+      <div class="counter"><b>{{ with_tracking }}</b><span>contacted at least one tracking service</span></div>
+      <div class="counter"><b>{{ unmeasured|length }}</b><span><a href="{{ root }}unmeasured.html">could not be measured</a></span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>Sites</h2>
+    <p class="sub">Tracking services = third-party services classified as advertising, analytics, social or audience measurement. The band is a fixed range of that count (<a href="{{ root }}method.html#bands">see the ranges</a>), not a verdict. Click a column heading to sort.</p>
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Search a site…" aria-label="Search a site">
+      <div class="chips" role="group" aria-label="Filter by country">
+        <button class="chip on" type="button" data-filter="group" data-value="all">All</button>
+        {% for g in groups %}<button class="chip" type="button" data-filter="group" data-value="{{ g }}">{{ g }}</button>{% endfor %}
+      </div>
+      <div class="chips" role="group" aria-label="Filter by type">
+        <button class="chip on" type="button" data-filter="kind" data-value="all">News and sports</button>
+        <button class="chip" type="button" data-filter="kind" data-value="news">News</button>
+        <button class="chip" type="button" data-filter="kind" data-value="sports">Sports</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="t" id="sites-table">
+        <thead><tr>
+          <th><button type="button" data-sort="name">Site</button></th>
+          <th>Country</th>
+          <th class="num"><button type="button" data-sort="tracking">Tracking services</button></th>
+          <th><button type="button" data-sort="band">Band</button></th>
+          <th class="num"><button type="button" data-sort="domains">Third-party domains</button></th>
+          <th class="num"><button type="button" data-sort="requests">Third-party requests</button></th>
+          <th>Confidence</th>
+          <th class="num"><button type="button" data-sort="delta">Vs last week</button></th>
+        </tr></thead>
+        <tbody>
+        {% for s in measured %}
+          <tr data-name="{{ s.name|lower }}" data-group="{{ s.group }}" data-kind="{{ s.kind }}" data-tracking="{{ s.tracking }}" data-band="{{ s.band or 'Z' }}" data-domains="{{ s.domains }}" data-requests="{{ s.requests }}" data-delta="{{ s.delta if s.delta is not none else -999 }}">
+            <td><a href="{{ root }}sites/{{ s.stem }}.html">{{ s.name }}</a></td>
+            <td>{{ s.group }}</td>
+            <td class="num"><b>{{ s.tracking }}</b></td>
+            <td>{% if s.band %}<span class="pill" title="Band {{ s.band }}: a range of the count, not a verdict">{{ s.band }}</span>{% else %}–{% endif %}</td>
+            <td class="num">{{ s.domains }}</td>
+            <td class="num">{{ s.requests }}</td>
+            <td><span class="pill {{ 'ok' if s.confidence == 'high' else 'warn' }}">{{ s.confidence or '–' }}</span></td>
+            <td class="num">{% if s.delta is none %}–{% elif s.delta > 0 %}+{{ s.delta }}{% else %}{{ s.delta }}{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p id="no-results" class="small" hidden>No site matches that filter.</p>
+    <p class="small">“Vs last week” compares the number of tracking services only when both weeks were measured under the same conditions; otherwise it shows a dash. {{ unmeasured|length }} sites refused automated access or could not be measured: <a href="{{ root }}unmeasured.html">see why</a>.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How this measurement was made</h2>
+    <div class="facts">
+      <div class="fact"><b>{{ scan_started[:10] }}</b><span>scan ran {{ scan_started[11:] }} to {{ scan_finished[11:] }}</span></div>
+      <div class="fact"><b>{{ passes }}×{{ observe }} s</b><span>passes × observation window, no clicks, no consent</span></div>
+      <div class="fact"><b>{{ vantage }}</b><span>measured from (banners and redirects vary by country)</span></div>
+      <div class="fact"><b>v{{ tool_version }}</b><span>tool version · {{ browser }}</span></div>
+      <div class="fact"><b>{{ tracker_count }}</b><span>entries in the classification list</span></div>
+    </div>
+    <p class="small">Every figure can be traced to a raw report. <a href="{{ root }}method.html">Method and limits</a> · <a href="{{ root }}data/latest.csv">Download the table (CSV)</a> · <a href="{{ root }}about.html">About and corrections</a></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Follow the weekly results</h2>
+    <div class="cards">
+      <div class="card"><h3>RSS</h3><p class="small">One entry per weekly measurement and its notable changes.</p><a class="btn sec" href="{{ root }}feed.xml">Open the feed</a></div>
+      <div class="card"><h3>Email</h3>
+        {% if subscribe_url %}
+        <p class="small">A weekly summary. The signup page is hosted by {{ subscribe_host }}; this site never sees your address. <a href="{{ root }}privacy.html">Privacy</a>.</p>
+        <a class="btn sec" href="{{ subscribe_url }}" rel="noopener">Subscribe</a>
+        {% else %}
+        <p class="small">A weekly summary. Not available yet.</p><span class="btn sec" aria-disabled="true">Coming soon</span>
+        {% endif %}
+      </div>
+      <div class="card"><h3>Raw data</h3><p class="small">Every report is published as JSON, including the request log of each pass.</p><a class="btn sec" href="{{ root }}method.html#data">How to use it</a></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -4,22 +4,25 @@
     "name": "traceguard",
     "version": "0.1.0"
   },
-  "generated_at": "2026-10-04T17:31:11+00:00",
+  "generated_at": "2026-10-04T18:14:07+00:00",
   "site": {
     "name": "The Independent",
     "url": "https://www.independent.co.uk",
     "first_party_domains": [
-      "independent.co.uk"
+      "independent.co.uk",
+      "the-independent.com"
     ]
   },
   "measurement": {
     "vantage": "local-windows-spain",
     "locale": "en-US",
     "timezone": "UTC",
-    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
     "browser": "chromium 153.0.8010.12",
     "passes": 3,
     "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
     "interaction": "none",
     "tracker_list": "trackers.seed.json"
   },
@@ -27,6 +30,8 @@
     "passes_total": 3,
     "passes_ok": 3,
     "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
     "http_status": 200,
     "final_url": "https://www.independent.co.uk/",
     "navigation_redirects": [],
@@ -36,11 +41,11 @@
     },
     "tls_protocol": "TLS 1.3",
     "metrics": {
-      "third_party_requests": 46,
-      "third_party_domains": 19,
-      "tracking_services": 7,
+      "third_party_requests": 41,
+      "third_party_domains": 18,
+      "tracking_services": 10,
       "third_party_cookies": 0,
-      "cookies_total": 17,
+      "cookies_total": 18,
       "storage_items": 18
     },
     "third_party_domains": [
@@ -133,11 +138,6 @@
         "domain": "spellknight.com",
         "passes_seen": 3,
         "stable": true
-      },
-      {
-        "domain": "the-independent.com",
-        "passes_seen": 3,
-        "stable": true
       }
     ],
     "services": [
@@ -166,8 +166,24 @@
         "stable": true
       },
       {
+        "service": "dotmetrics.net",
+        "entity": "Ipsos (Dotmetrics)",
+        "category": "audience_measurement",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
         "service": "doubleclick.net",
         "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "doubleverify.com",
+        "entity": "DoubleVerify",
         "category": "advertising",
         "tracking": true,
         "passes_seen": 3,
@@ -204,6 +220,14 @@
         "tracking": true,
         "passes_seen": 3,
         "stable": true
+      },
+      {
+        "service": "privacymanager.io",
+        "entity": "LiveRamp",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
       }
     ],
     "observations": [
@@ -228,16 +252,16 @@
     {
       "code": "THIRD_PARTY_REQUESTS",
       "severity": "info",
-      "text": "During a 12-second window with no user interaction, the page made 46 requests to 19 third-party domains (median of 3 passes).",
+      "text": "During a 12-second window with no user interaction, the page made 41 requests to 18 third-party domains (median of 3 passes).",
       "evidence": {
-        "requests": 46,
-        "domains": 19
+        "requests": 41,
+        "domains": 18
       }
     },
     {
       "code": "TRACKING_SERVICES",
       "severity": "notable",
-      "text": "7 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: amazon-adsystem.com (Amazon, advertising), chartbeat.com (Chartbeat, analytics), chartbeat.net (Chartbeat, analytics), doubleclick.net (Google, advertising), google-analytics.com (Google, analytics), googlesyndication.com (Google, advertising), permutive.app (Permutive, advertising).",
+      "text": "10 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: amazon-adsystem.com (Amazon, advertising), chartbeat.com (Chartbeat, analytics), chartbeat.net (Chartbeat, analytics), dotmetrics.net (Ipsos (Dotmetrics), audience measurement), doubleclick.net (Google, advertising), doubleverify.com (DoubleVerify, advertising), google-analytics.com (Google, analytics), googlesyndication.com (Google, advertising), permutive.app (Permutive, advertising), privacymanager.io (LiveRamp, advertising).",
       "evidence": {
         "services": [
           {
@@ -265,8 +289,24 @@
             "stable": true
           },
           {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
             "service": "doubleclick.net",
             "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
             "category": "advertising",
             "tracking": true,
             "passes_seen": 3,
@@ -295,6 +335,14 @@
             "tracking": true,
             "passes_seen": 3,
             "stable": true
+          },
+          {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
           }
         ]
       }
@@ -315,7 +363,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 179,
+          "t_ms": 167,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.independent.co.uk/",
@@ -325,47 +373,47 @@
           "tracker": null
         },
         {
-          "t_ms": 1091,
+          "t_ms": 495,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Medium.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1097,
+          "t_ms": 500,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Medium-Italic.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1102,
+          "t_ms": 505,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1105,
+          "t_ms": 512,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1156,
+          "t_ms": 535,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/13/11/Membership-6-months-1-panel.png",
@@ -375,7 +423,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1167,
+          "t_ms": 544,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/8/28/Climate.png",
@@ -385,7 +433,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1174,
+          "t_ms": 550,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/04/22/15/37/ipp1111111iStock-470032072-copy.jpeg",
@@ -395,7 +443,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1185,
+          "t_ms": 557,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/10/399c2ce572be5b0cf80ace50973791b5Y29udGVudHNlYXJjaGFwaSwxNzkxMTkzNDE5-2.86063325.jpg",
@@ -405,7 +453,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1206,
+          "t_ms": 569,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/bombora-rtvi.c55cfd7ec8369c06269f.js",
@@ -415,7 +463,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1220,
+          "t_ms": 574,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/sourcepoint.59b79d316191e01a6d03.js",
@@ -425,7 +473,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1226,
+          "t_ms": 584,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/iPhone+In+the+Room.png",
@@ -435,7 +483,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1436,
+          "t_ms": 685,
           "method": "GET",
           "resource_type": "script",
           "url": "https://assets.monetizationos.com/web-components-latest.js",
@@ -445,7 +493,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1450,
+          "t_ms": 690,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/init-firebase.edc3a345679a909c3b82.js",
@@ -455,7 +503,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1457,
+          "t_ms": 697,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/react-archipelago.54c63b49c811e10e41e0.js",
@@ -465,7 +513,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1470,
+          "t_ms": 701,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/react-components-base.390d46b11a7a575a6b8f.js",
@@ -475,7 +523,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1519,
+          "t_ms": 739,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/unified/wrapperMessagingWithoutDetection.js",
@@ -485,7 +533,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1523,
+          "t_ms": 748,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/analytics.0e9cbce725943a59311c.js",
@@ -495,7 +543,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1531,
+          "t_ms": 769,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/bombora.1dc413d60532888edfa0.js",
@@ -505,7 +553,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1585,
+          "t_ms": 816,
           "method": "GET",
           "resource_type": "script",
           "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
@@ -519,17 +567,21 @@
           }
         },
         {
-          "t_ms": 1639,
+          "t_ms": 896,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ats-wrapper.privacymanager.io/ats-modules/203e3874-5877-45ec-a8d4-5beaa84bab40/ats.js",
           "host": "ats-wrapper.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 1648,
+          "t_ms": 915,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/main.87b0eb1ac67c84058af1.js",
@@ -539,7 +591,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1652,
+          "t_ms": 968,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/section.86ebcfe276c3871ccc3b.js",
@@ -549,7 +601,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1655,
+          "t_ms": 975,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/braze-user-bundle.39e7d27069824f9fde98.js",
@@ -559,7 +611,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1661,
+          "t_ms": 983,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/iPhone+Harry+article.png",
@@ -569,7 +621,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1667,
+          "t_ms": 990,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/Independent+Membership+White.png",
@@ -579,7 +631,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1717,
+          "t_ms": 1099,
           "method": "GET",
           "resource_type": "script",
           "url": "https://vi.ml314.com/get",
@@ -589,7 +641,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1768,
+          "t_ms": 1133,
           "method": "GET",
           "resource_type": "script",
           "url": "https://spellknight.com/build/r4uaun_sooo0e.min.js",
@@ -599,17 +651,27 @@
           "tracker": null
         },
         {
-          "t_ms": 1772,
+          "t_ms": 1147,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Regular.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1780,
+          "t_ms": 1156,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1166,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/01/20/11/Anne-McElvoy-byline.jpg",
@@ -619,7 +681,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1783,
+          "t_ms": 1180,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/24/7/23/james-moore-byline-new.png",
@@ -629,7 +691,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1789,
+          "t_ms": 1200,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/12/17/Lucy-Fox-byline.png",
@@ -639,7 +701,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1800,
+          "t_ms": 1214,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/14/2250949142..",
@@ -649,7 +711,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1806,
+          "t_ms": 1220,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/13/02/The-Tucker-Carlson-ShowYouTube-Jacob-Rees-Mogg.png",
@@ -659,7 +721,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1815,
+          "t_ms": 1237,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/03/18/2026-10-03T171837Z_2123307095_UP1EMA31C2ZDU_RTRMADP_3_SOCCER-UEFANATIONS-CRO-ENG.JPG",
@@ -669,7 +731,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1854,
+          "t_ms": 1247,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/9/20/War.jpg",
@@ -679,7 +741,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1867,
+          "t_ms": 1258,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2025/04/09/15/48/iStock-1424526566.jpeg",
@@ -689,7 +751,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1873,
+          "t_ms": 1272,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.independent.co.uk/2026/09/28/11/2026-09-27T201156Z_138181953_UP1EM9R1K3VQQ_RTRMADP_3_SOCCER-UEFANATIONS-ISR-IRL.JPG",
+          "host": "static.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1295,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/14/15/8ecedd64e384bb9f3703d118b1f3fbbdY29udGVudHNlYXJjaGFwaSwxNzg5NDgyODA5-2.85853739.jpg",
@@ -699,7 +771,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1901,
+          "t_ms": 1324,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/09/2026-10-04T081910Z_1219093370_UP1EMA40N3WWW_RTRMADP_3_MOTOR-F1-BAHRAIN.JPG",
@@ -709,17 +781,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1914,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.independent.co.uk/2026/09/23/13/24/Image-Sep-23-2026-02_20_54-PM.png",
-          "host": "static.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1921,
+          "t_ms": 1338,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/08/12/15/04/1235-x-500.jpeg",
@@ -729,7 +791,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1935,
+          "t_ms": 1349,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.independent.co.uk/2026/09/20/12/01M2X60H8GE9M8A7AMETTRCP3N.jpg",
+          "host": "static.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1360,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/07/08/08/49057f5f5af16c379f474b19ec66ba3dY29udGVudHNlYXJjaGFwaSwxNzgzNTgwMzY1-2.8058616.jpg",
@@ -739,7 +811,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1951,
+          "t_ms": 1364,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/25/10/2296388925..",
@@ -749,17 +821,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1955,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.independent.co.uk/2026/09/09/10/2222177864..",
-          "host": "static.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1964,
+          "t_ms": 1369,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/29/13/12/Kayaking-in-Aurlandsfjord-in-the-Norwegian-fjords.jpeg",
@@ -769,7 +831,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1970,
+          "t_ms": 1374,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/13/2297899736..",
@@ -779,17 +841,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1976,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2444,
+          "t_ms": 1501,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
@@ -799,7 +851,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2453,
+          "t_ms": 1507,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.independent.co.uk/mms/v2/get_site_data",
@@ -809,7 +861,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2484,
+          "t_ms": 1514,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtm.js",
@@ -823,10 +875,10 @@
           }
         },
         {
-          "t_ms": 2520,
+          "t_ms": 1541,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609290101/pubads_impl.js",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609300101/pubads_impl.js",
           "host": "securepubads.g.doubleclick.net",
           "domain": "doubleclick.net",
           "party": "third",
@@ -837,17 +889,21 @@
           }
         },
         {
-          "t_ms": 2615,
+          "t_ms": 1606,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://geo.privacymanager.io/",
           "host": "geo.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 2668,
+          "t_ms": 1633,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/ga4-shared-event-handlers.9762c94b9ab6edfdd0b6.js",
@@ -857,7 +913,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2672,
+          "t_ms": 1640,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/ga4-section-event-handlers.cb9672e814bbc18395a5.js",
@@ -867,7 +923,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2691,
+          "t_ms": 1850,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://www.independent.co.uk/mos-endpoints/record-homepage-popup",
@@ -877,7 +933,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2718,
+          "t_ms": 1888,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.independent.co.uk/wrapper/v2/meta-data",
@@ -887,7 +943,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2944,
+          "t_ms": 2000,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.independent.co.uk/wrapper/v2/messages",
@@ -897,17 +953,21 @@
           "tracker": null
         },
         {
-          "t_ms": 2956,
+          "t_ms": 2006,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://geo.privacymanager.io/",
           "host": "geo.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 3071,
+          "t_ms": 2061,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.npttech.com/advertising.js",
@@ -917,17 +977,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3119,
-          "method": "GET",
-          "resource_type": "document",
-          "url": "https://cmpv2.independent.co.uk/index.html",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3213,
+          "t_ms": 2099,
           "method": "GET",
           "resource_type": "script",
           "url": "https://delivery.adrecover.com/49102/adRecover.js",
@@ -937,7 +987,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3217,
+          "t_ms": 2103,
           "method": "GET",
           "resource_type": "image",
           "url": "https://delivery.adrecover.com/block.jpg",
@@ -947,7 +997,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3253,
+          "t_ms": 2130,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://aax.amazon-adsystem.com/e/dtb/bid/54689.54/0/prebid",
@@ -961,37 +1011,7 @@
           }
         },
         {
-          "t_ms": 3266,
-          "method": "GET",
-          "resource_type": "stylesheet",
-          "url": "https://cmpv2.independent.co.uk/Notice.1c267.css",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3281,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.independent.co.uk/polyfills.01516.js",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3288,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.independent.co.uk/Notice.97af9.js",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3455,
+          "t_ms": 2291,
           "method": "GET",
           "resource_type": "script",
           "url": "https://script.crazyegg.com/pages/scripts/0131/9866.js",
@@ -1001,17 +1021,21 @@
           "tracker": null
         },
         {
-          "t_ms": 3489,
+          "t_ms": 2313,
           "method": "GET",
           "resource_type": "script",
           "url": "https://pub.doubleverify.com/dvtag/34448457/DV1395182/pub.js",
           "host": "pub.doubleverify.com",
           "domain": "doubleverify.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 3498,
+          "t_ms": 2316,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtag/js",
@@ -1025,7 +1049,7 @@
           }
         },
         {
-          "t_ms": 3506,
+          "t_ms": 2336,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://pagead2.googlesyndication.com/ccm/collect",
@@ -1039,27 +1063,17 @@
           }
         },
         {
-          "t_ms": 3594,
+          "t_ms": 2343,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
+          "resource_type": "document",
+          "url": "https://cmpv2.independent.co.uk/index.html",
           "host": "cmpv2.independent.co.uk",
           "domain": "independent.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 3597,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.independent.co.uk/Agent/GA/UniversalID/IIQUniversalID.js",
-          "host": "www.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3637,
+          "t_ms": 2369,
           "method": "GET",
           "resource_type": "script",
           "url": "https://code.jquery.com/jquery-3.7.1.min.js",
@@ -1069,7 +1083,17 @@
           "tracker": null
         },
         {
-          "t_ms": 3653,
+          "t_ms": 2382,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.independent.co.uk/Agent/GA/UniversalID/IIQUniversalID.js",
+          "host": "www.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2416,
           "method": "GET",
           "resource_type": "other",
           "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610010101/gpt",
@@ -1083,7 +1107,37 @@
           }
         },
         {
-          "t_ms": 3669,
+          "t_ms": 2439,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cmpv2.independent.co.uk/Notice.1c267.css",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2446,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.independent.co.uk/polyfills.01516.js",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2456,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.independent.co.uk/Notice.97af9.js",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2470,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
@@ -1093,77 +1147,59 @@
           "tracker": null
         },
         {
-          "t_ms": 3740,
+          "t_ms": 2502,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
+          "resource_type": "xhr",
+          "url": "https://script.crazyegg.com/pages/data-scripts/0131/9866/site/www.independent.co.uk.json",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
+          "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 3781,
+          "t_ms": 2526,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://pub.doubleverify.com/dvtag/signals/ids/pub.json",
           "host": "pub.doubleverify.com",
           "domain": "doubleverify.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 3787,
+          "t_ms": 2539,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://pub.doubleverify.com/dvtag/signals/bsc/pub.json",
           "host": "pub.doubleverify.com",
           "domain": "doubleverify.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 3834,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3838,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3843,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3921,
+          "t_ms": 2717,
           "method": "GET",
           "resource_type": "script",
           "url": "https://uk-script.dotmetrics.net/door.js",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 3955,
+          "t_ms": 2771,
           "method": "GET",
           "resource_type": "script",
           "url": "https://static.chartbeat.com/js/chartbeat_video.js",
@@ -1177,7 +1213,7 @@
           }
         },
         {
-          "t_ms": 3960,
+          "t_ms": 2778,
           "method": "GET",
           "resource_type": "script",
           "url": "https://static.chartbeat.com/js/chartbeat_mab.js",
@@ -1191,7 +1227,7 @@
           }
         },
         {
-          "t_ms": 3985,
+          "t_ms": 2800,
           "method": "GET",
           "resource_type": "script",
           "url": "https://5d79bce7-5d2b-427e-a6c4-b89b6c7bf048.edge.permutive.app/8a36876c-0af1-446c-b4da-51399e9ee198-web.js",
@@ -1205,7 +1241,27 @@
           }
         },
         {
-          "t_ms": 4003,
+          "t_ms": 2804,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://script.crazyegg.com/pages/versioned/common-scripts/b96c449137f00bb6dd6811619f89660f.js",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2811,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2815,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
@@ -1215,7 +1271,57 @@
           "tracker": null
         },
         {
-          "t_ms": 4170,
+          "t_ms": 2820,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://delivery.adrecover.com/block.jpg",
+          "host": "delivery.adrecover.com",
+          "domain": "adrecover.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2881,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2934,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2938,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2943,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3012,
           "method": "GET",
           "resource_type": "image",
           "url": "https://ping.chartbeat.net/ping",
@@ -1229,27 +1335,17 @@
           }
         },
         {
-          "t_ms": 4177,
+          "t_ms": 3050,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://uk-script.dotmetrics.net/hit.gif",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
+          "resource_type": "xhr",
+          "url": "https://script.crazyegg.com/pages/data-scripts/0131/9866/sampling/www.independent.co.uk.json",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 4206,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://rm-script.dotmetrics.net/hit.gif",
-          "host": "rm-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 4236,
+          "t_ms": 3079,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://mab.chartbeat.com/mab_strategy/headline_testing/get_strategy/",
@@ -1263,55 +1359,7 @@
           }
         },
         {
-          "t_ms": 4244,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://delivery.adrecover.com/block.jpg",
-          "host": "delivery.adrecover.com",
-          "domain": "adrecover.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 4326,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 4404,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://mabping.chartbeat.net/ping/mab",
-          "host": "mabping.chartbeat.net",
-          "domain": "chartbeat.net",
-          "party": "third",
-          "tracker": {
-            "service": "chartbeat.net",
-            "entity": "Chartbeat",
-            "category": "analytics"
-          }
-        },
-        {
-          "t_ms": 4543,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.googletagmanager.com/gtag/js",
-          "host": "www.googletagmanager.com",
-          "domain": "googletagmanager.com",
-          "party": "third",
-          "tracker": {
-            "service": "googletagmanager.com",
-            "entity": "Google",
-            "category": "tag_manager"
-          }
-        },
-        {
-          "t_ms": 4642,
+          "t_ms": 3092,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -1325,7 +1373,77 @@
           }
         },
         {
-          "t_ms": 9622,
+          "t_ms": 3104,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://uk-script.dotmetrics.net/hit.gif",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3124,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://rm-script.dotmetrics.net/hit.gif",
+          "host": "rm-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3224,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://mabping.chartbeat.net/ping/mab",
+          "host": "mabping.chartbeat.net",
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3228,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3348,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 8094,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -1484,6 +1602,15 @@
           "secure": true,
           "http_only": false,
           "same_site": "Lax"
+        },
+        {
+          "name": "_ce.s",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Strict"
         },
         {
           "name": "_t_tests",
@@ -1526,7 +1653,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 122,
+          "t_ms": 128,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.independent.co.uk/",
@@ -1536,47 +1663,47 @@
           "tracker": null
         },
         {
-          "t_ms": 581,
+          "t_ms": 409,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Medium.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 592,
+          "t_ms": 414,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Medium-Italic.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 599,
+          "t_ms": 418,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 609,
+          "t_ms": 421,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 623,
+          "t_ms": 425,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/13/11/Membership-6-months-1-panel.png",
@@ -1586,7 +1713,7 @@
           "tracker": null
         },
         {
-          "t_ms": 627,
+          "t_ms": 430,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/8/28/Climate.png",
@@ -1596,7 +1723,7 @@
           "tracker": null
         },
         {
-          "t_ms": 631,
+          "t_ms": 434,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/04/22/15/37/ipp1111111iStock-470032072-copy.jpeg",
@@ -1606,7 +1733,7 @@
           "tracker": null
         },
         {
-          "t_ms": 638,
+          "t_ms": 437,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/10/399c2ce572be5b0cf80ace50973791b5Y29udGVudHNlYXJjaGFwaSwxNzkxMTkzNDE5-2.86063325.jpg",
@@ -1616,7 +1743,7 @@
           "tracker": null
         },
         {
-          "t_ms": 642,
+          "t_ms": 441,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/bombora-rtvi.c55cfd7ec8369c06269f.js",
@@ -1626,7 +1753,7 @@
           "tracker": null
         },
         {
-          "t_ms": 645,
+          "t_ms": 445,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/sourcepoint.59b79d316191e01a6d03.js",
@@ -1636,7 +1763,7 @@
           "tracker": null
         },
         {
-          "t_ms": 729,
+          "t_ms": 449,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/iPhone+In+the+Room.png",
@@ -1646,7 +1773,7 @@
           "tracker": null
         },
         {
-          "t_ms": 761,
+          "t_ms": 504,
           "method": "GET",
           "resource_type": "script",
           "url": "https://assets.monetizationos.com/web-components-latest.js",
@@ -1656,7 +1783,7 @@
           "tracker": null
         },
         {
-          "t_ms": 765,
+          "t_ms": 512,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/init-firebase.edc3a345679a909c3b82.js",
@@ -1666,7 +1793,7 @@
           "tracker": null
         },
         {
-          "t_ms": 770,
+          "t_ms": 518,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/react-archipelago.54c63b49c811e10e41e0.js",
@@ -1676,7 +1803,7 @@
           "tracker": null
         },
         {
-          "t_ms": 773,
+          "t_ms": 522,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/react-components-base.390d46b11a7a575a6b8f.js",
@@ -1686,7 +1813,7 @@
           "tracker": null
         },
         {
-          "t_ms": 779,
+          "t_ms": 527,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/unified/wrapperMessagingWithoutDetection.js",
@@ -1696,7 +1823,7 @@
           "tracker": null
         },
         {
-          "t_ms": 791,
+          "t_ms": 533,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/analytics.0e9cbce725943a59311c.js",
@@ -1706,7 +1833,7 @@
           "tracker": null
         },
         {
-          "t_ms": 797,
+          "t_ms": 539,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/bombora.1dc413d60532888edfa0.js",
@@ -1716,7 +1843,7 @@
           "tracker": null
         },
         {
-          "t_ms": 802,
+          "t_ms": 547,
           "method": "GET",
           "resource_type": "script",
           "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
@@ -1730,17 +1857,21 @@
           }
         },
         {
-          "t_ms": 813,
+          "t_ms": 553,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ats-wrapper.privacymanager.io/ats-modules/203e3874-5877-45ec-a8d4-5beaa84bab40/ats.js",
           "host": "ats-wrapper.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 818,
+          "t_ms": 562,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/main.87b0eb1ac67c84058af1.js",
@@ -1750,7 +1881,7 @@
           "tracker": null
         },
         {
-          "t_ms": 824,
+          "t_ms": 567,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/section.86ebcfe276c3871ccc3b.js",
@@ -1760,7 +1891,7 @@
           "tracker": null
         },
         {
-          "t_ms": 829,
+          "t_ms": 589,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/braze-user-bundle.39e7d27069824f9fde98.js",
@@ -1770,7 +1901,7 @@
           "tracker": null
         },
         {
-          "t_ms": 832,
+          "t_ms": 656,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/iPhone+Harry+article.png",
@@ -1780,7 +1911,7 @@
           "tracker": null
         },
         {
-          "t_ms": 840,
+          "t_ms": 665,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/Independent+Membership+White.png",
@@ -1790,7 +1921,7 @@
           "tracker": null
         },
         {
-          "t_ms": 845,
+          "t_ms": 674,
           "method": "GET",
           "resource_type": "script",
           "url": "https://vi.ml314.com/get",
@@ -1800,7 +1931,7 @@
           "tracker": null
         },
         {
-          "t_ms": 853,
+          "t_ms": 678,
           "method": "GET",
           "resource_type": "script",
           "url": "https://spellknight.com/build/r4uaun_sooo0e.min.js",
@@ -1810,27 +1941,27 @@
           "tracker": null
         },
         {
-          "t_ms": 859,
+          "t_ms": 686,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Regular.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1077,
+          "t_ms": 720,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1090,
+          "t_ms": 747,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/01/20/11/Anne-McElvoy-byline.jpg",
@@ -1840,7 +1971,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1094,
+          "t_ms": 751,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/24/7/23/james-moore-byline-new.png",
@@ -1850,7 +1981,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1098,
+          "t_ms": 775,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/12/17/Lucy-Fox-byline.png",
@@ -1860,7 +1991,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1104,
+          "t_ms": 779,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/14/2250949142..",
@@ -1870,7 +2001,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1107,
+          "t_ms": 788,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/13/02/The-Tucker-Carlson-ShowYouTube-Jacob-Rees-Mogg.png",
@@ -1880,7 +2011,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1110,
+          "t_ms": 795,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/03/18/2026-10-03T171837Z_2123307095_UP1EMA31C2ZDU_RTRMADP_3_SOCCER-UEFANATIONS-CRO-ENG.JPG",
@@ -1890,7 +2021,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1114,
+          "t_ms": 803,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/9/20/War.jpg",
@@ -1900,7 +2031,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1119,
+          "t_ms": 814,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2025/04/09/15/48/iStock-1424526566.jpeg",
@@ -1910,7 +2041,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1123,
+          "t_ms": 818,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.independent.co.uk/2026/09/28/11/2026-09-27T201156Z_138181953_UP1EM9R1K3VQQ_RTRMADP_3_SOCCER-UEFANATIONS-ISR-IRL.JPG",
+          "host": "static.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 823,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/14/15/8ecedd64e384bb9f3703d118b1f3fbbdY29udGVudHNlYXJjaGFwaSwxNzg5NDgyODA5-2.85853739.jpg",
@@ -1920,7 +2061,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1128,
+          "t_ms": 910,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/09/2026-10-04T081910Z_1219093370_UP1EMA40N3WWW_RTRMADP_3_MOTOR-F1-BAHRAIN.JPG",
@@ -1930,17 +2071,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1132,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.independent.co.uk/2026/09/23/13/24/Image-Sep-23-2026-02_20_54-PM.png",
-          "host": "static.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1137,
+          "t_ms": 926,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/08/12/15/04/1235-x-500.jpeg",
@@ -1950,7 +2081,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1140,
+          "t_ms": 935,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.independent.co.uk/2026/09/20/12/01M2X60H8GE9M8A7AMETTRCP3N.jpg",
+          "host": "static.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 944,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/07/08/08/49057f5f5af16c379f474b19ec66ba3dY29udGVudHNlYXJjaGFwaSwxNzgzNTgwMzY1-2.8058616.jpg",
@@ -1960,7 +2101,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1144,
+          "t_ms": 1003,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/25/10/2296388925..",
@@ -1970,17 +2111,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1149,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.independent.co.uk/2026/09/09/10/2222177864..",
-          "host": "static.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1160,
+          "t_ms": 1021,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/29/13/12/Kayaking-in-Aurlandsfjord-in-the-Norwegian-fjords.jpeg",
@@ -1990,7 +2121,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1172,
+          "t_ms": 1038,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/13/2297899736..",
@@ -2000,17 +2131,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1867,
-          "method": "POST",
-          "resource_type": "fetch",
-          "url": "https://www.independent.co.uk/mos-endpoints/record-homepage-popup",
-          "host": "www.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1911,
+          "t_ms": 1429,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
@@ -2020,7 +2141,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1918,
+          "t_ms": 1433,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.independent.co.uk/mms/v2/get_site_data",
@@ -2030,7 +2151,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1922,
+          "t_ms": 1454,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtm.js",
@@ -2044,10 +2165,10 @@
           }
         },
         {
-          "t_ms": 1951,
+          "t_ms": 1505,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609290101/pubads_impl.js",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609300101/pubads_impl.js",
           "host": "securepubads.g.doubleclick.net",
           "domain": "doubleclick.net",
           "party": "third",
@@ -2058,17 +2179,21 @@
           }
         },
         {
-          "t_ms": 1993,
+          "t_ms": 1555,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://geo.privacymanager.io/",
           "host": "geo.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 2040,
+          "t_ms": 1605,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/ga4-shared-event-handlers.9762c94b9ab6edfdd0b6.js",
@@ -2078,7 +2203,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2047,
+          "t_ms": 1610,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/ga4-section-event-handlers.cb9672e814bbc18395a5.js",
@@ -2088,7 +2213,17 @@
           "tracker": null
         },
         {
-          "t_ms": 2165,
+          "t_ms": 1622,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://www.independent.co.uk/mos-endpoints/record-homepage-popup",
+          "host": "www.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1644,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.independent.co.uk/wrapper/v2/meta-data",
@@ -2098,7 +2233,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2317,
+          "t_ms": 1799,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.independent.co.uk/wrapper/v2/messages",
@@ -2108,17 +2243,17 @@
           "tracker": null
         },
         {
-          "t_ms": 2339,
+          "t_ms": 1860,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://geo.privacymanager.io/",
-          "host": "geo.privacymanager.io",
-          "domain": "privacymanager.io",
-          "party": "third",
+          "resource_type": "document",
+          "url": "https://cmpv2.independent.co.uk/index.html",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2365,
+          "t_ms": 1871,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.npttech.com/advertising.js",
@@ -2128,7 +2263,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2393,
+          "t_ms": 1894,
           "method": "GET",
           "resource_type": "script",
           "url": "https://delivery.adrecover.com/49102/adRecover.js",
@@ -2138,7 +2273,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2397,
+          "t_ms": 1898,
           "method": "GET",
           "resource_type": "image",
           "url": "https://delivery.adrecover.com/block.jpg",
@@ -2148,7 +2283,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2403,
+          "t_ms": 1901,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://aax.amazon-adsystem.com/e/dtb/bid/54689.54/0/prebid",
@@ -2162,17 +2297,7 @@
           }
         },
         {
-          "t_ms": 2431,
-          "method": "GET",
-          "resource_type": "document",
-          "url": "https://cmpv2.independent.co.uk/index.html",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 2536,
+          "t_ms": 1905,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://cmpv2.independent.co.uk/Notice.1c267.css",
@@ -2182,7 +2307,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2540,
+          "t_ms": 1911,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/polyfills.01516.js",
@@ -2192,7 +2317,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2543,
+          "t_ms": 1915,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/Notice.97af9.js",
@@ -2202,7 +2327,21 @@
           "tracker": null
         },
         {
-          "t_ms": 2629,
+          "t_ms": 1920,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://geo.privacymanager.io/",
+          "host": "geo.privacymanager.io",
+          "domain": "privacymanager.io",
+          "party": "third",
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2076,
           "method": "GET",
           "resource_type": "script",
           "url": "https://script.crazyegg.com/pages/scripts/0131/9866.js",
@@ -2212,17 +2351,21 @@
           "tracker": null
         },
         {
-          "t_ms": 2633,
+          "t_ms": 2080,
           "method": "GET",
           "resource_type": "script",
           "url": "https://pub.doubleverify.com/dvtag/34448457/DV1395182/pub.js",
           "host": "pub.doubleverify.com",
           "domain": "doubleverify.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 2638,
+          "t_ms": 2083,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtag/js",
@@ -2236,7 +2379,7 @@
           }
         },
         {
-          "t_ms": 2642,
+          "t_ms": 2087,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://pagead2.googlesyndication.com/ccm/collect",
@@ -2250,27 +2393,7 @@
           }
         },
         {
-          "t_ms": 2668,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://code.jquery.com/jquery-3.7.1.min.js",
-          "host": "code.jquery.com",
-          "domain": "jquery.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2675,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.independent.co.uk/Agent/GA/UniversalID/IIQUniversalID.js",
-          "host": "www.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 2774,
+          "t_ms": 2165,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
@@ -2280,17 +2403,139 @@
           "tracker": null
         },
         {
-          "t_ms": 2833,
+          "t_ms": 2196,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://code.jquery.com/jquery-3.7.1.min.js",
+          "host": "code.jquery.com",
+          "domain": "jquery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2218,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pub.doubleverify.com/dvtag/signals/ids/pub.json",
+          "host": "pub.doubleverify.com",
+          "domain": "doubleverify.com",
+          "party": "third",
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2222,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pub.doubleverify.com/dvtag/signals/bsc/pub.json",
+          "host": "pub.doubleverify.com",
+          "domain": "doubleverify.com",
+          "party": "third",
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2228,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
+          "host": "spellknight.com",
+          "domain": "spellknight.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2264,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2304,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2310,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2314,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2343,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.independent.co.uk/Agent/GA/UniversalID/IIQUniversalID.js",
+          "host": "www.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2363,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://script.crazyegg.com/pages/data-scripts/0131/9866/site/www.independent.co.uk.json",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2467,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://script.crazyegg.com/pages/versioned/common-scripts/b96c449137f00bb6dd6811619f89660f.js",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2509,
           "method": "GET",
           "resource_type": "script",
           "url": "https://uk-script.dotmetrics.net/door.js",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 2844,
+          "t_ms": 2513,
           "method": "GET",
           "resource_type": "script",
           "url": "https://static.chartbeat.com/js/chartbeat_video.js",
@@ -2304,7 +2549,7 @@
           }
         },
         {
-          "t_ms": 2848,
+          "t_ms": 2516,
           "method": "GET",
           "resource_type": "script",
           "url": "https://static.chartbeat.com/js/chartbeat_mab.js",
@@ -2318,7 +2563,7 @@
           }
         },
         {
-          "t_ms": 2852,
+          "t_ms": 2519,
           "method": "GET",
           "resource_type": "script",
           "url": "https://5d79bce7-5d2b-427e-a6c4-b89b6c7bf048.edge.permutive.app/8a36876c-0af1-446c-b4da-51399e9ee198-web.js",
@@ -2332,27 +2577,7 @@
           }
         },
         {
-          "t_ms": 2873,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://pub.doubleverify.com/dvtag/signals/ids/pub.json",
-          "host": "pub.doubleverify.com",
-          "domain": "doubleverify.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2876,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://pub.doubleverify.com/dvtag/signals/bsc/pub.json",
-          "host": "pub.doubleverify.com",
-          "domain": "doubleverify.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2880,
+          "t_ms": 2525,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
@@ -2362,7 +2587,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2908,
+          "t_ms": 2549,
           "method": "GET",
           "resource_type": "image",
           "url": "https://delivery.adrecover.com/block.jpg",
@@ -2372,71 +2597,17 @@
           "tracker": null
         },
         {
-          "t_ms": 3075,
+          "t_ms": 2614,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3114,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
+          "resource_type": "xhr",
+          "url": "https://script.crazyegg.com/pages/data-scripts/0131/9866/sampling/www.independent.co.uk.json",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 3119,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3123,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3147,
-          "method": "POST",
-          "resource_type": "fetch",
-          "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
-          "host": "spellknight.com",
-          "domain": "spellknight.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3179,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://ping.chartbeat.net/ping",
-          "host": "ping.chartbeat.net",
-          "domain": "chartbeat.net",
-          "party": "third",
-          "tracker": {
-            "service": "chartbeat.net",
-            "entity": "Chartbeat",
-            "category": "analytics"
-          }
-        },
-        {
-          "t_ms": 3228,
+          "t_ms": 2637,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://mab.chartbeat.com/mab_strategy/headline_testing/get_strategy/",
@@ -2450,51 +2621,49 @@
           }
         },
         {
-          "t_ms": 3307,
+          "t_ms": 2672,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ping.chartbeat.net/ping",
+          "host": "ping.chartbeat.net",
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2691,
           "method": "GET",
           "resource_type": "image",
           "url": "https://uk-script.dotmetrics.net/hit.gif",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 3311,
+          "t_ms": 2694,
           "method": "GET",
           "resource_type": "image",
           "url": "https://rm-script.dotmetrics.net/hit.gif",
           "host": "rm-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3315,
-          "method": "GET",
-          "resource_type": "other",
-          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610010101/gpt",
-          "host": "securepubads.g.doubleclick.net",
-          "domain": "doubleclick.net",
-          "party": "third",
           "tracker": {
-            "service": "doubleclick.net",
-            "entity": "Google",
-            "category": "advertising"
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
           }
         },
         {
-          "t_ms": 3408,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3440,
+          "t_ms": 2778,
           "method": "GET",
           "resource_type": "image",
           "url": "https://mabping.chartbeat.net/ping/mab",
@@ -2508,7 +2677,35 @@
           }
         },
         {
-          "t_ms": 3558,
+          "t_ms": 2800,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 2804,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610010101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2986,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -2522,7 +2719,7 @@
           }
         },
         {
-          "t_ms": 3576,
+          "t_ms": 3092,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtag/js",
@@ -2536,7 +2733,17 @@
           }
         },
         {
-          "t_ms": 8563,
+          "t_ms": 3622,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
+          "host": "spellknight.com",
+          "domain": "spellknight.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7982,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -2553,38 +2760,11 @@
       "internal_requests_blocked": [],
       "cookies": [
         {
-          "name": "_pc_subscriber_origin",
+          "name": "subscriber_origin",
           "domain": "independent.co.uk",
           "party": "first",
           "session": true,
           "secure": false,
-          "http_only": false,
-          "same_site": "Lax"
-        },
-        {
-          "name": "anon-session-id",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "session": true,
-          "secure": false,
-          "http_only": false,
-          "same_site": "Lax"
-        },
-        {
-          "name": "esi-uuid",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "session": false,
-          "secure": true,
-          "http_only": true,
-          "same_site": "Lax"
-        },
-        {
-          "name": "esi-permutive-id",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "session": true,
-          "secure": true,
           "http_only": false,
           "same_site": "Lax"
         },
@@ -2607,16 +2787,7 @@
           "same_site": "Lax"
         },
         {
-          "name": "feat__piano_use_vanity_domain",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "session": false,
-          "secure": true,
-          "http_only": false,
-          "same_site": "Lax"
-        },
-        {
-          "name": "subscriber_origin",
+          "name": "_pc_subscriber_origin",
           "domain": "independent.co.uk",
           "party": "first",
           "session": true,
@@ -2634,6 +2805,15 @@
           "same_site": "Lax"
         },
         {
+          "name": "feat__piano_use_vanity_domain",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
           "name": "feat__article_complete_tracking_commercial",
           "domain": "independent.co.uk",
           "party": "first",
@@ -2643,7 +2823,43 @@
           "same_site": "Lax"
         },
         {
+          "name": "esi-uuid",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax"
+        },
+        {
+          "name": "esi-permutive-id",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "anon-session-id",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
           "name": "_sp_su",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "_awl",
           "domain": "independent.co.uk",
           "party": "first",
           "session": false,
@@ -2659,15 +2875,6 @@
           "secure": false,
           "http_only": false,
           "same_site": "Lax"
-        },
-        {
-          "name": "_awl",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "session": false,
-          "secure": true,
-          "http_only": false,
-          "same_site": "None"
         },
         {
           "name": "_cb",
@@ -2695,6 +2902,15 @@
           "secure": true,
           "http_only": false,
           "same_site": "Lax"
+        },
+        {
+          "name": "_ce.s",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Strict"
         },
         {
           "name": "_t_tests",
@@ -2737,7 +2953,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 126,
+          "t_ms": 107,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.independent.co.uk/",
@@ -2747,47 +2963,47 @@
           "tracker": null
         },
         {
-          "t_ms": 565,
+          "t_ms": 449,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Medium.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 570,
+          "t_ms": 452,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Medium-Italic.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 575,
+          "t_ms": 459,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 579,
+          "t_ms": 462,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 582,
+          "t_ms": 465,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/13/11/Membership-6-months-1-panel.png",
@@ -2797,7 +3013,7 @@
           "tracker": null
         },
         {
-          "t_ms": 587,
+          "t_ms": 468,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/8/28/Climate.png",
@@ -2807,7 +3023,7 @@
           "tracker": null
         },
         {
-          "t_ms": 591,
+          "t_ms": 470,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/04/22/15/37/ipp1111111iStock-470032072-copy.jpeg",
@@ -2817,7 +3033,7 @@
           "tracker": null
         },
         {
-          "t_ms": 595,
+          "t_ms": 476,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/10/399c2ce572be5b0cf80ace50973791b5Y29udGVudHNlYXJjaGFwaSwxNzkxMTkzNDE5-2.86063325.jpg",
@@ -2827,7 +3043,7 @@
           "tracker": null
         },
         {
-          "t_ms": 598,
+          "t_ms": 480,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/bombora-rtvi.c55cfd7ec8369c06269f.js",
@@ -2837,7 +3053,7 @@
           "tracker": null
         },
         {
-          "t_ms": 602,
+          "t_ms": 483,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/sourcepoint.59b79d316191e01a6d03.js",
@@ -2847,7 +3063,7 @@
           "tracker": null
         },
         {
-          "t_ms": 607,
+          "t_ms": 487,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/iPhone+In+the+Room.png",
@@ -2857,7 +3073,7 @@
           "tracker": null
         },
         {
-          "t_ms": 700,
+          "t_ms": 564,
           "method": "GET",
           "resource_type": "script",
           "url": "https://assets.monetizationos.com/web-components-latest.js",
@@ -2867,7 +3083,7 @@
           "tracker": null
         },
         {
-          "t_ms": 704,
+          "t_ms": 576,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/init-firebase.edc3a345679a909c3b82.js",
@@ -2877,7 +3093,7 @@
           "tracker": null
         },
         {
-          "t_ms": 714,
+          "t_ms": 582,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/react-archipelago.54c63b49c811e10e41e0.js",
@@ -2887,7 +3103,7 @@
           "tracker": null
         },
         {
-          "t_ms": 721,
+          "t_ms": 585,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/react-components-base.390d46b11a7a575a6b8f.js",
@@ -2897,7 +3113,7 @@
           "tracker": null
         },
         {
-          "t_ms": 726,
+          "t_ms": 589,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/unified/wrapperMessagingWithoutDetection.js",
@@ -2907,7 +3123,7 @@
           "tracker": null
         },
         {
-          "t_ms": 736,
+          "t_ms": 599,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/analytics.0e9cbce725943a59311c.js",
@@ -2917,7 +3133,7 @@
           "tracker": null
         },
         {
-          "t_ms": 740,
+          "t_ms": 602,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/bombora.1dc413d60532888edfa0.js",
@@ -2927,7 +3143,7 @@
           "tracker": null
         },
         {
-          "t_ms": 750,
+          "t_ms": 608,
           "method": "GET",
           "resource_type": "script",
           "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
@@ -2941,17 +3157,21 @@
           }
         },
         {
-          "t_ms": 769,
+          "t_ms": 614,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ats-wrapper.privacymanager.io/ats-modules/203e3874-5877-45ec-a8d4-5beaa84bab40/ats.js",
           "host": "ats-wrapper.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 774,
+          "t_ms": 617,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/main.87b0eb1ac67c84058af1.js",
@@ -2961,7 +3181,7 @@
           "tracker": null
         },
         {
-          "t_ms": 778,
+          "t_ms": 627,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/section.86ebcfe276c3871ccc3b.js",
@@ -2971,7 +3191,7 @@
           "tracker": null
         },
         {
-          "t_ms": 782,
+          "t_ms": 631,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/braze-user-bundle.39e7d27069824f9fde98.js",
@@ -2981,7 +3201,7 @@
           "tracker": null
         },
         {
-          "t_ms": 786,
+          "t_ms": 635,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/iPhone+Harry+article.png",
@@ -2991,7 +3211,7 @@
           "tracker": null
         },
         {
-          "t_ms": 790,
+          "t_ms": 642,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/static-assets/images/MOS+prompts/Independent+Membership+White.png",
@@ -3001,7 +3221,7 @@
           "tracker": null
         },
         {
-          "t_ms": 794,
+          "t_ms": 649,
           "method": "GET",
           "resource_type": "script",
           "url": "https://vi.ml314.com/get",
@@ -3011,7 +3231,7 @@
           "tracker": null
         },
         {
-          "t_ms": 798,
+          "t_ms": 658,
           "method": "GET",
           "resource_type": "script",
           "url": "https://spellknight.com/build/r4uaun_sooo0e.min.js",
@@ -3021,27 +3241,27 @@
           "tracker": null
         },
         {
-          "t_ms": 802,
+          "t_ms": 760,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Regular.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1002,
+          "t_ms": 863,
           "method": "GET",
           "resource_type": "font",
           "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
           "host": "assets.the-independent.com",
           "domain": "the-independent.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1012,
+          "t_ms": 867,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/01/20/11/Anne-McElvoy-byline.jpg",
@@ -3051,7 +3271,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1018,
+          "t_ms": 875,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/24/7/23/james-moore-byline-new.png",
@@ -3061,7 +3281,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1033,
+          "t_ms": 879,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/12/17/Lucy-Fox-byline.png",
@@ -3071,7 +3291,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1037,
+          "t_ms": 882,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/02/14/2250949142..",
@@ -3081,7 +3301,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1042,
+          "t_ms": 886,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/13/02/The-Tucker-Carlson-ShowYouTube-Jacob-Rees-Mogg.png",
@@ -3091,7 +3311,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1047,
+          "t_ms": 890,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/03/18/2026-10-03T171837Z_2123307095_UP1EMA31C2ZDU_RTRMADP_3_SOCCER-UEFANATIONS-CRO-ENG.JPG",
@@ -3101,7 +3321,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1051,
+          "t_ms": 895,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/9/20/War.jpg",
@@ -3111,7 +3331,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1054,
+          "t_ms": 900,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2025/04/09/15/48/iStock-1424526566.jpeg",
@@ -3121,7 +3341,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1061,
+          "t_ms": 906,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.independent.co.uk/2026/09/28/11/2026-09-27T201156Z_138181953_UP1EM9R1K3VQQ_RTRMADP_3_SOCCER-UEFANATIONS-ISR-IRL.JPG",
+          "host": "static.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 913,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/14/15/8ecedd64e384bb9f3703d118b1f3fbbdY29udGVudHNlYXJjaGFwaSwxNzg5NDgyODA5-2.85853739.jpg",
@@ -3131,7 +3361,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1065,
+          "t_ms": 916,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/04/09/2026-10-04T081910Z_1219093370_UP1EMA40N3WWW_RTRMADP_3_MOTOR-F1-BAHRAIN.JPG",
@@ -3141,17 +3371,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1069,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.independent.co.uk/2026/09/23/13/24/Image-Sep-23-2026-02_20_54-PM.png",
-          "host": "static.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1079,
+          "t_ms": 920,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/08/12/15/04/1235-x-500.jpeg",
@@ -3161,7 +3381,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1085,
+          "t_ms": 927,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.independent.co.uk/2026/09/20/12/01M2X60H8GE9M8A7AMETTRCP3N.jpg",
+          "host": "static.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 931,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/07/08/08/49057f5f5af16c379f474b19ec66ba3dY29udGVudHNlYXJjaGFwaSwxNzgzNTgwMzY1-2.8058616.jpg",
@@ -3171,7 +3401,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1095,
+          "t_ms": 936,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/25/10/2296388925..",
@@ -3181,17 +3411,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1099,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.independent.co.uk/2026/09/09/10/2222177864..",
-          "host": "static.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1103,
+          "t_ms": 952,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/09/29/13/12/Kayaking-in-Aurlandsfjord-in-the-Norwegian-fjords.jpeg",
@@ -3201,7 +3421,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1119,
+          "t_ms": 961,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.independent.co.uk/2026/10/01/13/2297899736..",
@@ -3211,17 +3431,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1628,
-          "method": "POST",
-          "resource_type": "fetch",
-          "url": "https://www.independent.co.uk/mos-endpoints/record-homepage-popup",
-          "host": "www.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1659,
+          "t_ms": 1488,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.independent.co.uk/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
@@ -3231,7 +3441,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1667,
+          "t_ms": 1492,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.independent.co.uk/mms/v2/get_site_data",
@@ -3241,7 +3451,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1671,
+          "t_ms": 1495,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtm.js",
@@ -3255,10 +3465,10 @@
           }
         },
         {
-          "t_ms": 1701,
+          "t_ms": 1525,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609300101/pubads_impl.js",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609290101/pubads_impl.js",
           "host": "securepubads.g.doubleclick.net",
           "domain": "doubleclick.net",
           "party": "third",
@@ -3269,17 +3479,21 @@
           }
         },
         {
-          "t_ms": 1745,
+          "t_ms": 1569,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://geo.privacymanager.io/",
           "host": "geo.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 1786,
+          "t_ms": 1602,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/ga4-shared-event-handlers.9762c94b9ab6edfdd0b6.js",
@@ -3289,7 +3503,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1791,
+          "t_ms": 1608,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.independent.co.uk/_build/ga4-section-event-handlers.cb9672e814bbc18395a5.js",
@@ -3299,7 +3513,57 @@
           "tracker": null
         },
         {
-          "t_ms": 1954,
+          "t_ms": 1627,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://www.independent.co.uk/mos-endpoints/record-homepage-popup",
+          "host": "www.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1648,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmpv2.independent.co.uk/wrapper/v2/meta-data",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1818,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmpv2.independent.co.uk/wrapper/v2/messages",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1886,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cmpv2.independent.co.uk/index.html",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1902,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.npttech.com/advertising.js",
+          "host": "www.npttech.com",
+          "domain": "npttech.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1928,
           "method": "GET",
           "resource_type": "script",
           "url": "https://delivery.adrecover.com/49102/adRecover.js",
@@ -3309,7 +3573,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1960,
+          "t_ms": 1932,
           "method": "GET",
           "resource_type": "image",
           "url": "https://delivery.adrecover.com/block.jpg",
@@ -3319,7 +3583,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1964,
+          "t_ms": 1936,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://aax.amazon-adsystem.com/e/dtb/bid/54689.54/0/prebid",
@@ -3333,71 +3597,51 @@
           }
         },
         {
-          "t_ms": 1984,
+          "t_ms": 1943,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.npttech.com/advertising.js",
-          "host": "www.npttech.com",
-          "domain": "npttech.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1988,
-          "method": "GET",
-          "resource_type": "other",
-          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610010101/gpt",
-          "host": "securepubads.g.doubleclick.net",
-          "domain": "doubleclick.net",
-          "party": "third",
-          "tracker": {
-            "service": "doubleclick.net",
-            "entity": "Google",
-            "category": "advertising"
-          }
-        },
-        {
-          "t_ms": 2055,
-          "method": "GET",
-          "resource_type": "xhr",
-          "url": "https://cmpv2.independent.co.uk/wrapper/v2/meta-data",
+          "resource_type": "stylesheet",
+          "url": "https://cmpv2.independent.co.uk/Notice.1c267.css",
           "host": "cmpv2.independent.co.uk",
           "domain": "independent.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2097,
+          "t_ms": 1947,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.independent.co.uk/polyfills.01516.js",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1958,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.independent.co.uk/Notice.97af9.js",
+          "host": "cmpv2.independent.co.uk",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1963,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://geo.privacymanager.io/",
           "host": "geo.privacymanager.io",
           "domain": "privacymanager.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 2265,
-          "method": "GET",
-          "resource_type": "xhr",
-          "url": "https://cmpv2.independent.co.uk/wrapper/v2/messages",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 2269,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://code.jquery.com/jquery-3.7.1.min.js",
-          "host": "code.jquery.com",
-          "domain": "jquery.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2412,
+          "t_ms": 2143,
           "method": "GET",
           "resource_type": "script",
           "url": "https://script.crazyegg.com/pages/scripts/0131/9866.js",
@@ -3407,17 +3651,21 @@
           "tracker": null
         },
         {
-          "t_ms": 2419,
+          "t_ms": 2147,
           "method": "GET",
           "resource_type": "script",
           "url": "https://pub.doubleverify.com/dvtag/34448457/DV1395182/pub.js",
           "host": "pub.doubleverify.com",
           "domain": "doubleverify.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 2430,
+          "t_ms": 2150,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtag/js",
@@ -3431,7 +3679,7 @@
           }
         },
         {
-          "t_ms": 2456,
+          "t_ms": 2154,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://pagead2.googlesyndication.com/ccm/collect",
@@ -3445,27 +3693,45 @@
           }
         },
         {
-          "t_ms": 2468,
+          "t_ms": 2253,
           "method": "GET",
-          "resource_type": "document",
-          "url": "https://cmpv2.independent.co.uk/index.html",
+          "resource_type": "fetch",
+          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
           "host": "cmpv2.independent.co.uk",
           "domain": "independent.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2471,
+          "t_ms": 2274,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.independent.co.uk/Agent/GA/UniversalID/IIQUniversalID.js",
-          "host": "www.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
+          "resource_type": "fetch",
+          "url": "https://pub.doubleverify.com/dvtag/signals/ids/pub.json",
+          "host": "pub.doubleverify.com",
+          "domain": "doubleverify.com",
+          "party": "third",
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 2482,
+          "t_ms": 2278,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pub.doubleverify.com/dvtag/signals/bsc/pub.json",
+          "host": "pub.doubleverify.com",
+          "domain": "doubleverify.com",
+          "party": "third",
+          "tracker": {
+            "service": "doubleverify.com",
+            "entity": "DoubleVerify",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2281,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
@@ -3475,47 +3741,61 @@
           "tracker": null
         },
         {
-          "t_ms": 2521,
-          "method": "GET",
-          "resource_type": "stylesheet",
-          "url": "https://cmpv2.independent.co.uk/Notice.1c267.css",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 2525,
+          "t_ms": 2289,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://cmpv2.independent.co.uk/polyfills.01516.js",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
+          "url": "https://code.jquery.com/jquery-3.7.1.min.js",
+          "host": "code.jquery.com",
+          "domain": "jquery.com",
+          "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 2529,
+          "t_ms": 2293,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://cmpv2.independent.co.uk/Notice.97af9.js",
-          "host": "cmpv2.independent.co.uk",
+          "url": "https://www.independent.co.uk/Agent/GA/UniversalID/IIQUniversalID.js",
+          "host": "www.independent.co.uk",
           "domain": "independent.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2616,
+          "t_ms": 2310,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://script.crazyegg.com/pages/data-scripts/0131/9866/site/www.independent.co.uk.json",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2467,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://script.crazyegg.com/pages/versioned/common-scripts/b96c449137f00bb6dd6811619f89660f.js",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2543,
           "method": "GET",
           "resource_type": "script",
           "url": "https://uk-script.dotmetrics.net/door.js",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 2619,
+          "t_ms": 2547,
           "method": "GET",
           "resource_type": "script",
           "url": "https://static.chartbeat.com/js/chartbeat_video.js",
@@ -3529,7 +3809,7 @@
           }
         },
         {
-          "t_ms": 2624,
+          "t_ms": 2551,
           "method": "GET",
           "resource_type": "script",
           "url": "https://static.chartbeat.com/js/chartbeat_mab.js",
@@ -3543,7 +3823,7 @@
           }
         },
         {
-          "t_ms": 2628,
+          "t_ms": 2554,
           "method": "GET",
           "resource_type": "script",
           "url": "https://5d79bce7-5d2b-427e-a6c4-b89b6c7bf048.edge.permutive.app/8a36876c-0af1-446c-b4da-51399e9ee198-web.js",
@@ -3557,47 +3837,7 @@
           }
         },
         {
-          "t_ms": 2650,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://delivery.adrecover.com/block.jpg",
-          "host": "delivery.adrecover.com",
-          "domain": "adrecover.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2779,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://pub.doubleverify.com/dvtag/signals/ids/pub.json",
-          "host": "pub.doubleverify.com",
-          "domain": "doubleverify.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2784,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://pub.doubleverify.com/dvtag/signals/bsc/pub.json",
-          "host": "pub.doubleverify.com",
-          "domain": "doubleverify.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2794,
-          "method": "POST",
-          "resource_type": "fetch",
-          "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
-          "host": "spellknight.com",
-          "domain": "spellknight.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2990,
+          "t_ms": 2578,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
@@ -3607,7 +3847,67 @@
           "tracker": null
         },
         {
-          "t_ms": 3039,
+          "t_ms": 2619,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2625,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2629,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
+          "host": "assets.the-independent.com",
+          "domain": "the-independent.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2684,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://spellknight.com/lc1wjm24qggcnvam_p118xgpi",
+          "host": "spellknight.com",
+          "domain": "spellknight.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2695,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://delivery.adrecover.com/block.jpg",
+          "host": "delivery.adrecover.com",
+          "domain": "adrecover.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2790,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://script.crazyegg.com/pages/data-scripts/0131/9866/sampling/www.independent.co.uk.json",
+          "host": "script.crazyegg.com",
+          "domain": "crazyegg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2818,
           "method": "GET",
           "resource_type": "image",
           "url": "https://ping.chartbeat.net/ping",
@@ -3621,7 +3921,7 @@
           }
         },
         {
-          "t_ms": 3054,
+          "t_ms": 2831,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://mab.chartbeat.com/mab_strategy/headline_testing/get_strategy/",
@@ -3635,91 +3935,35 @@
           }
         },
         {
-          "t_ms": 3062,
+          "t_ms": 2842,
           "method": "GET",
           "resource_type": "image",
           "url": "https://uk-script.dotmetrics.net/hit.gif",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 3065,
+          "t_ms": 2846,
           "method": "GET",
           "resource_type": "image",
           "url": "https://rm-script.dotmetrics.net/hit.gif",
           "host": "rm-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3153,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://cmpv2.independent.co.uk/consent/tcfv2/vendor-list/categories",
-          "host": "cmpv2.independent.co.uk",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3199,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Serif-Bold.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3203,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Regular.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3208,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://assets.the-independent.com/fonts/Independent-Sans-Medium.woff2",
-          "host": "assets.the-independent.com",
-          "domain": "the-independent.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3213,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3218,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://mabping.chartbeat.net/ping/mab",
-          "host": "mabping.chartbeat.net",
-          "domain": "chartbeat.net",
-          "party": "third",
           "tracker": {
-            "service": "chartbeat.net",
-            "entity": "Chartbeat",
-            "category": "analytics"
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
           }
         },
         {
-          "t_ms": 3411,
+          "t_ms": 2934,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -3733,7 +3977,77 @@
           }
         },
         {
-          "t_ms": 3637,
+          "t_ms": 2948,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://mabping.chartbeat.net/ping/mab",
+          "host": "mabping.chartbeat.net",
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2952,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 2957,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610010101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3242,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pagead2.googlesyndication.com/pagead/ping",
+          "host": "pagead2.googlesyndication.com",
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3263,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pubads.g.doubleclick.net/gampad/ads",
+          "host": "pubads.g.doubleclick.net",
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3281,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtag/js",
@@ -3747,7 +4061,7 @@
           }
         },
         {
-          "t_ms": 8412,
+          "t_ms": 7933,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -3863,15 +4177,6 @@
           "same_site": "None"
         },
         {
-          "name": "__adblocker",
-          "domain": "independent.co.uk",
-          "party": "first",
-          "session": false,
-          "secure": false,
-          "http_only": false,
-          "same_site": "Lax"
-        },
-        {
           "name": "_awl",
           "domain": "independent.co.uk",
           "party": "first",
@@ -3879,6 +4184,15 @@
           "secure": true,
           "http_only": false,
           "same_site": "None"
+        },
+        {
+          "name": "__adblocker",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
         },
         {
           "name": "_cb",
@@ -3906,6 +4220,15 @@
           "secure": true,
           "http_only": false,
           "same_site": "Lax"
+        },
+        {
+          "name": "_ce.s",
+          "domain": "independent.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Strict"
         },
         {
           "name": "_t_tests",

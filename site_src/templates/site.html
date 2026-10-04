@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ s.name }}{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <p class="small"><a href="{{ root }}index.html">&larr; All sites</a></p>
+    <h1>{{ s.name }}</h1>
+    <p class="small">{{ s.url }} · measured {{ date }} from {{ vantage }} · {{ s.group }}{% if s.kind == 'sports' %} · sports{% endif %}</p>
+
+    {% if s.status != 'ok' %}
+      <div class="note">{{ s.status_text }}</div>
+    {% else %}
+      {% if s.confidence != 'high' %}<div class="note">Only {{ s.passes_ok }} of {{ s.passes_total }} passes could be measured. Figures are {{ 'medians of the passes that worked' if s.confidence == 'medium' else 'indicative only' }}.</div>{% endif %}
+      <div class="facts">
+        <div class="fact"><b>{{ s.tracking }}</b><span>tracking services contacted{% if s.band %} · band {{ s.band }}{% endif %}</span></div>
+        <div class="fact"><b>{{ s.domains }}</b><span>third-party domains</span></div>
+        <div class="fact"><b>{{ s.requests }}</b><span>third-party requests</span></div>
+        <div class="fact"><b>{{ s.cookies_third }}</b><span>third-party cookies ({{ s.cookies_total }} in total)</span></div>
+      </div>
+
+      <h2>What we measured</h2>
+      {% for f in s.findings %}
+        <div class="finding {{ f.severity }}">{{ f.text }}</div>
+      {% endfor %}
+
+      <h2>Comparison with last week</h2>
+      {% if s.diff is none %}
+        <p>This is the first measurement of this site, so there is nothing to compare yet.</p>
+      {% elif not s.diff.comparable %}
+        <p>Not comparable: {{ s.diff.reasons|join('; ') }}.</p>
+      {% elif not s.diff.notable and not s.diff.added_domains and not s.diff.removed_domains %}
+        <p>No stable change in tracking services or third-party domains.</p>
+      {% else %}
+        <ul>
+          {% for x in s.diff.added_tracking_services %}<li>Added tracking service: <b>{{ x.service }}</b> ({{ x.entity }}, {{ x.category|replace('_', ' ') }})</li>{% endfor %}
+          {% for x in s.diff.removed_tracking_services %}<li>No longer seen: <b>{{ x.service }}</b></li>{% endfor %}
+          {% for d in s.diff.added_domains %}<li>New third-party domain: {{ d }}</li>{% endfor %}
+          {% for d in s.diff.removed_domains %}<li>Third-party domain no longer seen: {{ d }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+
+      <h2>Third-party domains</h2>
+      <p class="sub">Only changes seen in most passes count as stable. “Unclassified” means the domain is not in our list, not that it is harmless.</p>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr><th>Domain</th><th>Service</th><th>Category</th><th class="num">Passes seen</th></tr></thead>
+          <tbody>
+          {% for d in s.domain_rows %}
+            <tr><td>{{ d.domain }}</td><td>{{ d.entity or 'Unclassified' }}</td><td>{{ (d.category or '')|replace('_', ' ') }}</td><td class="num">{{ d.passes_seen }}/{{ s.passes_ok }}</td></tr>
+          {% else %}
+            <tr><td colspan="4">No third-party domains were contacted.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if s.observations %}
+      <h2>Script behaviour recorded</h2>
+      <p class="sub">APIs that can be used for tracking, with the domain of the script that called them. They are also used for legitimate purposes.</p>
+      <ul>{% for o in s.observations %}<li>{{ o.kind|replace('_', ' ') }} — {{ o.script_domain or 'unknown script' }} ({{ o.party }} party)</li>{% endfor %}</ul>
+      {% endif %}
+    {% endif %}
+
+    <h2>History</h2>
+    <div class="table-scroll">
+      <table class="t">
+        <thead><tr><th>Date</th><th>Measured from</th><th>Status</th><th class="num">Tracking services</th></tr></thead>
+        <tbody>
+        {% for h in s.history %}
+          <tr><td>{{ h.date }}</td><td>{{ h.vantage }}</td><td>{{ h.status }}</td><td class="num">{{ h.tracking if h.tracking is not none else '–' }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Raw report: <a href="{{ root }}data/{{ date }}/{{ s.stem }}.json">JSON</a></p>
+  </div>
+</section>
+{% endblock %}

@@ -32,6 +32,13 @@ def build_findings(summary: dict, measurement: dict) -> list[dict]:
             f"The site did not serve the page to the automated browser (HTTP {summary['http_status']}). "
             "No further measurements were taken.", {"http_status": summary["http_status"]}))
         return findings
+    if status == "incomplete":
+        findings.append(_finding(
+            "MEASUREMENT_INCOMPLETE", "info",
+            "The page did not finish loading in the automated browser (it may have served a challenge or "
+            f"interstitial page): {summary.get('error')}. No figures are reported.",
+            {"error": summary.get("error")}))
+        return findings
     if status != "ok":
         findings.append(_finding(
             "MEASUREMENT_ERROR", "info",
@@ -40,6 +47,14 @@ def build_findings(summary: dict, measurement: dict) -> list[dict]:
 
     window = measurement["observe_seconds"]
     metrics = summary["metrics"]
+    if summary["confidence"] != "high":
+        failed = ", ".join(f"{n} {s}" for s, n in summary["failed_passes"].items())
+        findings.append(_finding(
+            "LOW_CONFIDENCE", "notable" if summary["confidence"] == "low" else "info",
+            f"Only {summary['passes_ok']} of {summary['passes_total']} passes could be measured ({failed}). "
+            + ("The figures come from a minority of passes and are indicative only."
+               if summary["confidence"] == "low" else "Figures are medians of the passes that worked."),
+            {"confidence": summary["confidence"], "failed_passes": summary["failed_passes"]}))
     findings.append(_finding(
         "THIRD_PARTY_REQUESTS", "info",
         f"During a {window:g}-second window with no user interaction, the page made "

@@ -6,6 +6,7 @@ import json
 import os
 import re
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -41,6 +42,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="extra first-party domain for the URLs given on the command line (repeatable)")
     parser.add_argument("--passes", type=int, default=3, help="passes per site (default 3)")
     parser.add_argument("--observe", type=float, default=12.0, help="observation window in seconds (default 12)")
+    parser.add_argument("--min-requests", type=int, default=5,
+                        help="a pass with fewer requests is marked 'incomplete' (default 5)")
+    parser.add_argument("--pause", type=float, default=3.0,
+                        help="seconds between passes and between sites (default 3)")
     parser.add_argument("--out", default="data/runs", help="output directory (default data/runs)")
     parser.add_argument("--vantage", default=os.environ.get("TRACEGUARD_VANTAGE", "unspecified"),
                         help="where the scan runs, e.g. github-actions-us (recorded in the report)")
@@ -62,13 +67,20 @@ def main(argv: list[str] | None = None) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     rejected = 0
-    for site in sites:
+    for index, site in enumerate(sites):
+        if index:
+            time.sleep(args.pause)
         try:
             report = scan_site(site["url"], name=site["name"], first_party_domains=site["first_party_domains"],
-                               passes=args.passes, observe_seconds=args.observe, vantage=args.vantage,
+                               passes=args.passes, observe_seconds=args.observe,
+                               min_requests=args.min_requests, pause_seconds=args.pause, vantage=args.vantage,
                                locale=args.locale, timezone=args.timezone, tracker_list=tracker_list)
         except UnsafeURL as exc:
             print(f"REJECTED {site['url']}: {exc}", file=sys.stderr)
+            rejected += 1
+            continue
+        except Exception as exc:  # one failing site must not abort the whole batch
+            print(f"FAILED {site['url']}: {type(exc).__name__}: {exc}", file=sys.stderr)
             rejected += 1
             continue
         path = out_dir / f"{_slug(report['site']['url'])}.json"

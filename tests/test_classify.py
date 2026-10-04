@@ -19,6 +19,15 @@ def test_tracker_lookup_longest_suffix_wins():
     assert trackers.lookup("example.com") is None
 
 
+def test_domains_verified_from_the_first_scan_are_classified():
+    trackers = TrackerList.load()
+    assert trackers.lookup("pixel.dotmetrics.net")["category"] == "audience_measurement"
+    assert trackers.lookup("cdn.privacy-mgmt.com")["category"] == "consent_management"
+    assert trackers.lookup("tags.tiqcdn.com")["category"] == "tag_manager"
+    assert trackers.lookup("cdn.tinypass.com")["category"] == "paywall"
+    assert not trackers.is_tracking("paywall")
+
+
 def test_tracking_categories_exclude_tag_managers_and_consent_tools():
     trackers = TrackerList.load()
     assert trackers.is_tracking("advertising")

@@ -1,9 +1,10 @@
-# DRAFT: never run yet. Weekly scan of the outlet list; commits the JSON reports so the
-# repository keeps the history. It does not publish anything to Bluesky or Mastodon.
+# Weekly scan of the outlet list. Commits the JSON reports (history), builds the site and, only when
+# the repository variable PUBLISH_SITE is "true", publishes it to the public repo joseasenjo/tracker-watch-site.
+# It never posts to Bluesky or Mastodon.
 name: weekly-scan
 
 on:
-  # Schedule disabled until a manual run (Actions tab > weekly-scan > Run workflow) has been checked.
+  # Schedule stays disabled until one manual run (Actions tab > weekly-scan > Run workflow) has been checked.
   # schedule:
   #   - cron: "0 5 * * 1"   # Mondays 05:00 UTC; scheduled runs can start a few minutes late
   workflow_dispatch:
@@ -18,6 +19,10 @@ permissions:
 concurrency:
   group: weekly-scan
   cancel-in-progress: false
+
+env:
+  SITE_REPO: joseasenjo/tracker-watch-site
+  SITE_URL: https://joseasenjo.github.io/tracker-watch-site/
 
 jobs:
   scan:
@@ -53,3 +58,37 @@ jobs:
           git add data/runs
           git diff --cached --quiet || git commit -m "scan: $(date -u +%F)"
           git push
+
+      - name: Build site
+        run: >
+          python -m traceguard.site data/runs --out site --sites-file data/sites.json
+          --base-url "$SITE_URL" --subscribe-url "${{ vars.SUBSCRIBE_URL }}"
+          --repo-url "https://github.com/joseasenjo/tracker-watch-site"
+          --contact-email "${{ vars.CONTACT_EMAIL }}" --linkedin-url "${{ vars.LINKEDIN_URL }}"
+          --author "${{ vars.AUTHOR_NAME }}" --next-scan "${{ vars.NEXT_SCAN }}"
+
+      - name: Keep the built site for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site
+          retention-days: 14
+
+      - name: Publish site to the public repository
+        if: ${{ vars.PUBLISH_SITE == 'true' }}
+        env:
+          SITE_DEPLOY_KEY: ${{ secrets.SITE_DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SITE_DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git clone "git@github.com:${SITE_REPO}.git" published
+          find published -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r site/. published/
+          touch published/.nojekyll
+          cd published
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || (git commit -m "site: $(date -u +%F)" && git push)

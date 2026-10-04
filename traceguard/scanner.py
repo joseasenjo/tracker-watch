@@ -75,7 +75,7 @@ def _now_ms(t0: float) -> int:
 
 
 def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: str, timezone: str,
-               observe_seconds: float, guard: HostGuard, classifier_factory) -> dict:
+               observe_seconds: float, min_requests: int, guard: HostGuard, classifier_factory) -> dict:
     run: dict = {
         "pass": number, "status": "ok", "http_status": None, "error": None,
         "final_url": None, "navigation_redirects": [],
@@ -86,6 +86,7 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
     context = browser.new_context(user_agent=user_agent, locale=locale, timezone_id=timezone,
                                   viewport={"width": 1366, "height": 768})
     t0 = time.monotonic()
+    recording = {"on": True}  # requests after the observation window are not recorded
     try:
         page = context.new_page()
         page.add_init_script(INIT_SCRIPT)
@@ -96,16 +97,19 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
                 parts = urlsplit(request.url)
                 if parts.scheme in ("http", "https") and parts.hostname:
                     if guard.verdict(parts.hostname) == "internal":
-                        run["internal_requests_blocked"].append(
-                            {"host": parts.hostname, "port": parts.port or (443 if parts.scheme == "https" else 80),
-                             "t_ms": _now_ms(t0)})
+                        if recording["on"]:
+                            run["internal_requests_blocked"].append(
+                                {"host": parts.hostname,
+                                 "port": parts.port or (443 if parts.scheme == "https" else 80),
+                                 "t_ms": _now_ms(t0)})
                         route.abort("blockedbyclient")
                         return
-                    run["requests"].append({
-                        "t_ms": _now_ms(t0), "method": request.method,
-                        "resource_type": request.resource_type,
-                        "url": strip_query(request.url), "host": parts.hostname.lower(),
-                    })
+                    if recording["on"]:
+                        run["requests"].append({
+                            "t_ms": _now_ms(t0), "method": request.method,
+                            "resource_type": request.resource_type,
+                            "url": strip_query(request.url), "host": parts.hostname.lower(),
+                        })
                 route.continue_()
             except Exception:
                 pass  # page closed while the request was in flight
@@ -162,6 +166,13 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
             return run
 
         page.wait_for_timeout(int(observe_seconds * 1000))
+        recording["on"] = False  # late requests would reach the report without being classified
+
+        if len(run["requests"]) < min_requests:
+            # A real page makes many requests; one or two usually means an interstitial or a challenge page.
+            run["status"] = "incomplete"
+            run["error"] = f"only {len(run['requests'])} request(s) observed (minimum {min_requests})"
+            return run
 
         try:
             run["storage_items"] = page.evaluate(
@@ -213,7 +224,8 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
 
 
 def scan_site(url: str, *, name: str | None = None, first_party_domains: Iterable[str] = (),
-              passes: int = 3, observe_seconds: float = 12.0, vantage: str = "unspecified",
+              passes: int = 3, observe_seconds: float = 12.0, min_requests: int = 5,
+              pause_seconds: float = 3.0, vantage: str = "unspecified",
               locale: str = "en-US", timezone: str = "UTC", tracker_list: TrackerList | None = None,
               resolver: Resolver = system_resolver, headless: bool = True) -> dict:
     """Scan one site `passes` times in fresh browser contexts and return the full report."""
@@ -234,11 +246,16 @@ def scan_site(url: str, *, name: str | None = None, first_party_domains: Iterabl
         try:
             browser_version = browser.version
             major = browser_version.split(".")[0]
+            # Plain "Chrome" token (some CDNs reject the default "HeadlessChrome" one and serve an error
+            # page) plus an explicit TraceGuard token, so the tool still identifies itself.
             user_agent = (f"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          f"HeadlessChrome/{major}.0.0.0 Safari/537.36 TraceGuard/{__version__}")
+                          f"Chrome/{major}.0.0.0 Safari/537.36 TraceGuard/{__version__}")
             for number in range(1, passes + 1):
+                if number > 1:
+                    time.sleep(pause_seconds)  # spacing requests avoids tripping rate limits
                 runs.append(_scan_pass(browser, target, number, user_agent=user_agent, locale=locale,
-                                       timezone=timezone, observe_seconds=observe_seconds, guard=guard,
+                                       timezone=timezone, observe_seconds=observe_seconds,
+                                       min_requests=min_requests, guard=guard,
                                        classifier_factory=classifier_factory))
         finally:
             browser.close()
@@ -246,6 +263,7 @@ def scan_site(url: str, *, name: str | None = None, first_party_domains: Iterabl
     measurement = {
         "vantage": vantage, "locale": locale, "timezone": timezone, "user_agent": user_agent,
         "browser": f"chromium {browser_version}", "passes": passes, "observe_seconds": observe_seconds,
+        "min_requests": min_requests, "pause_seconds": pause_seconds,
         "interaction": "none", "tracker_list": tracker_list.source,
     }
     site = {"name": name or (urlsplit(target).hostname or target), "url": target,

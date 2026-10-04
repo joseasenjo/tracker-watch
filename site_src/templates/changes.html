@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Changes{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Changes since last week</h1>
+    <p class="sub">Measurement of {{ date }}. Only changes seen in most passes are listed, so one-off ad rotation does not count.</p>
+    {% if not diffs %}
+      <div class="card">This is the first measurement, so there is nothing to compare yet.</div>
+    {% else %}
+      {% if notable %}
+        {% for d in notable %}
+        <div class="card">
+          <h3><a href="{{ root }}sites/{{ d.stem }}.html">{{ d.site }}</a></h3>
+          <ul>
+            {% for x in d.added_tracking_services %}<li>Added: <b>{{ x.service }}</b> ({{ x.entity }}, {{ x.category|replace('_', ' ') }})</li>{% endfor %}
+            {% for x in d.removed_tracking_services %}<li>No longer seen: <b>{{ x.service }}</b></li>{% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="card">No stable change in tracking services on the sites that could be compared.</div>
+      {% endif %}
+      {% if not_comparable %}
+        <p class="small">{{ not_comparable|length }} sites could not be compared with last week (different measurement conditions, or one of the two weeks could not be measured).</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

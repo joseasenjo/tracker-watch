@@ -16,6 +16,16 @@ python -m traceguard --sites-file data/sites.example.json
 
 One JSON report per site is written to `data/runs/<UTC date>/<site>.json`.
 
+## Other commands
+
+```bash
+python -m traceguard.diff data/runs                       # week-over-week changes (stable ones only)
+python -m traceguard.posts data/runs --platform bluesky --dry-run   # draft thread, never publishes
+python -m traceguard.site data/runs --out site --dashboard dashboard_local   # static site (English) + local Spanish dashboard
+```
+
+The site is static, makes no third-party requests and sets no cookies. `dashboard_local/` is an internal Spanish dashboard and must never be published. Bands (A 0–2, B 3–5, C 6–9, D 10–14, E 15+) are fixed ranges of the count of tracking services, not a verdict; see `traceguard/bands.py`. The workflow in `.github/workflows/weekly-scan.yml` scans, commits the reports and builds the site; it publishes only when the repository variable `PUBLISH_SITE` is `true`.
+
 ## What a scan does
 
 - Validates the URL first: http/https only, ports 80/443/8080/8443, no credentials, host must resolve to public addresses only. Requests the page makes to private or loopback addresses are blocked and recorded.
@@ -24,7 +34,7 @@ One JSON report per site is written to `data/runs/<UTC date>/<site>.json`.
 - Looks hosts up in a tracker list (`data/trackers.seed.json`: a small starter list, not audited).
 - Records script behaviour (canvas reads, geolocation requests, WebRTC connections, key listeners) together with the script's domain. These are observations, not accusations.
 - Never stores cookie values or URL query strings.
-- Identifies itself in the user agent (`HeadlessChrome ... TraceGuard/0.1.0`). No stealth or evasion. Sites that refuse the request are reported as `blocked`.
+- Identifies itself in the user agent (`Chrome/... Safari/537.36 TraceGuard/0.1.0`). The default `HeadlessChrome` token is dropped because some CDNs answer it with an error page (CNN does); the `TraceGuard` token stays. No stealth or evasion. Sites that refuse the request are reported as `blocked`; pages that serve an error page with HTTP 200 are reported as `incomplete`.
 
 ## Report layout
 

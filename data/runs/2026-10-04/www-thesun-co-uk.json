@@ -4,7 +4,7 @@
     "name": "traceguard",
     "version": "0.1.0"
   },
-  "generated_at": "2026-10-04T17:30:27+00:00",
+  "generated_at": "2026-10-04T18:13:16+00:00",
   "site": {
     "name": "The Sun",
     "url": "https://www.thesun.co.uk",
@@ -16,10 +16,12 @@
     "vantage": "local-windows-spain",
     "locale": "en-US",
     "timezone": "UTC",
-    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
     "browser": "chromium 153.0.8010.12",
     "passes": 3,
     "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
     "interaction": "none",
     "tracker_list": "trackers.seed.json"
   },
@@ -27,52 +29,215 @@
     "passes_total": 3,
     "passes_ok": 3,
     "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
     "http_status": 200,
     "final_url": "https://www.thesun.co.uk/",
     "navigation_redirects": [],
     "security_headers": {
       "strict_transport_security": true,
-      "content_security_policy": "absent"
+      "content_security_policy": "header"
     },
     "tls_protocol": "TLS 1.3",
     "metrics": {
-      "third_party_requests": 4,
-      "third_party_domains": 3,
-      "tracking_services": 0,
-      "third_party_cookies": 0,
-      "cookies_total": 2,
-      "storage_items": 0
+      "third_party_requests": 58,
+      "third_party_domains": 22,
+      "tracking_services": 7,
+      "third_party_cookies": 1,
+      "cookies_total": 23,
+      "storage_items": 15
     },
     "third_party_domains": [
       {
-        "domain": "mcl.io",
+        "domain": "affilimate.io",
         "passes_seen": 3,
         "stable": true
       },
       {
-        "domain": "spur.us",
+        "domain": "affilimateapis.com",
         "passes_seen": 3,
         "stable": true
       },
       {
-        "domain": "toadmash.net",
+        "domain": "affilimatejs.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "amazon-adsystem.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "brandmetrics.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "brightcove.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "cloudfront.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "dotmetrics.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "doubleclick.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "google-analytics.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "googleapis.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "googletagmanager.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "newrelic.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "news.co.uk",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "nr-data.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "onesignal.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "opta.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "parsely.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "permutive.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "scorecardresearch.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "tiqcdn.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "webcontentassessor.com",
         "passes_seen": 3,
         "stable": true
       }
     ],
-    "services": [],
-    "observations": [
+    "services": [
       {
-        "kind": "canvas_read",
-        "script_domain": "toadmash.net",
-        "party": "third",
+        "service": "amazon-adsystem.com",
+        "entity": "Amazon",
+        "category": "advertising",
+        "tracking": true,
         "passes_seen": 3,
         "stable": true
       },
       {
+        "service": "dotmetrics.net",
+        "entity": "Ipsos (Dotmetrics)",
+        "category": "audience_measurement",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "doubleclick.net",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "google-analytics.com",
+        "entity": "Google",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "googletagmanager.com",
+        "entity": "Google",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "parsely.com",
+        "entity": "Parse.ly",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "permutive.com",
+        "entity": "Permutive",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "scorecardresearch.com",
+        "entity": "Comscore",
+        "category": "audience_measurement",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "tiqcdn.com",
+        "entity": "Tealium",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
         "kind": "key_listener",
-        "script_domain": "toadmash.net",
-        "party": "third",
+        "script_domain": "thesun.co.uk",
+        "party": "first",
         "passes_seen": 3,
         "stable": true
       }
@@ -83,29 +248,85 @@
     {
       "code": "THIRD_PARTY_REQUESTS",
       "severity": "info",
-      "text": "During a 12-second window with no user interaction, the page made 4 requests to 3 third-party domains (median of 3 passes).",
+      "text": "During a 12-second window with no user interaction, the page made 58 requests to 22 third-party domains (median of 3 passes).",
       "evidence": {
-        "requests": 4,
-        "domains": 3
+        "requests": 58,
+        "domains": 22
       }
     },
     {
-      "code": "SCRIPT_BEHAVIOUR",
-      "severity": "info",
-      "text": "A script served from toadmash.net read image data from a canvas element. This API is also used for legitimate purposes and does not by itself indicate tracking.",
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "7 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: amazon-adsystem.com (Amazon, advertising), dotmetrics.net (Ipsos (Dotmetrics), audience measurement), doubleclick.net (Google, advertising), google-analytics.com (Google, analytics), parsely.com (Parse.ly, analytics), permutive.com (Permutive, advertising), scorecardresearch.com (Comscore, audience measurement).",
       "evidence": {
-        "kind": "canvas_read",
-        "script_domain": "toadmash.net",
-        "party": "third",
-        "passes_seen": 3,
-        "stable": true
+        "services": [
+          {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
       }
     },
     {
-      "code": "NO_CSP",
-      "severity": "info",
-      "text": "The main document response did not include a Content-Security-Policy header or meta tag.",
-      "evidence": {}
+      "code": "THIRD_PARTY_COOKIES",
+      "severity": "notable",
+      "text": "1 cookies were set by third-party domains (23 cookies in total).",
+      "evidence": {
+        "third_party": 1,
+        "total": 23
+      }
     }
   ],
   "runs": [
@@ -118,12 +339,12 @@
       "navigation_redirects": [],
       "security_headers": {
         "strict_transport_security": true,
-        "content_security_policy": "absent"
+        "content_security_policy": "header"
       },
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 166,
+          "t_ms": 382,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.thesun.co.uk/",
@@ -133,68 +354,1475 @@
           "tracker": null
         },
         {
-          "t_ms": 912,
+          "t_ms": 849,
           "method": "GET",
-          "resource_type": "stylesheet",
-          "url": "https://p.toadmash.net/toadmash-1.0.11.css",
-          "host": "p.toadmash.net",
-          "domain": "toadmash.net",
-          "party": "third",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Regular.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
           "tracker": null
+        },
+        {
+          "t_ms": 853,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Medium.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 856,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Bold.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 861,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-HeavyNarrow.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 885,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
         },
         {
           "t_ms": 917,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://p.toadmash.net/1791127944/eb755930-ee63-4d33-839b-f2d2e15048ca.js",
-          "host": "p.toadmash.net",
-          "domain": "toadmash.net",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "domain": "doubleclick.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
-          "t_ms": 1481,
+          "t_ms": 939,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://mcl.spur.us/d/mcl.js",
-          "host": "mcl.spur.us",
-          "domain": "spur.us",
+          "url": "https://cdn.brandmetrics.com/tag/3507d3a478cd4f59b15eb40434141032/thesun.js",
+          "host": "cdn.brandmetrics.com",
+          "domain": "brandmetrics.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 1486,
+          "t_ms": 968,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://scripts.webcontentassessor.com/scripts/ee8bf0fbcf04ca7e8abc933407f3310bf64c71d2a58f66543ec769ea828a320d",
+          "host": "scripts.webcontentassessor.com",
+          "domain": "webcontentassessor.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1021,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.permutive.com/88a66e5c-8fe8-48af-9c6c-3ec3f4983aad-web.js",
+          "host": "cdn.permutive.com",
+          "domain": "permutive.com",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1079,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/dfp",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1083,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/assets/optimizely/5492586870210560.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1109,
           "method": "GET",
           "resource_type": "fetch",
-          "url": "https://www.thesun.co.uk/RttCheck",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1166,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://experiments.parsely.com/vip-experiments.js",
+          "host": "experiments.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1170,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/KH_04_10_CHRIS_BRAIN-v3_HERO.jpg",
           "host": "www.thesun.co.uk",
           "domain": "thesun.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1885,
-          "method": "POST",
-          "resource_type": "xhr",
-          "url": "https://js.mcl.io/r/bundle",
-          "host": "js.mcl.io",
-          "domain": "mcl.io",
+          "t_ms": 1177,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/2026-bournemouth-england-exceptional-bank-1083839867.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1182,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/newspress-collage-07hsavneg-1791128499824.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1269,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/09/RF-DOWNSIZING-29SEP_COMP-1.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1272,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/AP-01-09-BATTERSEA_COMP.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1349,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/v3.opta-widgets.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 2247,
-          "method": "POST",
-          "resource_type": "fetch",
-          "url": "https://www.thesun.co.uk/AtaVerifyCaptcha",
+          "t_ms": 1353,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-blocks-custom.bundle.js",
           "host": "www.thesun.co.uk",
           "domain": "thesun.co.uk",
           "party": "first",
           "tracker": null
+        },
+        {
+          "t_ms": 1395,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1455,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ptr.thesun.co.uk/now.js",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1464,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1471,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/2016-london-england-secretary-state-1096915222.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1477,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/newspress-collage-tp6ah7ma8-1791113783621.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1480,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/andy-murray-falls-knees-agony-1113349696.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1485,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/KH_04_10_PILOT_HIJACKING_COMP_57a8ee.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1580,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js",
+          "host": "cdn.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1584,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/prebid.sun.min.js",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1588,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/ads.sun.min.js",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1593,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/plugins/wp-nuk-sun-wp-consent-management/build/app/index.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1618,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snippet.affilimatejs.com/",
+          "host": "snippet.affilimatejs.com",
+          "domain": "affilimatejs.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1622,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1627,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1631,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://secure.widget.cloud.opta.net/v3/css/v3.football.opta-widgets.css",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1635,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/global-assets.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1672,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/header-footer.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1680,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/blocks-core.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1689,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-home.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1703,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-shared-curation.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1720,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-shared-interior-with-sidebar.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1727,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/section-subnav.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1745,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-global-assets.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1775,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-header-footer.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1781,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-blocks-core.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1798,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-blocks-custom.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1807,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-templates-shared-curation.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1820,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-offers-section.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1829,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-modal.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1833,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-opta.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1837,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-google-one-tap.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1903,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://players.brightcove.net/videojs-pip/1/videojs-pip.css",
+          "host": "players.brightcove.net",
+          "domain": "brightcove.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1909,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/mu-plugins/jetpack-15.7/jetpack_vendor/automattic/jetpack-forms/dist/contact-form/css/jetpack-forms-layout.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1913,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/plugins/nuk-wp-opta/build/opta-widget-block/style-index.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1917,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1920,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/teaser-sample-landscape-large-b67f4dee63df86ff6d82.png",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1926,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/sun-club-icon-teaser-dark-red-e33495bd910a548f21cb.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1932,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1938,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/av-play-arrow-77f1b8797f309a4ac29b.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1943,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/sun-club-icon-teaser-light-red-ec15fc115d8bf2d3d69c.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1949,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/09/KH_29_09_KIDNAPPED_HERO_50a5ac.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1952,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-HeavyCondensed.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1960,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmp.cdn.thesun.co.uk/wrapper/v2/meta-data",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1964,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1968,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/4.40.3/usnat.17801fe5e33dd6698495.bundle.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2034,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ptr.thesun.co.uk/properties/88d4adaa/config.json",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2042,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-continue-watching-rail.chunk.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2052,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-continue-watching-tracker.chunk.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2128,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css2",
+          "host": "fonts.googleapis.com",
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2132,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.es6.js",
+          "host": "cdn.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2322,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://config.aps.amazon-adsystem.com/configs/3360",
+          "host": "config.aps.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2348,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://client.aps.amazon-adsystem.com/publisher.js",
+          "host": "client.aps.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2353,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ads.thesun.co.uk/sun.v2.raw.json",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2359,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ads.thesun.co.uk/dfp.json",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2418,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-open-web.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2422,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-includes/js/wp-emoji-release.min.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2426,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.99.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2430,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.132.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2433,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.133.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2436,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.115.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2440,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.78.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2443,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.100.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2492,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmp.cdn.thesun.co.uk/wrapper/v2/messages",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2524,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/subscriptions/v3_6b7abd03b9bef15d0461b05b0cc5d8a4.json",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2531,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/chunks/dayjslocale_en-gb-js.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2558,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2756,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ptr.thesun.co.uk/chunks/cp-chunk-cmp-sourcepoint.20260916082402-4036113f5e.190d104181bf79654a1a.js",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2936,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://commercial-analytics-collector.news.co.uk/track",
+          "host": "commercial-analytics-collector.news.co.uk",
+          "domain": "news.co.uk",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2944,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cmp.cdn.thesun.co.uk/index.html",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2971,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://snippet.affilimate.io/affilimate-sm.js",
+          "host": "snippet.affilimate.io",
+          "domain": "affilimate.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2997,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://api.onesignal.com/sync/33b5f1fd-593a-463b-85d4-72b0af659279/web",
+          "host": "api.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3022,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sb.scorecardresearch.com/cs/6035523/beacon.js",
+          "host": "sb.scorecardresearch.com",
+          "domain": "scorecardresearch.com",
+          "party": "third",
+          "tracker": {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3082,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://nid.thesun.co.uk/prod/sp/nid_sp.js",
+          "host": "nid.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3125,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/door.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3128,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3134,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3138,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cmp.cdn.thesun.co.uk/Notice.1c267.css",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3143,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/polyfills.01516.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3147,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/Notice.97af9.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3171,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://d1z2jf7jlzjs58.cloudfront.net/p.js",
+          "host": "d1z2jf7jlzjs58.cloudfront.net",
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3180,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3200,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/bin/subscriptions_7.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3253,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3260,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3295,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://pub.affilimateapis.com/send-getConfig",
+          "host": "pub.affilimateapis.com",
+          "domain": "affilimateapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3349,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://sac.thesun.co.uk/nuk/v2",
+          "host": "sac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3361,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmp.cdn.thesun.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3388,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://uk-script.dotmetrics.net/hit.gif",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3411,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://rm-script.dotmetrics.net/hit.gif",
+          "host": "rm-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3433,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/v3.app.opta-widgets.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3498,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmp.cdn.thesun.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3504,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/images/sunmasthead.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3525,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3528,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://sac.thesun.co.uk/nuk/v2",
+          "host": "sac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3532,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3575,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.parsely.com/keys/thesun.co.uk/p.js",
+          "host": "cdn.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3877,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/measurement/conversion",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3881,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3886,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3904,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3962,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://p1.parsely.com/plogger/",
+          "host": "p1.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4016,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 4019,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 4022,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/components/generic.all.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4282,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4445,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js-agent.newrelic.com/nr-spa-1.309.0.min.js",
+          "host": "js-agent.newrelic.com",
+          "domain": "newrelic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4602,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4807,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/events/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4810,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/jserrors/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4816,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/events/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4819,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/browser/logs",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4822,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/ins/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 8920,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
         }
       ],
       "internal_requests_blocked": [],
       "cookies": [
+        {
+          "name": "nuk_customer_country_code",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
         {
           "name": "_ngn_pb_p",
           "domain": "thesun.co.uk",
@@ -205,7 +1833,187 @@
           "same_site": "Lax"
         },
         {
-          "name": "_ngn_pm_p",
+          "name": "utag_main_v_id",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__sn",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main_ses_id",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__pn",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nukt_mem",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "onesignal.com",
+          "party": "third",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nukUserPreferences",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nukColorOptions",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_nuk_sp_ses.9caf",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nuPixelApp",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nuPixelAppSession",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "rc_id1",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "rc_id2",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "_nuk_sp_id_",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "utag_main__se",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__ss",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__st",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_nuk_sp_id.9caf",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "_parsely_session",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_parsely_visitor",
           "domain": "thesun.co.uk",
           "party": "first",
           "session": false,
@@ -215,19 +2023,14 @@
         }
       ],
       "storage_items": {
-        "local": 0,
-        "session": 0
+        "local": 13,
+        "session": 2
       },
       "observations": [
         {
           "kind": "key_listener",
-          "script_domain": "toadmash.net",
-          "party": "third"
-        },
-        {
-          "kind": "canvas_read",
-          "script_domain": "toadmash.net",
-          "party": "third"
+          "script_domain": "thesun.co.uk",
+          "party": "first"
         }
       ]
     },
@@ -240,12 +2043,12 @@
       "navigation_redirects": [],
       "security_headers": {
         "strict_transport_security": true,
-        "content_security_policy": "absent"
+        "content_security_policy": "header"
       },
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 126,
+          "t_ms": 204,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.thesun.co.uk/",
@@ -255,68 +2058,1495 @@
           "tracker": null
         },
         {
-          "t_ms": 446,
+          "t_ms": 726,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 734,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Regular.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 780,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Medium.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 798,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Bold.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 803,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-HeavyNarrow.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 821,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 838,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 858,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.brandmetrics.com/tag/3507d3a478cd4f59b15eb40434141032/thesun.js",
+          "host": "cdn.brandmetrics.com",
+          "domain": "brandmetrics.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 875,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://scripts.webcontentassessor.com/scripts/ee8bf0fbcf04ca7e8abc933407f3310bf64c71d2a58f66543ec769ea828a320d",
+          "host": "scripts.webcontentassessor.com",
+          "domain": "webcontentassessor.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 891,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.permutive.com/88a66e5c-8fe8-48af-9c6c-3ec3f4983aad-web.js",
+          "host": "cdn.permutive.com",
+          "domain": "permutive.com",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 909,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/dfp",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 920,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/assets/optimizely/5492586870210560.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 937,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://experiments.parsely.com/vip-experiments.js",
+          "host": "experiments.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 953,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/KH_04_10_CHRIS_BRAIN-v3_HERO.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 966,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/2026-bournemouth-england-exceptional-bank-1083839867.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 992,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/newspress-collage-07hsavneg-1791128499824.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1191,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/09/RF-DOWNSIZING-29SEP_COMP-1.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1235,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/AP-01-09-BATTERSEA_COMP.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1251,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/v3.opta-widgets.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1258,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-blocks-custom.bundle.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1263,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1271,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ptr.thesun.co.uk/now.js",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1279,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1285,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/2016-london-england-secretary-state-1096915222.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1290,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/newspress-collage-tp6ah7ma8-1791113783621.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1295,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/andy-murray-falls-knees-agony-1113349696.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1298,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/KH_04_10_PILOT_HIJACKING_COMP_57a8ee.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1303,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js",
+          "host": "cdn.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1308,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/prebid.sun.min.js",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1317,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/ads.sun.min.js",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1328,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/plugins/wp-nuk-sun-wp-consent-management/build/app/index.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1363,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snippet.affilimatejs.com/",
+          "host": "snippet.affilimatejs.com",
+          "domain": "affilimatejs.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1383,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1396,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1410,
           "method": "GET",
           "resource_type": "stylesheet",
-          "url": "https://p.toadmash.net/toadmash-1.0.11.css",
-          "host": "p.toadmash.net",
-          "domain": "toadmash.net",
+          "url": "https://secure.widget.cloud.opta.net/v3/css/v3.football.opta-widgets.css",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 449,
+          "t_ms": 1433,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://p.toadmash.net/1791134512/e32c7a8c-4711-46d9-8684-0b491b345913.js",
-          "host": "p.toadmash.net",
-          "domain": "toadmash.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1181,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://mcl.spur.us/d/mcl.js",
-          "host": "mcl.spur.us",
-          "domain": "spur.us",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1188,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://www.thesun.co.uk/RttCheck",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/global-assets.min.css",
           "host": "www.thesun.co.uk",
           "domain": "thesun.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1894,
+          "t_ms": 1446,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/header-footer.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1457,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/blocks-core.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1464,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-home.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1487,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-shared-curation.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1507,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-shared-interior-with-sidebar.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1511,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/section-subnav.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1513,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-global-assets.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1516,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-header-footer.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1518,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-blocks-core.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1521,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-blocks-custom.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1526,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-templates-shared-curation.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1547,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-offers-section.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1551,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-modal.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1555,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-opta.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1560,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-google-one-tap.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1563,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://players.brightcove.net/videojs-pip/1/videojs-pip.css",
+          "host": "players.brightcove.net",
+          "domain": "brightcove.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1568,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/mu-plugins/jetpack-15.7/jetpack_vendor/automattic/jetpack-forms/dist/contact-form/css/jetpack-forms-layout.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1577,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/plugins/nuk-wp-opta/build/opta-widget-block/style-index.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1586,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1594,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1609,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/av-play-arrow-77f1b8797f309a4ac29b.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1612,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/teaser-sample-landscape-large-b67f4dee63df86ff6d82.png",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1616,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/sun-club-icon-teaser-dark-red-e33495bd910a548f21cb.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1621,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/09/KH_29_09_KIDNAPPED_HERO_50a5ac.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1629,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/sun-club-icon-teaser-light-red-ec15fc115d8bf2d3d69c.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1723,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-HeavyCondensed.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1747,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css2",
+          "host": "fonts.googleapis.com",
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1755,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1763,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/4.40.3/usnat.17801fe5e33dd6698495.bundle.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1768,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmp.cdn.thesun.co.uk/wrapper/v2/meta-data",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1812,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ptr.thesun.co.uk/properties/88d4adaa/config.json",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1843,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-continue-watching-rail.chunk.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1856,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-continue-watching-tracker.chunk.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1891,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.es6.js",
+          "host": "cdn.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2327,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ads.thesun.co.uk/sun.v2.raw.json",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2364,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://config.aps.amazon-adsystem.com/configs/3360",
+          "host": "config.aps.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2394,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ads.thesun.co.uk/dfp.json",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2408,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://client.aps.amazon-adsystem.com/publisher.js",
+          "host": "client.aps.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2424,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-open-web.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2429,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-includes/js/wp-emoji-release.min.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2435,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.99.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2442,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.132.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2450,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.133.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2458,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.115.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2467,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.78.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2474,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.100.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2497,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmp.cdn.thesun.co.uk/wrapper/v2/messages",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2519,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/subscriptions/v3_6b7abd03b9bef15d0461b05b0cc5d8a4.json",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2538,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/chunks/dayjslocale_en-gb-js.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2627,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2784,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ptr.thesun.co.uk/chunks/cp-chunk-cmp-sourcepoint.20260916082402-4036113f5e.190d104181bf79654a1a.js",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2815,
           "method": "POST",
-          "resource_type": "fetch",
-          "url": "https://www.thesun.co.uk/AtaVerifyCaptcha",
-          "host": "www.thesun.co.uk",
+          "resource_type": "ping",
+          "url": "https://commercial-analytics-collector.news.co.uk/track",
+          "host": "commercial-analytics-collector.news.co.uk",
+          "domain": "news.co.uk",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3272,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://snippet.affilimate.io/affilimate-sm.js",
+          "host": "snippet.affilimate.io",
+          "domain": "affilimate.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3304,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ptr.thesun.co.uk/chunks/cp-chunk-payload.20260916082402-4036113f5e.7110d5adde28e649d4fd.js",
+          "host": "ptr.thesun.co.uk",
           "domain": "thesun.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1901,
+          "t_ms": 3332,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cmp.cdn.thesun.co.uk/index.html",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3360,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://api.onesignal.com/sync/33b5f1fd-593a-463b-85d4-72b0af659279/web",
+          "host": "api.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3403,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://nid.thesun.co.uk/prod/sp/nid_sp.js",
+          "host": "nid.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3423,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/door.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3482,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sb.scorecardresearch.com/cs/6035523/beacon.js",
+          "host": "sb.scorecardresearch.com",
+          "domain": "scorecardresearch.com",
+          "party": "third",
+          "tracker": {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3724,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3763,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://d1z2jf7jlzjs58.cloudfront.net/p.js",
+          "host": "d1z2jf7jlzjs58.cloudfront.net",
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3833,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3941,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3965,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/bin/subscriptions_7.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4080,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cmp.cdn.thesun.co.uk/Notice.1c267.css",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4093,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/polyfills.01516.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4097,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/Notice.97af9.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4120,
           "method": "POST",
           "resource_type": "xhr",
-          "url": "https://js.mcl.io/r/bundle",
-          "host": "js.mcl.io",
-          "domain": "mcl.io",
+          "url": "https://pub.affilimateapis.com/send-getConfig",
+          "host": "pub.affilimateapis.com",
+          "domain": "affilimateapis.com",
           "party": "third",
           "tracker": null
+        },
+        {
+          "t_ms": 4158,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4176,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 4207,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://uk-script.dotmetrics.net/hit.gif",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 4259,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://rm-script.dotmetrics.net/hit.gif",
+          "host": "rm-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 4280,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://sac.thesun.co.uk/nuk/v2",
+          "host": "sac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4335,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.parsely.com/keys/thesun.co.uk/p.js",
+          "host": "cdn.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4411,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 4448,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/v3.app.opta-widgets.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4530,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmp.cdn.thesun.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4835,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/measurement/conversion",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4847,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 5017,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 5157,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://p1.parsely.com/plogger/",
+          "host": "p1.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 5282,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmp.cdn.thesun.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5298,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/images/sunmasthead.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5333,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 5436,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 5485,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://sac.thesun.co.uk/nuk/v2",
+          "host": "sac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5515,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 5635,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5901,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/components/generic.all.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 6306,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 6648,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js-agent.newrelic.com/nr-spa-1.309.0.min.js",
+          "host": "js-agent.newrelic.com",
+          "domain": "newrelic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 6830,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7162,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/events/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7173,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/jserrors/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7177,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/events/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7181,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/browser/logs",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7187,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/ins/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 8420,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://ptr.thesun.co.uk/signal",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 10496,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
         }
       ],
       "internal_requests_blocked": [],
       "cookies": [
+        {
+          "name": "nuk_customer_country_code",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
         {
           "name": "_ngn_pb_p",
           "domain": "thesun.co.uk",
@@ -327,29 +3557,204 @@
           "same_site": "Lax"
         },
         {
-          "name": "_ngn_pm_p",
+          "name": "utag_main_v_id",
           "domain": "thesun.co.uk",
           "party": "first",
           "session": false,
           "secure": false,
           "http_only": false,
           "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__sn",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main_ses_id",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__pn",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nukt_mem",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "onesignal.com",
+          "party": "third",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nukUserPreferences",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nukColorOptions",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_nuk_sp_ses.9caf",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nuPixelApp",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nuPixelAppSession",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "rc_id1",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "rc_id2",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "_nuk_sp_id_",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "_parsely_session",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_parsely_visitor",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__se",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__ss",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__st",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_nuk_sp_id.9caf",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
         }
       ],
       "storage_items": {
-        "local": 0,
-        "session": 0
+        "local": 13,
+        "session": 2
       },
       "observations": [
         {
           "kind": "key_listener",
-          "script_domain": "toadmash.net",
-          "party": "third"
-        },
-        {
-          "kind": "canvas_read",
-          "script_domain": "toadmash.net",
-          "party": "third"
+          "script_domain": "thesun.co.uk",
+          "party": "first"
         }
       ]
     },
@@ -362,12 +3767,12 @@
       "navigation_redirects": [],
       "security_headers": {
         "strict_transport_security": true,
-        "content_security_policy": "absent"
+        "content_security_policy": "header"
       },
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 125,
+          "t_ms": 270,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.thesun.co.uk/",
@@ -377,78 +3782,1475 @@
           "tracker": null
         },
         {
-          "t_ms": 416,
+          "t_ms": 733,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 758,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Regular.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 775,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Medium.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 803,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-Bold.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 837,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-HeavyNarrow.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 878,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 913,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 920,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.brandmetrics.com/tag/3507d3a478cd4f59b15eb40434141032/thesun.js",
+          "host": "cdn.brandmetrics.com",
+          "domain": "brandmetrics.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 969,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://scripts.webcontentassessor.com/scripts/ee8bf0fbcf04ca7e8abc933407f3310bf64c71d2a58f66543ec769ea828a320d",
+          "host": "scripts.webcontentassessor.com",
+          "domain": "webcontentassessor.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 986,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.permutive.com/88a66e5c-8fe8-48af-9c6c-3ec3f4983aad-web.js",
+          "host": "cdn.permutive.com",
+          "domain": "permutive.com",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1013,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/dfp",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1027,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/assets/optimizely/5492586870210560.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1084,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://experiments.parsely.com/vip-experiments.js",
+          "host": "experiments.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1102,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/KH_04_10_CHRIS_BRAIN-v3_HERO.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1136,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/2026-bournemouth-england-exceptional-bank-1083839867.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1154,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/newspress-collage-07hsavneg-1791128499824.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1322,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/09/RF-DOWNSIZING-29SEP_COMP-1.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1355,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/AP-01-09-BATTERSEA_COMP.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1392,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/v3.opta-widgets.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1406,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-blocks-custom.bundle.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1427,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1477,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ptr.thesun.co.uk/now.js",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1485,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1493,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1512,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/2016-london-england-secretary-state-1096915222.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1523,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/newspress-collage-tp6ah7ma8-1791113783621.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1529,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/andy-murray-falls-knees-agony-1113349696.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1677,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/10/KH_04_10_PILOT_HIJACKING_COMP_57a8ee.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1743,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js",
+          "host": "cdn.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1981,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/prebid.sun.min.js",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1998,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ads.thesun.co.uk/ads.sun.min.js",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2020,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/plugins/wp-nuk-sun-wp-consent-management/build/app/index.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2029,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snippet.affilimatejs.com/",
+          "host": "snippet.affilimatejs.com",
+          "domain": "affilimatejs.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2035,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2046,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2063,
           "method": "GET",
           "resource_type": "stylesheet",
-          "url": "https://p.toadmash.net/toadmash-1.0.11.css",
-          "host": "p.toadmash.net",
-          "domain": "toadmash.net",
+          "url": "https://secure.widget.cloud.opta.net/v3/css/v3.football.opta-widgets.css",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 422,
+          "t_ms": 2070,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://p.toadmash.net/1791134512/51b1a659-b903-4da4-9d6a-ca0b063bb26b.js",
-          "host": "p.toadmash.net",
-          "domain": "toadmash.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 813,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://mcl.spur.us/d/mcl.js",
-          "host": "mcl.spur.us",
-          "domain": "spur.us",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 821,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://www.thesun.co.uk/RttCheck",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/global-assets.min.css",
           "host": "www.thesun.co.uk",
           "domain": "thesun.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1821,
+          "t_ms": 2075,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://arw56qibued7ozaepcxyzgtsb5n4dn3naaaaagnypz2.mcl.io/d/p",
-          "host": "arw56qibued7ozaepcxyzgtsb5n4dn3naaaaagnypz2.mcl.io",
-          "domain": "mcl.io",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/header-footer.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2081,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/blocks-core.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2093,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-home.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2111,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-shared-curation.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2134,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/templates-shared-interior-with-sidebar.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2145,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/gtf/client/build/css/section-subnav.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2149,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-global-assets.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2161,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-header-footer.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2167,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-blocks-core.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2173,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-blocks-custom.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2177,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-templates-shared-curation.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2182,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-offers-section.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2189,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-modal.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2199,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-opta.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2209,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-google-one-tap.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2225,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://players.brightcove.net/videojs-pip/1/videojs-pip.css",
+          "host": "players.brightcove.net",
+          "domain": "brightcove.net",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 2060,
+          "t_ms": 2239,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/mu-plugins/jetpack-15.7/jetpack_vendor/automattic/jetpack-forms/dist/contact-form/css/jetpack-forms-layout.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2248,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/plugins/nuk-wp-opta/build/opta-widget-block/style-index.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2261,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/_static/",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2270,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/teaser-sample-landscape-large-b67f4dee63df86ff6d82.png",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2280,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/sun-club-icon-teaser-dark-red-e33495bd910a548f21cb.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2287,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/av-play-arrow-77f1b8797f309a4ac29b.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2297,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/uploads/2026/09/KH_29_09_KIDNAPPED_HERO_50a5ac.jpg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2308,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/media/sun-club-icon-teaser-light-red-ec15fc115d8bf2d3d69c.svg",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2330,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/src/fonts/thesun/TheSun-HeavyCondensed.woff2",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2342,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ptr.thesun.co.uk/properties/88d4adaa/config.json",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2355,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmp.cdn.thesun.co.uk/wrapper/v2/meta-data",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2359,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2367,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/unified/4.40.3/usnat.17801fe5e33dd6698495.bundle.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2387,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css2",
+          "host": "fonts.googleapis.com",
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2403,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-continue-watching-rail.chunk.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2422,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/js/thesun-continue-watching-tracker.chunk.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2437,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.es6.js",
+          "host": "cdn.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2530,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://config.aps.amazon-adsystem.com/configs/3360",
+          "host": "config.aps.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2542,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://client.aps.amazon-adsystem.com/publisher.js",
+          "host": "client.aps.amazon-adsystem.com",
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2549,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ads.thesun.co.uk/sun.v2.raw.json",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2588,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ads.thesun.co.uk/dfp.json",
+          "host": "ads.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2729,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/client/build/css/thesun-open-web.min.css",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2734,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.thesun.co.uk/wp-includes/js/wp-emoji-release.min.js",
+          "host": "www.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2741,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.99.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2760,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.132.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2766,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.133.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2773,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.115.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2796,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.78.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2812,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/newsinternational/thesun.web.2017/prod/utag.100.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2832,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmp.cdn.thesun.co.uk/wrapper/v2/messages",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2848,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/subscriptions/v3_6b7abd03b9bef15d0461b05b0cc5d8a4.json",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2876,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/chunks/dayjslocale_en-gb-js.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2887,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2987,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ptr.thesun.co.uk/chunks/cp-chunk-cmp-sourcepoint.20260916082402-4036113f5e.190d104181bf79654a1a.js",
+          "host": "ptr.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2999,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://commercial-analytics-collector.news.co.uk/track",
+          "host": "commercial-analytics-collector.news.co.uk",
+          "domain": "news.co.uk",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3026,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cmp.cdn.thesun.co.uk/index.html",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3075,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cmp.cdn.thesun.co.uk/Notice.1c267.css",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3079,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/polyfills.01516.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3088,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmp.cdn.thesun.co.uk/Notice.97af9.js",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3094,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://snippet.affilimate.io/affilimate-sm.js",
+          "host": "snippet.affilimate.io",
+          "domain": "affilimate.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3099,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://api.onesignal.com/sync/33b5f1fd-593a-463b-85d4-72b0af659279/web",
+          "host": "api.onesignal.com",
+          "domain": "onesignal.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3128,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://nid.thesun.co.uk/prod/sp/nid_sp.js",
+          "host": "nid.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3146,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/door.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3156,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sb.scorecardresearch.com/cs/6035523/beacon.js",
+          "host": "sb.scorecardresearch.com",
+          "domain": "scorecardresearch.com",
+          "party": "third",
+          "tracker": {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 3169,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3277,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmp.cdn.thesun.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3358,
           "method": "POST",
           "resource_type": "xhr",
-          "url": "https://js.mcl.io/r/bundle",
-          "host": "js.mcl.io",
-          "domain": "mcl.io",
+          "url": "https://pub.affilimateapis.com/send-getConfig",
+          "host": "pub.affilimateapis.com",
+          "domain": "affilimateapis.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 2439,
+          "t_ms": 3373,
           "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://sac.thesun.co.uk/nuk/v2",
+          "host": "sac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3417,
+          "method": "GET",
           "resource_type": "fetch",
-          "url": "https://www.thesun.co.uk/AtaVerifyCaptcha",
+          "url": "https://cmp.cdn.thesun.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmp.cdn.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3421,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.thesun.co.uk/wp-content/themes/thesun/images/sunmasthead.svg",
           "host": "www.thesun.co.uk",
           "domain": "thesun.co.uk",
           "party": "first",
           "tracker": null
+        },
+        {
+          "t_ms": 3431,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://d1z2jf7jlzjs58.cloudfront.net/p.js",
+          "host": "d1z2jf7jlzjs58.cloudfront.net",
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3468,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3476,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tags.tiqcdn.com/utag/tiqapp/utag.v.js",
+          "host": "tags.tiqcdn.com",
+          "domain": "tiqcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "tiqcdn.com",
+            "entity": "Tealium",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3484,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pac.thesun.co.uk/track",
+          "host": "pac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3544,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://sac.thesun.co.uk/nuk/v2",
+          "host": "sac.thesun.co.uk",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3891,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3895,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/measurement/conversion",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3911,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3922,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3948,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 3974,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/bin/subscriptions_7.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4094,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4121,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://uk-script.dotmetrics.net/hit.gif",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 4160,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://rm-script.dotmetrics.net/hit.gif",
+          "host": "rm-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 4179,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.parsely.com/keys/thesun.co.uk/p.js",
+          "host": "cdn.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4309,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 4397,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/v3.app.opta-widgets.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4523,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://p1.parsely.com/plogger/",
+          "host": "p1.parsely.com",
+          "domain": "parsely.com",
+          "party": "third",
+          "tracker": {
+            "service": "parsely.com",
+            "entity": "Parse.ly",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 4561,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 4580,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 4598,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://secure.widget.cloud.opta.net/v3/components/generic.all.js",
+          "host": "secure.widget.cloud.opta.net",
+          "domain": "opta.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4990,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 5153,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js-agent.newrelic.com/nr-spa-1.309.0.min.js",
+          "host": "js-agent.newrelic.com",
+          "domain": "newrelic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5309,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5542,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/events/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5553,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/jserrors/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5561,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/events/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5567,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/browser/logs",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5573,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://bam.nr-data.net/ins/1/NRBR-8c0121e1a721bc34c2b",
+          "host": "bam.nr-data.net",
+          "domain": "nr-data.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 8916,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://region1.google-analytics.com/g/collect",
+          "host": "region1.google-analytics.com",
+          "domain": "google-analytics.com",
+          "party": "third",
+          "tracker": {
+            "service": "google-analytics.com",
+            "entity": "Google",
+            "category": "analytics"
+          }
         }
       ],
       "internal_requests_blocked": [],
       "cookies": [
+        {
+          "name": "nuk_customer_country_code",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
         {
           "name": "_ngn_pb_p",
           "domain": "thesun.co.uk",
@@ -459,7 +5261,187 @@
           "same_site": "Lax"
         },
         {
-          "name": "_ngn_pm_p",
+          "name": "utag_main_v_id",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__sn",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main_ses_id",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__pn",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nukt_mem",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "onesignal.com",
+          "party": "third",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nukUserPreferences",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "nukColorOptions",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_nuk_sp_ses.9caf",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nuPixelApp",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "nuPixelAppSession",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "rc_id1",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "rc_id2",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "utag_main__se",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__ss",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "utag_main__st",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_nuk_sp_id.9caf",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "_nuk_sp_id_",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "_parsely_session",
+          "domain": "thesun.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_parsely_visitor",
           "domain": "thesun.co.uk",
           "party": "first",
           "session": false,
@@ -469,19 +5451,14 @@
         }
       ],
       "storage_items": {
-        "local": 0,
-        "session": 0
+        "local": 13,
+        "session": 2
       },
       "observations": [
         {
           "kind": "key_listener",
-          "script_domain": "toadmash.net",
-          "party": "third"
-        },
-        {
-          "kind": "canvas_read",
-          "script_domain": "toadmash.net",
-          "party": "third"
+          "script_domain": "thesun.co.uk",
+          "party": "first"
         }
       ]
     }

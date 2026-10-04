@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Contact</h1>
+    <p class="sub">Corrections, notes and suggestions are welcome. If you represent a site listed here, this is also where to reply to its results.</p>
+
+    <div class="cards">
+      {% if repo_url %}
+      <div class="card">
+        <h3>Open an issue</h3>
+        <p class="small">The best way: it is public, so the correction and our answer stay on record. You need a free GitHub account.</p>
+        <a class="btn" href="{{ repo_url }}/issues/new/choose" rel="noopener">Report an error or reply</a>
+      </div>
+      {% endif %}
+      {% if contact_email %}
+      <div class="card">
+        <h3>Email</h3>
+        <p class="small">For anything you prefer not to post publicly.</p>
+        <a class="btn sec" href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+      </div>
+      {% endif %}
+      {% if linkedin_url %}
+      <div class="card">
+        <h3>LinkedIn</h3>
+        <p class="small">To get in touch professionally.</p>
+        <a class="btn sec" href="{{ linkedin_url }}" rel="noopener">Open the profile</a>
+      </div>
+      {% endif %}
+      {% if not repo_url and not contact_email and not linkedin_url %}
+      <div class="card"><p>Contact details will be added soon.</p></div>
+      {% endif %}
+    </div>
+
+    <h2>What to include</h2>
+    <ul>
+      <li>The site and the week you are referring to.</li>
+      <li>What looks wrong: a domain attributed to the wrong operator, a domain that belongs to the outlet itself, a page that behaves differently where you are.</li>
+      <li>Any evidence you have (a link, a public statement, a screenshot).</li>
+    </ul>
+    <p>We re-check what is reported and record every correction. See <a href="{{ root }}about.html">About and corrections</a> for how we handle them, and the <a href="{{ root }}privacy.html">privacy page</a> for what happens to what you send.</p>
+  </div>
+</section>
+{% endblock %}

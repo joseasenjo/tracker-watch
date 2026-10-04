@@ -4,11 +4,13 @@
     "name": "traceguard",
     "version": "0.1.0"
   },
-  "generated_at": "2026-10-04T17:37:55+00:00",
+  "generated_at": "2026-10-04T18:23:03+00:00",
   "site": {
     "name": "Die Welt",
     "url": "https://www.welt.de",
     "first_party_domains": [
+      "asadcdn.com",
+      "axelspringer.de",
       "welt.de"
     ]
   },
@@ -16,10 +18,12 @@
     "vantage": "local-windows-spain",
     "locale": "en-US",
     "timezone": "UTC",
-    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
     "browser": "chromium 153.0.8010.12",
     "passes": 3,
     "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
     "interaction": "none",
     "tracker_list": "trackers.seed.json"
   },
@@ -27,6 +31,8 @@
     "passes_total": 3,
     "passes_ok": 3,
     "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
     "http_status": 200,
     "final_url": "https://www.welt.de/",
     "navigation_redirects": [],
@@ -36,24 +42,14 @@
     },
     "tls_protocol": "TLS 1.3",
     "metrics": {
-      "third_party_requests": 40,
-      "third_party_domains": 4,
-      "tracking_services": 0,
+      "third_party_requests": 3,
+      "third_party_domains": 2,
+      "tracking_services": 1,
       "third_party_cookies": 0,
       "cookies_total": 12,
       "storage_items": 4
     },
     "third_party_domains": [
-      {
-        "domain": "asadcdn.com",
-        "passes_seen": 3,
-        "stable": true
-      },
-      {
-        "domain": "axelspringer.de",
-        "passes_seen": 3,
-        "stable": true
-      },
       {
         "domain": "ringieraxelspringer.tech",
         "passes_seen": 3,
@@ -65,7 +61,16 @@
         "stable": true
       }
     ],
-    "services": [],
+    "services": [
+      {
+        "service": "tracking.ringieraxelspringer.tech",
+        "entity": "Ringier Axel Springer Tech",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
     "observations": [
       {
         "kind": "key_listener",
@@ -81,10 +86,27 @@
     {
       "code": "THIRD_PARTY_REQUESTS",
       "severity": "info",
-      "text": "During a 12-second window with no user interaction, the page made 40 requests to 4 third-party domains (median of 3 passes).",
+      "text": "During a 12-second window with no user interaction, the page made 3 requests to 2 third-party domains (median of 3 passes).",
       "evidence": {
-        "requests": 40,
-        "domains": 4
+        "requests": 3,
+        "domains": 2
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "1 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: tracking.ringieraxelspringer.tech (Ringier Axel Springer Tech, analytics).",
+      "evidence": {
+        "services": [
+          {
+            "service": "tracking.ringieraxelspringer.tech",
+            "entity": "Ringier Axel Springer Tech",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
       }
     }
   ],
@@ -103,7 +125,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 154,
+          "t_ms": 148,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.welt.de/",
@@ -113,17 +135,17 @@
           "tracker": null
         },
         {
-          "t_ms": 613,
+          "t_ms": 523,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://bend.shootwhy.com/vendor/d654b3f0.js",
+          "url": "https://bend.shootwhy.com/assets/216c2956.js",
           "host": "bend.shootwhy.com",
           "domain": "shootwhy.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 646,
+          "t_ms": 531,
           "method": "GET",
           "resource_type": "script",
           "url": "https://jnt.welt.de/6pzfc2.js",
@@ -133,7 +155,7 @@
           "tracker": null
         },
         {
-          "t_ms": 654,
+          "t_ms": 535,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/section.module.DbLmQ0gt.js",
@@ -143,7 +165,7 @@
           "tracker": null
         },
         {
-          "t_ms": 662,
+          "t_ms": 542,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://www.welt.de/assets/bff-section/css/section.vlt9f90ua1.css",
@@ -153,17 +175,17 @@
           "tracker": null
         },
         {
-          "t_ms": 689,
+          "t_ms": 567,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/pages/welt.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 760,
+          "t_ms": 613,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/react.BPdhuoKc.js",
@@ -173,7 +195,7 @@
           "tracker": null
         },
         {
-          "t_ms": 771,
+          "t_ms": 619,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-subscription.DiNU7l_u.js",
@@ -183,7 +205,7 @@
           "tracker": null
         },
         {
-          "t_ms": 779,
+          "t_ms": 624,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.saL5Xypc.js",
@@ -193,7 +215,7 @@
           "tracker": null
         },
         {
-          "t_ms": 787,
+          "t_ms": 628,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/headlines-stage.state.DBkfZPIO.js",
@@ -203,7 +225,7 @@
           "tracker": null
         },
         {
-          "t_ms": 797,
+          "t_ms": 632,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/components.module.BIRsDccn.js",
@@ -213,7 +235,7 @@
           "tracker": null
         },
         {
-          "t_ms": 806,
+          "t_ms": 635,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/user-manager.D8HpB1GN.js",
@@ -223,7 +245,7 @@
           "tracker": null
         },
         {
-          "t_ms": 812,
+          "t_ms": 641,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player.DTAvasMX.js",
@@ -233,7 +255,7 @@
           "tracker": null
         },
         {
-          "t_ms": 821,
+          "t_ms": 645,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/in-viewport.7fN8zyEN.js",
@@ -243,7 +265,7 @@
           "tracker": null
         },
         {
-          "t_ms": 832,
+          "t_ms": 649,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/fetch.DIshuMG5.js",
@@ -253,7 +275,7 @@
           "tracker": null
         },
         {
-          "t_ms": 839,
+          "t_ms": 654,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/ui.state.ONQKZvx7.js",
@@ -263,7 +285,7 @@
           "tracker": null
         },
         {
-          "t_ms": 849,
+          "t_ms": 666,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/elements.L7b2HywX.js",
@@ -273,7 +295,7 @@
           "tracker": null
         },
         {
-          "t_ms": 873,
+          "t_ms": 675,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools-abo.NJiCkX3k.js",
@@ -283,7 +305,7 @@
           "tracker": null
         },
         {
-          "t_ms": 892,
+          "t_ms": 692,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.D7oOk6HY.js",
@@ -293,7 +315,7 @@
           "tracker": null
         },
         {
-          "t_ms": 897,
+          "t_ms": 702,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/status.actions.B19XxCaQ.js",
@@ -303,7 +325,7 @@
           "tracker": null
         },
         {
-          "t_ms": 905,
+          "t_ms": 708,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/script-replacer.BzlN9FQT.js",
@@ -313,7 +335,7 @@
           "tracker": null
         },
         {
-          "t_ms": 911,
+          "t_ms": 718,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/section-path.Bd-7-P3-.js",
@@ -323,7 +345,7 @@
           "tracker": null
         },
         {
-          "t_ms": 917,
+          "t_ms": 724,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/aria-label.helper.CwosWwXh.js",
@@ -333,7 +355,7 @@
           "tracker": null
         },
         {
-          "t_ms": 933,
+          "t_ms": 729,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/teaser-footer.Xa8OtwO7.js",
@@ -343,7 +365,7 @@
           "tracker": null
         },
         {
-          "t_ms": 939,
+          "t_ms": 732,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/logger.CV8hbJUc.js",
@@ -353,7 +375,7 @@
           "tracker": null
         },
         {
-          "t_ms": 944,
+          "t_ms": 737,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools.state.Dib0-eS7.js",
@@ -363,7 +385,7 @@
           "tracker": null
         },
         {
-          "t_ms": 948,
+          "t_ms": 744,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/tool-item-icon.BDlVZwqI.js",
@@ -373,37 +395,27 @@
           "tracker": null
         },
         {
-          "t_ms": 956,
+          "t_ms": 751,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/EmptyError.DgP3xukA.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
+          "resource_type": "xhr",
+          "url": "https://www.asadcdn.com/adlib/beta/branches/abtest/hashMap.json",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 961,
-          "method": "GET",
-          "resource_type": "xhr",
-          "url": "https://www.asadcdn.com/adlib/hashMap.json",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 966,
+          "t_ms": 757,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/pec/currency.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1065,
+          "t_ms": 798,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/unified/wrapperMessagingWithoutDetection.js",
@@ -413,7 +425,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1097,
+          "t_ms": 884,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6abe4f3d7a140aa704e3c9aa/b9b2e5ea5d27782c77c468a2cca2c24d/ci23x11-w600/453616390-jpg",
@@ -423,247 +435,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1111,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac26a74656315bd2f814c24/aa6872d03379487c59527b7d9b0bc317/ci23x11-w400/dpa-com-261004-936-110762-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1122,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aa41429181cb962d488c209/9dbad0f82675033a0a58a4c5b7782a98/ci23x11-w400/gettyimages-105650326-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1131,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Regular.woff2",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1144,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Heavy.woff2",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1151,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player-fallback.BThn464g.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1156,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/hooks.rX7QzX-A.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1160,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abf60de85d64113fb06c7f2/c309622c3bc479d40915f9a9c6c75574/ci23x11-w400/dwosb-martenstein-aw-cw-tuerkis-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1164,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abaa9dab37e570c7536e7a0/0bd65fda6b9f1941a7dfab567aad4ee3/ci23x11-w400/1-png",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1169,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/freight/FreightText-ProBoldItalic.woff2",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1173,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aa967d7f578300cd045cbda/ac0773dafc359835e57a2232fece77ae/ci16x9-w1000/gettyimages-2161447160-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1178,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac228fc85d64113fb06e961/cb382b74d46082f82d8d6c788dc87111/ci16x9-w400/1785313601275-afp-c3fm7kf-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1206,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Light.woff2",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1209,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac223eed463a3034f717cf7/2f5200826ab29087ba40a764c4cc34f6/ci23x11-w400/2026-10-04t120602z-1399210528-rc2awnafisrz-rtrmadp-3-ukraine-crisis-germany-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1225,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac2062e3b1bc356aee643ad/78415e34be31d6873f1d8456ebeb7132/ci23x11-w400/gettyimages-1454032829-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1230,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abd014d54f9c6309a68489f/18c0d16795c0a4a5daff6dc3c02a29ea/ci23x11-w400/gettyimages-200127258-001-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1234,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abf8925d4d0c24ec26d1600/7d529cb096cd1e6063caac2bc1e2cce7/ci23x11-w400/600460775-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1238,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac20d07c6253b9a73fa5c7d/03d5747ad9bb6d6ffd4cc05fe648062f/ci23x11-w400/dwosb-don-alphonso-sexteas-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1241,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aba2c865ddef1bff0d20767/8469266ff4d11eba34c0022cfdc6c744-master/ci23x11-w400/gettyimages-2207533686-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1244,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abe45ef09fefadd71a548cd/a02fec64aae6a17d934c7d243385ac40/ci23x11-w400/gettyimages-576509718-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1247,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abbb7fb075de12d78a8db82/cf3e85c407e254aa3524b8489f3c4b35-master/ci23x11-w400/pressebild-alicehorackova-cfoto-richard-klicnik-300dpi-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1250,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abdf6d8a159be769c717216/8d0170c51acd7897089717b736c2ee99/ci23x11-w400/dwosb-teaser-netto-brutto-jb-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1255,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac200e33b1bc356aee64353/f3329c8b53e9d8e3877346244ca1d528/ci23x11-w400/afp-87gk4cq-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1265,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac274191943cca8d96f1412/1a185b04cf6f0f4ebae90ec94c3d8437-master/ci23x11-w400/dpa-com-260928-99-785062-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1275,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac0b41f85d64113fb06d901/583ce0ee432b52a27d6e4080ea4e1fb7/ci23x11-w400/4cfc28c2-bdc0-463e-bf36-cbe0ad839c39-srgb",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1280,
+          "t_ms": 890,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6abb4f20b37e570c7536ebc1/a0d998a3bf1ff9bcaceb365d831fdde6/ci23x11-w400/vicampo-rotwein-jpg",
@@ -673,17 +445,317 @@
           "tracker": null
         },
         {
-          "t_ms": 1283,
+          "t_ms": 899,
           "method": "GET",
           "resource_type": "image",
-          "url": "https://images.welt.de/6ac21ba685d64113fb06e82c/c0535a45c5e9fac07c0226f61ab46b24/ci23x11-w400/gettyimages-1301086194-jpg",
+          "url": "https://images.welt.de/6ac26a74656315bd2f814c24/aa6872d03379487c59527b7d9b0bc317/ci23x11-w400/dpa-com-261004-936-110762-jpg",
           "host": "images.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1288,
+          "t_ms": 905,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Regular.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 912,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Heavy.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 930,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abf60de85d64113fb06c7f2/c309622c3bc479d40915f9a9c6c75574/ci23x11-w400/dwosb-martenstein-aw-cw-tuerkis-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 934,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abaa9dab37e570c7536e7a0/0bd65fda6b9f1941a7dfab567aad4ee3/ci23x11-w400/1-png",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1086,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/freight/FreightText-ProBoldItalic.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1116,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aa967d7f578300cd045cbda/ac0773dafc359835e57a2232fece77ae/ci16x9-w1000/gettyimages-2161447160-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1123,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac228fc85d64113fb06e961/cb382b74d46082f82d8d6c788dc87111/ci16x9-w400/1785313601275-afp-c3fm7kf-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1137,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/EmptyError.DgP3xukA.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1172,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/hooks.rX7QzX-A.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1216,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player-fallback.BThn464g.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1229,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/addCSS.842545bd.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1241,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcY.9b4f506a.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1251,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/enrichPTV.847d2d06.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1261,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/err.2606b9c6.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1265,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/extendSlot.cfdc19c1.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/fireRequest.3b532c14.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1281,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getContWidth.7054d382.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1309,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getSChain.fedc5db5.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1312,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getWinHeight.a475b9e9.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1315,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/idleLoader.fc323c9a.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1318,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/listenMessage.d6b68eb1.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1321,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/posOutstream.90206730.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1325,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderAd.e1536dc2.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1328,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderedCallback.0f80a72c.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1332,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sendEvent.5e638723.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1335,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/setRestrictedArea.aa5286d8.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1338,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/speedCheck.ea12efc0.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1342,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getLocalData.c2c0d88c.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1345,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/instream.cf27fb02.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1347,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/init.8f1eb72b.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1350,
           "method": "GET",
           "resource_type": "image",
           "url": "https://www.welt.de/assets/public/images/welt-go-bg.jpg",
@@ -693,207 +765,157 @@
           "tracker": null
         },
         {
-          "t_ms": 1294,
+          "t_ms": 1353,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/addCSS.842545bd.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Light.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1297,
+          "t_ms": 1356,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcY.9b4f506a.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac223eed463a3034f717cf7/2f5200826ab29087ba40a764c4cc34f6/ci23x11-w400/2026-10-04t120602z-1399210528-rc2awnafisrz-rtrmadp-3-ukraine-crisis-germany-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1314,
+          "t_ms": 1358,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/enrichPTV.847d2d06.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac2062e3b1bc356aee643ad/78415e34be31d6873f1d8456ebeb7132/ci23x11-w400/gettyimages-1454032829-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1323,
+          "t_ms": 1360,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/err.2606b9c6.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aa41429181cb962d488c209/9dbad0f82675033a0a58a4c5b7782a98/ci23x11-w400/gettyimages-105650326-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1329,
+          "t_ms": 1363,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/extendSlot.cfdc19c1.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abf8925d4d0c24ec26d1600/7d529cb096cd1e6063caac2bc1e2cce7/ci23x11-w400/600460775-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1337,
+          "t_ms": 1372,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/fireRequest.3b532c14.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abd014d54f9c6309a68489f/18c0d16795c0a4a5daff6dc3c02a29ea/ci23x11-w400/gettyimages-200127258-001-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1345,
+          "t_ms": 1376,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getContWidth.7054d382.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac20d07c6253b9a73fa5c7d/03d5747ad9bb6d6ffd4cc05fe648062f/ci23x11-w400/dwosb-don-alphonso-sexteas-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1371,
+          "t_ms": 1379,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getSChain.fedc5db5.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aba2c865ddef1bff0d20767/8469266ff4d11eba34c0022cfdc6c744-master/ci23x11-w400/gettyimages-2207533686-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1381,
+          "t_ms": 1382,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getWinHeight.a475b9e9.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abe45ef09fefadd71a548cd/a02fec64aae6a17d934c7d243385ac40/ci23x11-w400/gettyimages-576509718-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1387,
+          "t_ms": 1386,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/idleLoader.fc323c9a.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1394,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/listenMessage.d6b68eb1.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac200e33b1bc356aee64353/f3329c8b53e9d8e3877346244ca1d528/ci23x11-w400/afp-87gk4cq-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
           "t_ms": 1399,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/posOutstream.90206730.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abdf6d8a159be769c717216/8d0170c51acd7897089717b736c2ee99/ci23x11-w400/dwosb-teaser-netto-brutto-jb-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
           "t_ms": 1405,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderAd.e1536dc2.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abbb7fb075de12d78a8db82/cf3e85c407e254aa3524b8489f3c4b35-master/ci23x11-w400/pressebild-alicehorackova-cfoto-richard-klicnik-300dpi-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1411,
+          "t_ms": 1409,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderedCallback.0f80a72c.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac0b41f85d64113fb06d901/583ce0ee432b52a27d6e4080ea4e1fb7/ci23x11-w400/4cfc28c2-bdc0-463e-bf36-cbe0ad839c39-srgb",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1416,
+          "t_ms": 1414,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sendEvent.5e638723.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac274191943cca8d96f1412/1a185b04cf6f0f4ebae90ec94c3d8437-master/ci23x11-w400/dpa-com-260928-99-785062-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1425,
+          "t_ms": 1423,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/setRestrictedArea.aa5286d8.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac21ba685d64113fb06e82c/c0535a45c5e9fac07c0226f61ab46b24/ci23x11-w400/gettyimages-1301086194-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1431,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/speedCheck.ea12efc0.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1439,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getLocalData.c2c0d88c.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1444,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/instream.cf27fb02.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1458,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/init.8f1eb72b.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1603,
+          "t_ms": 1497,
           "method": "GET",
           "resource_type": "script",
           "url": "https://rosetta.prod.ps.welt.de/ps-rosetta.js",
@@ -903,7 +925,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1673,
+          "t_ms": 1541,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://hua-production.la.welt.de/la-hua-api/v1/articles/comment_counts",
@@ -913,17 +935,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1696,
+          "t_ms": 1548,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://www.asadcdn.com/200/test.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1699,
+          "t_ms": 1556,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/headlines-stage-placeholder.vB3PDg5a.js",
@@ -933,7 +955,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1877,
+          "t_ms": 1661,
           "method": "GET",
           "resource_type": "script",
           "url": "https://wait-web.prod.ps.welt.de/ps-wait-web-CzikDy8K.js",
@@ -943,7 +965,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1926,
+          "t_ms": 1692,
           "method": "GET",
           "resource_type": "script",
           "url": "https://whoami-web.prod.ps.welt.de/ps-whoami-web-CQiUyET_.js",
@@ -953,7 +975,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1966,
+          "t_ms": 1733,
           "method": "GET",
           "resource_type": "script",
           "url": "https://orchestra.prod.pss.welt.de/pss-orchestra-BvHRyoFJ.js",
@@ -963,7 +985,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1976,
+          "t_ms": 1750,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/articles/home",
@@ -973,7 +995,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1984,
+          "t_ms": 1764,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/animated-banner",
@@ -983,7 +1005,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1993,
+          "t_ms": 1770,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/news-banner/breaking-news",
@@ -993,7 +1015,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2000,
+          "t_ms": 1787,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/notifier.client.uPCTHoP3.js",
@@ -1003,17 +1025,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2146,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://orchestra-flows.prod.pss.axelspringer.de/welt/live.json",
-          "host": "orchestra-flows.prod.pss.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2161,
+          "t_ms": 1797,
           "method": "GET",
           "resource_type": "script",
           "url": "https://whoami-web.prod.ps.welt.de/asinfo-CGtMlU6t.js",
@@ -1023,7 +1035,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2279,
+          "t_ms": 1916,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consumer-api.prod.auth.welt.de/self-service/fed-cm/parameters",
@@ -1033,7 +1045,17 @@
           "tracker": null
         },
         {
-          "t_ms": 2283,
+          "t_ms": 1939,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://orchestra-flows.prod.pss.axelspringer.de/welt/live.json",
+          "host": "orchestra-flows.prod.pss.axelspringer.de",
+          "domain": "axelspringer.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1948,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
@@ -1043,7 +1065,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2288,
+          "t_ms": 1951,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://consent.up.welt.de/wrapper/v2/meta-data",
@@ -1053,97 +1075,27 @@
           "tracker": null
         },
         {
-          "t_ms": 2344,
-          "method": "POST",
-          "resource_type": "ping",
-          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
-          "host": "rusty-heartbeat.services.ps.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2373,
+          "t_ms": 2016,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/scrollHandler.15b141df.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2432,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getScrollTop.3431c031.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2439,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcAdPos.b49eb8d5.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2445,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isVisible.94bfd981.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2454,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/stickToSlot.c835ee4e.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2461,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sightLoader.9a6726b0.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2482,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/backchanger.f7cd49a7.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2495,
+          "t_ms": 2117,
           "method": "POST",
           "resource_type": "ping",
           "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
           "host": "rusty-heartbeat.services.ps.axelspringer.de",
           "domain": "axelspringer.de",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2511,
+          "t_ms": 2136,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://consent.up.welt.de/wrapper/v2/messages",
@@ -1153,27 +1105,97 @@
           "tracker": null
         },
         {
-          "t_ms": 2591,
+          "t_ms": 2146,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
+          "host": "rusty-heartbeat.services.ps.axelspringer.de",
+          "domain": "axelspringer.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2152,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getScrollTop.3431c031.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2158,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcAdPos.b49eb8d5.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2164,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isVisible.94bfd981.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2168,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/stickToSlot.c835ee4e.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2185,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sightLoader.9a6726b0.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2191,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/backchanger.f7cd49a7.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2258,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isChildOf.8f6a7f93.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2598,
+          "t_ms": 2262,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/ovkvmf/propagateOnScroll.634ea025.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2739,
+          "t_ms": 2330,
           "method": "GET",
           "resource_type": "document",
           "url": "https://consent.up.welt.de/index.html",
@@ -1183,7 +1205,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2861,
+          "t_ms": 2450,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://consent.up.welt.de/Notice.1c267.css",
@@ -1193,7 +1215,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2865,
+          "t_ms": 2453,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/polyfills.01516.js",
@@ -1203,7 +1225,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2869,
+          "t_ms": 2456,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/Notice.97af9.js",
@@ -1213,7 +1235,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3070,
+          "t_ms": 2631,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consent.up.welt.de/consent/tcfv2/vendor-list/categories",
@@ -1223,7 +1245,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3214,
+          "t_ms": 2816,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consent.up.welt.de/consent/tcfv2/vendor-list/categories",
@@ -1233,7 +1255,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3281,
+          "t_ms": 2852,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.js",
@@ -1243,7 +1265,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3474,
+          "t_ms": 3033,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/utag/tiqapp/utag.v.js",
@@ -1253,17 +1275,21 @@
           "tracker": null
         },
         {
-          "t_ms": 3480,
+          "t_ms": 3054,
           "method": "GET",
           "resource_type": "script",
           "url": "https://simetra.tracking.ringieraxelspringer.tech/EA-3734738/simetra.boot.js",
           "host": "simetra.tracking.ringieraxelspringer.tech",
           "domain": "ringieraxelspringer.tech",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "tracking.ringieraxelspringer.tech",
+            "entity": "Ringier Axel Springer Tech",
+            "category": "analytics"
+          }
         },
         {
-          "t_ms": 3484,
+          "t_ms": 3062,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.155.js",
@@ -1273,7 +1299,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3655,
+          "t_ms": 3178,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://as.welt.de/id",
@@ -1283,17 +1309,21 @@
           "tracker": null
         },
         {
-          "t_ms": 3663,
+          "t_ms": 3192,
           "method": "GET",
           "resource_type": "script",
           "url": "https://simetra.tracking.ringieraxelspringer.tech/3.31.0/b66.min.js",
           "host": "simetra.tracking.ringieraxelspringer.tech",
           "domain": "ringieraxelspringer.tech",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "tracking.ringieraxelspringer.tech",
+            "entity": "Ringier Axel Springer Tech",
+            "category": "analytics"
+          }
         },
         {
-          "t_ms": 3795,
+          "t_ms": 3287,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://ras.welt.de/v2/EA-3734738/me",
@@ -1303,17 +1333,37 @@
           "tracker": null
         },
         {
-          "t_ms": 3843,
+          "t_ms": 3323,
           "method": "POST",
           "resource_type": "xhr",
-          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s59965848791447",
+          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s65984770441207",
           "host": "as.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 3944,
+          "t_ms": 3425,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ras.welt.de/v2/",
+          "host": "ras.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3517,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ras.welt.de/v2/",
+          "host": "ras.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3528,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.234.js",
@@ -1323,43 +1373,13 @@
           "tracker": null
         },
         {
-          "t_ms": 3961,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://ras.welt.de/v2/",
-          "host": "ras.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 3967,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://ras.welt.de/v2/",
-          "host": "ras.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 4047,
+          "t_ms": 3598,
           "method": "GET",
           "resource_type": "image",
-          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s52595911705019",
+          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s62230558482508",
           "host": "as.welt.de",
           "domain": "welt.de",
           "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 9743,
-          "method": "POST",
-          "resource_type": "ping",
-          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
-          "host": "rusty-heartbeat.services.ps.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
           "tracker": null
         }
       ],
@@ -1500,7 +1520,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 111,
+          "t_ms": 101,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.welt.de/",
@@ -1510,17 +1530,17 @@
           "tracker": null
         },
         {
-          "t_ms": 594,
+          "t_ms": 557,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://bend.shootwhy.com/vendor/d654b3f0.js",
+          "url": "https://bend.shootwhy.com/assets/216c2956.js",
           "host": "bend.shootwhy.com",
           "domain": "shootwhy.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 604,
+          "t_ms": 560,
           "method": "GET",
           "resource_type": "script",
           "url": "https://jnt.welt.de/6pzfc2.js",
@@ -1530,7 +1550,7 @@
           "tracker": null
         },
         {
-          "t_ms": 612,
+          "t_ms": 564,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/section.module.DbLmQ0gt.js",
@@ -1540,7 +1560,7 @@
           "tracker": null
         },
         {
-          "t_ms": 619,
+          "t_ms": 568,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://www.welt.de/assets/bff-section/css/section.vlt9f90ua1.css",
@@ -1550,17 +1570,17 @@
           "tracker": null
         },
         {
-          "t_ms": 624,
+          "t_ms": 572,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/pages/welt.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 716,
+          "t_ms": 635,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/react.BPdhuoKc.js",
@@ -1570,7 +1590,7 @@
           "tracker": null
         },
         {
-          "t_ms": 725,
+          "t_ms": 639,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-subscription.DiNU7l_u.js",
@@ -1580,7 +1600,7 @@
           "tracker": null
         },
         {
-          "t_ms": 734,
+          "t_ms": 642,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.saL5Xypc.js",
@@ -1590,7 +1610,7 @@
           "tracker": null
         },
         {
-          "t_ms": 745,
+          "t_ms": 646,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/headlines-stage.state.DBkfZPIO.js",
@@ -1600,7 +1620,7 @@
           "tracker": null
         },
         {
-          "t_ms": 753,
+          "t_ms": 649,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/components.module.BIRsDccn.js",
@@ -1610,7 +1630,7 @@
           "tracker": null
         },
         {
-          "t_ms": 762,
+          "t_ms": 652,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/user-manager.D8HpB1GN.js",
@@ -1620,7 +1640,7 @@
           "tracker": null
         },
         {
-          "t_ms": 772,
+          "t_ms": 658,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player.DTAvasMX.js",
@@ -1630,7 +1650,7 @@
           "tracker": null
         },
         {
-          "t_ms": 778,
+          "t_ms": 661,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/in-viewport.7fN8zyEN.js",
@@ -1640,7 +1660,7 @@
           "tracker": null
         },
         {
-          "t_ms": 787,
+          "t_ms": 665,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/fetch.DIshuMG5.js",
@@ -1650,7 +1670,7 @@
           "tracker": null
         },
         {
-          "t_ms": 791,
+          "t_ms": 669,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/ui.state.ONQKZvx7.js",
@@ -1660,7 +1680,7 @@
           "tracker": null
         },
         {
-          "t_ms": 804,
+          "t_ms": 674,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/elements.L7b2HywX.js",
@@ -1670,7 +1690,7 @@
           "tracker": null
         },
         {
-          "t_ms": 810,
+          "t_ms": 677,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools-abo.NJiCkX3k.js",
@@ -1680,7 +1700,7 @@
           "tracker": null
         },
         {
-          "t_ms": 815,
+          "t_ms": 682,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.D7oOk6HY.js",
@@ -1690,7 +1710,7 @@
           "tracker": null
         },
         {
-          "t_ms": 820,
+          "t_ms": 688,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/status.actions.B19XxCaQ.js",
@@ -1700,7 +1720,7 @@
           "tracker": null
         },
         {
-          "t_ms": 835,
+          "t_ms": 692,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/script-replacer.BzlN9FQT.js",
@@ -1710,7 +1730,7 @@
           "tracker": null
         },
         {
-          "t_ms": 839,
+          "t_ms": 696,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/section-path.Bd-7-P3-.js",
@@ -1720,7 +1740,7 @@
           "tracker": null
         },
         {
-          "t_ms": 843,
+          "t_ms": 702,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/aria-label.helper.CwosWwXh.js",
@@ -1730,7 +1750,7 @@
           "tracker": null
         },
         {
-          "t_ms": 847,
+          "t_ms": 711,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/teaser-footer.Xa8OtwO7.js",
@@ -1740,7 +1760,7 @@
           "tracker": null
         },
         {
-          "t_ms": 852,
+          "t_ms": 723,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/logger.CV8hbJUc.js",
@@ -1750,7 +1770,7 @@
           "tracker": null
         },
         {
-          "t_ms": 856,
+          "t_ms": 743,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools.state.Dib0-eS7.js",
@@ -1760,7 +1780,7 @@
           "tracker": null
         },
         {
-          "t_ms": 862,
+          "t_ms": 749,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/tool-item-icon.BDlVZwqI.js",
@@ -1770,27 +1790,27 @@
           "tracker": null
         },
         {
-          "t_ms": 868,
+          "t_ms": 756,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://www.asadcdn.com/adlib/beta/branches/abtest/hashMap.json",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 871,
+          "t_ms": 767,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/pec/currency.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 880,
+          "t_ms": 781,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/unified/wrapperMessagingWithoutDetection.js",
@@ -1800,7 +1820,7 @@
           "tracker": null
         },
         {
-          "t_ms": 892,
+          "t_ms": 788,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6abe4f3d7a140aa704e3c9aa/b9b2e5ea5d27782c77c468a2cca2c24d/ci23x11-w600/453616390-jpg",
@@ -1810,27 +1830,7 @@
           "tracker": null
         },
         {
-          "t_ms": 897,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac26a74656315bd2f814c24/aa6872d03379487c59527b7d9b0bc317/ci23x11-w400/dpa-com-261004-936-110762-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 901,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aa41429181cb962d488c209/9dbad0f82675033a0a58a4c5b7782a98/ci23x11-w400/gettyimages-105650326-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 925,
+          "t_ms": 803,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Regular.woff2",
@@ -1840,7 +1840,7 @@
           "tracker": null
         },
         {
-          "t_ms": 933,
+          "t_ms": 806,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Heavy.woff2",
@@ -1850,227 +1850,7 @@
           "tracker": null
         },
         {
-          "t_ms": 940,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abf60de85d64113fb06c7f2/c309622c3bc479d40915f9a9c6c75574/ci23x11-w400/dwosb-martenstein-aw-cw-tuerkis-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 944,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abaa9dab37e570c7536e7a0/0bd65fda6b9f1941a7dfab567aad4ee3/ci23x11-w400/1-png",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1013,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Light.woff2",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1017,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/freight/FreightText-ProBoldItalic.woff2",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1022,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aa967d7f578300cd045cbda/ac0773dafc359835e57a2232fece77ae/ci16x9-w1000/gettyimages-2161447160-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1026,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac228fc85d64113fb06e961/cb382b74d46082f82d8d6c788dc87111/ci16x9-w400/1785313601275-afp-c3fm7kf-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1030,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/EmptyError.DgP3xukA.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1034,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/hooks.rX7QzX-A.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1038,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player-fallback.BThn464g.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1077,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://www.welt.de/assets/public/images/welt-go-bg.jpg",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1081,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac223eed463a3034f717cf7/2f5200826ab29087ba40a764c4cc34f6/ci23x11-w400/2026-10-04t120602z-1399210528-rc2awnafisrz-rtrmadp-3-ukraine-crisis-germany-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1086,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac2062e3b1bc356aee643ad/78415e34be31d6873f1d8456ebeb7132/ci23x11-w400/gettyimages-1454032829-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1091,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abd014d54f9c6309a68489f/18c0d16795c0a4a5daff6dc3c02a29ea/ci23x11-w400/gettyimages-200127258-001-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1095,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abf8925d4d0c24ec26d1600/7d529cb096cd1e6063caac2bc1e2cce7/ci23x11-w400/600460775-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1101,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac20d07c6253b9a73fa5c7d/03d5747ad9bb6d6ffd4cc05fe648062f/ci23x11-w400/dwosb-don-alphonso-sexteas-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1104,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aba2c865ddef1bff0d20767/8469266ff4d11eba34c0022cfdc6c744-master/ci23x11-w400/gettyimages-2207533686-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1107,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abe45ef09fefadd71a548cd/a02fec64aae6a17d934c7d243385ac40/ci23x11-w400/gettyimages-576509718-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1110,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abbb7fb075de12d78a8db82/cf3e85c407e254aa3524b8489f3c4b35-master/ci23x11-w400/pressebild-alicehorackova-cfoto-richard-klicnik-300dpi-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1113,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abdf6d8a159be769c717216/8d0170c51acd7897089717b736c2ee99/ci23x11-w400/dwosb-teaser-netto-brutto-jb-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1118,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac200e33b1bc356aee64353/f3329c8b53e9d8e3877346244ca1d528/ci23x11-w400/afp-87gk4cq-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1125,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac274191943cca8d96f1412/1a185b04cf6f0f4ebae90ec94c3d8437-master/ci23x11-w400/dpa-com-260928-99-785062-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1131,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac0b41f85d64113fb06d901/583ce0ee432b52a27d6e4080ea4e1fb7/ci23x11-w400/4cfc28c2-bdc0-463e-bf36-cbe0ad839c39-srgb",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1136,
+          "t_ms": 811,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6abb4f20b37e570c7536ebc1/a0d998a3bf1ff9bcaceb365d831fdde6/ci23x11-w400/vicampo-rotwein-jpg",
@@ -2080,7 +1860,247 @@
           "tracker": null
         },
         {
-          "t_ms": 1139,
+          "t_ms": 814,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac26a74656315bd2f814c24/aa6872d03379487c59527b7d9b0bc317/ci23x11-w400/dpa-com-261004-936-110762-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 818,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abf60de85d64113fb06c7f2/c309622c3bc479d40915f9a9c6c75574/ci23x11-w400/dwosb-martenstein-aw-cw-tuerkis-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 824,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abaa9dab37e570c7536e7a0/0bd65fda6b9f1941a7dfab567aad4ee3/ci23x11-w400/1-png",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 899,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Light.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 903,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/freight/FreightText-ProBoldItalic.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 906,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aa967d7f578300cd045cbda/ac0773dafc359835e57a2232fece77ae/ci16x9-w1000/gettyimages-2161447160-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 910,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac228fc85d64113fb06e961/cb382b74d46082f82d8d6c788dc87111/ci16x9-w400/1785313601275-afp-c3fm7kf-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 916,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/EmptyError.DgP3xukA.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 920,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/hooks.rX7QzX-A.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 928,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player-fallback.BThn464g.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 943,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.welt.de/assets/public/images/welt-go-bg.jpg",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 947,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac223eed463a3034f717cf7/2f5200826ab29087ba40a764c4cc34f6/ci23x11-w400/2026-10-04t120602z-1399210528-rc2awnafisrz-rtrmadp-3-ukraine-crisis-germany-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 958,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac2062e3b1bc356aee643ad/78415e34be31d6873f1d8456ebeb7132/ci23x11-w400/gettyimages-1454032829-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 961,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aa41429181cb962d488c209/9dbad0f82675033a0a58a4c5b7782a98/ci23x11-w400/gettyimages-105650326-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 965,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abf8925d4d0c24ec26d1600/7d529cb096cd1e6063caac2bc1e2cce7/ci23x11-w400/600460775-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 968,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abd014d54f9c6309a68489f/18c0d16795c0a4a5daff6dc3c02a29ea/ci23x11-w400/gettyimages-200127258-001-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 971,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac20d07c6253b9a73fa5c7d/03d5747ad9bb6d6ffd4cc05fe648062f/ci23x11-w400/dwosb-don-alphonso-sexteas-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 974,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aba2c865ddef1bff0d20767/8469266ff4d11eba34c0022cfdc6c744-master/ci23x11-w400/gettyimages-2207533686-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 979,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abe45ef09fefadd71a548cd/a02fec64aae6a17d934c7d243385ac40/ci23x11-w400/gettyimages-576509718-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 983,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac200e33b1bc356aee64353/f3329c8b53e9d8e3877346244ca1d528/ci23x11-w400/afp-87gk4cq-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 989,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abdf6d8a159be769c717216/8d0170c51acd7897089717b736c2ee99/ci23x11-w400/dwosb-teaser-netto-brutto-jb-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 996,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abbb7fb075de12d78a8db82/cf3e85c407e254aa3524b8489f3c4b35-master/ci23x11-w400/pressebild-alicehorackova-cfoto-richard-klicnik-300dpi-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1001,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac0b41f85d64113fb06d901/583ce0ee432b52a27d6e4080ea4e1fb7/ci23x11-w400/4cfc28c2-bdc0-463e-bf36-cbe0ad839c39-srgb",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1007,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac274191943cca8d96f1412/1a185b04cf6f0f4ebae90ec94c3d8437-master/ci23x11-w400/dpa-com-260928-99-785062-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1011,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6ac21ba685d64113fb06e82c/c0535a45c5e9fac07c0226f61ab46b24/ci23x11-w400/gettyimages-1301086194-jpg",
@@ -2090,207 +2110,207 @@
           "tracker": null
         },
         {
-          "t_ms": 1189,
+          "t_ms": 1017,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/addCSS.842545bd.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1193,
+          "t_ms": 1029,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcY.9b4f506a.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1197,
+          "t_ms": 1043,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/enrichPTV.847d2d06.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1201,
+          "t_ms": 1050,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/err.2606b9c6.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1204,
+          "t_ms": 1055,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/extendSlot.cfdc19c1.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1208,
+          "t_ms": 1060,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/fireRequest.3b532c14.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1211,
+          "t_ms": 1067,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getContWidth.7054d382.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1215,
+          "t_ms": 1076,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getSChain.fedc5db5.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1220,
+          "t_ms": 1085,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getWinHeight.a475b9e9.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1224,
+          "t_ms": 1095,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/idleLoader.fc323c9a.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1228,
+          "t_ms": 1104,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/listenMessage.d6b68eb1.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1239,
+          "t_ms": 1119,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/posOutstream.90206730.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1243,
+          "t_ms": 1139,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderAd.e1536dc2.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1247,
+          "t_ms": 1150,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderedCallback.0f80a72c.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1252,
+          "t_ms": 1153,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sendEvent.5e638723.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1268,
+          "t_ms": 1166,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/setRestrictedArea.aa5286d8.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1273,
+          "t_ms": 1171,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/speedCheck.ea12efc0.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1280,
+          "t_ms": 1175,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getLocalData.c2c0d88c.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1283,
+          "t_ms": 1180,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/instream.cf27fb02.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1290,
+          "t_ms": 1194,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/init.8f1eb72b.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1444,
+          "t_ms": 1276,
           "method": "GET",
           "resource_type": "script",
           "url": "https://rosetta.prod.ps.welt.de/ps-rosetta.js",
@@ -2300,7 +2320,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1496,
+          "t_ms": 1305,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://hua-production.la.welt.de/la-hua-api/v1/articles/comment_counts",
@@ -2310,17 +2330,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1507,
+          "t_ms": 1321,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://www.asadcdn.com/200/test.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1550,
+          "t_ms": 1344,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/headlines-stage-placeholder.vB3PDg5a.js",
@@ -2330,7 +2350,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1573,
+          "t_ms": 1395,
           "method": "GET",
           "resource_type": "script",
           "url": "https://wait-web.prod.ps.welt.de/ps-wait-web-CzikDy8K.js",
@@ -2340,7 +2360,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1576,
+          "t_ms": 1399,
           "method": "GET",
           "resource_type": "script",
           "url": "https://whoami-web.prod.ps.welt.de/ps-whoami-web-CQiUyET_.js",
@@ -2350,7 +2370,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1580,
+          "t_ms": 1402,
           "method": "GET",
           "resource_type": "script",
           "url": "https://orchestra.prod.pss.welt.de/pss-orchestra-BvHRyoFJ.js",
@@ -2360,17 +2380,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1736,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://orchestra-flows.prod.pss.axelspringer.de/welt/live.json",
-          "host": "orchestra-flows.prod.pss.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1748,
+          "t_ms": 1476,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/articles/home",
@@ -2380,17 +2390,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1766,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://whoami-web.prod.ps.welt.de/asinfo-CGtMlU6t.js",
-          "host": "whoami-web.prod.ps.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1780,
+          "t_ms": 1489,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/animated-banner",
@@ -2400,7 +2400,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1797,
+          "t_ms": 1503,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/news-banner/breaking-news",
@@ -2410,7 +2410,27 @@
           "tracker": null
         },
         {
-          "t_ms": 1808,
+          "t_ms": 1510,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://whoami-web.prod.ps.welt.de/asinfo-CGtMlU6t.js",
+          "host": "whoami-web.prod.ps.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1514,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://orchestra-flows.prod.pss.axelspringer.de/welt/live.json",
+          "host": "orchestra-flows.prod.pss.axelspringer.de",
+          "domain": "axelspringer.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1518,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/notifier.client.uPCTHoP3.js",
@@ -2420,7 +2440,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1829,
+          "t_ms": 1560,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consumer-api.prod.auth.welt.de/self-service/fed-cm/parameters",
@@ -2430,7 +2450,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1870,
+          "t_ms": 1588,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
@@ -2440,7 +2460,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1879,
+          "t_ms": 1593,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://consent.up.welt.de/wrapper/v2/meta-data",
@@ -2450,27 +2470,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1914,
+          "t_ms": 1643,
           "method": "POST",
           "resource_type": "ping",
           "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
           "host": "rusty-heartbeat.services.ps.axelspringer.de",
           "domain": "axelspringer.de",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2040,
-          "method": "POST",
-          "resource_type": "ping",
-          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
-          "host": "rusty-heartbeat.services.ps.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2109,
+          "t_ms": 1674,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://consent.up.welt.de/wrapper/v2/messages",
@@ -2480,77 +2490,27 @@
           "tracker": null
         },
         {
-          "t_ms": 2120,
+          "t_ms": 1718,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/scrollHandler.15b141df.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2191,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getScrollTop.3431c031.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
+          "t_ms": 1736,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
+          "host": "rusty-heartbeat.services.ps.axelspringer.de",
+          "domain": "axelspringer.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2200,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcAdPos.b49eb8d5.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2208,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isVisible.94bfd981.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2216,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/stickToSlot.c835ee4e.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2227,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sightLoader.9a6726b0.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2237,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/backchanger.f7cd49a7.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2262,
+          "t_ms": 1771,
           "method": "GET",
           "resource_type": "document",
           "url": "https://consent.up.welt.de/index.html",
@@ -2560,27 +2520,87 @@
           "tracker": null
         },
         {
-          "t_ms": 2367,
+          "t_ms": 1778,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getScrollTop.3431c031.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1782,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcAdPos.b49eb8d5.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1785,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isVisible.94bfd981.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1789,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/stickToSlot.c835ee4e.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1793,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sightLoader.9a6726b0.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1797,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/backchanger.f7cd49a7.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1871,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isChildOf.8f6a7f93.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2371,
+          "t_ms": 1875,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/ovkvmf/propagateOnScroll.634ea025.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2387,
+          "t_ms": 1886,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://consent.up.welt.de/Notice.1c267.css",
@@ -2590,7 +2610,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2390,
+          "t_ms": 1891,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/polyfills.01516.js",
@@ -2600,7 +2620,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2393,
+          "t_ms": 1896,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/Notice.97af9.js",
@@ -2610,7 +2630,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2609,
+          "t_ms": 2016,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consent.up.welt.de/consent/tcfv2/vendor-list/categories",
@@ -2620,7 +2640,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2747,
+          "t_ms": 2093,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consent.up.welt.de/consent/tcfv2/vendor-list/categories",
@@ -2630,7 +2650,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2763,
+          "t_ms": 2099,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.js",
@@ -2640,7 +2660,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2989,
+          "t_ms": 2279,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/utag/tiqapp/utag.v.js",
@@ -2650,17 +2670,21 @@
           "tracker": null
         },
         {
-          "t_ms": 2993,
+          "t_ms": 2281,
           "method": "GET",
           "resource_type": "script",
           "url": "https://simetra.tracking.ringieraxelspringer.tech/EA-3734738/simetra.boot.js",
           "host": "simetra.tracking.ringieraxelspringer.tech",
           "domain": "ringieraxelspringer.tech",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "tracking.ringieraxelspringer.tech",
+            "entity": "Ringier Axel Springer Tech",
+            "category": "analytics"
+          }
         },
         {
-          "t_ms": 3000,
+          "t_ms": 2284,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.155.js",
@@ -2670,7 +2694,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3098,
+          "t_ms": 2371,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://as.welt.de/id",
@@ -2680,17 +2704,21 @@
           "tracker": null
         },
         {
-          "t_ms": 3133,
+          "t_ms": 2419,
           "method": "GET",
           "resource_type": "script",
           "url": "https://simetra.tracking.ringieraxelspringer.tech/3.31.0/b66.min.js",
           "host": "simetra.tracking.ringieraxelspringer.tech",
           "domain": "ringieraxelspringer.tech",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "tracking.ringieraxelspringer.tech",
+            "entity": "Ringier Axel Springer Tech",
+            "category": "analytics"
+          }
         },
         {
-          "t_ms": 3237,
+          "t_ms": 2512,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://ras.welt.de/v2/EA-3734738/me",
@@ -2700,17 +2728,17 @@
           "tracker": null
         },
         {
-          "t_ms": 3254,
+          "t_ms": 2521,
           "method": "POST",
           "resource_type": "xhr",
-          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s52520974675592",
+          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s67656915486088",
           "host": "as.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 3387,
+          "t_ms": 2657,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://ras.welt.de/v2/",
@@ -2720,7 +2748,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3483,
+          "t_ms": 2772,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://ras.welt.de/v2/",
@@ -2730,7 +2758,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3489,
+          "t_ms": 2775,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.234.js",
@@ -2740,12 +2768,22 @@
           "tracker": null
         },
         {
-          "t_ms": 3559,
+          "t_ms": 2847,
           "method": "GET",
           "resource_type": "image",
-          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s56685246481547",
+          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s61923548541352",
           "host": "as.welt.de",
           "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3422,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
+          "host": "rusty-heartbeat.services.ps.axelspringer.de",
+          "domain": "axelspringer.de",
           "party": "first",
           "tracker": null
         }
@@ -2887,7 +2925,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 124,
+          "t_ms": 99,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.welt.de/",
@@ -2897,17 +2935,17 @@
           "tracker": null
         },
         {
-          "t_ms": 900,
+          "t_ms": 431,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://bend.shootwhy.com/vendor/d654b3f0.js",
+          "url": "https://bend.shootwhy.com/assets/216c2956.js",
           "host": "bend.shootwhy.com",
           "domain": "shootwhy.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 904,
+          "t_ms": 434,
           "method": "GET",
           "resource_type": "script",
           "url": "https://jnt.welt.de/6pzfc2.js",
@@ -2917,7 +2955,7 @@
           "tracker": null
         },
         {
-          "t_ms": 909,
+          "t_ms": 438,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/section.module.DbLmQ0gt.js",
@@ -2927,7 +2965,7 @@
           "tracker": null
         },
         {
-          "t_ms": 916,
+          "t_ms": 442,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://www.welt.de/assets/bff-section/css/section.vlt9f90ua1.css",
@@ -2937,247 +2975,37 @@
           "tracker": null
         },
         {
-          "t_ms": 923,
+          "t_ms": 445,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/pages/welt.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 997,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/react.BPdhuoKc.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1005,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-subscription.DiNU7l_u.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1027,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.saL5Xypc.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1036,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/headlines-stage.state.DBkfZPIO.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1046,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/components.module.BIRsDccn.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1054,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/user-manager.D8HpB1GN.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1061,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player.DTAvasMX.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1068,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/in-viewport.7fN8zyEN.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1073,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/fetch.DIshuMG5.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1078,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/ui.state.ONQKZvx7.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1088,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/elements.L7b2HywX.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1093,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools-abo.NJiCkX3k.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1099,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.D7oOk6HY.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1104,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/status.actions.B19XxCaQ.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1107,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/script-replacer.BzlN9FQT.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1112,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/section-path.Bd-7-P3-.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1117,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/aria-label.helper.CwosWwXh.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1122,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/teaser-footer.Xa8OtwO7.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1127,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/logger.CV8hbJUc.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1133,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools.state.Dib0-eS7.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1137,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/tool-item-icon.BDlVZwqI.js",
-          "host": "www.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1144,
+          "t_ms": 586,
           "method": "GET",
           "resource_type": "xhr",
-          "url": "https://www.asadcdn.com/adlib/hashMap.json",
+          "url": "https://www.asadcdn.com/adlib/beta/branches/abtest/hashMap.json",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1148,
+          "t_ms": 590,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/pec/currency.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1154,
+          "t_ms": 598,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/unified/wrapperMessagingWithoutDetection.js",
@@ -3187,7 +3015,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1158,
+          "t_ms": 601,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6abe4f3d7a140aa704e3c9aa/b9b2e5ea5d27782c77c468a2cca2c24d/ci23x11-w600/453616390-jpg",
@@ -3197,7 +3025,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1176,
+          "t_ms": 702,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Regular.woff2",
@@ -3207,7 +3035,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1181,
+          "t_ms": 706,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Heavy.woff2",
@@ -3217,217 +3045,217 @@
           "tracker": null
         },
         {
-          "t_ms": 1211,
+          "t_ms": 711,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac26a74656315bd2f814c24/aa6872d03379487c59527b7d9b0bc317/ci23x11-w400/dpa-com-261004-936-110762-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1215,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aa41429181cb962d488c209/9dbad0f82675033a0a58a4c5b7782a98/ci23x11-w400/gettyimages-105650326-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1219,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abf60de85d64113fb06c7f2/c309622c3bc479d40915f9a9c6c75574/ci23x11-w400/dwosb-martenstein-aw-cw-tuerkis-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1222,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abaa9dab37e570c7536e7a0/0bd65fda6b9f1941a7dfab567aad4ee3/ci23x11-w400/1-png",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1265,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Light.woff2",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/react.BPdhuoKc.js",
           "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1269,
+          "t_ms": 715,
           "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.welt.de/assets/public/fonts/freight/FreightText-ProBoldItalic.woff2",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-subscription.DiNU7l_u.js",
           "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1272,
+          "t_ms": 718,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aa967d7f578300cd045cbda/ac0773dafc359835e57a2232fece77ae/ci16x9-w1000/gettyimages-2161447160-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1276,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac228fc85d64113fb06e961/cb382b74d46082f82d8d6c788dc87111/ci16x9-w400/1785313601275-afp-c3fm7kf-jpg",
-          "host": "images.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1335,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://www.welt.de/assets/public/images/welt-go-bg.jpg",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.saL5Xypc.js",
           "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1343,
+          "t_ms": 721,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac223eed463a3034f717cf7/2f5200826ab29087ba40a764c4cc34f6/ci23x11-w400/2026-10-04t120602z-1399210528-rc2awnafisrz-rtrmadp-3-ukraine-crisis-germany-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/headlines-stage.state.DBkfZPIO.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1351,
+          "t_ms": 725,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac2062e3b1bc356aee643ad/78415e34be31d6873f1d8456ebeb7132/ci23x11-w400/gettyimages-1454032829-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/components.module.BIRsDccn.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1357,
+          "t_ms": 729,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abd014d54f9c6309a68489f/18c0d16795c0a4a5daff6dc3c02a29ea/ci23x11-w400/gettyimages-200127258-001-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/user-manager.D8HpB1GN.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1362,
+          "t_ms": 732,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abf8925d4d0c24ec26d1600/7d529cb096cd1e6063caac2bc1e2cce7/ci23x11-w400/600460775-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player.DTAvasMX.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1366,
+          "t_ms": 736,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac20d07c6253b9a73fa5c7d/03d5747ad9bb6d6ffd4cc05fe648062f/ci23x11-w400/dwosb-don-alphonso-sexteas-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/in-viewport.7fN8zyEN.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1371,
+          "t_ms": 741,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6aba2c865ddef1bff0d20767/8469266ff4d11eba34c0022cfdc6c744-master/ci23x11-w400/gettyimages-2207533686-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/fetch.DIshuMG5.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1378,
+          "t_ms": 746,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abe45ef09fefadd71a548cd/a02fec64aae6a17d934c7d243385ac40/ci23x11-w400/gettyimages-576509718-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/ui.state.ONQKZvx7.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1385,
+          "t_ms": 750,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abbb7fb075de12d78a8db82/cf3e85c407e254aa3524b8489f3c4b35-master/ci23x11-w400/pressebild-alicehorackova-cfoto-richard-klicnik-300dpi-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/elements.L7b2HywX.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1390,
+          "t_ms": 754,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6abdf6d8a159be769c717216/8d0170c51acd7897089717b736c2ee99/ci23x11-w400/dwosb-teaser-netto-brutto-jb-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools-abo.NJiCkX3k.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1395,
+          "t_ms": 759,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac200e33b1bc356aee64353/f3329c8b53e9d8e3877346244ca1d528/ci23x11-w400/afp-87gk4cq-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/state-singleton.D7oOk6HY.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1399,
+          "t_ms": 764,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac274191943cca8d96f1412/1a185b04cf6f0f4ebae90ec94c3d8437-master/ci23x11-w400/dpa-com-260928-99-785062-jpg",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/status.actions.B19XxCaQ.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1403,
+          "t_ms": 767,
           "method": "GET",
-          "resource_type": "image",
-          "url": "https://images.welt.de/6ac0b41f85d64113fb06d901/583ce0ee432b52a27d6e4080ea4e1fb7/ci23x11-w400/4cfc28c2-bdc0-463e-bf36-cbe0ad839c39-srgb",
-          "host": "images.welt.de",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/script-replacer.BzlN9FQT.js",
+          "host": "www.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1408,
+          "t_ms": 771,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/section-path.Bd-7-P3-.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 786,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/aria-label.helper.CwosWwXh.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 791,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/teaser-footer.Xa8OtwO7.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 797,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/logger.CV8hbJUc.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 803,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/header-top-tools.state.Dib0-eS7.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 806,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.welt.de/assets/bff-section/scripts/chunks/tool-item-icon.BDlVZwqI.js",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 814,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6abb4f20b37e570c7536ebc1/a0d998a3bf1ff9bcaceb365d831fdde6/ci23x11-w400/vicampo-rotwein-jpg",
@@ -3437,7 +3265,227 @@
           "tracker": null
         },
         {
-          "t_ms": 1412,
+          "t_ms": 857,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac26a74656315bd2f814c24/aa6872d03379487c59527b7d9b0bc317/ci23x11-w400/dpa-com-261004-936-110762-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 871,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abf60de85d64113fb06c7f2/c309622c3bc479d40915f9a9c6c75574/ci23x11-w400/dwosb-martenstein-aw-cw-tuerkis-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 883,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abaa9dab37e570c7536e7a0/0bd65fda6b9f1941a7dfab567aad4ee3/ci23x11-w400/1-png",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 911,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/ffmark/Mark-Light.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 915,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.welt.de/assets/public/fonts/freight/FreightText-ProBoldItalic.woff2",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 919,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aa967d7f578300cd045cbda/ac0773dafc359835e57a2232fece77ae/ci16x9-w1000/gettyimages-2161447160-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 922,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac228fc85d64113fb06e961/cb382b74d46082f82d8d6c788dc87111/ci16x9-w400/1785313601275-afp-c3fm7kf-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 925,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.welt.de/assets/public/images/welt-go-bg.jpg",
+          "host": "www.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 931,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac223eed463a3034f717cf7/2f5200826ab29087ba40a764c4cc34f6/ci23x11-w400/2026-10-04t120602z-1399210528-rc2awnafisrz-rtrmadp-3-ukraine-crisis-germany-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 934,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac2062e3b1bc356aee643ad/78415e34be31d6873f1d8456ebeb7132/ci23x11-w400/gettyimages-1454032829-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 937,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aa41429181cb962d488c209/9dbad0f82675033a0a58a4c5b7782a98/ci23x11-w400/gettyimages-105650326-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 941,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abf8925d4d0c24ec26d1600/7d529cb096cd1e6063caac2bc1e2cce7/ci23x11-w400/600460775-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 947,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abd014d54f9c6309a68489f/18c0d16795c0a4a5daff6dc3c02a29ea/ci23x11-w400/gettyimages-200127258-001-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 954,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac20d07c6253b9a73fa5c7d/03d5747ad9bb6d6ffd4cc05fe648062f/ci23x11-w400/dwosb-don-alphonso-sexteas-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 968,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6aba2c865ddef1bff0d20767/8469266ff4d11eba34c0022cfdc6c744-master/ci23x11-w400/gettyimages-2207533686-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 974,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abe45ef09fefadd71a548cd/a02fec64aae6a17d934c7d243385ac40/ci23x11-w400/gettyimages-576509718-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 979,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac200e33b1bc356aee64353/f3329c8b53e9d8e3877346244ca1d528/ci23x11-w400/afp-87gk4cq-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1010,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abdf6d8a159be769c717216/8d0170c51acd7897089717b736c2ee99/ci23x11-w400/dwosb-teaser-netto-brutto-jb-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1018,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6abbb7fb075de12d78a8db82/cf3e85c407e254aa3524b8489f3c4b35-master/ci23x11-w400/pressebild-alicehorackova-cfoto-richard-klicnik-300dpi-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1023,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/addCSS.842545bd.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1026,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac0b41f85d64113fb06d901/583ce0ee432b52a27d6e4080ea4e1fb7/ci23x11-w400/4cfc28c2-bdc0-463e-bf36-cbe0ad839c39-srgb",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1029,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.welt.de/6ac274191943cca8d96f1412/1a185b04cf6f0f4ebae90ec94c3d8437-master/ci23x11-w400/dpa-com-260928-99-785062-jpg",
+          "host": "images.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1032,
           "method": "GET",
           "resource_type": "image",
           "url": "https://images.welt.de/6ac21ba685d64113fb06e82c/c0535a45c5e9fac07c0226f61ab46b24/ci23x11-w400/gettyimages-1301086194-jpg",
@@ -3447,7 +3495,197 @@
           "tracker": null
         },
         {
-          "t_ms": 1422,
+          "t_ms": 1035,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcY.9b4f506a.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1039,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/enrichPTV.847d2d06.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1042,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/err.2606b9c6.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1046,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/extendSlot.cfdc19c1.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1049,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/fireRequest.3b532c14.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1051,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getContWidth.7054d382.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1053,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getSChain.fedc5db5.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1055,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getWinHeight.a475b9e9.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1057,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/idleLoader.fc323c9a.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1059,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/listenMessage.d6b68eb1.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1061,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/posOutstream.90206730.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1063,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderAd.e1536dc2.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1065,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderedCallback.0f80a72c.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1067,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sendEvent.5e638723.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1069,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/setRestrictedArea.aa5286d8.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1071,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/speedCheck.ea12efc0.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1073,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getLocalData.c2c0d88c.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1076,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/instream.cf27fb02.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1082,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/init.8f1eb72b.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1097,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/EmptyError.DgP3xukA.js",
@@ -3457,7 +3695,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1425,
+          "t_ms": 1109,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/hooks.rX7QzX-A.js",
@@ -3467,7 +3705,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1431,
+          "t_ms": 1113,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/welt-video-player-fallback.BThn464g.js",
@@ -3477,207 +3715,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1436,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/addCSS.842545bd.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1441,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcY.9b4f506a.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1446,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/enrichPTV.847d2d06.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1452,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/err.2606b9c6.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1456,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/extendSlot.cfdc19c1.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1470,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/fireRequest.3b532c14.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1475,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getContWidth.7054d382.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1482,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getSChain.fedc5db5.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1487,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getWinHeight.a475b9e9.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1491,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/idleLoader.fc323c9a.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1495,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/listenMessage.d6b68eb1.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1500,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/posOutstream.90206730.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1503,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderAd.e1536dc2.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1507,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/renderedCallback.0f80a72c.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1512,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sendEvent.5e638723.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1520,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/setRestrictedArea.aa5286d8.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1525,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/speedCheck.ea12efc0.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1533,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getLocalData.c2c0d88c.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1538,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/instream.cf27fb02.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1542,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.asadcdn.com/adlib/libmodules/desktop/init.8f1eb72b.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1737,
+          "t_ms": 1363,
           "method": "GET",
           "resource_type": "script",
           "url": "https://rosetta.prod.ps.welt.de/ps-rosetta.js",
@@ -3687,7 +3725,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1836,
+          "t_ms": 1385,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://www.asadcdn.com/200/test.js",
+          "host": "www.asadcdn.com",
+          "domain": "asadcdn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1388,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://hua-production.la.welt.de/la-hua-api/v1/articles/comment_counts",
@@ -3697,47 +3745,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1847,
-          "method": "GET",
-          "resource_type": "xhr",
-          "url": "https://www.asadcdn.com/200/test.js",
-          "host": "www.asadcdn.com",
-          "domain": "asadcdn.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1890,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://wait-web.prod.ps.welt.de/ps-wait-web-CzikDy8K.js",
-          "host": "wait-web.prod.ps.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1896,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://whoami-web.prod.ps.welt.de/ps-whoami-web-CQiUyET_.js",
-          "host": "whoami-web.prod.ps.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1902,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://orchestra.prod.pss.welt.de/pss-orchestra-BvHRyoFJ.js",
-          "host": "orchestra.prod.pss.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1950,
+          "t_ms": 1421,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/headlines-stage-placeholder.vB3PDg5a.js",
@@ -3747,37 +3755,37 @@
           "tracker": null
         },
         {
-          "t_ms": 2061,
+          "t_ms": 1485,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://orchestra-flows.prod.pss.axelspringer.de/welt/live.json",
-          "host": "orchestra-flows.prod.pss.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
+          "resource_type": "script",
+          "url": "https://wait-web.prod.ps.welt.de/ps-wait-web-CzikDy8K.js",
+          "host": "wait-web.prod.ps.welt.de",
+          "domain": "welt.de",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2099,
+          "t_ms": 1487,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://whoami-web.prod.ps.welt.de/asinfo-CGtMlU6t.js",
+          "url": "https://whoami-web.prod.ps.welt.de/ps-whoami-web-CQiUyET_.js",
           "host": "whoami-web.prod.ps.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2187,
+          "t_ms": 1491,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://consumer-api.prod.auth.welt.de/self-service/fed-cm/parameters",
-          "host": "consumer-api.prod.auth.welt.de",
+          "resource_type": "script",
+          "url": "https://orchestra.prod.pss.welt.de/pss-orchestra-BvHRyoFJ.js",
+          "host": "orchestra.prod.pss.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2199,
+          "t_ms": 1551,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/articles/home",
@@ -3787,27 +3795,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2241,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://consent.up.welt.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
-          "host": "consent.up.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 2248,
-          "method": "GET",
-          "resource_type": "xhr",
-          "url": "https://consent.up.welt.de/wrapper/v2/meta-data",
-          "host": "consent.up.welt.de",
-          "domain": "welt.de",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 2272,
+          "t_ms": 1559,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/animated-banner",
@@ -3817,7 +3805,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2295,
+          "t_ms": 1573,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.welt.de/api/news-banner/breaking-news",
@@ -3827,17 +3815,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2336,
-          "method": "POST",
-          "resource_type": "ping",
-          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
-          "host": "rusty-heartbeat.services.ps.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2342,
+          "t_ms": 1583,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.welt.de/assets/bff-section/scripts/chunks/notifier.client.uPCTHoP3.js",
@@ -3847,17 +3825,77 @@
           "tracker": null
         },
         {
-          "t_ms": 2397,
+          "t_ms": 1597,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://whoami-web.prod.ps.welt.de/asinfo-CGtMlU6t.js",
+          "host": "whoami-web.prod.ps.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1604,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://orchestra-flows.prod.pss.axelspringer.de/welt/live.json",
+          "host": "orchestra-flows.prod.pss.axelspringer.de",
+          "domain": "axelspringer.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1660,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consumer-api.prod.auth.welt.de/self-service/fed-cm/parameters",
+          "host": "consumer-api.prod.auth.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1699,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent.up.welt.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "consent.up.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1702,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent.up.welt.de/wrapper/v2/meta-data",
+          "host": "consent.up.welt.de",
+          "domain": "welt.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1739,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
+          "host": "rusty-heartbeat.services.ps.axelspringer.de",
+          "domain": "axelspringer.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1775,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/scrollHandler.15b141df.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2430,
+          "t_ms": 1788,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://consent.up.welt.de/wrapper/v2/messages",
@@ -3867,77 +3905,67 @@
           "tracker": null
         },
         {
-          "t_ms": 2445,
-          "method": "POST",
-          "resource_type": "ping",
-          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
-          "host": "rusty-heartbeat.services.ps.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2491,
+          "t_ms": 1828,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/getScrollTop.3431c031.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2495,
+          "t_ms": 1833,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/calcAdPos.b49eb8d5.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2503,
+          "t_ms": 1836,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isVisible.94bfd981.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2510,
+          "t_ms": 1840,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/stickToSlot.c835ee4e.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2517,
+          "t_ms": 1845,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/sightLoader.9a6726b0.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2524,
+          "t_ms": 1848,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/backchanger.f7cd49a7.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2558,
+          "t_ms": 1874,
           "method": "GET",
           "resource_type": "document",
           "url": "https://consent.up.welt.de/index.html",
@@ -3947,27 +3975,37 @@
           "tracker": null
         },
         {
-          "t_ms": 2599,
+          "t_ms": 1893,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
+          "host": "rusty-heartbeat.services.ps.axelspringer.de",
+          "domain": "axelspringer.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1941,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/desktop/isChildOf.8f6a7f93.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2605,
+          "t_ms": 1945,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.asadcdn.com/adlib/libmodules/ovkvmf/propagateOnScroll.634ea025.js",
           "host": "www.asadcdn.com",
           "domain": "asadcdn.com",
-          "party": "third",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2672,
+          "t_ms": 1983,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://consent.up.welt.de/Notice.1c267.css",
@@ -3977,7 +4015,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2677,
+          "t_ms": 1986,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/polyfills.01516.js",
@@ -3987,7 +4025,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2683,
+          "t_ms": 1992,
           "method": "GET",
           "resource_type": "script",
           "url": "https://consent.up.welt.de/Notice.97af9.js",
@@ -3997,7 +4035,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2876,
+          "t_ms": 2173,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consent.up.welt.de/consent/tcfv2/vendor-list/categories",
@@ -4007,7 +4045,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2998,
+          "t_ms": 2239,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://consent.up.welt.de/consent/tcfv2/vendor-list/categories",
@@ -4017,7 +4055,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3027,
+          "t_ms": 2249,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.js",
@@ -4027,7 +4065,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3224,
+          "t_ms": 2406,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/utag/tiqapp/utag.v.js",
@@ -4037,17 +4075,21 @@
           "tracker": null
         },
         {
-          "t_ms": 3227,
+          "t_ms": 2410,
           "method": "GET",
           "resource_type": "script",
           "url": "https://simetra.tracking.ringieraxelspringer.tech/EA-3734738/simetra.boot.js",
           "host": "simetra.tracking.ringieraxelspringer.tech",
           "domain": "ringieraxelspringer.tech",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "tracking.ringieraxelspringer.tech",
+            "entity": "Ringier Axel Springer Tech",
+            "category": "analytics"
+          }
         },
         {
-          "t_ms": 3232,
+          "t_ms": 2415,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.155.js",
@@ -4057,7 +4099,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3329,
+          "t_ms": 2492,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://as.welt.de/id",
@@ -4067,17 +4109,21 @@
           "tracker": null
         },
         {
-          "t_ms": 3363,
+          "t_ms": 2542,
           "method": "GET",
           "resource_type": "script",
           "url": "https://simetra.tracking.ringieraxelspringer.tech/3.31.0/b66.min.js",
           "host": "simetra.tracking.ringieraxelspringer.tech",
           "domain": "ringieraxelspringer.tech",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "tracking.ringieraxelspringer.tech",
+            "entity": "Ringier Axel Springer Tech",
+            "category": "analytics"
+          }
         },
         {
-          "t_ms": 3466,
+          "t_ms": 2642,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://ras.welt.de/v2/EA-3734738/me",
@@ -4087,17 +4133,17 @@
           "tracker": null
         },
         {
-          "t_ms": 3481,
+          "t_ms": 2652,
           "method": "POST",
           "resource_type": "xhr",
-          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s55405172512813",
+          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s61890017507567",
           "host": "as.welt.de",
           "domain": "welt.de",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 3607,
+          "t_ms": 2776,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://ras.welt.de/v2/",
@@ -4107,7 +4153,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3706,
+          "t_ms": 2894,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://ras.welt.de/v2/",
@@ -4117,7 +4163,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3710,
+          "t_ms": 2899,
           "method": "GET",
           "resource_type": "script",
           "url": "https://ast.welt.de/welt/prod/utag.234.js",
@@ -4127,23 +4173,13 @@
           "tracker": null
         },
         {
-          "t_ms": 3775,
+          "t_ms": 2952,
           "method": "GET",
           "resource_type": "image",
-          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s51005590577563",
+          "url": "https://as.welt.de/b/ss/axelspringerwelt/1/JS-2.10.0/s64743414844433",
           "host": "as.welt.de",
           "domain": "welt.de",
           "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 11229,
-          "method": "POST",
-          "resource_type": "ping",
-          "url": "https://rusty-heartbeat.services.ps.axelspringer.de/",
-          "host": "rusty-heartbeat.services.ps.axelspringer.de",
-          "domain": "axelspringer.de",
-          "party": "third",
           "tracker": null
         }
       ],
@@ -4157,6 +4193,15 @@
           "secure": true,
           "http_only": false,
           "same_site": "Lax"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "welt.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
         },
         {
           "name": "csrf_token_813e7fa20460eee846d207d1160337747401ce935177bdb8571bc30ed275e535",
@@ -4184,15 +4229,6 @@
           "secure": false,
           "http_only": true,
           "same_site": "Lax"
-        },
-        {
-          "name": "_sp_su",
-          "domain": "welt.de",
-          "party": "first",
-          "session": false,
-          "secure": true,
-          "http_only": false,
-          "same_site": "None"
         },
         {
           "name": "cmp_cv_list",

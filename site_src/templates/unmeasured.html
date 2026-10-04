@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Not measured{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Sites we could not measure, and why</h1>
+    <p class="sub">The tool identifies itself and does not try to bypass blocks, so some sites refuse it. We list them instead of hiding them.</p>
+    {% if unmeasured %}
+    <div class="table-scroll">
+      <table class="t">
+        <thead><tr><th>Site</th><th>Country</th><th>What happened</th></tr></thead>
+        <tbody>
+        {% for s in unmeasured %}
+          <tr><td><a href="{{ root }}sites/{{ s.stem }}.html">{{ s.name }}</a></td><td>{{ s.group }}</td><td>{{ s.status_text }}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <div class="card">Every site in the list could be measured this week.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

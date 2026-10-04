@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}About and corrections{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>About and corrections</h1>
+
+    <h2>What this is</h2>
+    <p>{{ site_name }} measures, every week, which third-party tracking services news websites contact when a page is loaded with no clicks and no consent given. The method, its limits and the list used to classify services are public on the <a href="{{ root }}method.html">method page</a>, and every report is published as raw data.</p>
+    {% if author %}<p>Maintained by <b>{{ author }}</b>{% if linkedin_url %} (<a href="{{ linkedin_url }}" rel="noopener">LinkedIn</a>){% endif %}.</p>{% endif %}
+
+    <h2>Corrections and right of reply</h2>
+    <p>Mistakes are possible: a domain can be attributed to the wrong operator, an outlet's own domain can be missed, a page can behave differently for a reader in another country. If you represent a listed site, or you spot an error, tell us:</p>
+    <ul>
+      {% if contact_email %}<li>by email: <a href="mailto:{{ contact_email }}">{{ contact_email }}</a></li>{% endif %}
+      {% if repo_url %}<li>by opening an issue: <a href="{{ repo_url }}/issues" rel="noopener">{{ repo_url }}/issues</a></li>{% endif %}
+      {% if not contact_email and not repo_url %}<li>through the contact details of the repository that publishes this site</li>{% endif %}
+    </ul>
+    <p>We re-check what is reported, correct what is wrong, and record each correction in the data and on this page. We do not remove a site from the list at its request, but we will state its reply next to its results.</p>
+
+    <h2>Independence</h2>
+    <p>No outlet pays for, or is paid by, this project. At the moment it has no income and no affiliate links. If that changes, it will be disclosed on this page before it starts, and it will never influence what is measured or how it is classified.</p>
+
+    <h2>Reproducibility</h2>
+    <p>Each report records the tool version, browser, locale, time zone, user agent and the place the scan ran from, plus the request log of every pass (without query strings or cookie values). The latest table is available as <a href="{{ root }}data/latest.csv">CSV</a>.</p>
+
+    <h2>Changes to the method</h2>
+    <ul>
+      <li><b>Version {{ tool_version }}</b> (first public version): counts of third-party tracking services before any interaction, three passes, median, fixed bands A–E, small hand-built classification list.</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

@@ -1,43 +1,298 @@
 {
-  "_note": "DRAFT outlet list (36 sites: 12 US, 12 UK, 12 DE; mostly general news plus a few sports sites). Chosen by judgement, not by traffic data: verify against a current ranking before publishing anything. first_party_domains lists only domains believed to belong to the outlet; refine it from scan results (inspect third_party_domains and move the outlet's own CDNs here). The site's own host is always first party.",
+  "_note": "DRAFT outlet list (36 sites: 12 US, 12 UK, 12 DE; mostly general news plus a few sports sites). Chosen by judgement, not by traffic data: verify against a current ranking before publishing anything. first_party_domains lists only domains believed to belong to the outlet; refine it from scan results (inspect third_party_domains and move the outlet's own CDNs here). The site's own host is always first party. First-party additions of 2026-10-04 rest on public knowledge of each group's own domains plus traffic patterns in the first scan; unidentified domains (e.g. asadcdn.com, greenvideo.io, html-load.com, ebxcdn.com) are deliberately left as third party. asadcdn.com (paths /adlib/..., seen only on Bild and Die Welt) is treated as Axel Springer's own ad-delivery code: inferred from the 'AdLib' tool Axel Springer is documented to run, not confirmed.",
   "sites": [
-    {"name": "The New York Times", "url": "https://www.nytimes.com", "first_party_domains": ["nyt.com", "nytimg.com"]},
-    {"name": "The Washington Post", "url": "https://www.washingtonpost.com", "first_party_domains": []},
-    {"name": "CNN", "url": "https://edition.cnn.com", "first_party_domains": []},
-    {"name": "Fox News", "url": "https://www.foxnews.com", "first_party_domains": ["fncstatic.com"]},
-    {"name": "USA Today", "url": "https://www.usatoday.com", "first_party_domains": ["gannett-cdn.com"]},
-    {"name": "NBC News", "url": "https://www.nbcnews.com", "first_party_domains": []},
-    {"name": "The Wall Street Journal", "url": "https://www.wsj.com", "first_party_domains": ["dowjones.com"]},
-    {"name": "Associated Press", "url": "https://apnews.com", "first_party_domains": []},
-    {"name": "New York Post", "url": "https://nypost.com", "first_party_domains": []},
-    {"name": "Los Angeles Times", "url": "https://www.latimes.com", "first_party_domains": []},
-    {"name": "ESPN", "url": "https://www.espn.com", "first_party_domains": ["espncdn.com"]},
-    {"name": "CBS Sports", "url": "https://www.cbssports.com", "first_party_domains": []},
-
-    {"name": "BBC News", "url": "https://www.bbc.co.uk/news", "first_party_domains": ["bbc.com", "bbci.co.uk"]},
-    {"name": "The Guardian", "url": "https://www.theguardian.com", "first_party_domains": ["guim.co.uk", "guardianapis.com"]},
-    {"name": "Daily Mail", "url": "https://www.dailymail.co.uk", "first_party_domains": []},
-    {"name": "The Telegraph", "url": "https://www.telegraph.co.uk", "first_party_domains": []},
-    {"name": "The Sun", "url": "https://www.thesun.co.uk", "first_party_domains": []},
-    {"name": "The Independent", "url": "https://www.independent.co.uk", "first_party_domains": []},
-    {"name": "Daily Mirror", "url": "https://www.mirror.co.uk", "first_party_domains": []},
-    {"name": "The Times", "url": "https://www.thetimes.co.uk", "first_party_domains": []},
-    {"name": "Sky News", "url": "https://news.sky.com", "first_party_domains": ["sky.com"]},
-    {"name": "Evening Standard", "url": "https://www.standard.co.uk", "first_party_domains": []},
-    {"name": "Financial Times", "url": "https://www.ft.com", "first_party_domains": ["ftcdn.net"]},
-    {"name": "Sky Sports", "url": "https://www.skysports.com", "first_party_domains": ["sky.com"]},
-
-    {"name": "Der Spiegel", "url": "https://www.spiegel.de", "first_party_domains": []},
-    {"name": "Bild", "url": "https://www.bild.de", "first_party_domains": []},
-    {"name": "Die Zeit", "url": "https://www.zeit.de", "first_party_domains": []},
-    {"name": "Frankfurter Allgemeine (FAZ)", "url": "https://www.faz.net", "first_party_domains": []},
-    {"name": "Süddeutsche Zeitung", "url": "https://www.sueddeutsche.de", "first_party_domains": []},
-    {"name": "Die Welt", "url": "https://www.welt.de", "first_party_domains": []},
-    {"name": "Tagesschau", "url": "https://www.tagesschau.de", "first_party_domains": []},
-    {"name": "Focus Online", "url": "https://www.focus.de", "first_party_domains": []},
-    {"name": "t-online", "url": "https://www.t-online.de", "first_party_domains": []},
-    {"name": "n-tv", "url": "https://www.n-tv.de", "first_party_domains": []},
-    {"name": "kicker", "url": "https://www.kicker.de", "first_party_domains": []},
-    {"name": "Sport1", "url": "https://www.sport1.de", "first_party_domains": []}
+    {
+      "name": "The New York Times",
+      "url": "https://www.nytimes.com",
+      "first_party_domains": [
+        "nyt.com",
+        "nytimg.com"
+      ],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "The Washington Post",
+      "url": "https://www.washingtonpost.com",
+      "first_party_domains": [],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "CNN",
+      "url": "https://edition.cnn.com",
+      "first_party_domains": [],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "Fox News",
+      "url": "https://www.foxnews.com",
+      "first_party_domains": [
+        "fncstatic.com"
+      ],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "USA Today",
+      "url": "https://www.usatoday.com",
+      "first_party_domains": [
+        "gannett-cdn.com",
+        "gannettdigital.com"
+      ],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "NBC News",
+      "url": "https://www.nbcnews.com",
+      "first_party_domains": [
+        "s-nbcnews.com"
+      ],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "The Wall Street Journal",
+      "url": "https://www.wsj.com",
+      "first_party_domains": [
+        "dowjones.com"
+      ],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "Associated Press",
+      "url": "https://apnews.com",
+      "first_party_domains": [],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "New York Post",
+      "url": "https://nypost.com",
+      "first_party_domains": [],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "Los Angeles Times",
+      "url": "https://www.latimes.com",
+      "first_party_domains": [],
+      "group": "US",
+      "kind": "news"
+    },
+    {
+      "name": "ESPN",
+      "url": "https://www.espn.com",
+      "first_party_domains": [
+        "espncdn.com",
+        "go.com"
+      ],
+      "group": "US",
+      "kind": "sports"
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com",
+      "first_party_domains": [
+        "cbsistatic.com",
+        "cbsimg.net"
+      ],
+      "group": "US",
+      "kind": "sports"
+    },
+    {
+      "name": "BBC News",
+      "url": "https://www.bbc.co.uk/news",
+      "first_party_domains": [
+        "bbc.com",
+        "bbci.co.uk"
+      ],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "The Guardian",
+      "url": "https://www.theguardian.com",
+      "first_party_domains": [
+        "guim.co.uk",
+        "guardianapis.com"
+      ],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "Daily Mail",
+      "url": "https://www.dailymail.co.uk",
+      "first_party_domains": [],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "The Telegraph",
+      "url": "https://www.telegraph.co.uk",
+      "first_party_domains": [],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "The Sun",
+      "url": "https://www.thesun.co.uk",
+      "first_party_domains": [],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "The Independent",
+      "url": "https://www.independent.co.uk",
+      "first_party_domains": [
+        "the-independent.com"
+      ],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "Daily Mirror",
+      "url": "https://www.mirror.co.uk",
+      "first_party_domains": [],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "The Times",
+      "url": "https://www.thetimes.co.uk",
+      "first_party_domains": [],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "Sky News",
+      "url": "https://news.sky.com",
+      "first_party_domains": [
+        "sky.com"
+      ],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "Evening Standard",
+      "url": "https://www.standard.co.uk",
+      "first_party_domains": [],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "Financial Times",
+      "url": "https://www.ft.com",
+      "first_party_domains": [
+        "ftcdn.net"
+      ],
+      "group": "UK",
+      "kind": "news"
+    },
+    {
+      "name": "Sky Sports",
+      "url": "https://www.skysports.com",
+      "first_party_domains": [
+        "sky.com"
+      ],
+      "group": "UK",
+      "kind": "sports"
+    },
+    {
+      "name": "Der Spiegel",
+      "url": "https://www.spiegel.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "Bild",
+      "url": "https://www.bild.de",
+      "first_party_domains": [
+        "bildstatic.de",
+        "axelspringer.de",
+        "asadcdn.com"
+      ],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "Die Zeit",
+      "url": "https://www.zeit.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "Frankfurter Allgemeine (FAZ)",
+      "url": "https://www.faz.net",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "Süddeutsche Zeitung",
+      "url": "https://www.sueddeutsche.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "Die Welt",
+      "url": "https://www.welt.de",
+      "first_party_domains": [
+        "axelspringer.de",
+        "asadcdn.com"
+      ],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "Tagesschau",
+      "url": "https://www.tagesschau.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "Focus Online",
+      "url": "https://www.focus.de",
+      "first_party_domains": [
+        "burda-forward.de"
+      ],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "t-online",
+      "url": "https://www.t-online.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "n-tv",
+      "url": "https://www.n-tv.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "news"
+    },
+    {
+      "name": "kicker",
+      "url": "https://www.kicker.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "sports"
+    },
+    {
+      "name": "Sport1",
+      "url": "https://www.sport1.de",
+      "first_party_domains": [],
+      "group": "DE",
+      "kind": "sports"
+    }
   ]
 }

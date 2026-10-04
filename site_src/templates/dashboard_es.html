@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Panel interno · {{ site_name }}</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <span class="logo">Panel interno · {{ site_name }}</span>
+  <span class="small">Solo para uso local: no se publica. Generado el {{ generated }}</span>
+</div></header>
+<main>
+<section><div class="wrap">
+  <div class="counters">
+    <div class="counter"><b>{{ total }}</b><span>webs en la lista</span></div>
+    <div class="counter"><b>{{ measured|length }}</b><span>medidas</span></div>
+    <div class="counter"><b>{{ unmeasured|length }}</b><span>sin medir (bloqueadas, incompletas o con error)</span></div>
+    <div class="counter"><b>{{ low_confidence|length }}</b><span>con confianza media o baja</span></div>
+    <div class="counter"><b>{{ pending_domains|length }}</b><span>dominios frecuentes sin clasificar</span></div>
+  </div>
+  <p class="small">Medición del {{ date }} desde {{ vantage_es }} · {{ passes }} pasadas · ventana de {{ observe }} s · lista de rastreadores: {{ tracker_count }} entradas.</p>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Estado por web</h2>
+  <div class="table-scroll"><table class="t">
+    <thead><tr><th>Web</th><th>País</th><th>Estado</th><th>Confianza</th><th class="num">Servicios de rastreo</th><th>Banda</th><th class="num">Dominios de terceros</th><th>Detalle</th></tr></thead>
+    <tbody>
+    {% for s in all_sites %}
+      <tr>
+        <td>{{ s.name }}</td><td>{{ s.group }}</td>
+        <td><span class="pill {{ 'ok' if s.status == 'ok' else 'bad' }}">{{ s.status }}</span></td>
+        <td>{{ s.confidence or '–' }}</td>
+        <td class="num">{{ s.tracking if s.status == 'ok' else '–' }}</td>
+        <td>{{ s.band or '–' }}</td>
+        <td class="num">{{ s.domains if s.status == 'ok' else '–' }}</td>
+        <td>{{ s.status_text_es }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Dominios de terceros frecuentes sin clasificar</h2>
+  <p class="sub">Candidatos para ampliar la lista (verificar el operador antes de añadir). Se cuentan solo los vistos de forma estable.</p>
+  <div class="table-scroll"><table class="t">
+    <thead><tr><th>Dominio</th><th class="num">Webs</th><th>Dónde</th></tr></thead>
+    <tbody>
+    {% for d in pending_domains %}
+      <tr><td>{{ d.domain }}</td><td class="num">{{ d.sites|length }}</td><td>{{ d.sites|join(', ') }}</td></tr>
+    {% else %}
+      <tr><td colspan="3">No hay dominios pendientes.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Cambios desde la semana anterior</h2>
+  {% if not diffs %}
+    <div class="card">Es la primera medición: no hay con qué comparar.</div>
+  {% else %}
+    <p class="small">{{ notable|length }} webs con cambios estables; {{ not_comparable|length }} no comparables.</p>
+    {% for d in notable %}
+      <div class="card"><b>{{ d.site }}</b>:
+        {% for x in d.added_tracking_services %}+{{ x.service }} {% endfor %}
+        {% for x in d.removed_tracking_services %}−{{ x.service }} {% endfor %}
+      </div>
+    {% endfor %}
+    {% for d in not_comparable %}
+      <p class="small">{{ d.site }}: no comparable ({{ d.reasons|join('; ') }})</p>
+    {% endfor %}
+  {% endif %}
+</div></section>
+
+<section><div class="wrap">
+  <h2>Borradores de publicación pendientes de aprobación</h2>
+  {% if drafts %}
+    <ul>{% for d in drafts %}<li>{{ d }}</li>{% endfor %}</ul>
+    <p class="small">Revísalos antes de publicar nada. Nada se publica automáticamente.</p>
+  {% else %}
+    <div class="card">No hay borradores. Se generan con <code>python -m traceguard.posts</code>.</div>
+  {% endif %}
+</div></section>
+</main>
+</body>
+</html>

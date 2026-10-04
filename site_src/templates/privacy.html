@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Privacy{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Privacy</h1>
+    <h2>This website</h2>
+    <p>This website is a set of static pages. It sets no cookies, runs no analytics, loads no fonts, scripts or images from other sites, and keeps no visitor logs of its own. The script on the page only handles the filters and sorting in your browser and stores nothing.</p>
+    <p>The pages are served by GitHub Pages. GitHub, like any web host, may process technical data such as your IP address when you request a page; see GitHub's own privacy statement.</p>
+
+    <h2>Email</h2>
+    {% if subscribe_url %}
+    <p>If you subscribe, you do so on a page hosted by <b>{{ subscribe_host }}</b>. Your address is handled by that service under its own terms, not by this website. You can unsubscribe at any time from any email you receive.</p>
+    {% else %}
+    <p>There is no email subscription yet, and this website collects no email addresses.</p>
+    {% endif %}
+
+    <h2>Data we publish</h2>
+    <p>We publish measurements of public web pages: which third-party domains each page contacted when loaded without interaction. Reports contain no personal data about visitors. Cookie values and URL query strings are never stored.</p>
+
+    <h2>Contact</h2>
+    {% if repo_url %}<p>Corrections and questions: open an issue at <a href="{{ repo_url }}">{{ repo_url }}</a>.</p>{% else %}<p>Corrections and questions: use the contact details of the repository that publishes this site.</p>{% endif %}
+  </div>
+</section>
+{% endblock %}

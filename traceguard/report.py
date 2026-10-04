@@ -11,7 +11,7 @@ from .findings import build_findings
 
 
 def summarize_run(run: dict, tracker_list: TrackerList) -> dict:
-    third = [r for r in run["requests"] if r["party"] == "third"]
+    third = [r for r in run["requests"] if r.get("party") == "third"]
     services: dict[str, dict] = {}
     for request in third:
         tracker = request.get("tracker")
@@ -41,6 +41,9 @@ def aggregate_runs(runs: list[dict], tracker_list: TrackerList) -> dict:
 
     summaries = [summarize_run(r, tracker_list) for r in ok]
     n = len(ok)
+    # high: every pass measured; medium: a majority did; low: a minority (figures are indicative only)
+    confidence = "high" if n == len(runs) else ("medium" if n * 2 > len(runs) else "low")
+    failed_statuses = dict(Counter(r["status"] for r in runs if r["status"] != "ok"))
 
     def median(values) -> int:
         return int(statistics.median_low(list(values)))
@@ -54,6 +57,8 @@ def aggregate_runs(runs: list[dict], tracker_list: TrackerList) -> dict:
     return {
         **base,
         "status": "ok",
+        "confidence": confidence,
+        "failed_passes": failed_statuses,
         "http_status": first_ok["http_status"],
         "final_url": first_ok["final_url"],
         "navigation_redirects": first_ok["navigation_redirects"],

@@ -4,7 +4,7 @@
     "name": "traceguard",
     "version": "0.1.0"
   },
-  "generated_at": "2026-10-04T17:33:30+00:00",
+  "generated_at": "2026-10-04T18:16:57+00:00",
   "site": {
     "name": "Evening Standard",
     "url": "https://www.standard.co.uk",
@@ -16,10 +16,12 @@
     "vantage": "local-windows-spain",
     "locale": "en-US",
     "timezone": "UTC",
-    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
     "browser": "chromium 153.0.8010.12",
     "passes": 3,
     "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
     "interaction": "none",
     "tracker_list": "trackers.seed.json"
   },
@@ -27,6 +29,8 @@
     "passes_total": 3,
     "passes_ok": 3,
     "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
     "http_status": 200,
     "final_url": "https://www.standard.co.uk/",
     "navigation_redirects": [],
@@ -38,7 +42,7 @@
     "metrics": {
       "third_party_requests": 19,
       "third_party_domains": 7,
-      "tracking_services": 2,
+      "tracking_services": 3,
       "third_party_cookies": 0,
       "cookies_total": 5,
       "storage_items": 3
@@ -82,6 +86,14 @@
     ],
     "services": [
       {
+        "service": "dotmetrics.net",
+        "entity": "Ipsos (Dotmetrics)",
+        "category": "audience_measurement",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
         "service": "google-analytics.com",
         "entity": "Google",
         "category": "analytics",
@@ -93,6 +105,14 @@
         "service": "googletagmanager.com",
         "entity": "Google",
         "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "privacy-mgmt.com",
+        "entity": "Sourcepoint",
+        "category": "consent_management",
         "tracking": false,
         "passes_seen": 3,
         "stable": true
@@ -137,9 +157,17 @@
     {
       "code": "TRACKING_SERVICES",
       "severity": "notable",
-      "text": "2 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: google-analytics.com (Google, analytics), scorecardresearch.com (Comscore, audience measurement).",
+      "text": "3 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: dotmetrics.net (Ipsos (Dotmetrics), audience measurement), google-analytics.com (Google, analytics), scorecardresearch.com (Comscore, audience measurement).",
       "evidence": {
         "services": [
+          {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
           {
             "service": "google-analytics.com",
             "entity": "Google",
@@ -175,7 +203,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 156,
+          "t_ms": 200,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.standard.co.uk/",
@@ -185,7 +213,7 @@
           "tracker": null
         },
         {
-          "t_ms": 659,
+          "t_ms": 369,
           "method": "GET",
           "resource_type": "other",
           "url": "https://www.standard.co.uk/speculationrules.json",
@@ -195,7 +223,7 @@
           "tracker": null
         },
         {
-          "t_ms": 663,
+          "t_ms": 375,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Semibold-Web.woff2",
@@ -205,7 +233,7 @@
           "tracker": null
         },
         {
-          "t_ms": 666,
+          "t_ms": 380,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/orbikular/Orbikular-Regular.woff2",
@@ -215,7 +243,7 @@
           "tracker": null
         },
         {
-          "t_ms": 671,
+          "t_ms": 384,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/orbikular/Orbikular-Bold.woff2",
@@ -225,7 +253,7 @@
           "tracker": null
         },
         {
-          "t_ms": 674,
+          "t_ms": 390,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/main.39d43b6d2a5bcd51ee63.js",
@@ -235,17 +263,21 @@
           "tracker": null
         },
         {
-          "t_ms": 722,
+          "t_ms": 414,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js",
           "host": "cdn.privacy-mgmt.com",
           "domain": "privacy-mgmt.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
         },
         {
-          "t_ms": 759,
+          "t_ms": 453,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cp.standard.co.uk/now.js",
@@ -255,17 +287,7 @@
           "tracker": null
         },
         {
-          "t_ms": 816,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.standard.co.uk/unified/wrapperMessagingWithoutDetection.js",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 875,
+          "t_ms": 480,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/15/2297776161..",
@@ -275,7 +297,7 @@
           "tracker": null
         },
         {
-          "t_ms": 892,
+          "t_ms": 483,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/17/2297719820..",
@@ -285,7 +307,7 @@
           "tracker": null
         },
         {
-          "t_ms": 904,
+          "t_ms": 489,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2021/07/27/16/e4815def9f8e2b43a5253df846a7f8f8Y29udGVudHNlYXJjaGFwaSwxNjI3NDg0MDc3-2.61215121.jpg",
@@ -295,7 +317,7 @@
           "tracker": null
         },
         {
-          "t_ms": 911,
+          "t_ms": 493,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/37/Screenshot-2026-10-04-at-17-51-09.png",
@@ -305,17 +327,27 @@
           "tracker": null
         },
         {
-          "t_ms": 915,
+          "t_ms": 499,
           "method": "GET",
           "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/04/16/2298100504..",
+          "url": "https://static.standard.co.uk/2026/10/04/18/2298559043..",
           "host": "static.standard.co.uk",
           "domain": "standard.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 945,
+          "t_ms": 524,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.standard.co.uk/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 546,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/rehydration.50a88bcbf17cb9631077.js",
@@ -325,7 +357,7 @@
           "tracker": null
         },
         {
-          "t_ms": 955,
+          "t_ms": 549,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/register.7274e7ca36cfcf0eb329.js",
@@ -335,7 +367,7 @@
           "tracker": null
         },
         {
-          "t_ms": 965,
+          "t_ms": 557,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/login.eb15226e41ea762a3eac.js",
@@ -345,7 +377,7 @@
           "tracker": null
         },
         {
-          "t_ms": 977,
+          "t_ms": 586,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/thankyou.755d5c33b464a3b1cc87.js",
@@ -355,7 +387,7 @@
           "tracker": null
         },
         {
-          "t_ms": 992,
+          "t_ms": 599,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/profile.7580d5dd69ee04ab70d0.js",
@@ -365,7 +397,7 @@
           "tracker": null
         },
         {
-          "t_ms": 998,
+          "t_ms": 633,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/forgottenPassword.df1732cd2c234d1e2664.js",
@@ -375,7 +407,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1006,
+          "t_ms": 646,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/newsletters.faf361af616857caf3d1.js",
@@ -385,7 +417,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1018,
+          "t_ms": 657,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/sar.cdd2c18970eee1b21264.js",
@@ -395,7 +427,21 @@
           "tracker": null
         },
         {
-          "t_ms": 1027,
+          "t_ms": 663,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "cdn.privacy-mgmt.com",
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 668,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.standard.co.uk/mms/v2/get_site_data",
@@ -405,17 +451,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1037,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cdn.privacy-mgmt.com/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
-          "host": "cdn.privacy-mgmt.com",
-          "domain": "privacy-mgmt.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1086,
+          "t_ms": 703,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-MediumWEB.woff2",
@@ -425,7 +461,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1092,
+          "t_ms": 708,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Black-Web.woff2",
@@ -435,7 +471,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1096,
+          "t_ms": 712,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/caslon-doric-condensed/CaslonDoricCondensed-Extrabold-Web.woff2",
@@ -445,7 +481,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1099,
+          "t_ms": 716,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-LightWEB.woff2",
@@ -455,7 +491,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1104,
+          "t_ms": 719,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Light-Web.woff2",
@@ -465,7 +501,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1108,
+          "t_ms": 723,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/10/2290050713..",
@@ -475,7 +511,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1112,
+          "t_ms": 728,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/14/01M41Q42YRRNWTZZCY8HC1VVQ0.jpg",
@@ -485,7 +521,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1126,
+          "t_ms": 733,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/10/399c2ce572be5b0cf80ace50973791b5Y29udGVudHNlYXJjaGFwaSwxNzkxMTkzNDE5-2.86063325.jpg",
@@ -495,7 +531,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1131,
+          "t_ms": 751,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/09/10/09/2222120928..",
@@ -505,7 +541,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1135,
+          "t_ms": 757,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/10/30/Abbie-Roden-shot-at-home-for-the-London-Standard.jpeg",
@@ -515,7 +551,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1139,
+          "t_ms": 766,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/13/52/cos.png",
@@ -525,7 +561,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1142,
+          "t_ms": 773,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/14/19/Dr-Sam-Bunting-5.jpg",
@@ -535,7 +571,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1203,
+          "t_ms": 777,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2025/10/16/13/52/Frieze-London-2025-yj2rirmo.jpeg",
@@ -545,7 +581,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1207,
+          "t_ms": 785,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/12/53/Longevity-expert-Dr-Mark-Mikhail.jpeg",
@@ -555,7 +591,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1211,
+          "t_ms": 789,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/8/33/Gillian-Anderson-(Martha)-in-Whos-Afraid-of-Virginia-Woolf--sohoplace--Credit-Johan-Persson_02033.jpeg",
@@ -565,7 +601,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1215,
+          "t_ms": 814,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2023/08/14/13/newFile.jpg",
@@ -575,7 +611,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1219,
+          "t_ms": 864,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/13/48/Untitled-design.png",
@@ -585,7 +621,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1224,
+          "t_ms": 880,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/9/43/Benedetta-Porcaroli.jpeg",
@@ -595,7 +631,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1227,
+          "t_ms": 891,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.standard.co.uk/2026/09/27/22/2296900608..",
+          "host": "static.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 898,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/18/2298546156..",
@@ -605,7 +651,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1231,
+          "t_ms": 909,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/8/03/FotoJet-(18).jpg",
@@ -615,7 +661,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1234,
+          "t_ms": 941,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/03/21/2147765652..",
@@ -625,7 +671,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1240,
+          "t_ms": 957,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/09/01M2ZNM7ERE3JY5JA7V96EYW56.jpg",
@@ -635,17 +681,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1243,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/04/14/2297936006..",
-          "host": "static.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1248,
+          "t_ms": 980,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2025/05/21/14/09/Eamonn-Holmes-Katie-Alexander.png",
@@ -655,7 +691,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1253,
+          "t_ms": 987,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/12/ae34fd3162932a73d30b0b3c7d88d3bdY29udGVudHNlYXJjaGFwaSwxNzkxMTk1NzEx-2.84575134.jpg",
@@ -665,7 +701,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1258,
+          "t_ms": 1000,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/b082492925747d6969aaf258390d1bf7Y29udGVudHNlYXJjaGFwaSwxNzkxMjExNjg5-2.86071562.jpg",
@@ -675,7 +711,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1262,
+          "t_ms": 1009,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/18/fb19b0b54da0bda976d4240d8833ccdfY29udGVudHNlYXJjaGFwaSwxNzkxMjE4Mzc4-2.85772665.jpg",
@@ -685,7 +721,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1265,
+          "t_ms": 1016,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/165c050287f6a12be166a63a62ddcc1fY29udGVudHNlYXJjaGFwaSwxNzkxMjEyMTY2-2.86072743.jpg",
@@ -695,7 +731,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1270,
+          "t_ms": 1032,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/17/37/claudia-outfit.png",
@@ -705,7 +741,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1282,
+          "t_ms": 1035,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/12/16/romantasy.png",
@@ -715,7 +751,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1298,
+          "t_ms": 1044,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/11/39/kindle.png",
@@ -725,7 +761,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1307,
+          "t_ms": 1050,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/8/15/best-concealers-2026.png",
@@ -735,7 +771,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1323,
+          "t_ms": 1084,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/14/40/578551.jpg",
@@ -745,7 +781,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1338,
+          "t_ms": 1113,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.standard.co.uk/api/html/adops/floor-prices",
@@ -755,17 +791,31 @@
           "tracker": null
         },
         {
-          "t_ms": 1388,
+          "t_ms": 1124,
           "method": "GET",
           "resource_type": "script",
           "url": "https://uk-script.dotmetrics.net/door.js",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1130,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1410,
+          "t_ms": 1151,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtm.js",
@@ -779,17 +829,7 @@
           }
         },
         {
-          "t_ms": 1418,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/scripts/jsd/main.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1424,
+          "t_ms": 1162,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cp.standard.co.uk/properties/2cd155e5/config.json",
@@ -799,7 +839,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1438,
+          "t_ms": 1180,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.standard.co.uk/wrapper/v2/meta-data",
@@ -809,7 +849,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1554,
+          "t_ms": 1225,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.standard.co.uk/wrapper/v2/messages",
@@ -819,7 +859,27 @@
           "tracker": null
         },
         {
-          "t_ms": 1690,
+          "t_ms": 1353,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d76008a69eab/0.3427516787060042:1791133518:YIKyxofw5fViG3osx-bC03MGjcvHqQd05_ktybWUBMc/a4562d249e72b286",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1359,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cp.standard.co.uk/chunks/cp-chunk-cmp-sourcepoint.20261002095153-ecd85be6d3.js",
+          "host": "cp.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1429,
           "method": "GET",
           "resource_type": "script",
           "url": "https://sb.scorecardresearch.com/cs/10476312/beacon.js",
@@ -833,17 +893,35 @@
           }
         },
         {
-          "t_ms": 1772,
-          "method": "POST",
-          "resource_type": "xhr",
-          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d76008a69eab/0.3427516787060042:1791133518:YIKyxofw5fViG3osx-bC03MGjcvHqQd05_ktybWUBMc/a455eda1ab4acbeb",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
+          "t_ms": 1435,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://uk-script.dotmetrics.net/hit.gif",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 1781,
+          "t_ms": 1445,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://rm-script.dotmetrics.net/hit.gif",
+          "host": "rm-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1450,
           "method": "GET",
           "resource_type": "document",
           "url": "https://cmpv2.standard.co.uk/index.html",
@@ -853,67 +931,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1786,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cp.standard.co.uk/chunks/cp-chunk-cmp-sourcepoint.20261002095153-ecd85be6d3.js",
-          "host": "cp.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1792,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://uk-script.dotmetrics.net/hit.gif",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1822,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://rm-script.dotmetrics.net/hit.gif",
-          "host": "rm-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1848,
-          "method": "GET",
-          "resource_type": "stylesheet",
-          "url": "https://cmpv2.standard.co.uk/Notice.1c267.css",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1854,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.standard.co.uk/polyfills.01516.js",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1858,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.standard.co.uk/Notice.97af9.js",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1905,
+          "t_ms": 1479,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.recaptcha.net/recaptcha/api.js",
@@ -923,17 +941,37 @@
           "tracker": null
         },
         {
-          "t_ms": 1913,
+          "t_ms": 1569,
           "method": "GET",
-          "resource_type": "script",
-          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
+          "resource_type": "stylesheet",
+          "url": "https://cmpv2.standard.co.uk/Notice.1c267.css",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2243,
+          "t_ms": 1576,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.standard.co.uk/polyfills.01516.js",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1581,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.standard.co.uk/Notice.97af9.js",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1650,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtag/js",
@@ -947,7 +985,21 @@
           }
         },
         {
-          "t_ms": 2400,
+          "t_ms": 1656,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1728,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
@@ -957,17 +1009,17 @@
           "tracker": null
         },
         {
-          "t_ms": 2432,
+          "t_ms": 1762,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMzwgr6KUGswGxeS/recaptcha__en.js",
           "host": "www.gstatic.com",
           "domain": "gstatic.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 2682,
+          "t_ms": 1818,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
@@ -977,7 +1029,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2691,
+          "t_ms": 1823,
           "method": "GET",
           "resource_type": "image",
           "url": "https://www.standard.co.uk/img/shortcut-icons/icon-72x72.png",
@@ -987,7 +1039,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2963,
+          "t_ms": 2386,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.recaptcha.net/recaptcha/api2/anchor",
@@ -997,27 +1049,27 @@
           "tracker": null
         },
         {
-          "t_ms": 3049,
+          "t_ms": 2486,
           "method": "GET",
           "resource_type": "stylesheet",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/styles__ltr.css",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMzwgr6KUGswGxeS/styles__ltr.css",
           "host": "www.gstatic.com",
           "domain": "gstatic.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 3056,
+          "t_ms": 2491,
           "method": "GET",
           "resource_type": "script",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMzwgr6KUGswGxeS/recaptcha__en.js",
           "host": "www.gstatic.com",
           "domain": "gstatic.com",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 3103,
+          "t_ms": 2540,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -1031,7 +1083,7 @@
           }
         },
         {
-          "t_ms": 3544,
+          "t_ms": 2935,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.recaptcha.net/recaptcha/api2/webworker.js",
@@ -1041,7 +1093,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3584,
+          "t_ms": 2956,
           "method": "GET",
           "resource_type": "image",
           "url": "https://www.gstatic.com/recaptcha/api2/logo_48.png",
@@ -1051,7 +1103,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3602,
+          "t_ms": 2982,
           "method": "GET",
           "resource_type": "font",
           "url": "https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2",
@@ -1061,10 +1113,10 @@
           "tracker": null
         },
         {
-          "t_ms": 3661,
+          "t_ms": 3040,
           "method": "GET",
           "resource_type": "other",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMzwgr6KUGswGxeS/recaptcha__en.js",
           "host": "www.gstatic.com",
           "domain": "gstatic.com",
           "party": "third",
@@ -1150,7 +1202,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 117,
+          "t_ms": 244,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.standard.co.uk/",
@@ -1160,7 +1212,7 @@
           "tracker": null
         },
         {
-          "t_ms": 559,
+          "t_ms": 431,
           "method": "GET",
           "resource_type": "other",
           "url": "https://www.standard.co.uk/speculationrules.json",
@@ -1170,7 +1222,7 @@
           "tracker": null
         },
         {
-          "t_ms": 565,
+          "t_ms": 440,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Semibold-Web.woff2",
@@ -1180,7 +1232,7 @@
           "tracker": null
         },
         {
-          "t_ms": 569,
+          "t_ms": 447,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/orbikular/Orbikular-Regular.woff2",
@@ -1190,7 +1242,7 @@
           "tracker": null
         },
         {
-          "t_ms": 573,
+          "t_ms": 452,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/orbikular/Orbikular-Bold.woff2",
@@ -1200,7 +1252,7 @@
           "tracker": null
         },
         {
-          "t_ms": 577,
+          "t_ms": 482,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/main.39d43b6d2a5bcd51ee63.js",
@@ -1210,27 +1262,7 @@
           "tracker": null
         },
         {
-          "t_ms": 580,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js",
-          "host": "cdn.privacy-mgmt.com",
-          "domain": "privacy-mgmt.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 583,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cp.standard.co.uk/now.js",
-          "host": "cp.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 619,
+          "t_ms": 487,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.standard.co.uk/unified/wrapperMessagingWithoutDetection.js",
@@ -1240,7 +1272,31 @@
           "tracker": null
         },
         {
-          "t_ms": 624,
+          "t_ms": 497,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cdn.privacy-mgmt.com",
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 500,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cp.standard.co.uk/now.js",
+          "host": "cp.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 504,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/15/2297776161..",
@@ -1250,7 +1306,7 @@
           "tracker": null
         },
         {
-          "t_ms": 628,
+          "t_ms": 509,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/17/2297719820..",
@@ -1260,7 +1316,7 @@
           "tracker": null
         },
         {
-          "t_ms": 632,
+          "t_ms": 514,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2021/07/27/16/e4815def9f8e2b43a5253df846a7f8f8Y29udGVudHNlYXJjaGFwaSwxNjI3NDg0MDc3-2.61215121.jpg",
@@ -1270,7 +1326,7 @@
           "tracker": null
         },
         {
-          "t_ms": 636,
+          "t_ms": 518,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/37/Screenshot-2026-10-04-at-17-51-09.png",
@@ -1280,97 +1336,17 @@
           "tracker": null
         },
         {
-          "t_ms": 639,
+          "t_ms": 523,
           "method": "GET",
           "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/04/16/2298100504..",
+          "url": "https://static.standard.co.uk/2026/10/04/18/2298559043..",
           "host": "static.standard.co.uk",
           "domain": "standard.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 717,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/rehydration.50a88bcbf17cb9631077.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 721,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/register.7274e7ca36cfcf0eb329.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 724,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/login.eb15226e41ea762a3eac.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 729,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/thankyou.755d5c33b464a3b1cc87.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 732,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/profile.7580d5dd69ee04ab70d0.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 736,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/forgottenPassword.df1732cd2c234d1e2664.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 739,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/newsletters.faf361af616857caf3d1.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 742,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/_build/sar.cdd2c18970eee1b21264.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 868,
+          "t_ms": 664,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.standard.co.uk/mms/v2/get_site_data",
@@ -1380,17 +1356,21 @@
           "tracker": null
         },
         {
-          "t_ms": 871,
+          "t_ms": 680,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cdn.privacy-mgmt.com/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
           "host": "cdn.privacy-mgmt.com",
           "domain": "privacy-mgmt.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
         },
         {
-          "t_ms": 886,
+          "t_ms": 722,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Light-Web.woff2",
@@ -1400,7 +1380,7 @@
           "tracker": null
         },
         {
-          "t_ms": 891,
+          "t_ms": 757,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/10/2290050713..",
@@ -1410,7 +1390,7 @@
           "tracker": null
         },
         {
-          "t_ms": 895,
+          "t_ms": 773,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/14/01M41Q42YRRNWTZZCY8HC1VVQ0.jpg",
@@ -1420,7 +1400,7 @@
           "tracker": null
         },
         {
-          "t_ms": 899,
+          "t_ms": 815,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/10/399c2ce572be5b0cf80ace50973791b5Y29udGVudHNlYXJjaGFwaSwxNzkxMTkzNDE5-2.86063325.jpg",
@@ -1430,7 +1410,7 @@
           "tracker": null
         },
         {
-          "t_ms": 903,
+          "t_ms": 831,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/09/10/09/2222120928..",
@@ -1440,7 +1420,7 @@
           "tracker": null
         },
         {
-          "t_ms": 906,
+          "t_ms": 845,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/10/30/Abbie-Roden-shot-at-home-for-the-London-Standard.jpeg",
@@ -1450,17 +1430,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1020,
+          "t_ms": 851,
           "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-LightWEB.woff2",
-          "host": "www.standard.co.uk",
+          "resource_type": "fetch",
+          "url": "https://cp.standard.co.uk/properties/2cd155e5/config.json",
+          "host": "cp.standard.co.uk",
           "domain": "standard.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1023,
+          "t_ms": 868,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/caslon-doric-condensed/CaslonDoricCondensed-Extrabold-Web.woff2",
@@ -1470,7 +1450,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1027,
+          "t_ms": 872,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-LightWEB.woff2",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 882,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Black-Web.woff2",
@@ -1480,7 +1470,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1032,
+          "t_ms": 887,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-MediumWEB.woff2",
@@ -1490,7 +1480,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1035,
+          "t_ms": 905,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/13/52/cos.png",
@@ -1500,7 +1490,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1039,
+          "t_ms": 914,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/14/19/Dr-Sam-Bunting-5.jpg",
@@ -1510,7 +1500,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1043,
+          "t_ms": 921,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2025/10/16/13/52/Frieze-London-2025-yj2rirmo.jpeg",
@@ -1520,7 +1510,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1047,
+          "t_ms": 931,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/12/53/Longevity-expert-Dr-Mark-Mikhail.jpeg",
@@ -1530,7 +1520,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1052,
+          "t_ms": 937,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/8/33/Gillian-Anderson-(Martha)-in-Whos-Afraid-of-Virginia-Woolf--sohoplace--Credit-Johan-Persson_02033.jpeg",
@@ -1540,7 +1530,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1058,
+          "t_ms": 945,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2023/08/14/13/newFile.jpg",
@@ -1550,7 +1540,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1065,
+          "t_ms": 962,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/13/48/Untitled-design.png",
@@ -1560,7 +1550,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1072,
+          "t_ms": 974,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/9/43/Benedetta-Porcaroli.jpeg",
@@ -1570,7 +1560,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1079,
+          "t_ms": 989,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.standard.co.uk/2026/09/27/22/2296900608..",
+          "host": "static.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 993,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/18/2298546156..",
@@ -1580,7 +1580,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1085,
+          "t_ms": 996,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/8/03/FotoJet-(18).jpg",
@@ -1590,7 +1590,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1091,
+          "t_ms": 998,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/03/21/2147765652..",
@@ -1600,7 +1600,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1098,
+          "t_ms": 1001,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/09/01M2ZNM7ERE3JY5JA7V96EYW56.jpg",
@@ -1610,17 +1610,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1102,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/04/14/2297936006..",
-          "host": "static.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1106,
+          "t_ms": 1004,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2025/05/21/14/09/Eamonn-Holmes-Katie-Alexander.png",
@@ -1630,7 +1620,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1114,
+          "t_ms": 1007,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/12/ae34fd3162932a73d30b0b3c7d88d3bdY29udGVudHNlYXJjaGFwaSwxNzkxMTk1NzEx-2.84575134.jpg",
@@ -1640,7 +1630,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1118,
+          "t_ms": 1009,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/b082492925747d6969aaf258390d1bf7Y29udGVudHNlYXJjaGFwaSwxNzkxMjExNjg5-2.86071562.jpg",
@@ -1650,7 +1640,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1122,
+          "t_ms": 1012,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/18/fb19b0b54da0bda976d4240d8833ccdfY29udGVudHNlYXJjaGFwaSwxNzkxMjE4Mzc4-2.85772665.jpg",
@@ -1660,7 +1650,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1135,
+          "t_ms": 1014,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/165c050287f6a12be166a63a62ddcc1fY29udGVudHNlYXJjaGFwaSwxNzkxMjEyMTY2-2.86072743.jpg",
@@ -1670,7 +1660,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1140,
+          "t_ms": 1016,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/17/37/claudia-outfit.png",
@@ -1680,7 +1670,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1144,
+          "t_ms": 1018,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/12/16/romantasy.png",
@@ -1690,7 +1680,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1150,
+          "t_ms": 1021,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/11/39/kindle.png",
@@ -1700,7 +1690,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1154,
+          "t_ms": 1025,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/8/15/best-concealers-2026.png",
@@ -1710,7 +1700,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1158,
+          "t_ms": 1028,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/14/40/578551.jpg",
@@ -1720,7 +1710,97 @@
           "tracker": null
         },
         {
-          "t_ms": 1165,
+          "t_ms": 1032,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/rehydration.50a88bcbf17cb9631077.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1037,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/register.7274e7ca36cfcf0eb329.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1041,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/login.eb15226e41ea762a3eac.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1044,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/thankyou.755d5c33b464a3b1cc87.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1047,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/profile.7580d5dd69ee04ab70d0.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1050,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/forgottenPassword.df1732cd2c234d1e2664.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1053,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/newsletters.faf361af616857caf3d1.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1055,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/_build/sar.cdd2c18970eee1b21264.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1059,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1062,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.standard.co.uk/api/html/adops/floor-prices",
@@ -1730,17 +1810,51 @@
           "tracker": null
         },
         {
-          "t_ms": 1169,
+          "t_ms": 1065,
           "method": "GET",
           "resource_type": "script",
           "url": "https://uk-script.dotmetrics.net/door.js",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1084,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmpv2.standard.co.uk/wrapper/v2/meta-data",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1173,
+          "t_ms": 1092,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cp.standard.co.uk/chunks/cp-chunk-cmp-sourcepoint.20261002095153-ecd85be6d3.js",
+          "host": "cp.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1200,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cmpv2.standard.co.uk/wrapper/v2/messages",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1215,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtm.js",
@@ -1754,161 +1868,7 @@
           }
         },
         {
-          "t_ms": 1196,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.recaptcha.net/recaptcha/api.js",
-          "host": "www.recaptcha.net",
-          "domain": "recaptcha.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1210,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://cp.standard.co.uk/properties/2cd155e5/config.json",
-          "host": "cp.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1236,
-          "method": "GET",
-          "resource_type": "xhr",
-          "url": "https://cmpv2.standard.co.uk/wrapper/v2/meta-data",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1241,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/scripts/jsd/main.js",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1331,
-          "method": "GET",
-          "resource_type": "xhr",
-          "url": "https://cmpv2.standard.co.uk/wrapper/v2/messages",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1363,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
-          "host": "www.gstatic.com",
-          "domain": "gstatic.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1513,
-          "method": "POST",
-          "resource_type": "xhr",
-          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d76008a69eab/0.3427516787060042:1791133518:YIKyxofw5fViG3osx-bC03MGjcvHqQd05_ktybWUBMc/a455edf609070329",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1543,
-          "method": "GET",
-          "resource_type": "document",
-          "url": "https://cmpv2.standard.co.uk/index.html",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1552,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cp.standard.co.uk/chunks/cp-chunk-cmp-sourcepoint.20261002095153-ecd85be6d3.js",
-          "host": "cp.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1567,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://uk-script.dotmetrics.net/hit.gif",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1570,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://rm-script.dotmetrics.net/hit.gif",
-          "host": "rm-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1655,
-          "method": "GET",
-          "resource_type": "stylesheet",
-          "url": "https://cmpv2.standard.co.uk/Notice.1c267.css",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1659,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.standard.co.uk/polyfills.01516.js",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1664,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.standard.co.uk/Notice.97af9.js",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1711,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.googletagmanager.com/gtag/js",
-          "host": "www.googletagmanager.com",
-          "domain": "googletagmanager.com",
-          "party": "third",
-          "tracker": {
-            "service": "googletagmanager.com",
-            "entity": "Google",
-            "category": "tag_manager"
-          }
-        },
-        {
-          "t_ms": 1745,
+          "t_ms": 1312,
           "method": "GET",
           "resource_type": "script",
           "url": "https://sb.scorecardresearch.com/cs/10476312/beacon.js",
@@ -1922,37 +1882,123 @@
           }
         },
         {
-          "t_ms": 1756,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
+          "t_ms": 1414,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d76008a69eab/0.3427516787060042:1791133518:YIKyxofw5fViG3osx-bC03MGjcvHqQd05_ktybWUBMc/a4562d8b0ef82186",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1891,
+          "t_ms": 1466,
           "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
+          "resource_type": "document",
+          "url": "https://cmpv2.standard.co.uk/index.html",
           "host": "cmpv2.standard.co.uk",
           "domain": "standard.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2090,
+          "t_ms": 1476,
           "method": "GET",
-          "resource_type": "document",
-          "url": "https://www.recaptcha.net/recaptcha/api2/anchor",
+          "resource_type": "script",
+          "url": "https://www.recaptcha.net/recaptcha/api.js",
           "host": "www.recaptcha.net",
           "domain": "recaptcha.net",
           "party": "third",
           "tracker": null
         },
         {
-          "t_ms": 2218,
+          "t_ms": 1485,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://uk-script.dotmetrics.net/hit.gif",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1491,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://rm-script.dotmetrics.net/hit.gif",
+          "host": "rm-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1548,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cmpv2.standard.co.uk/Notice.1c267.css",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1553,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.standard.co.uk/polyfills.01516.js",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1558,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.standard.co.uk/Notice.97af9.js",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1564,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1672,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1748,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
@@ -1962,7 +2008,27 @@
           "tracker": null
         },
         {
-          "t_ms": 2222,
+          "t_ms": 1758,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1832,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1842,
           "method": "GET",
           "resource_type": "image",
           "url": "https://www.standard.co.uk/img/shortcut-icons/icon-72x72.png",
@@ -1972,7 +2038,17 @@
           "tracker": null
         },
         {
-          "t_ms": 2228,
+          "t_ms": 2243,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.recaptcha.net/recaptcha/api2/anchor",
+          "host": "www.recaptcha.net",
+          "domain": "recaptcha.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2334,
           "method": "GET",
           "resource_type": "stylesheet",
           "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/styles__ltr.css",
@@ -1982,7 +2058,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2233,
+          "t_ms": 2340,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
@@ -1992,47 +2068,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2757,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.recaptcha.net/recaptcha/api2/webworker.js",
-          "host": "www.recaptcha.net",
-          "domain": "recaptcha.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2790,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://www.gstatic.com/recaptcha/api2/logo_48.png",
-          "host": "www.gstatic.com",
-          "domain": "gstatic.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2798,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2",
-          "host": "fonts.gstatic.com",
-          "domain": "gstatic.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2886,
-          "method": "GET",
-          "resource_type": "other",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
-          "host": "www.gstatic.com",
-          "domain": "gstatic.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 3044,
+          "t_ms": 2534,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -2044,6 +2080,46 @@
             "entity": "Google",
             "category": "analytics"
           }
+        },
+        {
+          "t_ms": 2736,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.recaptcha.net/recaptcha/api2/webworker.js",
+          "host": "www.recaptcha.net",
+          "domain": "recaptcha.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2753,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.gstatic.com/recaptcha/api2/logo_48.png",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2759,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2",
+          "host": "fonts.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2813,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
         }
       ],
       "internal_requests_blocked": [],
@@ -2125,7 +2201,7 @@
       "tls_protocol": "TLS 1.3",
       "requests": [
         {
-          "t_ms": 105,
+          "t_ms": 136,
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.standard.co.uk/",
@@ -2135,7 +2211,7 @@
           "tracker": null
         },
         {
-          "t_ms": 510,
+          "t_ms": 332,
           "method": "GET",
           "resource_type": "other",
           "url": "https://www.standard.co.uk/speculationrules.json",
@@ -2145,7 +2221,7 @@
           "tracker": null
         },
         {
-          "t_ms": 514,
+          "t_ms": 341,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Semibold-Web.woff2",
@@ -2155,7 +2231,7 @@
           "tracker": null
         },
         {
-          "t_ms": 522,
+          "t_ms": 349,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/orbikular/Orbikular-Regular.woff2",
@@ -2165,7 +2241,7 @@
           "tracker": null
         },
         {
-          "t_ms": 525,
+          "t_ms": 353,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/orbikular/Orbikular-Bold.woff2",
@@ -2175,7 +2251,7 @@
           "tracker": null
         },
         {
-          "t_ms": 528,
+          "t_ms": 360,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/main.39d43b6d2a5bcd51ee63.js",
@@ -2185,47 +2261,7 @@
           "tracker": null
         },
         {
-          "t_ms": 532,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js",
-          "host": "cdn.privacy-mgmt.com",
-          "domain": "privacy-mgmt.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 536,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cp.standard.co.uk/now.js",
-          "host": "cp.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 540,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/04/15/2297776161..",
-          "host": "static.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 543,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/02/17/2297719820..",
-          "host": "static.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 555,
+          "t_ms": 370,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cmpv2.standard.co.uk/unified/wrapperMessagingWithoutDetection.js",
@@ -2235,7 +2271,51 @@
           "tracker": null
         },
         {
-          "t_ms": 566,
+          "t_ms": 384,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cdn.privacy-mgmt.com",
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 388,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cp.standard.co.uk/now.js",
+          "host": "cp.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 394,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.standard.co.uk/2026/10/04/15/2297776161..",
+          "host": "static.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 399,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.standard.co.uk/2026/10/02/17/2297719820..",
+          "host": "static.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 404,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2021/07/27/16/e4815def9f8e2b43a5253df846a7f8f8Y29udGVudHNlYXJjaGFwaSwxNjI3NDg0MDc3-2.61215121.jpg",
@@ -2245,7 +2325,7 @@
           "tracker": null
         },
         {
-          "t_ms": 570,
+          "t_ms": 408,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/37/Screenshot-2026-10-04-at-17-51-09.png",
@@ -2255,17 +2335,17 @@
           "tracker": null
         },
         {
-          "t_ms": 574,
+          "t_ms": 414,
           "method": "GET",
           "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/04/16/2298100504..",
+          "url": "https://static.standard.co.uk/2026/10/04/18/2298559043..",
           "host": "static.standard.co.uk",
           "domain": "standard.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 664,
+          "t_ms": 521,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/rehydration.50a88bcbf17cb9631077.js",
@@ -2275,7 +2355,7 @@
           "tracker": null
         },
         {
-          "t_ms": 671,
+          "t_ms": 531,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/register.7274e7ca36cfcf0eb329.js",
@@ -2285,7 +2365,7 @@
           "tracker": null
         },
         {
-          "t_ms": 675,
+          "t_ms": 541,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/login.eb15226e41ea762a3eac.js",
@@ -2295,7 +2375,7 @@
           "tracker": null
         },
         {
-          "t_ms": 679,
+          "t_ms": 564,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/thankyou.755d5c33b464a3b1cc87.js",
@@ -2305,7 +2385,7 @@
           "tracker": null
         },
         {
-          "t_ms": 685,
+          "t_ms": 581,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/profile.7580d5dd69ee04ab70d0.js",
@@ -2315,7 +2395,7 @@
           "tracker": null
         },
         {
-          "t_ms": 689,
+          "t_ms": 596,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/forgottenPassword.df1732cd2c234d1e2664.js",
@@ -2325,7 +2405,7 @@
           "tracker": null
         },
         {
-          "t_ms": 693,
+          "t_ms": 608,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/newsletters.faf361af616857caf3d1.js",
@@ -2335,7 +2415,7 @@
           "tracker": null
         },
         {
-          "t_ms": 696,
+          "t_ms": 616,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.standard.co.uk/_build/sar.cdd2c18970eee1b21264.js",
@@ -2345,17 +2425,21 @@
           "tracker": null
         },
         {
-          "t_ms": 991,
+          "t_ms": 637,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cdn.privacy-mgmt.com/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
           "host": "cdn.privacy-mgmt.com",
           "domain": "privacy-mgmt.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
         },
         {
-          "t_ms": 994,
+          "t_ms": 647,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.standard.co.uk/mms/v2/get_site_data",
@@ -2365,47 +2449,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1125,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-MediumWEB.woff2",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1129,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Black-Web.woff2",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1134,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.standard.co.uk/fonts/caslon-doric-condensed/CaslonDoricCondensed-Extrabold-Web.woff2",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1138,
-          "method": "GET",
-          "resource_type": "font",
-          "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-LightWEB.woff2",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1142,
+          "t_ms": 691,
           "method": "GET",
           "resource_type": "font",
           "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Light-Web.woff2",
@@ -2415,7 +2459,47 @@
           "tracker": null
         },
         {
-          "t_ms": 1147,
+          "t_ms": 694,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-MediumWEB.woff2",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 703,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.standard.co.uk/fonts/standard-sans-web/StandardSans-Black-Web.woff2",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 716,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.standard.co.uk/fonts/caslon-doric-condensed/CaslonDoricCondensed-Extrabold-Web.woff2",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 738,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.standard.co.uk/fonts/standard-sans-legacy/StandardSans-LightWEB.woff2",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 753,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/10/2290050713..",
@@ -2425,7 +2509,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1152,
+          "t_ms": 770,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/14/01M41Q42YRRNWTZZCY8HC1VVQ0.jpg",
@@ -2435,7 +2519,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1156,
+          "t_ms": 783,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/10/399c2ce572be5b0cf80ace50973791b5Y29udGVudHNlYXJjaGFwaSwxNzkxMTkzNDE5-2.86063325.jpg",
@@ -2445,7 +2529,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1161,
+          "t_ms": 789,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/09/10/09/2222120928..",
@@ -2455,7 +2539,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1167,
+          "t_ms": 797,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/10/30/Abbie-Roden-shot-at-home-for-the-London-Standard.jpeg",
@@ -2465,7 +2549,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1172,
+          "t_ms": 802,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/13/52/cos.png",
@@ -2475,7 +2559,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1178,
+          "t_ms": 811,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/14/19/Dr-Sam-Bunting-5.jpg",
@@ -2485,7 +2569,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1183,
+          "t_ms": 820,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2025/10/16/13/52/Frieze-London-2025-yj2rirmo.jpeg",
@@ -2495,7 +2579,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1190,
+          "t_ms": 825,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/12/53/Longevity-expert-Dr-Mark-Mikhail.jpeg",
@@ -2505,7 +2589,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1195,
+          "t_ms": 829,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/8/33/Gillian-Anderson-(Martha)-in-Whos-Afraid-of-Virginia-Woolf--sohoplace--Credit-Johan-Persson_02033.jpeg",
@@ -2515,7 +2599,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1206,
+          "t_ms": 833,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2023/08/14/13/newFile.jpg",
@@ -2525,7 +2609,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1223,
+          "t_ms": 836,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/13/48/Untitled-design.png",
@@ -2535,7 +2619,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1235,
+          "t_ms": 842,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/9/43/Benedetta-Porcaroli.jpeg",
@@ -2545,7 +2629,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1245,
+          "t_ms": 846,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://static.standard.co.uk/2026/09/27/22/2296900608..",
+          "host": "static.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 851,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/18/2298546156..",
@@ -2555,7 +2649,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1253,
+          "t_ms": 862,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/8/03/FotoJet-(18).jpg",
@@ -2565,7 +2659,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1257,
+          "t_ms": 868,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/03/21/2147765652..",
@@ -2575,7 +2669,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1261,
+          "t_ms": 875,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/09/01M2ZNM7ERE3JY5JA7V96EYW56.jpg",
@@ -2585,17 +2679,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1268,
-          "method": "GET",
-          "resource_type": "image",
-          "url": "https://static.standard.co.uk/2026/10/04/14/2297936006..",
-          "host": "static.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1272,
+          "t_ms": 878,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2025/05/21/14/09/Eamonn-Holmes-Katie-Alexander.png",
@@ -2605,7 +2689,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1276,
+          "t_ms": 883,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/12/ae34fd3162932a73d30b0b3c7d88d3bdY29udGVudHNlYXJjaGFwaSwxNzkxMTk1NzEx-2.84575134.jpg",
@@ -2615,7 +2699,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1280,
+          "t_ms": 887,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/b082492925747d6969aaf258390d1bf7Y29udGVudHNlYXJjaGFwaSwxNzkxMjExNjg5-2.86071562.jpg",
@@ -2625,7 +2709,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1291,
+          "t_ms": 892,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/18/fb19b0b54da0bda976d4240d8833ccdfY29udGVudHNlYXJjaGFwaSwxNzkxMjE4Mzc4-2.85772665.jpg",
@@ -2635,7 +2719,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1326,
+          "t_ms": 902,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/04/16/165c050287f6a12be166a63a62ddcc1fY29udGVudHNlYXJjaGFwaSwxNzkxMjEyMTY2-2.86072743.jpg",
@@ -2645,7 +2729,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1338,
+          "t_ms": 909,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/17/37/claudia-outfit.png",
@@ -2655,7 +2739,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1351,
+          "t_ms": 915,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/12/16/romantasy.png",
@@ -2665,7 +2749,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1362,
+          "t_ms": 931,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/11/39/kindle.png",
@@ -2675,7 +2759,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1378,
+          "t_ms": 938,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/02/8/15/best-concealers-2026.png",
@@ -2685,7 +2769,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1408,
+          "t_ms": 949,
           "method": "GET",
           "resource_type": "image",
           "url": "https://static.standard.co.uk/2026/10/01/14/40/578551.jpg",
@@ -2695,7 +2779,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1427,
+          "t_ms": 959,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+          "host": "www.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 973,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://www.standard.co.uk/api/html/adops/floor-prices",
@@ -2705,17 +2799,21 @@
           "tracker": null
         },
         {
-          "t_ms": 1430,
+          "t_ms": 987,
           "method": "GET",
           "resource_type": "script",
           "url": "https://uk-script.dotmetrics.net/door.js",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 1446,
+          "t_ms": 994,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtm.js",
@@ -2729,17 +2827,7 @@
           }
         },
         {
-          "t_ms": 1461,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.recaptcha.net/recaptcha/api.js",
-          "host": "www.recaptcha.net",
-          "domain": "recaptcha.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1469,
+          "t_ms": 1003,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cp.standard.co.uk/properties/2cd155e5/config.json",
@@ -2749,7 +2837,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1476,
+          "t_ms": 1020,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.standard.co.uk/wrapper/v2/meta-data",
@@ -2759,17 +2847,17 @@
           "tracker": null
         },
         {
-          "t_ms": 1488,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+          "t_ms": 1110,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d76008a69eab/0.3427516787060042:1791133518:YIKyxofw5fViG3osx-bC03MGjcvHqQd05_ktybWUBMc/a4562def8881cc51",
           "host": "www.standard.co.uk",
           "domain": "standard.co.uk",
           "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 1606,
+          "t_ms": 1118,
           "method": "GET",
           "resource_type": "xhr",
           "url": "https://cmpv2.standard.co.uk/wrapper/v2/messages",
@@ -2779,7 +2867,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1677,
+          "t_ms": 1160,
           "method": "GET",
           "resource_type": "script",
           "url": "https://cp.standard.co.uk/chunks/cp-chunk-cmp-sourcepoint.20261002095153-ecd85be6d3.js",
@@ -2789,57 +2877,7 @@
           "tracker": null
         },
         {
-          "t_ms": 1745,
-          "method": "GET",
-          "resource_type": "document",
-          "url": "https://cmpv2.standard.co.uk/index.html",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1843,
-          "method": "POST",
-          "resource_type": "xhr",
-          "url": "https://www.standard.co.uk/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d76008a69eab/0.3427516787060042:1791133518:YIKyxofw5fViG3osx-bC03MGjcvHqQd05_ktybWUBMc/a455ee48a831fab7",
-          "host": "www.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1857,
-          "method": "GET",
-          "resource_type": "stylesheet",
-          "url": "https://cmpv2.standard.co.uk/Notice.1c267.css",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1863,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.standard.co.uk/polyfills.01516.js",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1868,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://cmpv2.standard.co.uk/Notice.97af9.js",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 1873,
+          "t_ms": 1176,
           "method": "GET",
           "resource_type": "script",
           "url": "https://sb.scorecardresearch.com/cs/10476312/beacon.js",
@@ -2853,37 +2891,109 @@
           }
         },
         {
-          "t_ms": 1877,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
-          "host": "www.gstatic.com",
-          "domain": "gstatic.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 1880,
+          "t_ms": 1188,
           "method": "GET",
           "resource_type": "image",
           "url": "https://uk-script.dotmetrics.net/hit.gif",
           "host": "uk-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
         },
         {
-          "t_ms": 1883,
+          "t_ms": 1199,
           "method": "GET",
           "resource_type": "image",
           "url": "https://rm-script.dotmetrics.net/hit.gif",
           "host": "rm-script.dotmetrics.net",
           "domain": "dotmetrics.net",
           "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1209,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cmpv2.standard.co.uk/index.html",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
           "tracker": null
         },
         {
-          "t_ms": 2168,
+          "t_ms": 1214,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.recaptcha.net/recaptcha/api.js",
+          "host": "www.recaptcha.net",
+          "domain": "recaptcha.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1265,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cmpv2.standard.co.uk/Notice.1c267.css",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1271,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.standard.co.uk/polyfills.01516.js",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1276,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cmpv2.standard.co.uk/Notice.97af9.js",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1288,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
+          "host": "uk-script.dotmetrics.net",
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1404,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
+          "host": "cmpv2.standard.co.uk",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1517,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.googletagmanager.com/gtag/js",
@@ -2897,17 +3007,7 @@
           }
         },
         {
-          "t_ms": 2180,
-          "method": "GET",
-          "resource_type": "script",
-          "url": "https://uk-script.dotmetrics.net/Scripts/ncs-script.js",
-          "host": "uk-script.dotmetrics.net",
-          "domain": "dotmetrics.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2276,
+          "t_ms": 1578,
           "method": "GET",
           "resource_type": "fetch",
           "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
@@ -2917,17 +3017,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2447,
-          "method": "GET",
-          "resource_type": "fetch",
-          "url": "https://cmpv2.standard.co.uk/consent/tcfv2/vendor-list/categories",
-          "host": "cmpv2.standard.co.uk",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "tracker": null
-        },
-        {
-          "t_ms": 2457,
+          "t_ms": 1586,
           "method": "GET",
           "resource_type": "image",
           "url": "https://www.standard.co.uk/img/shortcut-icons/icon-72x72.png",
@@ -2937,27 +3027,7 @@
           "tracker": null
         },
         {
-          "t_ms": 2837,
-          "method": "GET",
-          "resource_type": "document",
-          "url": "https://www.recaptcha.net/recaptcha/api2/anchor",
-          "host": "www.recaptcha.net",
-          "domain": "recaptcha.net",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2931,
-          "method": "GET",
-          "resource_type": "stylesheet",
-          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/styles__ltr.css",
-          "host": "www.gstatic.com",
-          "domain": "gstatic.com",
-          "party": "third",
-          "tracker": null
-        },
-        {
-          "t_ms": 2939,
+          "t_ms": 1704,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
@@ -2967,7 +3037,37 @@
           "tracker": null
         },
         {
-          "t_ms": 3200,
+          "t_ms": 2177,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.recaptcha.net/recaptcha/api2/anchor",
+          "host": "www.recaptcha.net",
+          "domain": "recaptcha.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2285,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/styles__ltr.css",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2292,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2313,
           "method": "POST",
           "resource_type": "fetch",
           "url": "https://region1.google-analytics.com/g/collect",
@@ -2981,7 +3081,7 @@
           }
         },
         {
-          "t_ms": 3456,
+          "t_ms": 2696,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.recaptcha.net/recaptcha/api2/webworker.js",
@@ -2991,7 +3091,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3482,
+          "t_ms": 2718,
           "method": "GET",
           "resource_type": "image",
           "url": "https://www.gstatic.com/recaptcha/api2/logo_48.png",
@@ -3001,7 +3101,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3491,
+          "t_ms": 2721,
           "method": "GET",
           "resource_type": "font",
           "url": "https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2",
@@ -3011,7 +3111,7 @@
           "tracker": null
         },
         {
-          "t_ms": 3542,
+          "t_ms": 2775,
           "method": "GET",
           "resource_type": "other",
           "url": "https://www.gstatic.com/recaptcha/releases/guXhH0v-XMxlzmbTwqkaT4i5/recaptcha__en.js",
@@ -3042,15 +3142,6 @@
           "same_site": "None"
         },
         {
-          "name": "_sp_su",
-          "domain": "standard.co.uk",
-          "party": "first",
-          "session": false,
-          "secure": true,
-          "http_only": false,
-          "same_site": "None"
-        },
-        {
           "name": "cf_clearance",
           "domain": "standard.co.uk",
           "party": "first",
@@ -3066,6 +3157,15 @@
           "session": false,
           "secure": true,
           "http_only": true,
+          "same_site": "None"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "standard.co.uk",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
           "same_site": "None"
         }
       ],

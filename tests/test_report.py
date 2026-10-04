@@ -66,6 +66,13 @@ def test_intermittent_domains_are_marked_unstable():
     assert domains["doubleclick.net"]["stable"]
 
 
+def test_requests_without_classification_are_ignored_instead_of_crashing():
+    late = {"t_ms": 99, "method": "GET", "resource_type": "image", "url": "https://late.example/x",
+            "host": "late.example"}
+    summary = aggregate_runs([own_run(1, [late]), own_run(2), own_run(3)], TRACKERS)
+    assert summary["metrics"]["third_party_requests"] == 2
+
+
 def test_median_is_used_across_passes():
     extra = [request(f"h{i}.t.example", "t.example", "third") for i in range(10)]
     runs = [own_run(1, extra), own_run(2), own_run(3)]
@@ -102,6 +109,37 @@ def test_first_party_script_behaviour_is_not_reported():
     report = build_report(SITE, MEASUREMENT, [own_run(1), own_run(2), own_run(3)], TRACKERS)
     behaviours = [f for f in report["findings"] if f["code"] == "SCRIPT_BEHAVIOUR"]
     assert [b["evidence"]["script_domain"] for b in behaviours] == ["doubleclick.net"]
+
+
+def test_confidence_reflects_how_many_passes_were_measured():
+    blocked = lambda n: make_run(n, [], status="blocked", http_status=403)
+    high = aggregate_runs([own_run(1), own_run(2), own_run(3)], TRACKERS)
+    medium = aggregate_runs([own_run(1), own_run(2), blocked(3)], TRACKERS)
+    low = aggregate_runs([blocked(1), blocked(2), own_run(3)], TRACKERS)
+    assert (high["confidence"], medium["confidence"], low["confidence"]) == ("high", "medium", "low")
+    assert low["failed_passes"] == {"blocked": 2}
+
+
+def test_low_confidence_is_reported_as_a_notable_finding():
+    runs = [make_run(1, [], status="blocked", http_status=403), make_run(2, [], status="blocked", http_status=403),
+            own_run(3)]
+    report = build_report(SITE, MEASUREMENT, runs, TRACKERS)
+    finding = next(f for f in report["findings"] if f["code"] == "LOW_CONFIDENCE")
+    assert finding["severity"] == "notable" and "1 of 3" in finding["text"] and "indicative only" in finding["text"]
+
+
+def test_full_confidence_adds_no_confidence_finding():
+    report = build_report(SITE, MEASUREMENT, [own_run(1), own_run(2), own_run(3)], TRACKERS)
+    assert "LOW_CONFIDENCE" not in {f["code"] for f in report["findings"]}
+
+
+def test_incomplete_passes_give_incomplete_status_and_no_figures():
+    runs = [make_run(i, [], status="incomplete", http_status=200) for i in (1, 2, 3)]
+    runs[0]["error"] = "only 1 request(s) observed (minimum 5)"
+    report = build_report(SITE, MEASUREMENT, runs, TRACKERS)
+    assert report["summary"]["status"] == "incomplete"
+    assert "metrics" not in report["summary"]
+    assert [f["code"] for f in report["findings"]] == ["MEASUREMENT_INCOMPLETE"]
 
 
 def test_report_is_json_serialisable_and_versioned():

@@ -33,6 +33,8 @@ def compare_reports(previous: dict, current: dict) -> dict:
     for label, report in (("previous", previous), ("current", current)):
         if report["summary"]["status"] != "ok":
             reasons.append(f"{label} measurement status is {report['summary']['status']}")
+        elif report["summary"].get("confidence") == "low":
+            reasons.append(f"{label} measurement has low confidence")
     if reasons:
         return {**result, "comparable": False, "reasons": reasons}
 

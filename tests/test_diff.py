@@ -56,6 +56,14 @@ def test_failed_measurement_is_not_comparable():
     assert "current measurement status is blocked" in result["reasons"]
 
 
+def test_low_confidence_measurement_is_not_comparable():
+    current = report([])
+    current["summary"]["confidence"] = "low"
+    result = compare_reports(report([]), current)
+    assert result["comparable"] is False
+    assert "current measurement has low confidence" in result["reasons"]
+
+
 def test_domain_changes_are_listed():
     result = compare_reports(report([], ["x.example"]), report([], ["y.example"]))
     assert result["added_domains"] == ["y.example"] and result["removed_domains"] == ["x.example"]
