@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Same site, different countries{% endblock %}
+{% block head %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Same news site, different countries: the tracking count changes">
+  <meta property="og:description" content="The same pages, measured from {{ origins.origins|join(' and ') }}.">
+  {% if share_origins_image %}
+  <meta property="og:image" content="{{ share_origins_image }}">
+  <meta property="og:image:alt" content="{{ share_origins_alt }}">
+  <meta name="twitter:card" content="summary_large_image">
+  {% endif %}
+{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1>Same site, different countries</h1>
+    <p class="sub">Many outlets change what loads depending on where the reader is. We measure the same pages from more than one place so the difference is visible instead of hidden.</p>
+
+    {% if not origins.has_data %}
+      <div class="card">Only one origin has been measured so far, so there is nothing to compare yet.</div>
+    {% else %}
+      <div class="counters">
+        <div class="counter"><b>{{ origins.compared }}</b><span>sites measured from both places</span></div>
+        <div class="counter"><b>{{ origins.differ }}</b><span>show a different count</span></div>
+        <div class="counter"><b>{{ origins.median_gap }}</b><span>median gap in tracking services</span></div>
+        <div class="counter"><b>{{ origins.max_gap }}</b><span>largest gap</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Largest gaps</h3>
+        {{ origins_chart }}
+        <p class="small">Tracking services contacted before any interaction.</p>
+      </div>
+
+      <h2>All sites</h2>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr>
+            <th>Site</th>
+            {% for o in origins.origins %}<th class="num">{{ o }}</th><th>Consent tool</th>{% endfor %}
+            <th class="num">Gap</th>
+          </tr></thead>
+          <tbody>
+          {% for r in origins.rows %}
+            <tr>
+              <td><a href="{{ root }}sites/{{ r.stem }}.html">{{ r.name }}</a></td>
+              {% for o in origins.origins %}{% set c = r.cells[o] %}
+                <td class="num">{% if c.status == 'ok' %}<b>{{ c.tracking }}</b>{% else %}–{% endif %}</td>
+                <td>{% if c.status != 'ok' %}{{ c.status if c.status != 'none' else 'not measured' }}{% elif c.consent %}seen{% else %}not seen{% endif %}</td>
+              {% endfor %}
+              <td class="num">{{ r.gap if r.gap is not none else '–' }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h2>How to read this</h2>
+      <ul>
+        <li>The measurements were taken from: {% for o in origins.origins %}<b>{{ o }}</b> ({{ origins.dates[o]|join(', ') }}){% if not loop.last %}; {% endif %}{% endfor %}. Each origin is one machine on one network, at one moment.</li>
+        <li><b>Consent tool</b> says whether a consent-management service in our list was contacted. One possible cause of a gap is a consent wall that appears in some countries and not in others, but this page does not prove that is the cause: our list of consent tools is small, so “not seen” does not mean “absent”, and the column does not line up consistently with the gaps.</li>
+        <li>Other possible causes: advertising and tests that differ by country, different content delivery paths, and ordinary run-to-run variation. Each figure is a median of several passes, which reduces but does not remove the last one.</li>
+        <li>A gap is not a verdict on any site. It shows that a single number depends on the vantage point.</li>
+      </ul>
+      <p class="small">More origins can be added by running the scanner from another place and saving its reports under <code>data/extra/&lt;origin&gt;/</code> (see the <a href="{{ root }}method.html#data">data section</a>).</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

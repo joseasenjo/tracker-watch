@@ -25,8 +25,11 @@ from . import SCHEMA_VERSION
 from .classify import DEFAULT_TRACKER_LIST
 from .bands import band_for, describe as describe_bands
 from .diff import compare_reports
-from .cards import alt_text as ranking_alt_text, ranking_card_html, render_png
+from .cards import (alt_text as ranking_alt_text, origins_alt_text, origins_card_html, ranking_card_html,
+                    render_png)
 from .findings import SCRIPT_BEHAVIOURS
+from .links import load_links
+from .origins import compare as compare_origins, load_extra, paired_bars
 from .spark import sparkline
 
 SRC = Path(__file__).resolve().parent.parent / "site_src"
@@ -134,7 +137,7 @@ def _entry(stem: str, report: dict, meta: dict, history: dict, date: str, diff: 
     return entry
 
 
-def build_context(runs_dir: Path | str, sites_file: str | None = None) -> dict:
+def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir: Path | str | None = None) -> dict:
     history = load_history(Path(runs_dir))
     if not history:
         raise FileNotFoundError(f"no dated report folders in {runs_dir}")
@@ -167,7 +170,12 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None) -> dict:
                 pending.setdefault(row["domain"], set()).add(report["site"]["name"])
     pending_domains = sorted(({"domain": d, "sites": sorted(s)} for d, s in pending.items() if len(s) >= 2),
                              key=lambda x: (-len(x["sites"]), x["domain"]))
+    primary_label = VANTAGE_LABELS.get(measurement["vantage"], measurement["vantage"])
+    extra = load_extra(extra_dir if extra_dir is not None else Path(runs_dir).parent / "extra")
+    extra = {v: d for v, d in extra.items() if VANTAGE_LABELS.get(v, v) != primary_label}
+    origins = compare_origins(date, history[date], primary_label, extra, VANTAGE_LABELS, meta)
     return {
+        "origins": origins, "origins_chart": paired_bars(origins["rows"], origins["origins"]),
         "site_name": SITE_NAME, "date": date, "dates": dates,
         "vantage": VANTAGE_LABELS.get(measurement["vantage"], measurement["vantage"]),
         "passes": measurement["passes"], "observe": f"{measurement['observe_seconds']:g}",
@@ -255,80 +263,16 @@ def _write_csv(ctx: dict, path: Path) -> None:
                              e["cookies_third"] if ok else ""])
 
 
-CORRECTION_FORM = """name: Report an error or reply to a result
-description: A wrong measurement, a misattributed domain, or a reply from a listed site.
-title: "[Correction] "
-labels: ["correction"]
-body:
-  - type: markdown
-    attributes:
-      value: "Issues are public. Please do not include personal data."
-  - type: input
-    id: site
-    attributes:
-      label: Site and week
-      placeholder: "e.g. Example News, week of 2026-10-11"
-    validations:
-      required: true
-  - type: dropdown
-    id: kind
-    attributes:
-      label: What is it about?
-      options:
-        - A domain attributed to the wrong operator
-        - A domain that belongs to the site itself
-        - The page behaves differently where I am
-        - Reply from the listed site
-        - Something else
-    validations:
-      required: true
-  - type: textarea
-    id: details
-    attributes:
-      label: Details and evidence
-      description: Links, public statements or screenshots help us re-check quickly.
-    validations:
-      required: true
-"""
-ADD_SITE_FORM = """name: Suggest a site to measure
-description: Ask for a news site to be added to the weekly list.
-title: "[Add site] "
-labels: ["suggestion"]
-body:
-  - type: markdown
-    attributes:
-      value: "Issues are public. The list is fixed and extended by hand; live checks of any address are not available yet."
-  - type: input
-    id: url
-    attributes:
-      label: Site address
-      placeholder: "https://www.example-news.com"
-    validations:
-      required: true
-  - type: textarea
-    id: why
-    attributes:
-      label: Why should it be included?
-"""
-ISSUE_CONFIG = "blank_issues_enabled: true\n"
-
-
-def _write_issue_templates(out: Path) -> None:
-    """Issue form published with the site so the public repository offers a structured way to report errors."""
-    folder = out / ".github" / "ISSUE_TEMPLATE"
-    folder.mkdir(parents=True, exist_ok=True)
-    (folder / "correction.yml").write_text(CORRECTION_FORM, encoding="utf-8")
-    (folder / "add-site.yml").write_text(ADD_SITE_FORM, encoding="utf-8")
-    (folder / "config.yml").write_text(ISSUE_CONFIG, encoding="utf-8")
-
-
 def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | None = None,
                base_url: str = "https://example.org/tracker-watch/", subscribe_url: str | None = None,
                repo_url: str | None = None, contact_email: str | None = None, linkedin_url: str | None = None,
-               author: str | None = None, next_scan: str | None = None, share_cards: bool = False) -> dict:
-    ctx = build_context(runs_dir, sites_file)
+               author: str | None = None, next_scan: str | None = None, share_cards: bool = False,
+               extra_dir: Path | str | None = None, links_file: Path | str | None = None) -> dict:
+    ctx = build_context(runs_dir, sites_file, extra_dir)
+    ctx["links"] = load_links(links_file if links_file is not None else Path(runs_dir).parent / "links.json")
     base = base_url if base_url.endswith("/") else base_url + "/"
     ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
+    ctx["share_origins_image"], ctx["share_origins_alt"] = "", origins_alt_text(ctx)
     ctx["site_base"] = base
     ctx["subscribe_url"], ctx["subscribe_host"] = _check_subscribe_url(subscribe_url)
     ctx["repo_url"] = (repo_url or "").strip()
@@ -342,18 +286,24 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
 
     def render(template: str, target: Path, **extra):
         root = "../" * (len(target.relative_to(out).parts) - 1)
+        target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(env.get_template(template).render(**ctx, root=root, **extra), encoding="utf-8")
 
     if share_cards and render_png(ranking_card_html(ctx), out / "share" / "ranking.png"):
         ctx["share_image"] = base + "share/ranking.png"
+    if share_cards and ctx["origins"]["has_data"] and render_png(origins_card_html(ctx), out / "share" / "origins.png"):
+        ctx["share_origins_image"] = base + "share/origins.png"
     render("index.html", out / "index.html", page="index")
+    render("origins.html", out / "origins.html", page="origins")
     render("changes.html", out / "changes.html", page="changes")
     render("unmeasured.html", out / "unmeasured.html", page="unmeasured")
     render("method.html", out / "method.html", page="method")
     render("privacy.html", out / "privacy.html", page="privacy")
     render("about.html", out / "about.html", page="about")
     render("contact.html", out / "contact.html", page="contact")
-    _write_issue_templates(out)
+    render("shortlinks.html", out / "shortlinks.html", page="shortlinks")
+    for link in ctx["links"]:
+        render("go.html", out / "go" / link["code"] / "index.html", page="go", link=link)
     (out / "data").mkdir(exist_ok=True)
     _write_csv(ctx, out / "data" / "latest.csv")
     for entry in ctx["entries"]:
@@ -366,7 +316,8 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     return ctx
 
 
-def build_dashboard(ctx: dict, out_dir: Path | str, drafts_dir: Path | str = "data/drafts") -> None:
+def build_dashboard(ctx: dict, out_dir: Path | str, drafts_dir: Path | str = "data/drafts",
+                    pending_links: list[dict] | None = None) -> None:
     out = Path(out_dir)
     if out.exists():
         shutil.rmtree(out)
@@ -378,7 +329,8 @@ def build_dashboard(ctx: dict, out_dir: Path | str, drafts_dir: Path | str = "da
         drafts = [f"{p.parent.name}/{p.name}" for p in sorted(drafts_path.glob("*/*.md"))]
     extra = {
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M"), "total": len(ctx["entries"]),
-        "all_sites": sorted(ctx["entries"], key=lambda e: (e["status"] == "ok", e["name"])), "drafts": drafts}
+        "all_sites": sorted(ctx["entries"], key=lambda e: (e["status"] == "ok", e["name"])), "drafts": drafts,
+        "pending_links": pending_links or []}
     (out / "index.html").write_text(_env().get_template("dashboard_es.html").render(**ctx, **extra), encoding="utf-8")
 
 
@@ -394,19 +346,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--linkedin-url", default="", help="optional public LinkedIn profile or page")
     parser.add_argument("--author", default="", help="optional name shown on the About page")
     parser.add_argument("--next-scan", default="", help="text such as 'Mondays 05:00 UTC'; hidden when empty")
-    parser.add_argument("--share-cards", action="store_true", help="also render the shareable ranking image (needs Chromium)")
+    parser.add_argument("--extra-dir", default=None, help="folder with reports from other origins (default: data/extra next to the runs folder)")
+    parser.add_argument("--share-cards", action="store_true", help="also render the shareable images (needs Chromium)")
+    parser.add_argument("--links-file", default=None, help="approved short links (default: data/links.json next to the runs folder)")
     parser.add_argument("--dashboard", help="also write the Spanish internal dashboard to this folder (never publish it)")
+    parser.add_argument("--pending-repo", default="", help="with --dashboard: read pending link requests from this OWNER/NAME using the GitHub CLI")
     args = parser.parse_args(argv)
     sites_file = args.sites_file if Path(args.sites_file).exists() else None
     ctx = build_site(args.runs_dir, args.out, sites_file=sites_file, base_url=args.base_url,
                      subscribe_url=args.subscribe_url, repo_url=args.repo_url, contact_email=args.contact_email,
                      linkedin_url=args.linkedin_url, author=args.author, next_scan=args.next_scan,
-                     share_cards=args.share_cards)
+                     share_cards=args.share_cards, extra_dir=args.extra_dir, links_file=args.links_file)
     if args.share_cards and not ctx["share_image"]:
         print("warning: the shareable image was not created (Playwright or Chromium is not available)")
     print(f"site: {args.out} ({len(ctx['entries'])} sites, measurement of {ctx['date']})")
     if args.dashboard:
-        build_dashboard(ctx, args.dashboard)
+        from .links import pending_requests
+        build_dashboard(ctx, args.dashboard,
+                        pending_links=pending_requests(args.pending_repo) if args.pending_repo else None)
         print(f"dashboard (Spanish, local only): {args.dashboard}")
     return 0
 

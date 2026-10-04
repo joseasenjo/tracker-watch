@@ -1,10 +1,10 @@
-# Weekly scan of the outlet list. Commits the JSON reports (history), builds the site and, only when
-# the repository variable PUBLISH_SITE is "true", publishes it to the public repo joseasenjo/tracker-watch-site.
+# Weekly scan of the outlet list. Commits the JSON reports (history) and builds the site.
+# The site is published to GitHub Pages only when the repository variable PUBLISH_SITE is "true".
 # It never posts to Bluesky or Mastodon.
 name: weekly-scan
 
 on:
-  # Schedule stays disabled until one manual run (Actions tab > weekly-scan > Run workflow) has been checked.
+  # Schedule stays disabled until the owner decides to turn it on.
   # schedule:
   #   - cron: "0 5 * * 1"   # Mondays 05:00 UTC; scheduled runs can start a few minutes late
   workflow_dispatch:
@@ -15,14 +15,16 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: weekly-scan
   cancel-in-progress: false
 
 env:
-  SITE_REPO: joseasenjo/tracker-watch-site
-  SITE_URL: https://joseasenjo.github.io/tracker-watch-site/
+  SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+  REPO_URL: https://github.com/${{ github.repository }}
 
 jobs:
   scan:
@@ -63,7 +65,7 @@ jobs:
         run: >
           python -m traceguard.site data/runs --out site --sites-file data/sites.json
           --base-url "$SITE_URL" --subscribe-url "${{ vars.SUBSCRIBE_URL }}"
-          --repo-url "https://github.com/joseasenjo/tracker-watch-site" --share-cards
+          --repo-url "$REPO_URL" --share-cards
           --contact-email "${{ vars.CONTACT_EMAIL }}" --linkedin-url "${{ vars.LINKEDIN_URL }}"
           --author "${{ vars.AUTHOR_NAME }}" --next-scan "${{ vars.NEXT_SCAN }}"
 
@@ -74,21 +76,20 @@ jobs:
           path: site
           retention-days: 14
 
-      - name: Publish site to the public repository
+      - name: Prepare the site for GitHub Pages
         if: ${{ vars.PUBLISH_SITE == 'true' }}
-        env:
-          SITE_DEPLOY_KEY: ${{ secrets.SITE_DEPLOY_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SITE_DEPLOY_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git clone "git@github.com:${SITE_REPO}.git" published
-          find published -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -r site/. published/
-          touch published/.nojekyll
-          cd published
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --quiet || (git commit -m "site: $(date -u +%F)" && git push)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: scan
+    if: ${{ vars.PUBLISH_SITE == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

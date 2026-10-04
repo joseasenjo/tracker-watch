@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Short links{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Short links</h1>
+    <p class="sub">Short links that show where they lead before you click.</p>
+    <div class="steps">
+      <div class="step"><h3>Ask</h3><p>Open a request with the address you want to shorten and, optionally, the code you would like.</p></div>
+      <div class="step"><h3>Approval</h3><p>Every link is reviewed and added by hand by the administrator. Unreviewed links do not exist.</p></div>
+      <div class="step"><h3>Check</h3><p>The link opens a page with the destination, what we measured there when available, and a button to continue. Nothing redirects by itself.</p></div>
+    </div>
+
+    <h2 style="margin-top:28px">Rules</h2>
+    <ul>
+      <li>Only <code>http</code> and <code>https</code> addresses on public websites. Addresses that point to private networks, carry credentials, or belong to other link shorteners are refused.</li>
+      <li>We may remove a link at any time, for example if it leads to harmful or misleading content.</li>
+      <li>The page shows counts of what the destination contacted, not a judgement about it.</li>
+    </ul>
+    {% if repo_url %}
+    <p><a class="btn" href="{{ repo_url }}/issues/new?template=link-request.yml" rel="noopener">Request a short link</a></p>
+    {% endif %}
+
+    {% if links %}
+    <h2>Approved links</h2>
+    <p class="sub">{{ links|length }} active.</p>
+    <div class="table-scroll"><table class="t">
+      <thead><tr><th>Link</th><th>Leads to</th></tr></thead>
+      <tbody>{% for l in links %}<tr><td><a href="{{ root }}go/{{ l.code }}/">{{ l.code }}</a></td><td>{{ l.host }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

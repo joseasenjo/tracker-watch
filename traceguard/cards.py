@@ -36,6 +36,36 @@ def ranking_card_html(ctx: dict) -> str:
     return env.get_template("share_ranking.html").render(rows=ranking_rows(ctx), **ctx)
 
 
+def origins_rows(ctx: dict) -> list[dict]:
+    """Largest gaps between the first two origins, with bar widths on a common scale."""
+    origins = ctx["origins"]
+    if not origins["has_data"]:
+        return []
+    first, second = origins["origins"][:2]
+    rows = [r for r in origins["rows"] if r["gap"] is not None][:6]
+    top = max((max(r["cells"][first]["tracking"], r["cells"][second]["tracking"]) for r in rows), default=1) or 1
+    return [{"name": r["name"], "a": r["cells"][first]["tracking"], "b": r["cells"][second]["tracking"],
+             "wa": max(2, round(100 * r["cells"][first]["tracking"] / top)),
+             "wb": max(2, round(100 * r["cells"][second]["tracking"] / top))} for r in rows]
+
+
+def origins_alt_text(ctx: dict) -> str:
+    rows = origins_rows(ctx)
+    if not rows:
+        return "No site has been measured from more than one origin yet."
+    first, second = ctx["origins"]["origins"][:2]
+    listing = "; ".join(f"{r['name']}: {first} {r['a']}, {second} {r['b']}" for r in rows)
+    return ("Paired bar chart of the number of third-party tracking services contacted before any interaction, "
+            f"measured from {first} and from {second}. {listing}.")
+
+
+def origins_card_html(ctx: dict) -> str:
+    env = Environment(loader=FileSystemLoader(SRC / "templates"), autoescape=select_autoescape(["html"]))
+    first, second = ctx["origins"]["origins"][:2]
+    return env.get_template("share_origins.html").render(rows=origins_rows(ctx), first=first, second=second,
+                                                         compared=ctx["origins"]["compared"], **ctx)
+
+
 def render_png(html: str, path: Path) -> bool:
     """Write the card as a PNG. Returns False when Playwright or Chromium is not available."""
     try:

@@ -66,7 +66,6 @@ def test_lookup_bar_embeds_a_host_list_and_never_posts_anywhere(weeks):
     data = json.loads(re.search(r'id="site-lookup">(.*?)</script>', html, re.S).group(1))
     assert {"name": "News A", "host": "a.example", "stem": "a", "measured": True} in data
     assert "action=" not in html.split('id="check-form"')[1].split(">")[0]
-    assert (out / ".github" / "ISSUE_TEMPLATE" / "add-site.yml").exists()
     js = (out / "assets" / "site.js").read_text(encoding="utf-8")
     assert "fetch(" not in js and "XMLHttpRequest" not in js and "sendBeacon" not in js
     assert ctx["lookup"][0]["host"] in ("a.example", "b.example")

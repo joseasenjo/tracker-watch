@@ -78,6 +78,37 @@
 </div></section>
 
 <section><div class="wrap">
+  <h2>Enlaces cortos</h2>
+  <p class="sub">Solo existen los que apruebas tú. Cada uno se convierte en una página estática con la pantalla intermedia.</p>
+  <h3>Peticiones pendientes (issues abiertas con la etiqueta <code>link-request</code>)</h3>
+  {% if pending_links %}
+  <div class="table-scroll"><table class="t">
+    <thead><tr><th>#</th><th>Quién</th><th>Fecha</th><th>Destino</th><th>Código pedido</th><th>Motivo</th><th>Para aprobar</th></tr></thead>
+    <tbody>
+    {% for r in pending_links %}
+      <tr><td>{{ r.number }}</td><td>{{ r.author }}</td><td>{{ r.created }}</td><td style="word-break:break-all">{{ r.url or '—' }}</td>
+        <td>{{ r.code or '—' }}</td><td>{{ r.reason }}</td>
+        <td>{% if r.url and r.code %}<code>python -m traceguard.links add {{ r.code }} {{ r.url }} --scan</code>{% else %}Falta destino o código: elige uno o rechaza la petición.{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p class="small">Tras aprobar: reconstruye la web, haz commit y push, y responde y cierra la issue. Para rechazar, cierra la issue con un comentario.</p>
+  {% else %}
+  <div class="card">No hay peticiones pendientes (o la herramienta <code>gh</code> no está disponible).</div>
+  {% endif %}
+  <h3>Enlaces aprobados</h3>
+  {% if links %}
+  <div class="table-scroll"><table class="t">
+    <thead><tr><th>Código</th><th>Destino</th><th>Creado</th><th>Medición</th></tr></thead>
+    <tbody>{% for l in links %}<tr><td>{{ l.code }}</td><td>{{ l.host }}</td><td>{{ l.created }}</td>
+      <td>{% if l.check and l.check.status == 'ok' %}{{ l.check.tracking }} servicios de rastreo (banda {{ l.check.band or '–' }}){% elif l.check %}{{ l.check.status }}{% else %}sin medir{% endif %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}
+  <div class="card">Todavía no hay enlaces aprobados.</div>
+  {% endif %}
+</div></section>
+
+<section><div class="wrap">
   <h2>Borradores de publicación pendientes de aprobación</h2>
   {% if drafts %}
     <ul>{% for d in drafts %}<li>{{ d }}</li>{% endfor %}</ul>

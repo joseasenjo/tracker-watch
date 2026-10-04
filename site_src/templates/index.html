@@ -79,7 +79,7 @@
         </tbody>
       </table>
     </div>
-    <div class="note"><b>Where the page is loaded from matters.</b> Many outlets change what loads depending on the visitor's country, for example showing a consent wall to readers in the UK and the EU that blocks most trackers until they choose. A count measured from {{ vantage }} describes that vantage point, not what a reader in another country sees. See <a href="{{ root }}method.html#limits">the limits</a>.</div>
+    <div class="note"><b>Where the page is loaded from matters.</b> Many outlets change what loads depending on the visitor's country, for example showing a consent wall to readers in the UK and the EU that blocks most trackers until they choose. A count measured from {{ vantage }} describes that vantage point, not what a reader in another country sees. {% if origins.has_data %}<a href="{{ root }}origins.html">See the same sites measured from {{ origins.origins|join(' and ') }}</a>.{% else %}See <a href="{{ root }}method.html#limits">the limits</a>.{% endif %}</div>
     <p id="no-results" class="small" hidden>No site matches that filter.</p>
     <p class="small">“Vs last week” compares the number of tracking services only when both weeks were measured under the same conditions; otherwise it shows a dash. {{ unmeasured|length }} sites refused automated access or could not be measured: <a href="{{ root }}unmeasured.html">see why</a>.</p>
   </div>

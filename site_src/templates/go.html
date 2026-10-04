@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Short link {{ link.code }}{% endblock %}
+{% block head %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <p class="small">Short link approved by the administrator. We never redirect automatically.</p>
+    <h1>You are about to leave {{ site_name }}</h1>
+    <div class="card">
+      <p class="small">This link leads to</p>
+      <p><b style="font-size:1.4rem">{{ link.host }}</b></p>
+      <p class="small" style="word-break:break-all"><code>{{ link.url }}</code></p>
+      {% if link.note %}<p class="small">Note: {{ link.note }}</p>{% endif %}
+    </div>
+
+    {% if link.check and link.check.status == 'ok' %}
+    <div class="card">
+      <h3>What we measured on that page</h3>
+      <p>Before any interaction it contacted <b>{{ link.check.tracking }}</b> third-party tracking services{% if link.check.band %} (band {{ link.check.band }}){% endif %}.
+        <span class="small">Measured {{ link.check.date }} from {{ link.check.vantage }}; confidence {{ link.check.confidence or 'n/a' }}.</span></p>
+      {% if link.check.domains %}
+      <ul>{% for d in link.check.domains %}<li><code>{{ d.domain }}</code>: {{ d.entity }}, {{ d.category|replace('_', ' ') }}</li>{% endfor %}</ul>
+      {% endif %}
+      <p class="small">Counts, not verdicts: this is not a statement about safety or legality. <a href="{{ root }}method.html">Method and limits</a>.</p>
+    </div>
+    {% elif link.check %}
+    <div class="note">We could not measure that page ({{ link.check.status }}), so we have nothing to show about it.</div>
+    {% else %}
+    <div class="note">This address has not been analysed.</div>
+    {% endif %}
+
+    <p>
+      <a class="btn" href="{{ link.url }}" rel="noopener noreferrer nofollow">Continue to {{ link.host }}</a>
+      <a class="btn sec" href="{{ root }}index.html">Go back</a>
+    </p>
+    {% if repo_url %}<p class="small">Something wrong with this link? <a href="{{ repo_url }}/issues/new/choose" rel="noopener">Tell us</a>.</p>{% endif %}
+  </div>
+</section>
+{% endblock %}

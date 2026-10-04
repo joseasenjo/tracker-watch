@@ -188,11 +188,13 @@ def test_linkedin_only_is_enough_to_show_a_contact_card(tmp_path):
     assert "linkedin.com/in/someone" in page and "mailto:" not in page
 
 
-def test_issue_form_is_published_with_the_site(built):
+def test_issue_forms_live_in_the_repository_not_in_the_generated_site(built):
+    from pathlib import Path
     _, out, _ = built
-    form = (out / ".github" / "ISSUE_TEMPLATE" / "correction.yml").read_text(encoding="utf-8")
-    assert "Report an error or reply to a result" in form and "Issues are public" in form
-    assert (out / ".github" / "ISSUE_TEMPLATE" / "config.yml").exists()
+    assert not (out / ".github").exists()
+    folder = Path(__file__).resolve().parent.parent / ".github" / "ISSUE_TEMPLATE"
+    assert {p.name for p in folder.iterdir()} >= {"correction.yml", "add-site.yml", "link-request.yml", "config.yml"}
+    assert "Issues are public" in (folder / "correction.yml").read_text(encoding="utf-8")
 
 
 def test_about_page_states_independence_and_corrections(built):
