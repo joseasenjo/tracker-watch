@@ -6,7 +6,7 @@ public (method page) and change only with a note. Results with low confidence ge
 from __future__ import annotations
 
 # (label, lowest count, highest count or None for open-ended)
-BANDS = (("A", 0, 2), ("B", 3, 5), ("C", 6, 9), ("D", 10, 14), ("E", 15, None))
+BANDS = (("A", 0, 2), ("B", 3, 9), ("C", 10, 24), ("D", 25, 49), ("E", 50, None))
 BANDED_CONFIDENCE = ("high", "medium")
 
 

@@ -43,7 +43,7 @@
     "metrics": {
       "third_party_requests": 9,
       "third_party_domains": 5,
-      "tracking_services": 3,
+      "tracking_services": 4,
       "third_party_cookies": 0,
       "cookies_total": 15,
       "storage_items": 17
@@ -76,6 +76,14 @@
       }
     ],
     "services": [
+      {
+        "service": "adsafeprotected.com",
+        "entity": "Integral Ad Science",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
       {
         "service": "chartbeat.com",
         "entity": "Chartbeat",
@@ -140,9 +148,17 @@
     {
       "code": "TRACKING_SERVICES",
       "severity": "notable",
-      "text": "3 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: chartbeat.com (Chartbeat, analytics), chartbeat.net (Chartbeat, analytics), doubleclick.net (Google, advertising).",
+      "text": "4 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: adsafeprotected.com (Integral Ad Science, advertising), chartbeat.com (Chartbeat, analytics), chartbeat.net (Chartbeat, analytics), doubleclick.net (Google, advertising).",
       "evidence": {
         "services": [
+          {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
           {
             "service": "chartbeat.com",
             "entity": "Chartbeat",
@@ -1137,7 +1153,11 @@
           "host": "cdn.adsafeprotected.com",
           "domain": "adsafeprotected.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 2269,
@@ -2668,7 +2688,11 @@
           "host": "cdn.adsafeprotected.com",
           "domain": "adsafeprotected.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1326,
@@ -3919,7 +3943,11 @@
           "host": "cdn.adsafeprotected.com",
           "domain": "adsafeprotected.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1028,
@@ -4765,5 +4793,6 @@
         }
       ]
     }
-  ]
+  ],
+  "reclassified_at": "2026-10-04T19:22:43+00:00"
 }

@@ -70,7 +70,7 @@ def render_comment(report: dict) -> str:
     host = _safe_host(report["site"]["url"].split("/")[2]) if "//" in report["site"]["url"] else "the site"
     head = f"**Analysis of `{host}`**, measured from {m['vantage']} with {m['passes']} passes of {m['observe_seconds']:g} s."
     foot = ("\n\nThese are counts of what the page contacted before any interaction, not legal conclusions or "
-            "statements of intent. The classification list is small and may be incomplete. This result is a "
+            "statements of intent. The classification list is limited and may be incomplete. This result is a "
             "single measurement, is **not** added to the public ranking, and is kept only in this issue.")
     if s["status"] != "ok":
         reason = {"blocked": "the site refused the automated browser",

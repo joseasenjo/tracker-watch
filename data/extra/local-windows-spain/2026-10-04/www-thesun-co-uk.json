@@ -42,7 +42,7 @@
     "metrics": {
       "third_party_requests": 58,
       "third_party_domains": 22,
-      "tracking_services": 7,
+      "tracking_services": 8,
       "third_party_cookies": 1,
       "cookies_total": 23,
       "storage_items": 15
@@ -169,6 +169,14 @@
         "stable": true
       },
       {
+        "service": "brandmetrics.com",
+        "entity": "Brandmetrics",
+        "category": "audience_measurement",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
         "service": "dotmetrics.net",
         "entity": "Ipsos (Dotmetrics)",
         "category": "audience_measurement",
@@ -257,13 +265,21 @@
     {
       "code": "TRACKING_SERVICES",
       "severity": "notable",
-      "text": "7 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: amazon-adsystem.com (Amazon, advertising), dotmetrics.net (Ipsos (Dotmetrics), audience measurement), doubleclick.net (Google, advertising), google-analytics.com (Google, analytics), parsely.com (Parse.ly, analytics), permutive.com (Permutive, advertising), scorecardresearch.com (Comscore, audience measurement).",
+      "text": "8 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: amazon-adsystem.com (Amazon, advertising), brandmetrics.com (Brandmetrics, audience measurement), dotmetrics.net (Ipsos (Dotmetrics), audience measurement), doubleclick.net (Google, advertising), google-analytics.com (Google, analytics), parsely.com (Parse.ly, analytics), permutive.com (Permutive, advertising), scorecardresearch.com (Comscore, audience measurement).",
       "evidence": {
         "services": [
           {
             "service": "amazon-adsystem.com",
             "entity": "Amazon",
             "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "brandmetrics.com",
+            "entity": "Brandmetrics",
+            "category": "audience_measurement",
             "tracking": true,
             "passes_seen": 3,
             "stable": true
@@ -429,7 +445,11 @@
           "host": "cdn.brandmetrics.com",
           "domain": "brandmetrics.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "brandmetrics.com",
+            "entity": "Brandmetrics",
+            "category": "audience_measurement"
+          }
         },
         {
           "t_ms": 968,
@@ -2143,7 +2163,11 @@
           "host": "cdn.brandmetrics.com",
           "domain": "brandmetrics.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "brandmetrics.com",
+            "entity": "Brandmetrics",
+            "category": "audience_measurement"
+          }
         },
         {
           "t_ms": 875,
@@ -3867,7 +3891,11 @@
           "host": "cdn.brandmetrics.com",
           "domain": "brandmetrics.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "brandmetrics.com",
+            "entity": "Brandmetrics",
+            "category": "audience_measurement"
+          }
         },
         {
           "t_ms": 969,
@@ -5462,5 +5490,6 @@
         }
       ]
     }
-  ]
+  ],
+  "reclassified_at": "2026-10-04T19:22:43+00:00"
 }

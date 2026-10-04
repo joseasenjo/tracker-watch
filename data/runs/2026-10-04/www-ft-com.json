@@ -45,7 +45,7 @@
     "metrics": {
       "third_party_requests": 9,
       "third_party_domains": 5,
-      "tracking_services": 3,
+      "tracking_services": 4,
       "third_party_cookies": 0,
       "cookies_total": 15,
       "storage_items": 17
@@ -78,6 +78,14 @@
       }
     ],
     "services": [
+      {
+        "service": "adsafeprotected.com",
+        "entity": "Integral Ad Science",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 2,
+        "stable": true
+      },
       {
         "service": "chartbeat.com",
         "entity": "Chartbeat",
@@ -153,9 +161,17 @@
     {
       "code": "TRACKING_SERVICES",
       "severity": "notable",
-      "text": "3 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: chartbeat.com (Chartbeat, analytics), chartbeat.net (Chartbeat, analytics), doubleclick.net (Google, advertising).",
+      "text": "4 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: adsafeprotected.com (Integral Ad Science, advertising), chartbeat.com (Chartbeat, analytics), chartbeat.net (Chartbeat, analytics), doubleclick.net (Google, advertising).",
       "evidence": {
         "services": [
+          {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 2,
+            "stable": true
+          },
           {
             "service": "chartbeat.com",
             "entity": "Chartbeat",
@@ -209,14 +225,16 @@
           "method": "GET",
           "resource_type": "document",
           "url": "https://www.ft.com/",
-          "host": "www.ft.com"
+          "host": "www.ft.com",
+          "tracker": null
         },
         {
           "t_ms": 293,
           "method": "GET",
           "resource_type": "script",
           "url": "https://www.ft.com/cdn-cgi/challenge-platform/h/b/orchestrate/chl_page/v1",
-          "host": "www.ft.com"
+          "host": "www.ft.com",
+          "tracker": null
         }
       ],
       "internal_requests_blocked": [],
@@ -912,7 +930,11 @@
           "host": "cdn.adsafeprotected.com",
           "domain": "adsafeprotected.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1152,
@@ -2553,7 +2575,11 @@
           "host": "cdn.adsafeprotected.com",
           "domain": "adsafeprotected.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1060,
@@ -3309,5 +3335,6 @@
         }
       ]
     }
-  ]
+  ],
+  "reclassified_at": "2026-10-04T19:22:41+00:00"
 }

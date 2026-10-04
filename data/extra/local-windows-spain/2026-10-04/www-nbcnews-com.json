@@ -43,7 +43,7 @@
     "metrics": {
       "third_party_requests": 208,
       "third_party_domains": 50,
-      "tracking_services": 14,
+      "tracking_services": 17,
       "third_party_cookies": 17,
       "cookies_total": 56,
       "storage_items": 39
@@ -318,6 +318,14 @@
         "stable": true
       },
       {
+        "service": "adtrafficquality.google",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
         "service": "amazon-adsystem.com",
         "entity": "Amazon",
         "category": "advertising",
@@ -382,6 +390,14 @@
         "stable": true
       },
       {
+        "service": "fwmrm.net",
+        "entity": "FreeWheel",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
         "service": "googlesyndication.com",
         "entity": "Google",
         "category": "advertising",
@@ -414,7 +430,23 @@
         "stable": true
       },
       {
+        "service": "piano.io",
+        "entity": "Piano",
+        "category": "paywall",
+        "tracking": false,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
         "service": "privacymanager.io",
+        "entity": "LiveRamp",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "rlcdn.com",
         "entity": "LiveRamp",
         "category": "advertising",
         "tracking": true,
@@ -520,12 +552,20 @@
     {
       "code": "TRACKING_SERVICES",
       "severity": "notable",
-      "text": "14 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: adnxs.com (Microsoft (Xandr), advertising), amazon-adsystem.com (Amazon, advertising), criteo.com (Criteo, advertising), cxense.com (Piano (Cxense), advertising), demdex.net (Adobe, advertising), doubleclick.net (Google, advertising), doubleverify.com (DoubleVerify, advertising), dv.tech (DoubleVerify, advertising), googlesyndication.com (Google, advertising), parsely.com (Parse.ly, analytics).",
+      "text": "17 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: adnxs.com (Microsoft (Xandr), advertising), adtrafficquality.google (Google, advertising), amazon-adsystem.com (Amazon, advertising), criteo.com (Criteo, advertising), cxense.com (Piano (Cxense), advertising), demdex.net (Adobe, advertising), doubleclick.net (Google, advertising), doubleverify.com (DoubleVerify, advertising), dv.tech (DoubleVerify, advertising), fwmrm.net (FreeWheel, advertising).",
       "evidence": {
         "services": [
           {
             "service": "adnxs.com",
             "entity": "Microsoft (Xandr)",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
             "category": "advertising",
             "tracking": true,
             "passes_seen": 3,
@@ -588,6 +628,14 @@
             "stable": true
           },
           {
+            "service": "fwmrm.net",
+            "entity": "FreeWheel",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
             "service": "googlesyndication.com",
             "entity": "Google",
             "category": "advertising",
@@ -605,6 +653,14 @@
           },
           {
             "service": "privacymanager.io",
+            "entity": "LiveRamp",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "rlcdn.com",
             "entity": "LiveRamp",
             "category": "advertising",
             "tracking": true,
@@ -2632,7 +2688,11 @@
           "host": "ats.rlcdn.com",
           "domain": "rlcdn.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "rlcdn.com",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 3614,
@@ -2666,7 +2726,11 @@
           "host": "c2.piano.io",
           "domain": "piano.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "piano.io",
+            "entity": "Piano",
+            "category": "paywall"
+          }
         },
         {
           "t_ms": 3723,
@@ -2704,7 +2768,11 @@
           "host": "c2.piano.io",
           "domain": "piano.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "piano.io",
+            "entity": "Piano",
+            "category": "paywall"
+          }
         },
         {
           "t_ms": 3771,
@@ -3022,7 +3090,11 @@
           "host": "mssl.fwmrm.net",
           "domain": "fwmrm.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "fwmrm.net",
+            "entity": "FreeWheel",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 4475,
@@ -4986,7 +5058,11 @@
           "host": "ep1.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 10613,
@@ -5016,7 +5092,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 10740,
@@ -5036,7 +5116,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 10951,
@@ -5060,7 +5144,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 11668,
@@ -5084,7 +5172,11 @@
           "host": "ep1.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 14501,
@@ -7548,7 +7640,11 @@
           "host": "ats.rlcdn.com",
           "domain": "rlcdn.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "rlcdn.com",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 2885,
@@ -7652,7 +7748,11 @@
           "host": "c2.piano.io",
           "domain": "piano.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "piano.io",
+            "entity": "Piano",
+            "category": "paywall"
+          }
         },
         {
           "t_ms": 3031,
@@ -7662,7 +7762,11 @@
           "host": "c2.piano.io",
           "domain": "piano.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "piano.io",
+            "entity": "Piano",
+            "category": "paywall"
+          }
         },
         {
           "t_ms": 3040,
@@ -7892,7 +7996,11 @@
           "host": "mssl.fwmrm.net",
           "domain": "fwmrm.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "fwmrm.net",
+            "entity": "FreeWheel",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 3411,
@@ -10038,7 +10146,11 @@
           "host": "ep1.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 8936,
@@ -10068,7 +10180,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 9163,
@@ -10078,7 +10194,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 9208,
@@ -10102,7 +10222,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 9943,
@@ -10112,7 +10236,11 @@
           "host": "ep1.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 13448,
@@ -12536,7 +12664,11 @@
           "host": "c2.piano.io",
           "domain": "piano.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "piano.io",
+            "entity": "Piano",
+            "category": "paywall"
+          }
         },
         {
           "t_ms": 3350,
@@ -12602,7 +12734,11 @@
           "host": "c2.piano.io",
           "domain": "piano.io",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "piano.io",
+            "entity": "Piano",
+            "category": "paywall"
+          }
         },
         {
           "t_ms": 3401,
@@ -12734,7 +12870,11 @@
           "host": "ats.rlcdn.com",
           "domain": "rlcdn.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "rlcdn.com",
+            "entity": "LiveRamp",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 3529,
@@ -13048,7 +13188,11 @@
           "host": "mssl.fwmrm.net",
           "domain": "fwmrm.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "fwmrm.net",
+            "entity": "FreeWheel",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 4296,
@@ -14988,7 +15132,11 @@
           "host": "ep1.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 10263,
@@ -15018,7 +15166,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 10528,
@@ -15028,7 +15180,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 10584,
@@ -15052,7 +15208,11 @@
           "host": "ep2.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 11350,
@@ -15062,7 +15222,11 @@
           "host": "ep1.adtrafficquality.google",
           "domain": "adtrafficquality.google",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "adtrafficquality.google",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 11802,
@@ -15642,5 +15806,6 @@
         }
       ]
     }
-  ]
+  ],
+  "reclassified_at": "2026-10-04T19:22:43+00:00"
 }

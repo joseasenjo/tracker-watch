@@ -42,7 +42,7 @@
     "metrics": {
       "third_party_requests": 71,
       "third_party_domains": 4,
-      "tracking_services": 0,
+      "tracking_services": 1,
       "third_party_cookies": 0,
       "cookies_total": 2,
       "storage_items": 2
@@ -69,7 +69,16 @@
         "stable": true
       }
     ],
-    "services": [],
+    "services": [
+      {
+        "service": "confiant-integrations.net",
+        "entity": "Confiant",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
     "observations": [
       {
         "kind": "key_listener",
@@ -96,6 +105,23 @@
       "evidence": {
         "requests": 71,
         "domains": 4
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "1 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: confiant-integrations.net (Confiant, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
       }
     }
   ],
@@ -221,7 +247,11 @@
           "host": "cdn.confiant-integrations.net",
           "domain": "confiant-integrations.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 513,
@@ -821,7 +851,11 @@
           "host": "cdn.confiant-integrations.net",
           "domain": "confiant-integrations.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1264,
@@ -1133,7 +1167,11 @@
           "host": "cdn.confiant-integrations.net",
           "domain": "confiant-integrations.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 155,
@@ -1743,7 +1781,11 @@
           "host": "cdn.confiant-integrations.net",
           "domain": "confiant-integrations.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 950,
@@ -2055,7 +2097,11 @@
           "host": "cdn.confiant-integrations.net",
           "domain": "confiant-integrations.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 164,
@@ -2665,7 +2711,11 @@
           "host": "cdn.confiant-integrations.net",
           "domain": "confiant-integrations.net",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 991,
@@ -2866,5 +2916,6 @@
         }
       ]
     }
-  ]
+  ],
+  "reclassified_at": "2026-10-04T19:22:41+00:00"
 }

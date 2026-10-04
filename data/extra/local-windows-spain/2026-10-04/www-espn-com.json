@@ -44,7 +44,7 @@
     "metrics": {
       "third_party_requests": 42,
       "third_party_domains": 13,
-      "tracking_services": 4,
+      "tracking_services": 5,
       "third_party_cookies": 0,
       "cookies_total": 33,
       "storage_items": 24
@@ -155,6 +155,14 @@
         "stable": false
       },
       {
+        "service": "googletagservices.com",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
         "service": "parsely.com",
         "entity": "Parse.ly",
         "category": "analytics",
@@ -209,7 +217,7 @@
     {
       "code": "TRACKING_SERVICES",
       "severity": "notable",
-      "text": "4 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: demdex.net (Adobe, advertising), doubleclick.net (Google, advertising), parsely.com (Parse.ly, analytics), rubiconproject.com (Magnite, advertising).",
+      "text": "5 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: demdex.net (Adobe, advertising), doubleclick.net (Google, advertising), googletagservices.com (Google, advertising), parsely.com (Parse.ly, analytics), rubiconproject.com (Magnite, advertising).",
       "evidence": {
         "services": [
           {
@@ -222,6 +230,14 @@
           },
           {
             "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "googletagservices.com",
             "entity": "Google",
             "category": "advertising",
             "tracking": true,
@@ -890,7 +906,11 @@
           "host": "www.googletagservices.com",
           "domain": "googletagservices.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "googletagservices.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1657,
@@ -2970,7 +2990,11 @@
           "host": "www.googletagservices.com",
           "domain": "googletagservices.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "googletagservices.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1819,
@@ -5080,7 +5104,11 @@
           "host": "www.googletagservices.com",
           "domain": "googletagservices.com",
           "party": "third",
-          "tracker": null
+          "tracker": {
+            "service": "googletagservices.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
         },
         {
           "t_ms": 1974,
@@ -6539,5 +6567,6 @@
         }
       ]
     }
-  ]
+  ],
+  "reclassified_at": "2026-10-04T19:22:43+00:00"
 }

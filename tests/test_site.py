@@ -110,7 +110,7 @@ def test_bands_are_shown_and_explained_as_ranges_not_verdicts(built):
     assert entry["band"] == "B" and next(e for e in ctx["entries"] if e["stem"] == "b")["band"] is None
     assert 'data-band="B"' in (out / "index.html").read_text(encoding="utf-8")
     method = (out / "method.html").read_text(encoding="utf-8")
-    assert 'id="bands"' in method and "15+" in method and "not</b> a grade" in method
+    assert 'id="bands"' in method and "50+" in method and "not</b> a grade" in method
     assert "band B" in (out / "sites" / "a.html").read_text(encoding="utf-8")
 
 

@@ -87,7 +87,7 @@ def _method(reports: list[dict], report_url: str) -> str:
     m = reports[0]["measurement"] if reports else {}
     failed = len(reports) - len(eligible(reports))
     return (f"How: pages load with no clicks for {m.get('observe_seconds', 12):g}s, {m.get('passes', 3)} passes, "
-            f"median. Third party = other registered domain, checked against a small hand-built list "
+            f"median. Third party = other registered domain, checked against a limited hand-built list "
             f"(may be incomplete). {failed} sites blocked/unmeasured. Counts, not legal verdicts. "
             f"Method and data: {report_url}")
 
