@@ -25,7 +25,9 @@ from . import SCHEMA_VERSION
 from .classify import DEFAULT_TRACKER_LIST
 from .bands import band_for, describe as describe_bands
 from .diff import compare_reports
+from .cards import alt_text as ranking_alt_text, ranking_card_html, render_png
 from .findings import SCRIPT_BEHAVIOURS
+from .spark import sparkline
 
 SRC = Path(__file__).resolve().parent.parent / "site_src"
 SITE_NAME = "Tracker Watch"
@@ -122,6 +124,13 @@ def _entry(stem: str, report: dict, meta: dict, history: dict, date: str, diff: 
                          "status": r["summary"]["status"],
                          "tracking": r["summary"].get("metrics", {}).get("tracking_services")}
                         for d, reports in history.items() for s, r in reports.items() if s == stem]
+    # Only weeks measured from the same place are plotted together: other origins are not comparable.
+    latest_vantage = VANTAGE_LABELS.get(report["measurement"]["vantage"], report["measurement"]["vantage"])
+    points = [(h["date"], h["tracking"]) for h in entry["history"]
+              if h["status"] == "ok" and h["tracking"] is not None and h["vantage"] == latest_vantage]
+    entry["trend_n"] = len(points)
+    entry["spark"] = sparkline(points)
+    entry["spark_small"] = sparkline(points, width=96, height=28)
     return entry
 
 
@@ -172,6 +181,9 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None) -> dict:
         "low_confidence": [e for e in measured if e["confidence"] in ("medium", "low")],
         "vantage_es": VANTAGE_LABELS_ES.get(measurement["vantage"], measurement["vantage"]),
         "bands": describe_bands(),
+        "any_trend": any(e["trend_n"] >= 2 for e in measured),
+        "lookup": [{"name": e["name"], "host": (urlsplit(e["url"]).hostname or "").removeprefix("www."),
+                    "stem": e["stem"], "measured": e["status"] == "ok"} for e in entries],
         "scan_started": stamps[0].astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "scan_finished": stamps[-1].astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "tool_version": first["tool"]["version"], "browser": measurement.get("browser", "unknown"),
@@ -278,6 +290,26 @@ body:
     validations:
       required: true
 """
+ADD_SITE_FORM = """name: Suggest a site to measure
+description: Ask for a news site to be added to the weekly list.
+title: "[Add site] "
+labels: ["suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: "Issues are public. The list is fixed and extended by hand; live checks of any address are not available yet."
+  - type: input
+    id: url
+    attributes:
+      label: Site address
+      placeholder: "https://www.example-news.com"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why should it be included?
+"""
 ISSUE_CONFIG = "blank_issues_enabled: true\n"
 
 
@@ -286,14 +318,18 @@ def _write_issue_templates(out: Path) -> None:
     folder = out / ".github" / "ISSUE_TEMPLATE"
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "correction.yml").write_text(CORRECTION_FORM, encoding="utf-8")
+    (folder / "add-site.yml").write_text(ADD_SITE_FORM, encoding="utf-8")
     (folder / "config.yml").write_text(ISSUE_CONFIG, encoding="utf-8")
 
 
 def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | None = None,
                base_url: str = "https://example.org/tracker-watch/", subscribe_url: str | None = None,
                repo_url: str | None = None, contact_email: str | None = None, linkedin_url: str | None = None,
-               author: str | None = None, next_scan: str | None = None) -> dict:
+               author: str | None = None, next_scan: str | None = None, share_cards: bool = False) -> dict:
     ctx = build_context(runs_dir, sites_file)
+    base = base_url if base_url.endswith("/") else base_url + "/"
+    ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
+    ctx["site_base"] = base
     ctx["subscribe_url"], ctx["subscribe_host"] = _check_subscribe_url(subscribe_url)
     ctx["repo_url"] = (repo_url or "").strip()
     ctx.update(_check_contact(contact_email, linkedin_url, author, next_scan))
@@ -308,6 +344,8 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
         root = "../" * (len(target.relative_to(out).parts) - 1)
         target.write_text(env.get_template(template).render(**ctx, root=root, **extra), encoding="utf-8")
 
+    if share_cards and render_png(ranking_card_html(ctx), out / "share" / "ranking.png"):
+        ctx["share_image"] = base + "share/ranking.png"
     render("index.html", out / "index.html", page="index")
     render("changes.html", out / "changes.html", page="changes")
     render("unmeasured.html", out / "unmeasured.html", page="unmeasured")
@@ -356,12 +394,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--linkedin-url", default="", help="optional public LinkedIn profile or page")
     parser.add_argument("--author", default="", help="optional name shown on the About page")
     parser.add_argument("--next-scan", default="", help="text such as 'Mondays 05:00 UTC'; hidden when empty")
+    parser.add_argument("--share-cards", action="store_true", help="also render the shareable ranking image (needs Chromium)")
     parser.add_argument("--dashboard", help="also write the Spanish internal dashboard to this folder (never publish it)")
     args = parser.parse_args(argv)
     sites_file = args.sites_file if Path(args.sites_file).exists() else None
     ctx = build_site(args.runs_dir, args.out, sites_file=sites_file, base_url=args.base_url,
                      subscribe_url=args.subscribe_url, repo_url=args.repo_url, contact_email=args.contact_email,
-                     linkedin_url=args.linkedin_url, author=args.author, next_scan=args.next_scan)
+                     linkedin_url=args.linkedin_url, author=args.author, next_scan=args.next_scan,
+                     share_cards=args.share_cards)
+    if args.share_cards and not ctx["share_image"]:
+        print("warning: the shareable image was not created (Playwright or Chromium is not available)")
     print(f"site: {args.out} ({len(ctx['entries'])} sites, measurement of {ctx['date']})")
     if args.dashboard:
         build_dashboard(ctx, args.dashboard)

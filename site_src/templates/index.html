@@ -1,10 +1,30 @@
 {% extends "base.html" %}
+{% block head %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ site_name }}: tracking services contacted by news sites before any interaction">
+  <meta property="og:description" content="{{ measured|length }} sites measured on {{ date }}. Counts, not verdicts.">
+  {% if share_image %}
+  <meta property="og:image" content="{{ share_image }}">
+  <meta property="og:image:alt" content="{{ share_alt }}">
+  <meta name="twitter:card" content="summary_large_image">
+  {% endif %}
+{% endblock %}
 {% block content %}
 <div class="hero">
   <div class="wrap">
-    <span class="kicker">Last scan: {{ scan_finished }}</span>
+    <span class="kicker">Last scan: {{ scan_finished }} · from {{ vantage }}</span>
     <h1>Which news sites contact the most tracking services before you click anything?</h1>
     <p class="lead">Each page is loaded with no clicks and no consent given, three times, and we count the third-party tracking services it contacts. These are counts, not verdicts: read the <a href="{{ root }}method.html">method and its limits</a> before drawing conclusions.</p>
+    <form class="checker" id="check-form" data-root="{{ root }}" data-repo="{{ repo_url }}" novalidate>
+      <label for="check-url" class="small">Is your site in the list?</label>
+      <div class="checker-row">
+        <input type="text" id="check-url" inputmode="url" autocomplete="off" placeholder="example-news.com" aria-describedby="check-help">
+        <button class="btn" type="submit">Look up</button>
+      </div>
+      <p class="small" id="check-help">Looks only at the sites we already measure each week. What you type never leaves your browser.</p>
+      <p class="note" id="check-result" role="status" hidden></p>
+    </form>
+    <script type="application/json" id="site-lookup">{{ lookup|tojson }}</script>
     <div class="counters">
       <div class="counter"><b>{{ measured|length }}</b><span>sites measured</span></div>
       <div class="counter"><b>{{ with_tracking }}</b><span>contacted at least one tracking service</span></div>
@@ -40,6 +60,7 @@
           <th class="num"><button type="button" data-sort="requests">Third-party requests</button></th>
           <th>Confidence</th>
           <th class="num"><button type="button" data-sort="delta">Vs last week</button></th>
+          {% if any_trend %}<th>Trend</th>{% endif %}
         </tr></thead>
         <tbody>
         {% for s in measured %}
@@ -52,6 +73,7 @@
             <td class="num">{{ s.requests }}</td>
             <td><span class="pill {{ 'ok' if s.confidence == 'high' else 'warn' }}">{{ s.confidence or '–' }}</span></td>
             <td class="num">{% if s.delta is none %}–{% elif s.delta > 0 %}+{{ s.delta }}{% else %}{{ s.delta }}{% endif %}</td>
+            {% if any_trend %}<td>{% if s.trend_n >= 2 %}{{ s.spark_small }}{% else %}–{% endif %}</td>{% endif %}
           </tr>
         {% endfor %}
         </tbody>

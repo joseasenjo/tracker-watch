@@ -61,6 +61,13 @@
       {% endif %}
     {% endif %}
 
+    <h2>Evolution</h2>
+    {% if s.trend_n >= 2 %}
+      <div class="card">{{ s.spark }}<p class="small">Tracking services contacted each week. Only weeks measured from the same place are plotted together.</p></div>
+    {% else %}
+      <p class="small">The chart appears once there are at least two weeks measured under the same conditions.</p>
+    {% endif %}
+
     <h2>History</h2>
     <div class="table-scroll">
       <table class="t">
