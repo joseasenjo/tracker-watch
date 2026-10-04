@@ -201,6 +201,18 @@ def test_about_page_states_independence_and_corrections(built):
     assert "Independence" in about and "no affiliate links" in about and "Changes to the method" in about
 
 
+def test_vantage_caveat_is_shown_on_the_index_and_on_non_us_site_pages(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/"), "u": ok_report("US News", "https://u.example/")})
+    sites = tmp_path / "sites.json"
+    sites.write_text(json.dumps({"sites": [{"name": "News A", "url": "https://a.example/", "group": "UK", "kind": "news"},
+                                           {"name": "US News", "url": "https://u.example/", "group": "US", "kind": "news"}]}))
+    out = tmp_path / "site"
+    build_site(tmp_path / "runs", out, sites_file=str(sites))
+    assert "Where the page is loaded from matters" in (out / "index.html").read_text(encoding="utf-8")
+    assert "mainly serves readers in the UK" in (out / "sites" / "a.html").read_text(encoding="utf-8")
+    assert "mainly serves readers" not in (out / "sites" / "u.html").read_text(encoding="utf-8")
+
+
 def test_site_makes_no_external_requests(built):
     _, out, _ = built
     for page in list(out.rglob("*.html")):
