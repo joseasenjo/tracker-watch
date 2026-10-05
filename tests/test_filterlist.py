@@ -102,6 +102,9 @@ def test_site_publishes_the_files_the_page_and_the_card(tmp_path):
     page = (out / "filters.html").read_text(encoding="utf-8")
     assert "https://o.github.io/r/data/trackerwatch-verified.txt" in page and "uBlock Origin" in page
     assert "not complete protection" in page and "$third-party" in page
+    for benefit in ("Fewer ads and fewer trackers contacted", "often load faster and use less data", "Control per site"):
+        assert benefit in page
+    assert "pause the blocker on that one site" in page
     home = (out / "index.html").read_text(encoding="utf-8")
     assert "<h3>Filter lists</h3>" in home and 'href="filters.html"' in home
     index = json.loads((out / "data" / "index.json").read_text(encoding="utf-8"))
