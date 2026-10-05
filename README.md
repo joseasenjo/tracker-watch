@@ -63,6 +63,10 @@ The admin server listens on 127.0.0.1 only, needs a token for changes and never 
 
 `traceguard/categories.py` holds the plain-language explanation of each category shown on the *What the categories mean* page (the type of service, not any company, and no invasiveness score).
 
+## Filter lists for ad and tracker blockers
+
+`python -m traceguard.filterlist --out some/folder` (the site build does it too, into `data/`) writes `trackerwatch-verified.txt` and `trackerwatch-full.txt` in Adblock syntax (uBlock Origin, AdGuard): only the tracking categories, never tag managers, consent tools or paywalls, every rule `||domain^$third-party`. The verified file has only entries verified one by one; the full file adds the ones marked as inferred, listed separately at the end. They do nothing by themselves and are not complete protection; see the site's *Filter lists* page.
+
 ## What the site adds beyond the ranking
 
 - **Weight of third-party content:** every request records the transfer size of its response (compressed, if it finished inside the window); reports show the third-party share and the part from tracking services. Reports made before schema 0.2 have no sizes.

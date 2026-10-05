@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Filter lists{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Filter lists</h1>
+    <p class="sub">Our list of tracking services, as a file for the ad and tracker blocker you already use.</p>
+
+    <div class="note"><b>What this is.</b> A text file of domains. By itself it does nothing: it only takes effect when a blocker such as uBlock Origin or AdGuard reads it, and then that blocker stops <i>other sites'</i> requests to those domains. It is <b>not complete protection</b>: our list is limited, and blocking can change how a page works.</div>
+
+    <h2>The two files</h2>
+    <div class="table-scroll"><table class="t">
+      <thead><tr><th>File</th><th class="num">Entries</th><th>What it contains</th></tr></thead>
+      <tbody>
+      {% for f in filters %}
+        <tr>
+          <td><a href="{{ root }}data/{{ f.file }}">{{ f.file }}</a></td>
+          <td class="num">{{ f.count }}</td>
+          <td class="small">{{ f.summary }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p class="small">Both are in Adblock syntax, regenerated every time the site is built, and licensed CC BY 4.0 (credit “Tracker Watch”). Each header states the version, the number of entries and that it expires in 7 days, so blockers refresh it.</p>
+
+    <h2>How to use it</h2>
+    <ol>
+      <li>Copy the address of the file you want (it only works once this site is published):
+        {% for f in filters %}<br><code style="word-break:break-all">{{ site_base }}data/{{ f.file }}</code>{% endfor %}</li>
+      <li><b>uBlock Origin:</b> open its dashboard, go to <i>Filter lists</i>, scroll to <i>Import…</i>, paste the address and press <i>Apply changes</i>.</li>
+      <li><b>AdGuard (extension or app):</b> <i>Settings → Filters → Custom filters → Add custom filter</i>, paste the address.</li>
+      <li>Keep your blocker's usual lists as well: this one is a small, focused addition, not a replacement.</li>
+    </ol>
+    <p class="small">The file is for blockers that read Adblock syntax. A version for DNS-level blockers can be added if people ask for it.</p>
+
+    <h2>What it includes, and what it leaves out</h2>
+    <ul>
+      <li>Only <a href="{{ root }}glossary.html">the tracking categories</a>: advertising, analytics, social networks, session replay and audience measurement.</li>
+      <li>Never tag managers, consent tools or paywalls, because blocking them breaks sites (and our own <a href="{{ root }}consent.html">banner test</a> needs the consent tools to work).</li>
+      <li>Every rule is <code>||domain^$third-party</code>: it covers the domain and its subdomains, but only when another site requests it. Visiting a company's own website, or using its own tools, is not affected.</li>
+      <li>The <b>verified</b> file holds only the entries whose operator we verified one by one. The <b>full</b> file adds the entries identified from general knowledge of the vendor and marked as unverified on the <a href="{{ root }}method.html">method page</a>, which are listed separately at the end of the file. A wrong attribution there would block a harmless domain, so the verified file is the cautious choice.</li>
+    </ul>
+
+    <h2>What to expect</h2>
+    <ul>
+      <li>Blocking trackers sometimes breaks videos, comments, embedded content or log-ins. If a site stops working, pause the blocker on that site. Our <a href="{{ root }}protection.html">blocking-list test</a> shows how much third-party traffic a public list removes on the sites we measure.</li>
+      <li>We receive nothing from any blocker or browser, and naming them is not an endorsement.</li>
+      <li>Found a mistaken entry? <a href="{{ repo_url }}/issues/new?template=correction.yml" rel="noopener">Tell us</a> and we will check it and fix the list.</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

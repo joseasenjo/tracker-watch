@@ -27,6 +27,7 @@ from .classify import DEFAULT_TRACKER_LIST, TrackerList
 from .community import load_community
 from .entities import horizontal_bars, inferred_entities, reach
 from .extended import consent_view, protection_view
+from .filterlist import build as build_filter_lists
 from .bands import band_for, describe as describe_bands
 from .behaviour import phrases as activity_phrases, service_activity, totals as activity_totals
 from .categories import describe as describe_categories, label as category_label
@@ -236,6 +237,9 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
     return {
         "origins": origins, "origins_chart": paired_bars(origins["rows"], origins["origins"]),
         "categories": describe_categories(trackers),
+        "filters": [{"file": name, **{k: v for k, v in info.items() if k != "text"}}
+                    for name, info in build_filter_lists(json.loads(DEFAULT_TRACKER_LIST.read_text(encoding="utf-8")),
+                                                         date).items()],
         "entities": entities, "entities_chart": horizontal_bars(entities["rows"], entities["measured"]),
         "consent": consent, "protection": protection, "stems": {e["stem"] for e in entries},
         "consent_dir": consent_dir if consent_dir is not None else data_root / "consent",
@@ -379,6 +383,9 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
     """CSV and JSON files for journalists and researchers (all CC BY 4.0, see DATA_LICENSE.md)."""
     data_dir.mkdir(parents=True, exist_ok=True)
     _write_csv(ctx, data_dir / "latest.csv")
+    for name, info in build_filter_lists(json.loads(DEFAULT_TRACKER_LIST.read_text(encoding="utf-8")), ctx["date"],
+                                         base).items():
+        (data_dir / name).write_text(info["text"], encoding="utf-8")
     meta = {e["url"]: {"group": e["group"], "kind": e["kind"]} for e in ctx["entries"]}
     with (data_dir / "history.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
@@ -438,7 +445,9 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         "schema_version": SCHEMA_VERSION, "latest_date": ctx["date"], "dates": ctx["dates"], "origins": origins,
         "files": {"latest.csv": "data/latest.csv", "history.csv": "data/history.csv",
                   "entities.csv": "data/entities.csv", "consent.csv": "data/consent.csv",
-                  "protection.csv": "data/protection.csv", "index.json": "data/index.json"},
+                  "protection.csv": "data/protection.csv", "index.json": "data/index.json",
+                  "trackerwatch-verified.txt": "data/trackerwatch-verified.txt",
+                  "trackerwatch-full.txt": "data/trackerwatch-full.txt"},
         "notes": ["Counts are minimums: the classification list is limited.",
                   "Byte figures are compressed transfer sizes of responses that finished inside the observation "
                   "window; reports made before sizes were collected leave them blank.",
@@ -486,6 +495,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("origins.html", out / "origins.html", page="origins")
     render("companies.html", out / "companies.html", page="companies")
     render("glossary.html", out / "glossary.html", page="glossary")
+    render("filters.html", out / "filters.html", page="filters")
     render("request.html", out / "request.html", page="request")
     render("consent.html", out / "consent.html", page="consent")
     render("protection.html", out / "protection.html", page="protection")
