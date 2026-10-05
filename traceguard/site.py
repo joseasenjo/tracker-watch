@@ -25,12 +25,14 @@ from . import SCHEMA_VERSION
 from .classify import DEFAULT_TRACKER_LIST, TrackerList
 from .community import load_community
 from .entities import horizontal_bars, inferred_entities, reach
+from .extended import consent_view, protection_view
 from .bands import band_for, describe as describe_bands
 from .diff import compare_reports
 from .cards import (alt_text as ranking_alt_text, origins_alt_text, origins_card_html, ranking_card_html,
                     render_png)
 from .findings import SCRIPT_BEHAVIOURS, format_bytes
 from .links import load_links
+from .report import passive_requests
 from .origins import compare as compare_origins, load_extra, paired_bars
 from .spark import sparkline
 
@@ -91,7 +93,7 @@ def _domain_rows(report: dict) -> list[dict]:
     for run in report["runs"]:
         if run["status"] != "ok":
             continue
-        for request in run["requests"]:
+        for request in passive_requests(run):
             if request.get("party") == "third" and request.get("tracker"):
                 known.setdefault(request["domain"], request["tracker"])
     rows = []
@@ -147,7 +149,8 @@ def _entry(stem: str, report: dict, meta: dict, history: dict, date: str, diff: 
 
 
 def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir: Path | str | None = None,
-                  community_dir: Path | str | None = None) -> dict:
+                  community_dir: Path | str | None = None, consent_dir: Path | str | None = None,
+                  protected_dir: Path | str | None = None) -> dict:
     history = load_history(Path(runs_dir))
     if not history:
         raise FileNotFoundError(f"no dated report folders in {runs_dir}")
@@ -192,6 +195,14 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
     origins = compare_origins(date, history[date], primary_label, all_extra, labels, meta)
     origins["unverified"] = [labels[v] for v in community]
     entities = reach(history[date], meta, inferred_entities(trackers))
+    data_root = Path(runs_dir).parent
+    consent = consent_view(consent_dir if consent_dir is not None else data_root / "consent", labels, meta)
+    baselines = {measurement["vantage"]: history, **extra}  # community origins are never a baseline
+    protection = protection_view(protected_dir if protected_dir is not None else data_root / "protected",
+                                 baselines, labels, meta)
+    for e in entries:
+        e["consent_rows"] = consent["by_stem"].get(e["stem"], [])
+        e["protection_rows"] = protection["by_stem"].get(e["stem"], [])
     share = {r["entity"]: r["share"] for r in entities["rows"]}
     for e in entries:
         by_entity: dict[str, list[str]] = {}
@@ -205,6 +216,9 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
     return {
         "origins": origins, "origins_chart": paired_bars(origins["rows"], origins["origins"]),
         "entities": entities, "entities_chart": horizontal_bars(entities["rows"], entities["measured"]),
+        "consent": consent, "protection": protection, "stems": {e["stem"] for e in entries},
+        "consent_dir": consent_dir if consent_dir is not None else data_root / "consent",
+        "protected_dir": protected_dir if protected_dir is not None else data_root / "protected",
         "extra_origins": all_extra, "origin_labels": labels, "community_slugs": sorted(community),
         "community_warnings": warnings, "primary_vantage": measurement["vantage"],
         "site_name": SITE_NAME, "date": date, "dates": dates,
@@ -288,6 +302,13 @@ HISTORY_COLUMNS = ["date", "origin", "origin_kind", "site", "url", "country", "t
                    "tracking_services", "band", "third_party_domains", "third_party_requests", "tracking_requests",
                    "total_bytes", "third_party_bytes", "tracking_bytes", "third_party_cookies", "tool_version"]
 ENTITY_COLUMNS = ["date", "operator", "sites_reached", "sites_measured", "share_percent", "services", "categories"]
+CONSENT_COLUMNS = ["date", "origin", "site", "url_id", "status", "consent_tool", "action", "outcome", "button_text",
+                   "tracking_services_before", "tracking_services_after", "tracking_services_new_after",
+                   "third_party_cookies_before", "third_party_cookies_after", "after_seconds"]
+PROTECTION_COLUMNS = ["date", "origin", "baseline_date", "site", "url_id", "blocklist", "blocklist_sha256",
+                      "blocked_requests", "tracking_services_passive", "tracking_services_protected",
+                      "third_party_requests_passive", "third_party_requests_protected",
+                      "third_party_bytes_passive", "third_party_bytes_protected"]
 
 
 def _write_csv(ctx: dict, path: Path) -> None:
@@ -348,6 +369,30 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         for r in ctx["entities"]["rows"]:
             writer.writerow([ctx["date"], r["entity"], r["n"], ctx["entities"]["measured"], r["share"],
                              " ".join(r["services"]), " ".join(r["categories"])])
+    with (data_dir / "consent.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(CONSENT_COLUMNS)
+        for o in ctx["consent"]["origins"]:
+            for r in o["rows"]:
+                for mode in o["modes"]:
+                    c = r[mode]
+                    writer.writerow([o["date"], o["vantage"], r["name"], r["stem"], r["status"], r["cmp"] or "", mode,
+                                     c["outcome"], c.get("button") or "", c.get("before", ""), c.get("after", ""),
+                                     c.get("new", ""), c.get("cookies_before", ""), c.get("cookies_after", ""),
+                                     c.get("seconds", "")])
+    with (data_dir / "protection.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(PROTECTION_COLUMNS)
+        for o in ctx["protection"]["origins"]:
+            for r in o["rows"]:
+                p, q = r["passive"] or {}, r["protected"] or {}
+
+                def v(d, k):
+                    return "" if d.get(k) is None else d[k]
+                writer.writerow([o["date"], o["vantage"], o["base_date"] or "", r["name"], r["stem"],
+                                 o["blocklist"].get("name", ""), o["blocklist"].get("sha256", ""),
+                                 "" if r["blocked"] is None else r["blocked"], v(p, "tracking"), v(q, "tracking"),
+                                 v(p, "requests"), v(q, "requests"), v(p, "bytes"), v(q, "bytes")])
     origins = [{"id": ctx["primary_vantage"], "label": ctx["vantage"], "kind": "main"}]
     for vantage in ctx["extra_origins"]:
         unverified = vantage in ctx["community_slugs"]
@@ -371,11 +416,14 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         "name": SITE_NAME, "site": base, "licence": "CC BY 4.0 (credit 'Tracker Watch')",
         "schema_version": SCHEMA_VERSION, "latest_date": ctx["date"], "dates": ctx["dates"], "origins": origins,
         "files": {"latest.csv": "data/latest.csv", "history.csv": "data/history.csv",
-                  "entities.csv": "data/entities.csv", "index.json": "data/index.json"},
+                  "entities.csv": "data/entities.csv", "consent.csv": "data/consent.csv",
+                  "protection.csv": "data/protection.csv", "index.json": "data/index.json"},
         "notes": ["Counts are minimums: the classification list is limited.",
                   "Byte figures are compressed transfer sizes of responses that finished inside the observation "
                   "window; reports made before sizes were collected leave them blank.",
-                  "Community origins are unverified."],
+                  "Community origins are unverified.",
+                  "consent.csv and protection.csv come from optional, separate measurements (see the method page); "
+                  "they never change the main figures."],
         "sites": sites}
     (data_dir / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False), encoding="utf-8")
 
@@ -385,8 +433,9 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
                repo_url: str | None = None, contact_email: str | None = None, linkedin_url: str | None = None,
                author: str | None = None, next_scan: str | None = None, share_cards: bool = False,
                extra_dir: Path | str | None = None, links_file: Path | str | None = None,
-               community_dir: Path | str | None = None) -> dict:
-    ctx = build_context(runs_dir, sites_file, extra_dir, community_dir)
+               community_dir: Path | str | None = None, consent_dir: Path | str | None = None,
+               protected_dir: Path | str | None = None) -> dict:
+    ctx = build_context(runs_dir, sites_file, extra_dir, community_dir, consent_dir, protected_dir)
     ctx["links"] = load_links(links_file if links_file is not None else Path(runs_dir).parent / "links.json")
     base = base_url if base_url.endswith("/") else base_url + "/"
     ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
@@ -414,6 +463,8 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("index.html", out / "index.html", page="index")
     render("origins.html", out / "origins.html", page="origins")
     render("companies.html", out / "companies.html", page="companies")
+    render("consent.html", out / "consent.html", page="consent")
+    render("protection.html", out / "protection.html", page="protection")
     render("changes.html", out / "changes.html", page="changes")
     render("unmeasured.html", out / "unmeasured.html", page="unmeasured")
     render("method.html", out / "method.html", page="method")
@@ -432,12 +483,15 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
         (out / "data" / date).mkdir(parents=True, exist_ok=True)
         for stem, report in reports.items():
             (out / "data" / date / f"{stem}.json").write_text(json.dumps(report, ensure_ascii=False), encoding="utf-8")
-    for vantage, by_date in ctx["extra_origins"].items():
-        for date, reports in by_date.items():
-            (out / "data" / "origins" / vantage / date).mkdir(parents=True, exist_ok=True)
-            for stem, report in reports.items():
-                (out / "data" / "origins" / vantage / date / f"{stem}.json").write_text(
-                    json.dumps(report, ensure_ascii=False), encoding="utf-8")
+    published = [("origins", ctx["extra_origins"]), ("consent", load_extra(ctx["consent_dir"])),
+                 ("protected", load_extra(ctx["protected_dir"]))]
+    for folder, data in published:
+        for vantage, by_date in data.items():
+            for date, reports in by_date.items():
+                (out / "data" / folder / vantage / date).mkdir(parents=True, exist_ok=True)
+                for stem, report in reports.items():
+                    (out / "data" / folder / vantage / date / f"{stem}.json").write_text(
+                        json.dumps(report, ensure_ascii=False), encoding="utf-8")
     return ctx
 
 
@@ -473,6 +527,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--next-scan", default="", help="text such as 'Mondays 05:00 UTC'; hidden when empty")
     parser.add_argument("--extra-dir", default=None, help="folder with reports from other origins (default: data/extra next to the runs folder)")
     parser.add_argument("--share-cards", action="store_true", help="also render the shareable images (needs Chromium)")
+    parser.add_argument("--consent-dir", default=None, help="consent-test reports (default: data/consent next to the runs folder)")
+    parser.add_argument("--protected-dir", default=None, help="blocking-list reports (default: data/protected next to the runs folder)")
     parser.add_argument("--community-dir", default=None, help="community-contributed origins (default: data/community next to the runs folder)")
     parser.add_argument("--links-file", default=None, help="approved short links (default: data/links.json next to the runs folder)")
     parser.add_argument("--dashboard", help="also write the Spanish internal dashboard to this folder (never publish it)")
@@ -483,7 +539,8 @@ def main(argv: list[str] | None = None) -> int:
                      subscribe_url=args.subscribe_url, repo_url=args.repo_url, contact_email=args.contact_email,
                      linkedin_url=args.linkedin_url, author=args.author, next_scan=args.next_scan,
                      share_cards=args.share_cards, extra_dir=args.extra_dir, links_file=args.links_file,
-                     community_dir=args.community_dir)
+                     community_dir=args.community_dir, consent_dir=args.consent_dir,
+                     protected_dir=args.protected_dir)
     if args.share_cards and not ctx["share_image"]:
         print("warning: the shareable image was not created (Playwright or Chromium is not available)")
     for warning in ctx["community_warnings"]:

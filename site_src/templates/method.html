@@ -14,7 +14,7 @@
     <h2 style="margin-top:28px">What the numbers mean</h2>
     <ul>
       <li><b>Tracking services</b> are the distinct third-party services in our list classified as advertising, analytics, social or audience measurement that were contacted during the observation window. Tag managers, consent tools and paywalls are listed but not counted.</li>
-      <li>The count is <b>before any interaction</b>. A site that blocks everything until you accept shows a low number here; this says nothing about what happens afterwards.</li>
+      <li>The count is <b>before any interaction</b>. A site that blocks everything until you accept shows a low number here; what happens after a choice is measured separately on <a href="{{ root }}consent.html">After the banner</a>.</li>
       <li>Counts describe what was contacted. They do not say what data was sent, why, or whether it was lawful.</li>
     </ul>
 
@@ -45,6 +45,13 @@
     <h2 id="companies">Reach by company</h2>
     <p>The <a href="{{ root }}companies.html">Companies</a> page counts, for each operator named in our list, the sites where one of its services in a tracking category was contacted in most passes. Subsidiaries are not merged into parents.</p>
 
+    <h2 id="tests">Two separate tests</h2>
+    <p>Besides the weekly ranking, which never interacts with the page, two optional tests are published on their own pages. They use the same browser and classification list, are stored in their own folders and never change the weekly figures.</p>
+    <ul>
+      <li><a href="{{ root }}consent.html">After the banner</a>: after the passive window, the consent banner's reject (or accept) button is pressed once and the next window is recorded. Only that one button is pressed, and only when our detector is confident it is that button.</li>
+      <li><a href="{{ root }}protection.html">With a blocking list</a>: the page is loaded while blocking the requests a public privacy filter list targets (domain rules only), and compared with the passive measurement from the same place.</li>
+    </ul>
+
     <h2 id="data">Data and downloads</h2>
     <p>Everything is published under CC BY 4.0 (credit “Tracker Watch”). Fields and files are versioned (schema {{ schema }}).</p>
     <div class="table-scroll"><table class="t">
@@ -53,6 +60,8 @@
         <tr><td><a href="{{ root }}data/latest.csv">latest.csv</a></td><td>One row per site for the newest measurement of the main series.</td></tr>
         <tr><td><a href="{{ root }}data/history.csv">history.csv</a></td><td>Every measurement of every origin since the start, one row per site, date and origin (<code>origin_kind</code>: main, extra or community-unverified).</td></tr>
         <tr><td><a href="{{ root }}data/entities.csv">entities.csv</a></td><td>Sites reached by each operator in the newest measurement.</td></tr>
+        <tr><td><a href="{{ root }}data/consent.csv">consent.csv</a></td><td>The consent test: per site, origin and button, what the detector found and the counts before and after the click.</td></tr>
+        <tr><td><a href="{{ root }}data/protection.csv">protection.csv</a></td><td>The blocking-list test: per site and origin, the figures without and with the list.</td></tr>
         <tr><td><a href="{{ root }}data/index.json">index.json</a></td><td>Machine-readable index: origins, dates, every site with its latest figures and the path of each raw report.</td></tr>
         <tr><td><code>data/&lt;date&gt;/&lt;site&gt;.json</code></td><td>The raw report of the main series: measurement conditions (tool version, browser, locale, time zone, origin, user agent) and the request log of every pass, without query strings or cookie values.</td></tr>
         <tr><td><code>data/origins/&lt;origin&gt;/&lt;date&gt;/&lt;site&gt;.json</code></td><td>Raw reports of the other origins (for community ones, recomputed with our list).</td></tr>

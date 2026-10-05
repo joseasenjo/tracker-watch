@@ -11,7 +11,7 @@ import json
 import sys
 from pathlib import Path
 
-COMPARABLE_FIELDS = ("vantage", "locale", "timezone", "tracker_list")
+COMPARABLE_FIELDS = ("vantage", "locale", "timezone", "tracker_list", "interaction", "blocklist")
 METRICS = ("third_party_requests", "third_party_domains", "tracking_services",
            "third_party_cookies", "cookies_total", "storage_items")
 

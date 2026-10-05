@@ -31,6 +31,19 @@ python -m traceguard.community check data/community                   # validate
 python -m traceguard.community add my-scan/2026-10-05 --slug brazil-home --label Brazil --contributor handle
 ```
 
+## Two separate tests (never part of the weekly ranking)
+
+```bash
+# After the banner: press the consent banner's reject / accept button once and record the next window
+python -m traceguard --sites-file data/sites.json --consent reject,accept --vantage local-windows-spain   # -> data/consent/<vantage>/
+# With a blocking list: block what a public filter list targets (domain rules only) and compare
+curl -sSfL https://easylist.to/easylist/easyprivacy.txt -o /tmp/easyprivacy.txt   # not stored in the repository
+python -m traceguard --sites-file data/sites.json --blocklist /tmp/easyprivacy.txt --blocklist-name EasyPrivacy \
+    --blocklist-url https://easylist.to/easylist/easyprivacy.txt --vantage github-actions-us                # -> data/protected/<vantage>/
+```
+
+The consent detector (`traceguard/consent.py`) tries known consent tools by their button ids, then exact button texts in five languages inside a cookie/consent/privacy block. It presses one button, never follows a link off the page and never presses a paid option; "not found" means "not found by our detector". The blocking test (`traceguard/blocker.py`) applies only `||domain^` rules with party and resource-type options and records the list's name, address and SHA-256. Neither writes to `data/runs`.
+
 ## What the site adds beyond the ranking
 
 - **Weight of third-party content:** every request records the transfer size of its response (compressed, if it finished inside the window); reports show the third-party share and the part from tracking services. Reports made before schema 0.2 have no sizes.
@@ -62,14 +75,13 @@ This tool is meant for measuring public pages as an ordinary visitor would load 
 
 - The browser resolves names again when connecting, so DNS rebinding is not fully covered: run scans on a disposable machine with no internal network access.
 - Storage counts cover the main frame only. Script attribution from stack traces cannot tell an inline third-party snippet from first-party code.
-- The scan never interacts with consent banners, so it measures the state before any interaction. It does not yet detect the banner itself.
+- The weekly scan never interacts with consent banners, so it measures the state before any interaction. The separate consent test presses one banner button and depends on a detector that can miss banners or buttons.
 - Results depend on where the scan runs; the vantage is recorded in every report.
 - The classification list is limited, so every count is a minimum.
 
 ## Still open
 
 - A larger, licensed classification list.
-- Detection of the consent banner and measurement after rejecting or accepting it (designed, postponed).
-- Comparison with a content-blocking list (designed, postponed).
+- Running the two separate tests on a schedule, from more than one origin.
 - Publishing drafts to Bluesky and Mastodon (drafts are generated; posting is not implemented).
 - Live analysis of any address (a server is needed); a limited on-demand mode through issues is being prepared.

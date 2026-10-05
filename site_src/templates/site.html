@@ -47,6 +47,28 @@
       <ul>{% for c in s.company_rows %}<li><b>{{ c.entity }}</b> — {{ c.services|join(', ') }} ({{ c.share }}% of the measured sites)</li>{% endfor %}</ul>
       {% endif %}
 
+      {% if s.consent_rows %}
+      <h2>After the banner (separate test)</h2>
+      <p class="sub">The banner's reject or accept button pressed once, in a fresh browser. <a href="{{ root }}consent.html#method">How this works</a>.</p>
+      <ul>
+      {% for c in s.consent_rows %}
+        <li>From {{ c.label }} ({{ c.date }}){% if c.cmp %}, consent tool {{ c.cmp }}{% endif %}:
+          {% for m in ['reject', 'accept'] %}{% set x = c[m] %}{% if x.outcome != 'not_run' %}
+            <b>{{ m }}</b>: {% if x.outcome == 'clicked' %}{{ x.after }} tracking services contacted in the {{ x.seconds|int }} s after pressing{% if x.button %} “{{ x.button }}”{% endif %} ({{ x.new }} new){% elif x.outcome == 'no_button' %}no one-click button found by our detector{% if x.paid %}; paid option offered (“{{ x.paid }}”){% endif %}{% elif x.outcome == 'no_banner' %}no banner detected{% else %}not measured{% endif %}{% if not loop.last %};{% endif %}
+          {% endif %}{% endfor %}</li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if s.protection_rows %}
+      <h2>With a blocking list (separate test)</h2>
+      <ul>
+      {% for p in s.protection_rows %}
+        <li>From {{ p.label }} ({{ p.date }}):{% if p.paired %} tracking services {{ p.passive.tracking }} → {{ p.protected.tracking }}, third-party requests {{ p.passive.requests }} → {{ p.protected.requests }} ({{ p.requests_cut }}% fewer){% elif p.protected %} {{ p.protected.tracking }} tracking services with the list (no passive measurement to compare){% else %} not measured{% endif %}. <a href="{{ root }}protection.html#method">How this works</a>.</li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+
       <h2>Third-party domains</h2>
       <p class="sub">Only changes seen in most passes count as stable. “Unclassified” means the domain is not in our list, not that it is harmless.</p>
       <div class="table-scroll">

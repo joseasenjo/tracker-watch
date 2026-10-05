@@ -1,0 +1,76 @@
+# The two separate tests, run on demand. They never touch data/runs (the weekly ranking) and never publish:
+# the next site build picks up data/consent and data/protected.
+#  - consent: press the consent banner's reject / accept button once (from US servers few banners appear;
+#    the same command can be run from a PC in the EU with --vantage local-windows-spain)
+#  - blocklist: block what EasyPrivacy targets (domain rules only); the list is downloaded here, not stored
+name: extra-tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Which test"
+        type: choice
+        options: [consent, blocklist, both]
+        default: both
+      passes:
+        description: "Passes per site (per button for the consent test)"
+        default: "2"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-scan   # never at the same time as the weekly scan (both commit to the repository)
+  cancel-in-progress: false
+
+env:
+  VANTAGE: github-actions-us
+  EASYPRIVACY_URL: https://easylist.to/easylist/easyprivacy.txt
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Unit tests
+        run: python -m pytest tests -q
+
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Consent test
+        if: ${{ github.event.inputs.test != 'blocklist' }}
+        run: >
+          python -m traceguard --sites-file data/sites.json --consent reject,accept
+          --passes "${{ github.event.inputs.passes || '2' }}" --vantage "$VANTAGE"
+          || echo "some sites could not be measured"
+
+      - name: Blocking-list test
+        if: ${{ github.event.inputs.test != 'consent' }}
+        run: |
+          curl -sSfL "$EASYPRIVACY_URL" -o "$RUNNER_TEMP/easyprivacy.txt"
+          python -m traceguard --sites-file data/sites.json --blocklist "$RUNNER_TEMP/easyprivacy.txt" \
+            --blocklist-name EasyPrivacy --blocklist-url "$EASYPRIVACY_URL" \
+            --passes "${{ github.event.inputs.passes || '2' }}" --vantage "$VANTAGE" \
+            || echo "some sites could not be measured"
+
+      - name: Commit reports
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p data/consent data/protected
+          git add data/consent data/protected
+          git diff --cached --quiet || git commit -m "extra tests: $(date -u +%F)"
+          git pull --rebase
+          git push

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}After the banner{% endblock %}
+{% block head %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Do news sites stop tracking when you press “reject”?">
+  <meta property="og:description" content="A separate test: we press the consent banner's reject or accept button once and record what is contacted next.">
+{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1>After the banner: reject and accept</h1>
+    <p class="sub">The weekly ranking measures pages before any interaction. This separate test goes one step further: after the same passive window, it presses the consent banner's <b>reject</b> (or <b>accept</b>) button once, in a fresh browser each time, and records what the page contacts in the following seconds.</p>
+
+    {% if not consent.has_data %}
+      <div class="card">This test has not been run yet. The method is described below.</div>
+    {% endif %}
+
+    {% for o in consent.origins %}
+      <h2>Measured from {{ o.label }} · {{ o.date }}</h2>
+      <div class="counters">
+        <div class="counter"><b>{{ o.stats.measured }}</b><span>sites measured</span></div>
+        <div class="counter"><b>{{ o.stats.banner }}</b><span>with a consent banner our detector recognised</span></div>
+        {% if 'reject' in o.modes %}
+        <div class="counter"><b>{{ o.stats.reject_clicked }}</b><span>where a one-click reject button was found and pressed</span></div>
+        <div class="counter"><b>{{ o.stats.still_tracking_after_reject }}</b><span>of those still contacted at least one tracking service after rejecting</span></div>
+        <div class="counter"><b>{{ o.stats.reject_not_found }}</b><span>banners where no one-click reject was found on the first layer</span></div>
+        <div class="counter"><b>{{ o.stats.pay_or_accept }}</b><span>of those offered a paid option instead (“pay or accept”)</span></div>
+        {% endif %}
+      </div>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr>
+            <th>Site</th><th>Consent tool</th><th class="num">Before any click</th>
+            {% for m in o.modes %}<th>{{ m|capitalize }} button</th><th class="num">Tracking services after {{ m }}ing</th><th class="num">New after {{ m }}ing</th>{% endfor %}
+          </tr></thead>
+          <tbody>
+          {% for r in o.rows %}
+            <tr>
+              <td>{% if r.stem in stems %}<a href="{{ root }}sites/{{ r.stem }}.html">{{ r.name }}</a>{% else %}{{ r.name }}{% endif %}</td>
+              <td>{{ r.cmp or ('–' if r.status == 'ok' else r.status) }}</td>
+              <td class="num">{{ r.passive if r.passive is not none else '–' }}</td>
+              {% for m in o.modes %}{% set c = r[m] %}
+                <td class="small">{% if c.outcome == 'clicked' %}pressed{% if c.button %} “{{ c.button }}”{% endif %}{% elif c.outcome == 'no_button' %}<span class="pill warn">not found</span>{% if c.paid %}<br>paid option offered: “{{ c.paid }}”{% endif %}{% elif c.outcome == 'no_banner' %}no banner detected{% else %}–{% endif %}</td>
+                <td class="num">{% if c.outcome == 'clicked' %}<b>{{ c.after }}</b>{% else %}–{% endif %}</td>
+                <td class="num" {% if c.services_new %}title="{{ c.services_new|join(', ') }}"{% endif %}>{% if c.outcome == 'clicked' %}{{ c.new }}{% else %}–{% endif %}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+
+    <h2 id="method">How this test works, and what it does not say</h2>
+    <ul>
+      <li>Each site is loaded in a fresh browser, exactly as in the weekly measurement. After the passive window, the tool looks for the banner's button: first by the documented ids of common consent tools (OneTrust, Cookiebot, Didomi, Sourcepoint, Quantcast, Usercentrics, Google Funding Choices and others), then by the button's exact text (“Reject all”, “Alle ablehnen”, “Rechazar todo”…) inside a block that talks about cookies, consent or privacy. It presses that one button and nothing else, then records the next window.</li>
+      <li><b>“After”</b> counts tracking services in our list contacted in the window after the click. <b>“New”</b> counts those that were not contacted before it. A service contacted after rejecting is a measured fact, not proof of unlawful processing: some requests may be needed to record the refusal itself, or may carry no personal data.</li>
+      <li><b>“Not found”</b> means our detector found a banner but no one-click reject button on its first layer. The option may exist behind a “settings” or “manage” button. When the banner shows a button offering a subscription or an ad-free paid option instead (“pay or accept”), we note its text; we never press it. We do not open settings menus.</li>
+      <li><b>“No banner detected”</b> means our detector did not recognise one. Banners depend on the visitor's country: from outside the EU and UK many sites show none.</li>
+      <li>Both choices are measured in separate fresh browsers. A link that would leave the page is never followed, nothing is typed, and no account is used.</li>
+      <li>This test is separate from the weekly ranking and never changes it. Raw reports: <code>data/consent/&lt;origin&gt;/&lt;date&gt;/</code>; table: <a href="{{ root }}data/consent.csv">consent.csv</a>.</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

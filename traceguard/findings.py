@@ -26,7 +26,71 @@ def _finding(code: str, severity: str, text: str, evidence: dict | None = None) 
     return {"code": code, "severity": severity, "text": text, "evidence": evidence or {}}
 
 
+CONSENT_ACTION_TEXT = {"reject": "reject", "accept": "accept"}
+
+
+def consent_findings(consent: dict) -> list[dict]:
+    """Findings of the optional consent measurement. "Not found" always means "not found by our detector"."""
+    findings = []
+    for mode, c in consent.items():
+        button = f" (“{c['button_text']}”)" if c.get("button_text") else ""
+        tool = f" The consent tool appeared to be {c['cmp']}." if c.get("cmp") else ""
+        if c["outcome"] == "clicked":
+            m = c["metrics"]
+            new = ", ".join(s["service"] for s in c["services_new_after"][:8])
+            findings.append(_finding(
+                f"CONSENT_{mode.upper()}_CLICKED", "notable" if m["tracking_services_after"] else "info",
+                f"After the banner's {mode} button{button} was pressed, {m['tracking_services_after']} tracking "
+                f"services were contacted in the following {c['after_seconds']:g} seconds, "
+                f"{m['tracking_services_new_after']} of them not seen before the click"
+                + (f" ({new})" if new else "") + f". Before the click: {m['tracking_services_before']}. "
+                f"Third-party cookies went from {m['third_party_cookies_before']} to {m['third_party_cookies_after']} "
+                f"(median of {c['passes_clicked']} passes).{tool}",
+                {"mode": mode, **m}))
+        elif c["outcome"] == "no_button":
+            findings.append(_finding(
+                f"CONSENT_{mode.upper()}_NOT_FOUND", "info",
+                f"A consent banner was detected, but our detector found no one-click {mode} button on its first "
+                f"layer (it may sit behind a settings or options button). Nothing was clicked."
+                + (f" The banner offered a paid option instead (“{c['paid_option']}”)." if c.get("paid_option") else "")
+                + tool,
+                {"mode": mode, "outcomes": c["outcomes"]}))
+        elif c["outcome"] == "no_banner":
+            findings.append(_finding(
+                f"CONSENT_NO_BANNER", "info",
+                "Our detector found no consent banner from this origin, so nothing was clicked.",
+                {"mode": mode}))
+        else:
+            findings.append(_finding(
+                f"CONSENT_{mode.upper()}_NOT_MEASURED", "info",
+                f"The {mode} button could not be pressed reliably in most passes.",
+                {"mode": mode, "outcomes": c.get("outcomes", {})}))
+    return [f for i, f in enumerate(findings) if f["code"] != "CONSENT_NO_BANNER"
+            or all(g["code"] != "CONSENT_NO_BANNER" for g in findings[:i])]
+
+
+def protection_findings(protection: dict, measurement: dict, metrics: dict) -> list[dict]:
+    if not protection:
+        return []
+    info = measurement["blocklist"]
+    return [_finding(
+        "PROTECTION_LIST_APPLIED", "info",
+        f"With the {info['name']} filter list applied (domain rules only, {info['rules_applied']} rules), "
+        f"{protection['blocked_requests']} requests were blocked. The page still made "
+        f"{metrics['third_party_requests']} requests to {metrics['third_party_domains']} third-party domains, "
+        f"including {metrics['tracking_services']} tracking services in our list.",
+        {"blocked_requests": protection["blocked_requests"], "blocked_domains": protection["blocked_domains"]})]
+
+
 def build_findings(summary: dict, measurement: dict) -> list[dict]:
+    findings = _passive_findings(summary, measurement)
+    if summary["status"] == "ok":
+        findings += protection_findings(summary.get("protection", {}), measurement, summary["metrics"])
+    findings += consent_findings(summary.get("consent", {}))
+    return findings
+
+
+def _passive_findings(summary: dict, measurement: dict) -> list[dict]:
     status = summary["status"]
     findings: list[dict] = []
 

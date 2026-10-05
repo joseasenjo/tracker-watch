@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}With a blocking list{% endblock %}
+{% block head %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How much third-party traffic does a public blocking list remove?">
+  <meta property="og:description" content="The same news pages, loaded with and without a public privacy filter list.">
+{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1>With a blocking list</h1>
+    <p class="sub">The same pages, loaded again while blocking the requests that a public privacy filter list targets. It shows how much of the third-party traffic such lists are designed to stop, and what still loads. It is not a recommendation of any product.</p>
+
+    {% if not protection.has_data %}
+      <div class="card">This test has not been run yet. The method is described below.</div>
+    {% endif %}
+
+    {% for o in protection.origins %}
+      <h2>Measured from {{ o.label }} · {{ o.date }}</h2>
+      <p class="small">List: <b>{{ o.blocklist.name or 'unknown' }}</b>{% if o.blocklist.url %} (<a href="{{ o.blocklist.url }}" rel="noopener">source</a>){% endif %} · {{ o.blocklist.rules_applied }} of {{ o.blocklist.rules_total }} rules applied (domain rules only) · compared with the passive measurement of {{ o.base_date or 'no matching date' }} from the same origin.</p>
+      {% if o.stats.paired %}
+      <div class="counters">
+        <div class="counter"><b>{{ o.stats.paired }}</b><span>sites measured both ways</span></div>
+        <div class="counter"><b>{{ '%g'|format(o.stats.median_requests_cut) }}%</b><span>median drop in third-party requests</span></div>
+        {% if o.stats.median_bytes_cut is not none %}<div class="counter"><b>{{ '%g'|format(o.stats.median_bytes_cut) }}%</b><span>median drop in third-party data</span></div>{% endif %}
+        <div class="counter"><b>{{ '%g'|format(o.stats.median_tracking_passive) }} → {{ '%g'|format(o.stats.median_tracking_protected) }}</b><span>median tracking services, without and with the list</span></div>
+      </div>
+      {% else %}
+      <div class="note">No passive measurement from the same origin within a week, so nothing is compared.</div>
+      {% endif %}
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr>
+            <th>Site</th><th class="num">Tracking services (without → with)</th><th class="num">Third-party requests (without → with)</th>
+            <th class="num">Drop</th><th class="num">Third-party data (without → with)</th><th class="num">Blocked requests</th>
+          </tr></thead>
+          <tbody>
+          {% for r in o.rows %}
+            <tr>
+              <td>{% if r.stem in stems %}<a href="{{ root }}sites/{{ r.stem }}.html">{{ r.name }}</a>{% else %}{{ r.name }}{% endif %}</td>
+              {% if r.paired %}
+              <td class="num">{{ r.passive.tracking }} → <b>{{ r.protected.tracking }}</b></td>
+              <td class="num">{{ r.passive.requests }} → <b>{{ r.protected.requests }}</b></td>
+              <td class="num">{{ r.requests_cut }}%</td>
+              <td class="num">{% if r.passive.bytes is not none and r.protected.bytes is not none %}{{ r.passive.bytes|size }} → {{ r.protected.bytes|size }}{% else %}–{% endif %}</td>
+              {% else %}
+              <td class="num">{{ '– → ' ~ r.protected.tracking if r.protected else '–' }}</td><td class="num">{{ '– → ' ~ r.protected.requests if r.protected else '–' }}</td><td class="num">–</td><td class="num">–</td>
+              {% endif %}
+              <td class="num">{{ r.blocked if r.blocked is not none else '–' }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+
+    <h2 id="method">How this test works, and what it does not say</h2>
+    <ul>
+      <li>We download a public privacy filter list when the scan runs (it is not stored in our repository) and apply only its simplest rules: whole domains, optionally limited to third-party requests or to some resource types. Rules with paths, wildcards, page elements or site-specific conditions are skipped. A real blocker using the full list would usually block more.</li>
+      <li>Blocked requests are recorded and aborted. “With” counts what still went out. Tracking services are still counted with <a href="{{ root }}method.html">our own classification list</a>, which is independent from the filter list.</li>
+      <li>The two measurements are taken at different moments (up to a week apart), so ordinary run-to-run variation is part of the difference. Each figure is a median of several passes.</li>
+      <li>Blocking can change how a page works (video, comments, paywalls). We do not measure that.</li>
+      <li>Many browsers and extensions use lists like this one. Naming the list is not an endorsement of any product, and we receive nothing from any of them.</li>
+      <li>This test is separate from the weekly ranking and never changes it. Raw reports: <code>data/protected/&lt;origin&gt;/&lt;date&gt;/</code>; table: <a href="{{ root }}data/protection.csv">protection.csv</a>.</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

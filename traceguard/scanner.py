@@ -1,7 +1,12 @@
-"""Passive page measurement with Playwright.
+"""Page measurement with Playwright.
 
-The scanner loads one page like an ordinary visitor, never clicks or types, and records
-what happens during a fixed observation window. It does not hide that it is automated.
+The main measurement loads one page like an ordinary visitor, never clicks or types, and records what
+happens during a fixed observation window. It does not hide that it is automated.
+
+Two optional measurements, always written to separate report folders, reuse the same pass:
+- consent: after the passive window, press the banner's reject or accept button once (see consent.py)
+  and record a second window; requests carry a "phase" ("before" or "after").
+- protection: requests matched by a filter list (see blocker.py) are aborted and marked "blocked_by_list".
 """
 from __future__ import annotations
 
@@ -11,6 +16,7 @@ from typing import Iterable
 from urllib.parse import urlsplit
 
 from . import __version__
+from . import consent as consent_mod
 from .classify import Classifier, TrackerList, registrable_domain
 from .report import build_report
 from .safety import HostGuard, Resolver, check_target, system_resolver
@@ -74,8 +80,28 @@ def _now_ms(t0: float) -> int:
     return int((time.monotonic() - t0) * 1000)
 
 
+def _cookie_rows(raw_cookies: list[dict], classifier: Classifier) -> list[dict]:
+    rows, seen = [], set()
+    for cookie in raw_cookies:
+        domain = registrable_domain(cookie["domain"].lstrip("."))
+        key = (cookie["name"], cookie["domain"], cookie.get("path"))
+        if key in seen:
+            continue
+        seen.add(key)
+        rows.append({
+            "name": cookie["name"], "domain": domain,
+            "party": classifier.party(domain),
+            "session": cookie.get("expires", -1) == -1,
+            "secure": cookie.get("secure", False), "http_only": cookie.get("httpOnly", False),
+            "same_site": cookie.get("sameSite"),
+        })  # values are never stored
+    return rows
+
+
 def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: str, timezone: str,
-               observe_seconds: float, min_requests: int, guard: HostGuard, classifier_factory) -> dict:
+               observe_seconds: float, min_requests: int, guard: HostGuard, classifier_factory,
+               consent_action: str | None = None, after_seconds: float = 0.0, blocker=None,
+               base_first_party: frozenset = frozenset()) -> dict:
     run: dict = {
         "pass": number, "status": "ok", "http_status": None, "error": None,
         "final_url": None, "navigation_redirects": [],
@@ -88,6 +114,7 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
     t0 = time.monotonic()
     recording = {"on": True}  # requests after the observation window are not recorded
     sized: dict = {}  # Playwright request -> its entry in run["requests"], to attach the transfer size
+    phase = {"name": "before"}  # only recorded in consent runs
     try:
         page = context.new_page()
         page.add_init_script(INIT_SCRIPT)
@@ -105,12 +132,21 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
                                  "t_ms": _now_ms(t0)})
                         route.abort("blockedbyclient")
                         return
+                    item = {
+                        "t_ms": _now_ms(t0), "method": request.method,
+                        "resource_type": request.resource_type,
+                        "url": strip_query(request.url), "host": parts.hostname.lower(),
+                    }
+                    if consent_action:
+                        item["phase"] = phase["name"]
+                    if blocker is not None and not (request.is_navigation_request() and request.frame == page.main_frame):
+                        third = registrable_domain(parts.hostname) not in base_first_party
+                        if blocker.blocks(parts.hostname, request.resource_type, third):
+                            if recording["on"]:
+                                run["requests"].append({**item, "blocked_by_list": True})
+                            route.abort("blockedbyclient")
+                            return
                     if recording["on"]:
-                        item = {
-                            "t_ms": _now_ms(t0), "method": request.method,
-                            "resource_type": request.resource_type,
-                            "url": strip_query(request.url), "host": parts.hostname.lower(),
-                        }
                         run["requests"].append(item)
                         sized[request] = item
                 route.continue_()
@@ -183,14 +219,17 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
             return run
 
         page.wait_for_timeout(int(observe_seconds * 1000))
-        recording["on"] = False  # late requests would reach the report without being classified
+        if not consent_action:
+            recording["on"] = False  # late requests would reach the report without being classified
 
         if len(run["requests"]) < min_requests:
             # A real page makes many requests; one or two usually means an interstitial or a challenge page.
+            recording["on"] = False
             run["status"] = "incomplete"
             run["error"] = f"only {len(run['requests'])} request(s) observed (minimum {min_requests})"
             return run
 
+        # Everything below describes the state at the end of the passive window, before any click.
         try:
             run["storage_items"] = page.evaluate(
                 """() => { const n = (s) => { try { return s.length; } catch (e) { return 0; } };
@@ -201,8 +240,21 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
             raw_events = page.evaluate("() => window.__tg_events || []")
         except Exception:
             raw_events = []
-
+        raw_cookies = context.cookies()
         final_domain = registrable_domain(urlsplit(page.url).hostname or "")
+
+        if consent_action:
+            phase["name"] = "after"
+            try:
+                run["consent"] = consent_mod.act(page, consent_action)
+            except Exception as exc:  # a detector failure must not lose the passive measurement
+                run["consent"] = {"action": consent_action, "outcome": "click_failed", "error": type(exc).__name__}
+            run["consent"]["after_seconds"] = after_seconds if run["consent"]["outcome"] == "clicked" else 0
+            if run["consent"]["outcome"] == "clicked":
+                page.wait_for_timeout(int(after_seconds * 1000))
+            recording["on"] = False
+            raw_cookies_after = context.cookies()
+
         classifier = classifier_factory(final_domain)
 
         for item in run["requests"]:
@@ -210,20 +262,9 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
             item["party"] = classifier.party(item["host"])
             item["tracker"] = classifier.tracker(item["host"])
 
-        seen_cookies = set()
-        for cookie in context.cookies():
-            domain = registrable_domain(cookie["domain"].lstrip("."))
-            key = (cookie["name"], cookie["domain"], cookie.get("path"))
-            if key in seen_cookies:
-                continue
-            seen_cookies.add(key)
-            run["cookies"].append({
-                "name": cookie["name"], "domain": domain,
-                "party": classifier.party(domain),
-                "session": cookie.get("expires", -1) == -1,
-                "secure": cookie.get("secure", False), "http_only": cookie.get("httpOnly", False),
-                "same_site": cookie.get("sameSite"),
-            })  # values are never stored
+        run["cookies"] = _cookie_rows(raw_cookies, classifier)
+        if consent_action:
+            run["cookies_after"] = _cookie_rows(raw_cookies_after, classifier)
 
         seen_events = set()
         for event in raw_events:
@@ -244,8 +285,20 @@ def scan_site(url: str, *, name: str | None = None, first_party_domains: Iterabl
               passes: int = 3, observe_seconds: float = 12.0, min_requests: int = 5,
               pause_seconds: float = 3.0, vantage: str = "unspecified",
               locale: str = "en-US", timezone: str = "UTC", tracker_list: TrackerList | None = None,
-              resolver: Resolver = system_resolver, headless: bool = True) -> dict:
-    """Scan one site `passes` times in fresh browser contexts and return the full report."""
+              resolver: Resolver = system_resolver, headless: bool = True,
+              consent_modes: Iterable[str] = (), after_seconds: float | None = None, blocker=None) -> dict:
+    """Scan one site `passes` times in fresh browser contexts and return the full report.
+
+    consent_modes ("reject", "accept"): run `passes` passes per mode, each pressing that banner button once.
+    blocker: a blocker.FilterList; matching requests are aborted (the "with protection" measurement).
+    """
+    consent_modes = tuple(consent_modes)
+    if consent_modes and blocker is not None:
+        raise ValueError("the consent and protection measurements are separate: use one at a time")
+    for mode in consent_modes:
+        if mode not in consent_mod.ACTIONS:
+            raise ValueError(f"unknown consent mode {mode!r}")
+    after_seconds = observe_seconds if after_seconds is None else after_seconds
     from playwright.sync_api import sync_playwright  # imported lazily so tests run without it
 
     target = check_target(url, resolver)
@@ -267,13 +320,19 @@ def scan_site(url: str, *, name: str | None = None, first_party_domains: Iterabl
             # page) plus an explicit TraceGuard token, so the tool still identifies itself.
             user_agent = (f"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
                           f"Chrome/{major}.0.0.0 Safari/537.36 TraceGuard/{__version__}")
-            for number in range(1, passes + 1):
+            plan = [(mode, n) for mode in consent_modes for n in range(passes)] or [(None, n) for n in range(passes)]
+            for number, (mode, _) in enumerate(plan, start=1):
                 if number > 1:
                     time.sleep(pause_seconds)  # spacing requests avoids tripping rate limits
-                runs.append(_scan_pass(browser, target, number, user_agent=user_agent, locale=locale,
-                                       timezone=timezone, observe_seconds=observe_seconds,
-                                       min_requests=min_requests, guard=guard,
-                                       classifier_factory=classifier_factory))
+                run = _scan_pass(browser, target, number, user_agent=user_agent, locale=locale,
+                                 timezone=timezone, observe_seconds=observe_seconds,
+                                 min_requests=min_requests, guard=guard,
+                                 classifier_factory=classifier_factory, consent_action=mode,
+                                 after_seconds=after_seconds, blocker=blocker,
+                                 base_first_party=frozenset(base_first_party))
+                if mode:
+                    run["mode"] = mode
+                runs.append(run)
         finally:
             browser.close()
 
@@ -281,8 +340,13 @@ def scan_site(url: str, *, name: str | None = None, first_party_domains: Iterabl
         "vantage": vantage, "locale": locale, "timezone": timezone, "user_agent": user_agent,
         "browser": f"chromium {browser_version}", "passes": passes, "observe_seconds": observe_seconds,
         "min_requests": min_requests, "pause_seconds": pause_seconds,
-        "interaction": "none", "tracker_list": tracker_list.source,
+        "interaction": ("consent:" + "+".join(consent_modes)) if consent_modes else "none",
+        "tracker_list": tracker_list.source,
     }
+    if consent_modes:
+        measurement.update(consent_modes=list(consent_modes), after_seconds=after_seconds)
+    if blocker is not None:
+        measurement["blocklist"] = blocker.describe()
     site = {"name": name or (urlsplit(target).hostname or target), "url": target,
             "first_party_domains": sorted(base_first_party)}
     return build_report(site, measurement, runs, tracker_list)

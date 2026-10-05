@@ -58,6 +58,16 @@
 </div></section>
 
 <section><div class="wrap">
+  <h2>Pruebas aparte: banner y lista de bloqueo</h2>
+  {% for o in consent.origins %}
+  <p>Banner desde {{ o.label }} ({{ o.date }}): {{ o.stats.measured }} medidas, {{ o.stats.banner }} con banner detectado, rechazo pulsado en {{ o.stats.reject_clicked }} (siguieron rastreando {{ o.stats.still_tracking_after_reject }}), sin rechazo en primera capa {{ o.stats.reject_not_found }} ({{ o.stats.pay_or_accept }} con opción de pago).</p>
+  {% else %}<p class="sub">La prueba del banner no se ha ejecutado aún (<code>python -m traceguard --consent reject,accept</code>).</p>{% endfor %}
+  {% for o in protection.origins %}
+  <p>Lista {{ o.blocklist.name }} desde {{ o.label }} ({{ o.date }}, comparada con {{ o.base_date or 'nada' }}): {{ o.stats.paired }} webs emparejadas, caída mediana de peticiones de terceros {{ o.stats.median_requests_cut }}%.</p>
+  {% else %}<p class="sub">La prueba con lista de bloqueo no se ha ejecutado aún (<code>--blocklist</code>).</p>{% endfor %}
+</div></section>
+
+<section><div class="wrap">
   <h2>Orígenes de la comunidad</h2>
   {% if community_slugs %}
   <p class="sub">Medidos por voluntarios, siempre marcados «sin verificar» en la web: {{ origins.unverified|join('; ') }}. Se recalculan con nuestra lista a partir del registro crudo.</p>
