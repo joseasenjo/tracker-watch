@@ -297,3 +297,11 @@ def test_home_page_summarises_what_the_tool_offers_and_why_clicks_matter(full_si
     assert "What you get here" in home and "Why also test what happens after a click?" in home
     for page in ("companies.html", "origins.html", "consent.html", "protection.html"):
         assert f'href="{page}"' in home
+
+
+def test_home_sections_are_collapsed_by_default_with_an_arrow(full_site):
+    out, _ = full_site
+    home = (out / "index.html").read_text(encoding="utf-8")
+    for key, title in (("try-it", "Try it on your own address"), ("what-you-get", "What you get here")):
+        assert f'<details class="fold" id="{key}">' in home and f"<summary>{title}</summary>" in home
+    assert "<details class=\"fold\" id=\"try-it\" open" not in home and "fold\" id=\"what-you-get\" open" not in home

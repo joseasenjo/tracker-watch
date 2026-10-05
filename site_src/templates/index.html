@@ -15,16 +15,6 @@
     <span class="kicker">Last scan: {{ scan_finished }} · from {{ vantage }}</span>
     <h1>Which news sites contact the most tracking services before you click anything?</h1>
     <p class="lead">Each page is loaded with no clicks and no consent given, three times, and we count the third-party tracking services it contacts. These are counts, not verdicts: read the <a href="{{ root }}method.html">method and its limits</a> before drawing conclusions.</p>
-    <form class="checker" id="check-form" data-root="{{ root }}" data-repo="{{ repo_url }}" novalidate>
-      <label for="check-url" class="small">Is your site in the list?</label>
-      <div class="checker-row">
-        <input type="text" id="check-url" inputmode="url" autocomplete="off" placeholder="example-news.com" aria-describedby="check-help">
-        <button class="btn" type="submit">Look up</button>
-      </div>
-      <p class="small" id="check-help">Looks first at the sites we measure each week, inside your browser. If yours is not there, you can ask for an analysis: that opens a public GitHub issue only when you choose to.</p>
-      <p class="note" id="check-result" role="status" hidden></p>
-    </form>
-    <script type="application/json" id="site-lookup">{{ lookup|tojson }}</script>
     <div class="counters">
       <div class="counter"><b>{{ measured|length }}</b><span>sites measured</span></div>
       <div class="counter"><b>{{ with_tracking }}</b><span>contacted at least one tracking service</span></div>
@@ -35,18 +25,21 @@
 
 <section>
   <div class="wrap">
-    <h2>Try it on your own address</h2>
+    <details class="fold" id="try-it">
+    <summary>Try it on your own address</summary>
     <p class="sub">Two free tools, no approval needed. They run automatically from a public GitHub issue.</p>
     <div class="cards">
       <div class="card"><h3>Analyse an address</h3><p class="small">One measurement of any public site: how many third-party tracking services it contacts before any interaction. Not added to the ranking.</p><a class="btn" href="{{ root }}request.html">Analyse an address</a></div>
       <div class="card"><h3>Create a short link</h3><p class="small">A short link that shows where it leads, and what we measured there, before the visitor continues. It never redirects by itself.</p><a class="btn" href="{{ root }}request.html">Create a short link</a></div>
     </div>
+    </details>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2>What you get here</h2>
+    <details class="fold" id="what-you-get">
+    <summary>What you get here</summary>
     <p class="sub">One weekly, reproducible measurement of third-party tracking on news sites, with open data and its limits stated. Everything below is published, and nothing here is a verdict.</p>
     <div class="cards">
       <div class="card"><h3>The weekly ranking</h3><p class="small">Which tracking services each site contacts before you click anything, with a fixed band, a week-to-week comparison and the raw reports behind every number.</p><a class="btn sec" href="#sites">See the sites</a></div>
@@ -58,6 +51,7 @@
       <div class="card"><h3>Open data</h3><p class="small">CSV and JSON downloads, full history and the raw request log of every pass, free to reuse with credit (CC BY 4.0).</p><a class="btn sec" href="{{ root }}method.html#data">Download</a></div>
     </div>
     <div class="note" id="why-clicks"><b>Why also test what happens after a click?</b> The weekly ranking deliberately never clicks anything, so it shows the state before you have made any choice. But many sites load very little until you accept, and others keep contacting trackers even after you reject, so a count taken before the click can be misleading in both directions. The two tests above press one consent button, or block a public list, in separate runs and publish the results next to the ranking without changing it. They help answer a simple question: <i>does my choice at the banner change what the site does?</i> They are limited by what our detector can find, and a number there is a measured fact, not a finding of wrongdoing.</div>
+    </details>
   </div>
 </section>
 

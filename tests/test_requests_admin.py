@@ -66,7 +66,8 @@ def test_save_roundtrip_and_cli(tmp_path, capsys):
 
 
 def test_shipped_limits_file_is_valid():
-    assert load_limits("data/limits.json") == DEFAULTS
+    limits = load_limits("data/limits.json")  # the owner may change the values from the dashboard
+    assert set(limits) == set(DEFAULTS) and set(limits["scan"]) == set(DEFAULTS["scan"])
 
 
 def test_check_account_covers_switch_blocklist_age_window_and_daily_cap():

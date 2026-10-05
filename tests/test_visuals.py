@@ -58,17 +58,13 @@ def test_hero_shows_last_scan_and_where_it_ran_from(weeks):
     assert re.search(r"Last scan: 2026-10-04 10:00 UTC · from GitHub servers in the US", html)
 
 
-def test_lookup_bar_embeds_a_host_list_and_never_posts_anywhere(weeks):
+def test_the_header_has_no_lookup_bar_and_the_script_never_posts_anywhere(weeks):
     out = weeks / "site"
-    ctx = build_site(weeks / "runs", out, repo_url="https://github.com/x/y")
+    build_site(weeks / "runs", out, repo_url="https://github.com/x/y")
     html = (out / "index.html").read_text(encoding="utf-8")
-    assert 'id="check-form"' in html and 'data-repo="https://github.com/x/y"' in html
-    data = json.loads(re.search(r'id="site-lookup">(.*?)</script>', html, re.S).group(1))
-    assert {"name": "News A", "host": "a.example", "stem": "a", "measured": True} in data
-    assert "action=" not in html.split('id="check-form"')[1].split(">")[0]
+    assert 'id="check-form"' not in html and "Is your site in the list?" not in html
     js = (out / "assets" / "site.js").read_text(encoding="utf-8")
     assert "fetch(" not in js and "XMLHttpRequest" not in js and "sendBeacon" not in js
-    assert ctx["lookup"][0]["host"] in ("a.example", "b.example")
 
 
 def test_open_graph_tags_appear_only_when_the_share_image_was_made(weeks, monkeypatch):
