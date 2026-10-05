@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Companies{% endblock %}
+{% block head %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Which companies' tracking services reach the most news sites">
+  <meta property="og:description" content="Reach by operator across {{ entities.measured }} news sites measured on {{ date }}. Counts, not verdicts.">
+{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1>Which companies reach the most sites?</h1>
+    <p class="sub">Reach by operator: on how many of the measured sites a company's tracking services were contacted before any interaction. Measured on {{ date }} from {{ vantage }}.</p>
+
+    {% if not entities.rows %}
+      <div class="card">No tracking service was recorded in this measurement.</div>
+    {% else %}
+      <div class="counters">
+        <div class="counter"><b>{{ entities.measured }}</b><span>sites measured with high or medium confidence</span></div>
+        <div class="counter"><b>{{ entities.operators }}</b><span>operators reached at least one site</span></div>
+        <div class="counter"><b>{{ entities.rows[0].n }}</b><span>sites reached by the top operator, {{ entities.rows[0].entity }}</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Sites reached by each operator</h3>
+        {{ entities_chart }}
+        <p class="small">A site counts for an operator when at least one of its services in our list was contacted in most passes.</p>
+      </div>
+
+      <h2>All operators</h2>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr>
+            <th>Operator</th><th class="num">Sites</th><th class="num">Share</th>
+            {% for g, n in entities.groups.items() %}<th class="num">{{ g }} (of {{ n }})</th>{% endfor %}
+            <th>Services</th>
+          </tr></thead>
+          <tbody>
+          {% for r in entities.rows %}
+            <tr>
+              <td><b>{{ r.entity }}</b>{% if r.inferred %} <span class="pill warn" title="Every entry for this operator in our list is inferred from general knowledge, not verified">inferred</span>{% endif %}
+                <details><summary class="small">Which sites</summary><p class="small">{% for s in r.sites %}<a href="{{ root }}sites/{{ s.stem }}.html">{{ s.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</p></details></td>
+              <td class="num"><b>{{ r.n }}</b></td>
+              <td class="num">{{ r.share }}%</td>
+              {% for g in entities.groups %}<td class="num">{{ r.by_group[g] }}</td>{% endfor %}
+              <td class="small">{{ r.services|join(', ') }}<br>{{ r.categories|join(', ')|replace('_', ' ') }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h2>How to read this</h2>
+      <ul>
+        <li>Reach is a count of sites, not of readers, requests or data, and it describes the moment before the visitor interacts. It says nothing about what the operator does with a request, nor whether it is lawful.</li>
+        <li>Operators are named as in our classification list. Subsidiaries and brands of the same group are <b>not</b> merged (for example “Microsoft” and “Microsoft (Xandr)” are separate rows), so a group's real reach can be higher than its largest row. Our list is limited, so every figure is a minimum.</li>
+        <li><b>Inferred</b> marks operators whose every entry was identified from general knowledge of the vendor and not verified one by one (<a href="{{ root }}method.html#limits">see the limits</a>).</li>
+        <li>Only sites measured with high or medium confidence are in the denominator. Sites that refused the automated browser are listed under <a href="{{ root }}unmeasured.html">not measured</a>; they may well contact more.</li>
+        <li>The download <a href="{{ root }}data/entities.csv">entities.csv</a> has these rows. Each site's page lists the operators behind its own count.</li>
+      </ul>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -17,8 +17,15 @@ def summarize_run(run: dict, tracker_list: TrackerList) -> dict:
         tracker = request.get("tracker")
         if tracker:
             services.setdefault(tracker["service"], {"entity": tracker["entity"], "category": tracker["category"]})
+    tracking_requests = [r for r in third if r.get("tracker") and tracker_list.is_tracking(r["tracker"]["category"])]
+    sized = [r for r in run["requests"] if r.get("bytes") is not None]  # old reports have no sizes
     return {
         "third_party_requests": len(third),
+        "tracking_requests": len(tracking_requests),
+        # None when no response size was recorded at all (reports made before sizes were collected)
+        "total_bytes": sum(r["bytes"] for r in sized) if sized else None,
+        "third_party_bytes": sum(r["bytes"] for r in third if r.get("bytes") is not None) if sized else None,
+        "tracking_bytes": sum(r["bytes"] for r in tracking_requests if r.get("bytes") is not None) if sized else None,
         "third_party_domains": {r["domain"] for r in third},
         "services": services,
         "tracking_services": {s for s, v in services.items() if tracker_list.is_tracking(v["category"])},
@@ -48,6 +55,10 @@ def aggregate_runs(runs: list[dict], tracker_list: TrackerList) -> dict:
     def median(values) -> int:
         return int(statistics.median_low(list(values)))
 
+    def median_or_none(values) -> int | None:
+        values = list(values)
+        return None if any(v is None for v in values) else median(values)
+
     domain_counts = Counter(d for s in summaries for d in s["third_party_domains"])
     service_counts = Counter(svc for s in summaries for svc in s["services"])
     service_info = {svc: v for s in summaries for svc, v in s["services"].items()}
@@ -67,6 +78,10 @@ def aggregate_runs(runs: list[dict], tracker_list: TrackerList) -> dict:
         "metrics": {
             "third_party_requests": median(s["third_party_requests"] for s in summaries),
             "third_party_domains": median(len(s["third_party_domains"]) for s in summaries),
+            "tracking_requests": median(s["tracking_requests"] for s in summaries),
+            "total_bytes": median_or_none(s["total_bytes"] for s in summaries),
+            "third_party_bytes": median_or_none(s["third_party_bytes"] for s in summaries),
+            "tracking_bytes": median_or_none(s["tracking_bytes"] for s in summaries),
             "tracking_services": median(len(s["tracking_services"]) for s in summaries),
             "third_party_cookies": median(s["third_party_cookies"] for s in summaries),
             "cookies_total": median(s["cookies_total"] for s in summaries),

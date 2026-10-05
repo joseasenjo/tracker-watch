@@ -87,6 +87,7 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
                                   viewport={"width": 1366, "height": 768})
     t0 = time.monotonic()
     recording = {"on": True}  # requests after the observation window are not recorded
+    sized: dict = {}  # Playwright request -> its entry in run["requests"], to attach the transfer size
     try:
         page = context.new_page()
         page.add_init_script(INIT_SCRIPT)
@@ -105,16 +106,32 @@ def _scan_pass(browser, target: str, number: int, *, user_agent: str, locale: st
                         route.abort("blockedbyclient")
                         return
                     if recording["on"]:
-                        run["requests"].append({
+                        item = {
                             "t_ms": _now_ms(t0), "method": request.method,
                             "resource_type": request.resource_type,
                             "url": strip_query(request.url), "host": parts.hostname.lower(),
-                        })
+                        }
+                        run["requests"].append(item)
+                        sized[request] = item
                 route.continue_()
             except Exception:
                 pass  # page closed while the request was in flight
 
+        def on_finished(request):
+            """Transfer size (headers + compressed body) of a response that finished inside the window."""
+            item = sized.get(request)
+            if item is None or not recording["on"]:
+                return
+            try:
+                sizes = request.sizes()
+                total = sizes["responseBodySize"] + sizes["responseHeadersSize"]
+                if total >= 0:
+                    item["bytes"] = total
+            except Exception:
+                pass
+
         page.route("**/*", on_route)
+        page.on("requestfinished", on_finished)
 
         try:
             response = page.goto(target, wait_until="domcontentloaded", timeout=NAVIGATION_TIMEOUT_MS)

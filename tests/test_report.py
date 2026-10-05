@@ -145,7 +145,7 @@ def test_incomplete_passes_give_incomplete_status_and_no_figures():
 def test_report_is_json_serialisable_and_versioned():
     report = build_report(SITE, MEASUREMENT, [own_run(1), own_run(2), own_run(3)], TRACKERS)
     parsed = json.loads(json.dumps(report))
-    assert parsed["schema_version"] == "0.1"
+    assert parsed["schema_version"] == "0.2"
     assert parsed["tool"]["name"] == "traceguard"
     assert parsed["measurement"]["vantage"] == "test"
 

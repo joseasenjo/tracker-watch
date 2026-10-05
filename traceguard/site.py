@@ -22,12 +22,14 @@ from xml.sax.saxutils import escape
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from . import SCHEMA_VERSION
-from .classify import DEFAULT_TRACKER_LIST
+from .classify import DEFAULT_TRACKER_LIST, TrackerList
+from .community import load_community
+from .entities import horizontal_bars, inferred_entities, reach
 from .bands import band_for, describe as describe_bands
 from .diff import compare_reports
 from .cards import (alt_text as ranking_alt_text, origins_alt_text, origins_card_html, ranking_card_html,
                     render_png)
-from .findings import SCRIPT_BEHAVIOURS
+from .findings import SCRIPT_BEHAVIOURS, format_bytes
 from .links import load_links
 from .origins import compare as compare_origins, load_extra, paired_bars
 from .spark import sparkline
@@ -50,8 +52,10 @@ STATUS_ES = {
 
 
 def _env() -> Environment:
-    return Environment(loader=FileSystemLoader(SRC / "templates"),
-                       autoescape=select_autoescape(["html", "xml"]), trim_blocks=True, lstrip_blocks=True)
+    env = Environment(loader=FileSystemLoader(SRC / "templates"),
+                      autoescape=select_autoescape(["html", "xml"]), trim_blocks=True, lstrip_blocks=True)
+    env.filters["size"] = format_bytes
+    return env
 
 
 def load_history(runs_dir: Path) -> dict[str, dict[str, dict]]:
@@ -110,6 +114,11 @@ def _entry(stem: str, report: dict, meta: dict, history: dict, date: str, diff: 
         "passes_total": summary["passes_total"],
         "tracking": metrics.get("tracking_services"), "domains": metrics.get("third_party_domains"),
         "requests": metrics.get("third_party_requests"),
+        "tracking_requests": metrics.get("tracking_requests"),
+        "total_bytes": metrics.get("total_bytes"), "third_bytes": metrics.get("third_party_bytes"),
+        "tracking_bytes": metrics.get("tracking_bytes"),
+        "third_share": (round(100 * metrics["third_party_bytes"] / metrics["total_bytes"])
+                        if metrics.get("total_bytes") else None),
         "cookies_third": metrics.get("third_party_cookies"), "cookies_total": metrics.get("cookies_total"),
         "findings": report["findings"],
         # keyboard listeners stay in the raw data only: nearly every page has some, so listing them is noise
@@ -137,7 +146,8 @@ def _entry(stem: str, report: dict, meta: dict, history: dict, date: str, diff: 
     return entry
 
 
-def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir: Path | str | None = None) -> dict:
+def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir: Path | str | None = None,
+                  community_dir: Path | str | None = None) -> dict:
     history = load_history(Path(runs_dir))
     if not history:
         raise FileNotFoundError(f"no dated report folders in {runs_dir}")
@@ -173,9 +183,30 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
     primary_label = VANTAGE_LABELS.get(measurement["vantage"], measurement["vantage"])
     extra = load_extra(extra_dir if extra_dir is not None else Path(runs_dir).parent / "extra")
     extra = {v: d for v, d in extra.items() if VANTAGE_LABELS.get(v, v) != primary_label}
-    origins = compare_origins(date, history[date], primary_label, extra, VANTAGE_LABELS, meta)
+    community, community_labels, warnings = load_community(
+        community_dir if community_dir is not None else Path(runs_dir).parent / "community",
+        TrackerList.load(), meta or None)
+    community = {v: d for v, d in community.items() if v not in extra}
+    labels = {**VANTAGE_LABELS, **community_labels}
+    all_extra = {**extra, **community}
+    origins = compare_origins(date, history[date], primary_label, all_extra, labels, meta)
+    origins["unverified"] = [labels[v] for v in community]
+    entities = reach(history[date], meta, inferred_entities(trackers))
+    share = {r["entity"]: r["share"] for r in entities["rows"]}
+    for e in entries:
+        by_entity: dict[str, list[str]] = {}
+        if e["status"] == "ok":
+            for service in history[date][e["stem"]]["summary"]["services"]:
+                if service["tracking"] and service["stable"]:
+                    by_entity.setdefault(service["entity"], []).append(service["service"])
+        e["company_rows"] = sorted(
+            ({"entity": n, "services": sorted(v), "share": share.get(n)} for n, v in by_entity.items()),
+            key=lambda c: (-(c["share"] or 0), c["entity"]))
     return {
         "origins": origins, "origins_chart": paired_bars(origins["rows"], origins["origins"]),
+        "entities": entities, "entities_chart": horizontal_bars(entities["rows"], entities["measured"]),
+        "extra_origins": all_extra, "origin_labels": labels, "community_slugs": sorted(community),
+        "community_warnings": warnings, "primary_vantage": measurement["vantage"],
         "site_name": SITE_NAME, "date": date, "dates": dates,
         "vantage": VANTAGE_LABELS.get(measurement["vantage"], measurement["vantage"]),
         "passes": measurement["passes"], "observe": f"{measurement['observe_seconds']:g}",
@@ -190,6 +221,7 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
         "vantage_es": VANTAGE_LABELS_ES.get(measurement["vantage"], measurement["vantage"]),
         "bands": describe_bands(),
         "any_trend": any(e["trend_n"] >= 2 for e in measured),
+        "any_bytes": any(e["third_bytes"] is not None for e in measured),
         "lookup": [{"name": e["name"], "host": (urlsplit(e["url"]).hostname or "").removeprefix("www."),
                     "stem": e["stem"], "measured": e["status"] == "ok"} for e in entries],
         "scan_started": stamps[0].astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
@@ -249,26 +281,112 @@ def _check_contact(email: str | None, linkedin: str | None, author: str | None, 
             "next_scan": (next_scan or "").strip()}
 
 
+LATEST_COLUMNS = ["date", "site", "url", "country", "type", "status", "confidence", "tracking_services", "band",
+                  "third_party_domains", "third_party_requests", "tracking_requests", "total_bytes",
+                  "third_party_bytes", "tracking_bytes", "third_party_cookies"]
+HISTORY_COLUMNS = ["date", "origin", "origin_kind", "site", "url", "country", "type", "status", "confidence",
+                   "tracking_services", "band", "third_party_domains", "third_party_requests", "tracking_requests",
+                   "total_bytes", "third_party_bytes", "tracking_bytes", "third_party_cookies", "tool_version"]
+ENTITY_COLUMNS = ["date", "operator", "sites_reached", "sites_measured", "share_percent", "services", "categories"]
+
+
 def _write_csv(ctx: dict, path: Path) -> None:
-    columns = ["date", "site", "url", "country", "type", "status", "confidence", "tracking_services", "band",
-               "third_party_domains", "third_party_requests", "third_party_cookies"]
+    """latest.csv: the newest measurement of the main series, one row per site."""
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
-        writer.writerow(columns)
+        writer.writerow(LATEST_COLUMNS)
         for e in sorted(ctx["entries"], key=lambda x: x["name"]):
             ok = e["status"] == "ok"
+
+            def v(x):
+                return x if ok and x is not None else ""
             writer.writerow([ctx["date"], e["name"], e["url"], e["group"], e["kind"], e["status"],
-                             e["confidence"] or "", e["tracking"] if ok else "", e["band"] or "",
-                             e["domains"] if ok else "", e["requests"] if ok else "",
-                             e["cookies_third"] if ok else ""])
+                             e["confidence"] or "", v(e["tracking"]), e["band"] or "", v(e["domains"]),
+                             v(e["requests"]), v(e["tracking_requests"]), v(e["total_bytes"]), v(e["third_bytes"]),
+                             v(e["tracking_bytes"]), v(e["cookies_third"])])
+
+
+def _history_rows(ctx: dict, meta: dict[str, dict]) -> list[list]:
+    """Every report of every origin: the main series, verified extra origins, community origins."""
+    def row(date, origin, kind, report):
+        info = meta.get(report["site"]["url"], {})
+        m = report["summary"].get("metrics") if report["summary"]["status"] == "ok" else None
+
+        def value(key):
+            return "" if not m or m.get(key) is None else m[key]
+        band = band_for(m["tracking_services"], report["summary"].get("confidence")) if m else None
+        return [date, origin, kind, report["site"]["name"], report["site"]["url"], info.get("group", "Other"),
+                info.get("kind", "news"), report["summary"]["status"], report["summary"].get("confidence") or "",
+                value("tracking_services"), band or "", value("third_party_domains"), value("third_party_requests"),
+                value("tracking_requests"), value("total_bytes"), value("third_party_bytes"),
+                value("tracking_bytes"), value("third_party_cookies"), report["tool"]["version"]]
+    rows = []
+    for date, reports in ctx["history"].items():
+        for report in reports.values():
+            rows.append(row(date, report["measurement"]["vantage"], "main", report))
+    for vantage, by_date in ctx["extra_origins"].items():
+        kind = "community-unverified" if vantage in ctx["community_slugs"] else "extra"
+        for date, reports in by_date.items():
+            for report in reports.values():
+                rows.append(row(date, vantage, kind, report))
+    rows.sort(key=lambda r: (r[0], r[1], r[3]))
+    return rows
+
+
+def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
+    """CSV and JSON files for journalists and researchers (all CC BY 4.0, see DATA_LICENSE.md)."""
+    data_dir.mkdir(parents=True, exist_ok=True)
+    _write_csv(ctx, data_dir / "latest.csv")
+    meta = {e["url"]: {"group": e["group"], "kind": e["kind"]} for e in ctx["entries"]}
+    with (data_dir / "history.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(HISTORY_COLUMNS)
+        writer.writerows(_history_rows(ctx, meta))
+    with (data_dir / "entities.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(ENTITY_COLUMNS)
+        for r in ctx["entities"]["rows"]:
+            writer.writerow([ctx["date"], r["entity"], r["n"], ctx["entities"]["measured"], r["share"],
+                             " ".join(r["services"]), " ".join(r["categories"])])
+    origins = [{"id": ctx["primary_vantage"], "label": ctx["vantage"], "kind": "main"}]
+    for vantage in ctx["extra_origins"]:
+        unverified = vantage in ctx["community_slugs"]
+        origins.append({"id": vantage, "label": ctx["origin_labels"].get(vantage, vantage),
+                        "kind": "community-unverified" if unverified else "extra"})
+    sites = []
+    for e in sorted(ctx["entries"], key=lambda x: x["name"]):
+        reports = [{"date": d, "origin": ctx["primary_vantage"], "path": f"data/{d}/{e['stem']}.json"}
+                   for d, rs in ctx["history"].items() if e["stem"] in rs]
+        for vantage, by_date in ctx["extra_origins"].items():
+            reports += [{"date": d, "origin": vantage, "path": f"data/origins/{vantage}/{d}/{e['stem']}.json"}
+                        for d, rs in by_date.items() if e["stem"] in rs]
+        sites.append({"id": e["stem"], "name": e["name"], "url": e["url"], "country": e["group"], "type": e["kind"],
+                      "latest": {"date": ctx["date"], "status": e["status"], "confidence": e["confidence"],
+                                 "tracking_services": e["tracking"], "band": e["band"],
+                                 "third_party_domains": e["domains"], "third_party_requests": e["requests"],
+                                 "tracking_requests": e["tracking_requests"], "total_bytes": e["total_bytes"],
+                                 "third_party_bytes": e["third_bytes"], "tracking_bytes": e["tracking_bytes"]},
+                      "reports": reports})
+    index = {
+        "name": SITE_NAME, "site": base, "licence": "CC BY 4.0 (credit 'Tracker Watch')",
+        "schema_version": SCHEMA_VERSION, "latest_date": ctx["date"], "dates": ctx["dates"], "origins": origins,
+        "files": {"latest.csv": "data/latest.csv", "history.csv": "data/history.csv",
+                  "entities.csv": "data/entities.csv", "index.json": "data/index.json"},
+        "notes": ["Counts are minimums: the classification list is limited.",
+                  "Byte figures are compressed transfer sizes of responses that finished inside the observation "
+                  "window; reports made before sizes were collected leave them blank.",
+                  "Community origins are unverified."],
+        "sites": sites}
+    (data_dir / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False), encoding="utf-8")
 
 
 def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | None = None,
                base_url: str = "https://example.org/tracker-watch/", subscribe_url: str | None = None,
                repo_url: str | None = None, contact_email: str | None = None, linkedin_url: str | None = None,
                author: str | None = None, next_scan: str | None = None, share_cards: bool = False,
-               extra_dir: Path | str | None = None, links_file: Path | str | None = None) -> dict:
-    ctx = build_context(runs_dir, sites_file, extra_dir)
+               extra_dir: Path | str | None = None, links_file: Path | str | None = None,
+               community_dir: Path | str | None = None) -> dict:
+    ctx = build_context(runs_dir, sites_file, extra_dir, community_dir)
     ctx["links"] = load_links(links_file if links_file is not None else Path(runs_dir).parent / "links.json")
     base = base_url if base_url.endswith("/") else base_url + "/"
     ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
@@ -295,6 +413,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
         ctx["share_origins_image"] = base + "share/origins.png"
     render("index.html", out / "index.html", page="index")
     render("origins.html", out / "origins.html", page="origins")
+    render("companies.html", out / "companies.html", page="companies")
     render("changes.html", out / "changes.html", page="changes")
     render("unmeasured.html", out / "unmeasured.html", page="unmeasured")
     render("method.html", out / "method.html", page="method")
@@ -305,7 +424,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     for link in ctx["links"]:
         render("go.html", out / "go" / link["code"] / "index.html", page="go", link=link)
     (out / "data").mkdir(exist_ok=True)
-    _write_csv(ctx, out / "data" / "latest.csv")
+    _write_downloads(ctx, out / "data", base)
     for entry in ctx["entries"]:
         render("site.html", out / "sites" / f"{entry['stem']}.html", page="site", s=entry)
     (out / "feed.xml").write_text(_feed(ctx, base_url), encoding="utf-8")
@@ -313,6 +432,12 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
         (out / "data" / date).mkdir(parents=True, exist_ok=True)
         for stem, report in reports.items():
             (out / "data" / date / f"{stem}.json").write_text(json.dumps(report, ensure_ascii=False), encoding="utf-8")
+    for vantage, by_date in ctx["extra_origins"].items():
+        for date, reports in by_date.items():
+            (out / "data" / "origins" / vantage / date).mkdir(parents=True, exist_ok=True)
+            for stem, report in reports.items():
+                (out / "data" / "origins" / vantage / date / f"{stem}.json").write_text(
+                    json.dumps(report, ensure_ascii=False), encoding="utf-8")
     return ctx
 
 
@@ -348,6 +473,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--next-scan", default="", help="text such as 'Mondays 05:00 UTC'; hidden when empty")
     parser.add_argument("--extra-dir", default=None, help="folder with reports from other origins (default: data/extra next to the runs folder)")
     parser.add_argument("--share-cards", action="store_true", help="also render the shareable images (needs Chromium)")
+    parser.add_argument("--community-dir", default=None, help="community-contributed origins (default: data/community next to the runs folder)")
     parser.add_argument("--links-file", default=None, help="approved short links (default: data/links.json next to the runs folder)")
     parser.add_argument("--dashboard", help="also write the Spanish internal dashboard to this folder (never publish it)")
     parser.add_argument("--pending-repo", default="", help="with --dashboard: read pending link requests from this OWNER/NAME using the GitHub CLI")
@@ -356,9 +482,12 @@ def main(argv: list[str] | None = None) -> int:
     ctx = build_site(args.runs_dir, args.out, sites_file=sites_file, base_url=args.base_url,
                      subscribe_url=args.subscribe_url, repo_url=args.repo_url, contact_email=args.contact_email,
                      linkedin_url=args.linkedin_url, author=args.author, next_scan=args.next_scan,
-                     share_cards=args.share_cards, extra_dir=args.extra_dir, links_file=args.links_file)
+                     share_cards=args.share_cards, extra_dir=args.extra_dir, links_file=args.links_file,
+                     community_dir=args.community_dir)
     if args.share_cards and not ctx["share_image"]:
         print("warning: the shareable image was not created (Playwright or Chromium is not available)")
+    for warning in ctx["community_warnings"]:
+        print(f"warning: {warning}")
     print(f"site: {args.out} ({len(ctx['entries'])} sites, measurement of {ctx['date']})")
     if args.dashboard:
         from .links import pending_requests

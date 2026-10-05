@@ -55,6 +55,10 @@
         </table>
       </div>
 
+      {% if origins.unverified %}
+      <div class="note"><b>Community origins are unverified.</b> {{ origins.unverified|join('; ') }}: measured by volunteers on their own machines. We cannot confirm where the machine was or that it ran the unmodified tool, so these figures are shown for comparison only and are never used in the weekly ranking. Their classification is always recomputed here from the raw request log with our own list.</div>
+      {% endif %}
+
       <h2>How to read this</h2>
       <ul>
         <li>The measurements were taken from: {% for o in origins.origins %}<b>{{ o }}</b> ({{ origins.dates[o]|join(', ') }}){% if not loop.last %}; {% endif %}{% endfor %}. Each origin is one machine on one network, at one moment.</li>
@@ -62,8 +66,22 @@
         <li>Other possible causes: advertising and tests that differ by country, different content delivery paths, and ordinary run-to-run variation. Each figure is a median of several passes, which reduces but does not remove the last one.</li>
         <li>A gap is not a verdict on any site. It shows that a single number depends on the vantage point.</li>
       </ul>
-      <p class="small">More origins can be added by running the scanner from another place and saving its reports under <code>data/extra/&lt;origin&gt;/</code> (see the <a href="{{ root }}method.html#data">data section</a>).</p>
     {% endif %}
+
+    <h2 id="contribute">Measure it from your country</h2>
+    <p>Anyone can add an origin. You run the same open scanner on your own computer and send the reports in a pull request. It takes about half an hour for the whole list; the scanner makes a handful of ordinary page loads per site, spaced out, and never clicks anything.</p>
+    <ol>
+      <li>Install the tool (<a href="{{ repo_url or '#' }}">repository</a>, see its README) and run it from your home or office connection, <b>not</b> through a VPN or proxy unless you say so in the label:
+        <pre><code>python -m traceguard --sites-file data/sites.json --vantage your-slug --out my-scan</code></pre></li>
+      <li>Check and copy the reports into the repository:
+        <pre><code>python -m traceguard.community add my-scan/YYYY-MM-DD --slug your-slug --label "Your country" --contributor your-handle</code></pre></li>
+      <li>Open a pull request with the new <code>data/community/your-slug/</code> folder. A check validates the files; a maintainer reads the pull request before it is merged.</li>
+    </ol>
+    <ul>
+      <li>Reports are accepted only for the sites already in our list, with at least 2 passes and an observation window of 8 to 60 seconds. They must contain no query strings and no cookie values (the scanner never writes any).</li>
+      <li>Whatever the file says, the counts shown here are recomputed from the raw request log, and the origin is always labelled <b>community, unverified</b>.</li>
+      <li>Your handle is published next to the data. Use <code>anonymous</code> if you prefer.</li>
+    </ul>
   </div>
 </section>
 {% endblock %}

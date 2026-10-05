@@ -1,0 +1,24 @@
+# Validates community-contributed origins in pull requests (shape, size, known sites, no query strings,
+# no cookie values). It runs no scanner and never executes anything from the contributed files.
+name: community-check
+
+on:
+  pull_request:
+    paths:
+      - "data/community/**"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: python -m traceguard.community check data/community --sites-file data/sites.json

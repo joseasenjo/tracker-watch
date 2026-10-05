@@ -45,6 +45,29 @@
 </div></section>
 
 <section><div class="wrap">
+  <h2>Empresas con más alcance</h2>
+  <p class="sub">En cuántas de las {{ entities.measured }} webs medidas (confianza alta o media) se contactó un servicio de rastreo de cada operador. Los operadores se nombran como en la lista; no se agrupan filiales.</p>
+  <div class="table-scroll"><table class="t">
+    <thead><tr><th>Operador</th><th class="num">Webs</th><th class="num">%</th><th>Servicios</th></tr></thead>
+    <tbody>
+    {% for r in entities.rows[:15] %}
+      <tr><td>{{ r.entity }}{% if r.inferred %} <span class="pill warn">inferido</span>{% endif %}</td><td class="num">{{ r.n }}</td><td class="num">{{ r.share }}%</td><td class="small">{{ r.services|join(', ') }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Orígenes de la comunidad</h2>
+  {% if community_slugs %}
+  <p class="sub">Medidos por voluntarios, siempre marcados «sin verificar» en la web: {{ origins.unverified|join('; ') }}. Se recalculan con nuestra lista a partir del registro crudo.</p>
+  {% else %}
+  <p class="sub">Aún no hay ninguno. Se añaden con <code>python -m traceguard.community add</code> en un pull request (ver la página «Countries»).</p>
+  {% endif %}
+  {% for w in community_warnings %}<div class="note">{{ w }}</div>{% endfor %}
+</div></section>
+
+<section><div class="wrap">
   <h2>Dominios de terceros frecuentes sin clasificar</h2>
   <p class="sub">Candidatos para ampliar la lista (verificar el operador antes de añadir). Se cuentan solo los vistos de forma estable.</p>
   <div class="table-scroll"><table class="t">

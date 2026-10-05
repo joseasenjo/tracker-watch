@@ -58,19 +58,21 @@
           <th><button type="button" data-sort="band">Band</button></th>
           <th class="num"><button type="button" data-sort="domains">Third-party domains</button></th>
           <th class="num"><button type="button" data-sort="requests">Third-party requests</button></th>
+          {% if any_bytes %}<th class="num"><button type="button" data-sort="bytes">Third-party data</button></th>{% endif %}
           <th>Confidence</th>
           <th class="num"><button type="button" data-sort="delta">Vs last week</button></th>
           {% if any_trend %}<th>Trend</th>{% endif %}
         </tr></thead>
         <tbody>
         {% for s in measured %}
-          <tr data-name="{{ s.name|lower }}" data-group="{{ s.group }}" data-kind="{{ s.kind }}" data-tracking="{{ s.tracking }}" data-band="{{ s.band or 'Z' }}" data-domains="{{ s.domains }}" data-requests="{{ s.requests }}" data-delta="{{ s.delta if s.delta is not none else -999 }}">
+          <tr data-name="{{ s.name|lower }}" data-group="{{ s.group }}" data-kind="{{ s.kind }}" data-tracking="{{ s.tracking }}" data-band="{{ s.band or 'Z' }}" data-domains="{{ s.domains }}" data-requests="{{ s.requests }}" data-bytes="{{ s.third_bytes if s.third_bytes is not none else -1 }}" data-delta="{{ s.delta if s.delta is not none else -999 }}">
             <td><a href="{{ root }}sites/{{ s.stem }}.html">{{ s.name }}</a></td>
             <td>{{ s.group }}</td>
             <td class="num"><b>{{ s.tracking }}</b></td>
             <td>{% if s.band %}<span class="pill" title="Band {{ s.band }}: a range of the count, not a verdict">{{ s.band }}</span>{% else %}–{% endif %}</td>
             <td class="num">{{ s.domains }}</td>
             <td class="num">{{ s.requests }}</td>
+            {% if any_bytes %}<td class="num">{% if s.third_bytes is none %}–{% else %}{{ s.third_bytes|size }}{% if s.third_share is not none %} <span class="small">({{ s.third_share }}%)</span>{% endif %}{% endif %}</td>{% endif %}
             <td><span class="pill {{ 'ok' if s.confidence == 'high' else 'warn' }}">{{ s.confidence or '–' }}</span></td>
             <td class="num">{% if s.delta is none %}–{% elif s.delta > 0 %}+{{ s.delta }}{% else %}{{ s.delta }}{% endif %}</td>
             {% if any_trend %}<td>{% if s.trend_n >= 2 %}{{ s.spark_small }}{% else %}–{% endif %}</td>{% endif %}
@@ -95,7 +97,7 @@
       <div class="fact"><b>v{{ tool_version }}</b><span>tool version · {{ browser }}</span></div>
       <div class="fact"><b>{{ tracker_count }}</b><span>entries in the classification list</span></div>
     </div>
-    <p class="small">Every figure can be traced to a raw report. <a href="{{ root }}method.html">Method and limits</a> · <a href="{{ root }}data/latest.csv">Download the table (CSV)</a> · <a href="{{ root }}about.html">About and corrections</a></p>
+    <p class="small">Every figure can be traced to a raw report. <a href="{{ root }}method.html">Method and limits</a> · <a href="{{ root }}companies.html">Which companies reach the most sites</a> · <a href="{{ root }}data/latest.csv">Download the table (CSV)</a> · <a href="{{ root }}method.html#data">All downloads</a> · <a href="{{ root }}about.html">About and corrections</a></p>
   </div>
 </section>
 
@@ -112,7 +114,7 @@
         <p class="small">A weekly summary. Not available yet.</p><span class="btn sec" aria-disabled="true">Coming soon</span>
         {% endif %}
       </div>
-      <div class="card"><h3>Raw data</h3><p class="small">Every report is published as JSON, including the request log of each pass.</p><a class="btn sec" href="{{ root }}method.html#data">How to use it</a></div>
+      <div class="card"><h3>Raw data</h3><p class="small">Every report is published as JSON, with the full history and a JSON index as CSV and JSON for journalists and researchers.</p><a class="btn sec" href="{{ root }}method.html#data">Downloads</a></div>
     </div>
   </div>
 </section>

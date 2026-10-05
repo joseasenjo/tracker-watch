@@ -11,6 +11,17 @@ SCRIPT_BEHAVIOURS = {
 SCRIPT_CAVEAT = "This API is also used for legitimate purposes and does not by itself indicate tracking."
 
 
+def format_bytes(n: int | float | None) -> str:
+    """Compact human size: 820 B, 41 kB, 1.3 MB (decimal units, as network figures usually are)."""
+    if n is None:
+        return "–"
+    if n < 1000:
+        return f"{int(n)} B"
+    if n < 1_000_000:
+        return f"{n / 1000:.0f} kB"
+    return f"{n / 1_000_000:.1f} MB"
+
+
 def _finding(code: str, severity: str, text: str, evidence: dict | None = None) -> dict:
     return {"code": code, "severity": severity, "text": text, "evidence": evidence or {}}
 
@@ -61,6 +72,17 @@ def build_findings(summary: dict, measurement: dict) -> list[dict]:
         f"{metrics['third_party_requests']} requests to {metrics['third_party_domains']} third-party domains "
         f"(median of {summary['passes_ok']} passes).",
         {"requests": metrics["third_party_requests"], "domains": metrics["third_party_domains"]}))
+
+    if metrics.get("total_bytes"):
+        third, tracked, total = metrics["third_party_bytes"], metrics["tracking_bytes"], metrics["total_bytes"]
+        findings.append(_finding(
+            "THIRD_PARTY_WEIGHT", "info",
+            f"Of {format_bytes(total)} transferred in that window (compressed responses that finished loading), "
+            f"{format_bytes(third)} ({round(100 * third / total)}%) came from third-party domains, "
+            f"{format_bytes(tracked)} of it from services classified as tracking "
+            f"({metrics['tracking_requests']} requests).",
+            {"total_bytes": total, "third_party_bytes": third, "tracking_bytes": tracked,
+             "tracking_requests": metrics["tracking_requests"]}))
 
     tracking = [s for s in summary["services"] if s["tracking"] and s["stable"]]
     if tracking:

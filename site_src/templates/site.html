@@ -16,6 +16,7 @@
         <div class="fact"><b>{{ s.tracking }}</b><span>tracking services contacted{% if s.band %} · band {{ s.band }}{% endif %}</span></div>
         <div class="fact"><b>{{ s.domains }}</b><span>third-party domains</span></div>
         <div class="fact"><b>{{ s.requests }}</b><span>third-party requests</span></div>
+        {% if s.total_bytes %}<div class="fact"><b>{{ s.third_bytes|size }}</b><span>from third parties, {{ s.third_share }}% of {{ s.total_bytes|size }} transferred ({{ s.tracking_bytes|size }} from tracking services)</span></div>{% endif %}
         <div class="fact"><b>{{ s.cookies_third }}</b><span>third-party cookies ({{ s.cookies_total }} in total)</span></div>
       </div>
 
@@ -38,6 +39,12 @@
           {% for d in s.diff.added_domains %}<li>New third-party domain: {{ d }}</li>{% endfor %}
           {% for d in s.diff.removed_domains %}<li>Third-party domain no longer seen: {{ d }}</li>{% endfor %}
         </ul>
+      {% endif %}
+
+      {% if s.company_rows %}
+      <h2>Companies behind the tracking services</h2>
+      <p class="sub">Operators as named in our list; subsidiaries are not merged. See <a href="{{ root }}companies.html">how many sites each operator reaches</a>.</p>
+      <ul>{% for c in s.company_rows %}<li><b>{{ c.entity }}</b> — {{ c.services|join(', ') }} ({{ c.share }}% of the measured sites)</li>{% endfor %}</ul>
       {% endif %}
 
       <h2>Third-party domains</h2>

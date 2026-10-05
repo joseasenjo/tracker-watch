@@ -27,7 +27,16 @@ python -m traceguard.diff data/runs                                   # week-ove
 python -m traceguard.posts data/runs --platform bluesky --dry-run     # draft thread, never publishes
 python -m traceguard.site data/runs --out site --dashboard dashboard_local   # static site (English) + local Spanish dashboard
 python -m traceguard.ondemand --help                                  # one-address analysis requested through an issue
+python -m traceguard.community check data/community                   # validate community-contributed origins
+python -m traceguard.community add my-scan/2026-10-05 --slug brazil-home --label Brazil --contributor handle
 ```
+
+## What the site adds beyond the ranking
+
+- **Weight of third-party content:** every request records the transfer size of its response (compressed, if it finished inside the window); reports show the third-party share and the part from tracking services. Reports made before schema 0.2 have no sizes.
+- **Reach by company** (`traceguard/entities.py`, the *Companies* page and `entities.csv`): on how many measured sites an operator's tracking services were contacted. Operators are named as in the list, not merged.
+- **Downloads** (`data/latest.csv`, `history.csv`, `entities.csv`, `index.json` plus the raw JSON of every origin), all CC BY 4.0.
+- **Community origins** (`traceguard/community.py`): anyone can measure the same list from their own country and send the reports in a pull request. Files are validated, their classification is recomputed from the raw request log with our list, and the origin is always labelled "community, unverified" and kept out of the weekly ranking.
 
 The site is static, makes no third-party requests and sets no cookies. `dashboard_local/` is an internal dashboard and is never published. Bands (A 0–2, B 3–9, C 10–24, D 25–49, E 50+) are fixed ranges of the count of tracking services, not a verdict; see `traceguard/bands.py`. The workflow in `.github/workflows/weekly-scan.yml` scans, commits the reports and builds the site; it publishes only when the repository variable `PUBLISH_SITE` is `true`.
 
@@ -60,6 +69,7 @@ This tool is meant for measuring public pages as an ordinary visitor would load 
 ## Still open
 
 - A larger, licensed classification list.
-- Detection of the consent banner and measurement after consent.
+- Detection of the consent banner and measurement after rejecting or accepting it (designed, postponed).
+- Comparison with a content-blocking list (designed, postponed).
 - Publishing drafts to Bluesky and Mastodon (drafts are generated; posting is not implemented).
 - Live analysis of any address (a server is needed); a limited on-demand mode through issues is being prepared.
