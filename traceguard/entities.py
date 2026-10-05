@@ -7,11 +7,15 @@ confidence) is left out of the denominator, so the share is "of the sites we cou
 """
 from __future__ import annotations
 
+from .behaviour import operator_footprint
+
 USABLE_CONFIDENCE = ("high", "medium")
 
 
-def reach(reports: dict[str, dict], meta: dict[str, dict], inferred_only: set[str] | None = None) -> dict:
-    """reports: stem -> report for one dated measurement. meta: sites.json entries by URL."""
+def reach(reports: dict[str, dict], meta: dict[str, dict], inferred_only: set[str] | None = None,
+          activities: dict[str, dict[str, dict]] | None = None) -> dict:
+    """reports: stem -> report for one dated measurement. meta: sites.json entries by URL.
+    activities: stem -> service -> activity (behaviour.service_activity), to describe what each operator did."""
     inferred_only = inferred_only or set()
     measured = {stem: r for stem, r in reports.items()
                 if r["summary"]["status"] == "ok" and r["summary"].get("confidence") in USABLE_CONFIDENCE}
@@ -41,6 +45,8 @@ def reach(reports: dict[str, dict], meta: dict[str, dict], inferred_only: set[st
             "sites": sites, "services": sorted(op["services"]),
             "categories": sorted(op["categories"]), "by_group": by_group,
             "inferred": op["entity"] in inferred_only,
+            "footprint": operator_footprint({s["stem"]: activities.get(s["stem"], {}) for s in sites}, op["services"])
+            if activities is not None else None,
         })
     rows.sort(key=lambda r: (-r["n"], r["entity"]))
     return {"measured": len(measured), "groups": groups, "rows": rows,

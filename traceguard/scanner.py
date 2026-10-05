@@ -94,6 +94,8 @@ def _cookie_rows(raw_cookies: list[dict], classifier: Classifier) -> list[dict]:
             "session": cookie.get("expires", -1) == -1,
             "secure": cookie.get("secure", False), "http_only": cookie.get("httpOnly", False),
             "same_site": cookie.get("sameSite"),
+            **({"lifetime_days": max(0, round((cookie["expires"] - time.time()) / 86400))}
+               if cookie.get("expires", -1) > 0 else {}),
         })  # values are never stored
     return rows
 

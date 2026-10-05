@@ -167,7 +167,8 @@ def test_interstitial_is_escaped_and_covers_unmeasured_and_failed_checks(site_wi
 def test_short_links_page_lists_active_links_and_the_request_button(site_with_links):
     _, out, _ = site_with_links
     page = (out / "shortlinks.html").read_text(encoding="utf-8")
-    assert "Request a short link" in page and "template=link-request.yml" in page
+    assert "Create a short link" in page and 'href="request.html"' in page and "nobody approves" in page.replace("and nobody approves it by hand", "nobody approves")
+    assert 'data-template="link-request.yml"' in (out / "request.html").read_text(encoding="utf-8")
     assert 'href="go/good/"' in page and "3 active" in page
     assert "Short links" in (out / "index.html").read_text(encoding="utf-8")
 
@@ -190,9 +191,9 @@ def test_dashboard_shows_pending_requests_with_the_approval_command(site_with_li
     build_dashboard(ctx, tmp_path / "dash", drafts_dir=tmp_path / "none", pending_links=pending)
     html = (tmp_path / "dash" / "index.html").read_text(encoding="utf-8")
     assert "python -m traceguard.links add talk https://example.com/p --scan" in html
-    assert "Falta destino o código" in html and "Enlaces aprobados" in html
+    assert "Falta destino o código" in html and "Enlaces activos" in html
     build_dashboard(ctx, tmp_path / "dash2", drafts_dir=tmp_path / "none")
-    assert "No hay peticiones pendientes" in (tmp_path / "dash2" / "index.html").read_text(encoding="utf-8")
+    assert "No hay peticiones abiertas" in (tmp_path / "dash2" / "index.html").read_text(encoding="utf-8")
 
 
 def test_cli_add_list_remove_and_error_codes(tmp_path, monkeypatch, capsys):

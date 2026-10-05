@@ -19,7 +19,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from xml.sax.saxutils import escape
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader, pass_context, select_autoescape
+from markupsafe import Markup
 
 from . import SCHEMA_VERSION
 from .classify import DEFAULT_TRACKER_LIST, TrackerList
@@ -27,10 +28,13 @@ from .community import load_community
 from .entities import horizontal_bars, inferred_entities, reach
 from .extended import consent_view, protection_view
 from .bands import band_for, describe as describe_bands
+from .behaviour import phrases as activity_phrases, service_activity, totals as activity_totals
+from .categories import describe as describe_categories, label as category_label
 from .diff import compare_reports
 from .cards import (alt_text as ranking_alt_text, origins_alt_text, origins_card_html, ranking_card_html,
                     render_png)
 from .findings import SCRIPT_BEHAVIOURS, format_bytes
+from .limits import DEFAULTS as DEFAULT_LIMITS, LimitsError, load_limits
 from .links import load_links
 from .report import passive_requests
 from .origins import compare as compare_origins, load_extra, paired_bars
@@ -57,6 +61,13 @@ def _env() -> Environment:
     env = Environment(loader=FileSystemLoader(SRC / "templates"),
                       autoescape=select_autoescape(["html", "xml"]), trim_blocks=True, lstrip_blocks=True)
     env.filters["size"] = format_bytes
+
+    @pass_context
+    def catlink(context, category: str) -> Markup:
+        """A category name linked to its explanation in the glossary."""
+        return Markup('<a href="{}glossary.html#{}">{}</a>').format(context.get("root", ""), category,
+                                                                    category_label(category))
+    env.filters["catlink"] = catlink
     return env
 
 
@@ -194,7 +205,9 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
     all_extra = {**extra, **community}
     origins = compare_origins(date, history[date], primary_label, all_extra, labels, meta)
     origins["unverified"] = [labels[v] for v in community]
-    entities = reach(history[date], meta, inferred_entities(trackers))
+    tracker_list = TrackerList.load()
+    activities = {stem: service_activity(report, tracker_list) for stem, report in history[date].items()}
+    entities = reach(history[date], meta, inferred_entities(trackers), activities)
     data_root = Path(runs_dir).parent
     consent = consent_view(consent_dir if consent_dir is not None else data_root / "consent", labels, meta)
     baselines = {measurement["vantage"]: history, **extra}  # community origins are never a baseline
@@ -210,11 +223,19 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
             for service in history[date][e["stem"]]["summary"]["services"]:
                 if service["tracking"] and service["stable"]:
                     by_entity.setdefault(service["entity"], []).append(service["service"])
+        mine = activities.get(e["stem"], {})
+        info = {s["service"]: s for s in history[date][e["stem"]]["summary"].get("services", [])} if mine else {}
+        e["activity_rows"] = sorted(
+            ({"service": s, "entity": info[s]["entity"], "category": info[s]["category"],
+              "phrases": activity_phrases(a), "total": a["total"] + len(a["cookies"])} for s, a in mine.items()),
+            key=lambda r: (-r["total"], r["service"]))
+        e["activity_totals"] = activity_totals(mine) if mine else None
         e["company_rows"] = sorted(
             ({"entity": n, "services": sorted(v), "share": share.get(n)} for n, v in by_entity.items()),
             key=lambda c: (-(c["share"] or 0), c["entity"]))
     return {
         "origins": origins, "origins_chart": paired_bars(origins["rows"], origins["origins"]),
+        "categories": describe_categories(trackers),
         "entities": entities, "entities_chart": horizontal_bars(entities["rows"], entities["measured"]),
         "consent": consent, "protection": protection, "stems": {e["stem"] for e in entries},
         "consent_dir": consent_dir if consent_dir is not None else data_root / "consent",
@@ -434,8 +455,9 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
                author: str | None = None, next_scan: str | None = None, share_cards: bool = False,
                extra_dir: Path | str | None = None, links_file: Path | str | None = None,
                community_dir: Path | str | None = None, consent_dir: Path | str | None = None,
-               protected_dir: Path | str | None = None) -> dict:
+               protected_dir: Path | str | None = None, limits_file: Path | str | None = None) -> dict:
     ctx = build_context(runs_dir, sites_file, extra_dir, community_dir, consent_dir, protected_dir)
+    ctx["limits"] = load_limits(limits_file if limits_file is not None else Path(runs_dir).parent / "limits.json")
     ctx["links"] = load_links(links_file if links_file is not None else Path(runs_dir).parent / "links.json")
     base = base_url if base_url.endswith("/") else base_url + "/"
     ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
@@ -463,6 +485,8 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("index.html", out / "index.html", page="index")
     render("origins.html", out / "origins.html", page="origins")
     render("companies.html", out / "companies.html", page="companies")
+    render("glossary.html", out / "glossary.html", page="glossary")
+    render("request.html", out / "request.html", page="request")
     render("consent.html", out / "consent.html", page="consent")
     render("protection.html", out / "protection.html", page="protection")
     render("changes.html", out / "changes.html", page="changes")
@@ -496,7 +520,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
 
 
 def build_dashboard(ctx: dict, out_dir: Path | str, drafts_dir: Path | str = "data/drafts",
-                    pending_links: list[dict] | None = None) -> None:
+                    pending_links: list[dict] | None = None, limits: dict | None = None) -> None:
     out = Path(out_dir)
     if out.exists():
         shutil.rmtree(out)
@@ -509,7 +533,7 @@ def build_dashboard(ctx: dict, out_dir: Path | str, drafts_dir: Path | str = "da
     extra = {
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M"), "total": len(ctx["entries"]),
         "all_sites": sorted(ctx["entries"], key=lambda e: (e["status"] == "ok", e["name"])), "drafts": drafts,
-        "pending_links": pending_links or []}
+        "pending_links": pending_links or [], "limits_json": json.dumps(limits if limits is not None else ctx.get("limits", DEFAULT_LIMITS))}
     (out / "index.html").write_text(_env().get_template("dashboard_es.html").render(**ctx, **extra), encoding="utf-8")
 
 
@@ -529,6 +553,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--share-cards", action="store_true", help="also render the shareable images (needs Chromium)")
     parser.add_argument("--consent-dir", default=None, help="consent-test reports (default: data/consent next to the runs folder)")
     parser.add_argument("--protected-dir", default=None, help="blocking-list reports (default: data/protected next to the runs folder)")
+    parser.add_argument("--limits-file", default=None, help="request limits (default: data/limits.json next to the runs folder)")
     parser.add_argument("--community-dir", default=None, help="community-contributed origins (default: data/community next to the runs folder)")
     parser.add_argument("--links-file", default=None, help="approved short links (default: data/links.json next to the runs folder)")
     parser.add_argument("--dashboard", help="also write the Spanish internal dashboard to this folder (never publish it)")
@@ -540,7 +565,7 @@ def main(argv: list[str] | None = None) -> int:
                      linkedin_url=args.linkedin_url, author=args.author, next_scan=args.next_scan,
                      share_cards=args.share_cards, extra_dir=args.extra_dir, links_file=args.links_file,
                      community_dir=args.community_dir, consent_dir=args.consent_dir,
-                     protected_dir=args.protected_dir)
+                     protected_dir=args.protected_dir, limits_file=args.limits_file)
     if args.share_cards and not ctx["share_image"]:
         print("warning: the shareable image was not created (Playwright or Chromium is not available)")
     for warning in ctx["community_warnings"]:

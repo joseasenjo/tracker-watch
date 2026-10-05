@@ -57,6 +57,104 @@
   </table></div>
 </div></section>
 
+<section><div class="wrap" id="limits-section">
+  <h2>Solicitudes públicas: límites y uso</h2>
+  <p class="sub">Cualquiera con cuenta de GitHub puede pedir el análisis de una dirección o un enlace corto, sin aprobación previa. Estos límites los aplican los workflows y se muestran en la web pública. Son por cuenta de GitHub (GitHub no muestra la IP del visitante).</p>
+  <div class="note" id="limits-mode">Cargando…</div>
+  <form id="limits-form" class="card" novalidate>
+    <div class="table-scroll"><table class="t">
+      <thead><tr><th>Ajuste</th><th>Análisis de direcciones</th><th>Enlaces cortos</th></tr></thead>
+      <tbody id="limits-rows"></tbody>
+    </table></div>
+    <p><label for="blocked"><b>Cuentas bloqueadas</b> (una por línea, nombre de GitHub):</label><br>
+      <textarea id="blocked" rows="3" style="width:100%;max-width:420px"></textarea></p>
+    <p>
+      <button class="btn" type="submit" id="limits-save">Guardar en data/limits.json</button>
+      <button class="btn sec" type="button" id="limits-copy">Copiar JSON</button>
+      <span class="small" id="limits-status" role="status"></span>
+    </p>
+    <p class="small">Guardar solo modifica el archivo local. Para que los workflows y la web lo usen: <code>git add data/limits.json &amp;&amp; git commit -m "Update request limits" &amp;&amp; git push</code></p>
+  </form>
+  <h3>Uso en las últimas 24 horas</h3>
+  <div id="usage" class="small">Abre este panel con <code>python -m traceguard.admin</code> para ver el uso.</div>
+  <script type="application/json" id="limits-initial">{{ limits_json|safe }}</script>
+  <script>
+  (function () {
+    var initial = JSON.parse(document.getElementById('limits-initial').textContent);
+    var rows = [
+      ['enabled', 'Activado', 'check'], ['per_account', 'Solicitudes por cuenta en la ventana', 'num'],
+      ['window_hours', 'Ventana (horas)', 'num'], ['min_account_age_days', 'Antigüedad mínima de la cuenta (días)', 'num'],
+      ['global_per_day', 'Tope diario para toda la web', 'num'], ['max_total', 'Enlaces cortos totales como máximo', 'num', 'links']
+    ];
+    var body = document.getElementById('limits-rows'), status = document.getElementById('limits-status');
+    var token = null, serverMode = false;
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + r[1] + '</td>';
+      ['scan', 'links'].forEach(function (kind) {
+        var td = document.createElement('td');
+        if (!r[3] || r[3] === kind) {
+          td.innerHTML = r[2] === 'check' ? '<input type="checkbox" data-k="' + kind + '.' + r[0] + '">'
+            : '<input type="number" min="0" style="width:90px" data-k="' + kind + '.' + r[0] + '">';
+        } else { td.textContent = '–'; }
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    function fill(l) {
+      document.querySelectorAll('[data-k]').forEach(function (el) {
+        var p = el.dataset.k.split('.'), v = l[p[0]][p[1]];
+        if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+      });
+      document.getElementById('blocked').value = (l.blocked_accounts || []).join('\n');
+    }
+    function read() {
+      var l = { scan: {}, links: {}, blocked_accounts: document.getElementById('blocked').value.split(/\s+/).filter(Boolean) };
+      document.querySelectorAll('[data-k]').forEach(function (el) {
+        var p = el.dataset.k.split('.');
+        l[p[0]][p[1]] = el.type === 'checkbox' ? el.checked : parseInt(el.value, 10);
+      });
+      return l;
+    }
+    fill(initial);
+    document.getElementById('limits-copy').addEventListener('click', function () {
+      var text = JSON.stringify(read(), null, 2) + '\n';
+      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(
+        function () { status.textContent = 'Copiado: pégalo en data/limits.json'; },
+        function () { status.textContent = 'No se pudo copiar; selecciona el texto de data/limits.json a mano.'; });
+    });
+    document.getElementById('limits-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!serverMode) { status.textContent = 'Modo solo lectura: usa «Copiar JSON» o abre el panel con traceguard.admin.'; return; }
+      fetch('/api/limits', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+                             body: JSON.stringify(read()) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) { if (d.error) { status.textContent = 'Error: ' + d.error; } else { fill(d.limits); status.textContent = 'Guardado en ' + d.saved_to + '. Falta hacer commit y push.'; } });
+    });
+    var mode = document.getElementById('limits-mode');
+    function usage(u) {
+      var box = document.getElementById('usage');
+      if (!u.available) { box.textContent = 'No se pudo leer el uso (¿está instalado y autenticado gh?).'; return; }
+      function table(title, items) {
+        return '<h4>' + title + ': ' + items.length + '</h4>' + (items.length ? '<ul>' + items.map(function (i) {
+          return '<li>#' + i.number + ' @' + i.author.replace(/[^A-Za-z0-9-]/g, '') + ' · ' + i.created.slice(0, 16).replace('T', ' ') + ' · ' + i.state + '</li>'; }).join('') + '</ul>' : '');
+      }
+      box.innerHTML = table('Análisis de direcciones', u.scan) + table('Enlaces cortos', u.links);
+    }
+    if (location.protocol.indexOf('http') === 0) {
+      fetch('/api/token').then(function (r) { return r.json(); }).then(function (t) {
+        token = t.token; serverMode = true;
+        mode.textContent = 'Conectado al servidor local: «Guardar» escribe data/limits.json.';
+        return fetch('/api/limits').then(function (r) { return r.json(); }).then(function (d) { if (d.limits) fill(d.limits); });
+      }).then(function () { return fetch('/api/usage').then(function (r) { return r.json(); }).then(usage); })
+        .catch(function () { mode.textContent = 'Modo solo lectura (sin servidor local). Para editar, arranca python -m traceguard.admin.'; });
+    } else {
+      mode.textContent = 'Modo solo lectura (abierto como archivo). Para editar con «Guardar», arranca python -m traceguard.admin y abre la dirección que imprime.';
+    }
+  })();
+  </script>
+</div></section>
+
 <section><div class="wrap">
   <h2>Pruebas aparte: banner y lista de bloqueo</h2>
   {% for o in consent.origins %}
@@ -112,11 +210,11 @@
 
 <section><div class="wrap">
   <h2>Enlaces cortos</h2>
-  <p class="sub">Solo existen los que apruebas tú. Cada uno se convierte en una página estática con la pantalla intermedia.</p>
-  <h3>Peticiones pendientes (issues abiertas con la etiqueta <code>link-request</code>)</h3>
+  <p class="sub">Se crean solos cuando alguien los pide (sin aprobación previa), con las comprobaciones y los límites de arriba, y cada uno es una página estática con pantalla intermedia. Tú puedes añadir o quitar enlaces a mano en cualquier momento.</p>
+  <h3>Peticiones abiertas (issues con la etiqueta <code>link-request</code> que no se procesaron o fallaron)</h3>
   {% if pending_links %}
   <div class="table-scroll"><table class="t">
-    <thead><tr><th>#</th><th>Quién</th><th>Fecha</th><th>Destino</th><th>Código pedido</th><th>Motivo</th><th>Para aprobar</th></tr></thead>
+    <thead><tr><th>#</th><th>Quién</th><th>Fecha</th><th>Destino</th><th>Código pedido</th><th>Motivo</th><th>Alta manual</th></tr></thead>
     <tbody>
     {% for r in pending_links %}
       <tr><td>{{ r.number }}</td><td>{{ r.author }}</td><td>{{ r.created }}</td><td style="word-break:break-all">{{ r.url or '—' }}</td>
@@ -125,11 +223,11 @@
     {% endfor %}
     </tbody>
   </table></div>
-  <p class="small">Tras aprobar: reconstruye la web, haz commit y push, y responde y cierra la issue. Para rechazar, cierra la issue con un comentario.</p>
+  <p class="small">Si das de alta a mano: reconstruye la web, haz commit y push, y responde y cierra la issue. Para quitar un enlace: <code>python -m traceguard.links remove CODIGO</code>, commit y push.</p>
   {% else %}
-  <div class="card">No hay peticiones pendientes (o la herramienta <code>gh</code> no está disponible).</div>
+  <div class="card">No hay peticiones abiertas (o la herramienta <code>gh</code> no está disponible).</div>
   {% endif %}
-  <h3>Enlaces aprobados</h3>
+  <h3>Enlaces activos</h3>
   {% if links %}
   <div class="table-scroll"><table class="t">
     <thead><tr><th>Código</th><th>Destino</th><th>Creado</th><th>Medición</th></tr></thead>

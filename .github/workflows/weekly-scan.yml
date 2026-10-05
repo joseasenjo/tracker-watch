@@ -59,6 +59,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/runs
           git diff --cached --quiet || git commit -m "scan: $(date -u +%F)"
+          git pull --rebase --autostash   # the link workflow may have pushed meanwhile
           git push
 
       - name: Build site
@@ -86,6 +87,9 @@ jobs:
     needs: scan
     if: ${{ vars.PUBLISH_SITE == 'true' }}
     runs-on: ubuntu-latest
+    concurrency:
+      group: pages   # shared with publish-site.yml: only one publication at a time
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

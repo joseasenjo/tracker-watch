@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}What the categories mean{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>What the categories mean</h1>
+    <p class="sub">Every service in our classification list belongs to one category. These descriptions are about the <b>type</b> of service, not about any particular company or site.</p>
+
+    <div class="note"><b>Read this first.</b> A passive measurement sees that a service was contacted, not what was sent to it. What a service actually receives depends on how each site configures it, so the descriptions say what such services <i>typically</i> do. None of them is a judgement about a site, and the list of services is limited, so a count is a minimum.</div>
+
+    <div class="table-scroll"><table class="t">
+      <thead><tr><th>Category</th><th>Counted as tracking?</th><th class="num">Entries in the list</th><th class="num">Operators</th></tr></thead>
+      <tbody>
+      {% for c in categories %}
+        <tr><td><a href="#{{ c.id }}">{{ c.label }}</a></td><td>{{ 'yes' if c.counted else 'no' }}</td><td class="num">{{ c.entries }}</td><td class="num">{{ c.operators }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+
+    {% for c in categories %}
+    <h2 id="{{ c.id }}">{{ c.label }}</h2>
+    <p><span class="pill {{ 'warn' if c.counted else 'ok' }}">{{ 'counted in the tracking figure' if c.counted else 'not counted in the tracking figure' }}</span></p>
+    <h3>What it does</h3>
+    <p>{{ c.what }}</p>
+    <h3>{{ 'What it typically receives' if c.counted else 'Why it is not counted' }}</h3>
+    <p>{{ c.data }}</p>
+    {% endfor %}
+
+    <h2 id="on-your-computer">What a service can do on your computer</h2>
+    <p>On every site page we list what each tracking service did in the browser that loaded it. These are the things we count, in plain words:</p>
+    <ul>
+      <li><b>Ran a script.</b> The service sent a program that your browser executed. A script can read details of the page and the browser, set cookies and send information back. What a particular script does is not visible to us, and the same kind of script is used for harmless purposes too.</li>
+      <li><b>Image request (“pixel”).</b> The browser asked the service for a picture, often a single transparent dot. The picture does not matter: the request itself tells the service that the page was loaded, along with the browser's usual details and any cookie it already has.</li>
+      <li><b>Background request.</b> The page sent or fetched data from the service without anything appearing on screen.</li>
+      <li><b>Embedded frame.</b> A small page from the service shown inside the page, often an ad.</li>
+      <li><b>Cookie.</b> A small piece of text the service asked your browser to keep. <i>Session</i> cookies disappear when you close the browser; the others stay, sometimes for a year or more, and are sent back to the service on later visits. We record each cookie's name and lifetime, never its value.</li>
+      <li><b>Script behaviours.</b> We also note when a script from a third-party domain calls browser features used for fingerprinting or tracking (reading image data from a canvas, asking for location, opening a WebRTC connection). These features have many legitimate uses, so a note is not an accusation.</li>
+    </ul>
+    <p>All of this happens before you click anything. What each service receives, stores or does with it afterwards depends on its configuration and its own policies, and cannot be seen from the browser.</p>
+
+    <h2>What we do not claim</h2>
+    <ul>
+      <li>We do not rate how invasive a company is, and there is no “privacy score”. The figures are counts of what a page contacted.</li>
+      <li>Companies and sites can reply or ask for a correction: see <a href="{{ root }}about.html">About and corrections</a>.</li>
+      <li>For what a specific company says it does with data, read its own privacy documentation. A page per company, with sources, may be added later.</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

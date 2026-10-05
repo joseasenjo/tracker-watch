@@ -34,16 +34,49 @@
         window.location.href = form.dataset.root + 'sites/' + found.stem + '.html';
         return;
       }
-      result.textContent = host + ' is not in our list. We measure a fixed list of sites once a week; live checks of any address are not available yet. ';
+      result.textContent = host + ' is not in our weekly list. ';
       if (form.dataset.repo) {
+        var issues = form.dataset.repo + '/issues/new?template=';
+        var scan = document.createElement('a');
+        scan.href = issues + 'scan-request.yml&title=' + encodeURIComponent('[Scan] ' + host) + '&url=' + encodeURIComponent('https://' + host);
+        scan.rel = 'noopener';
+        scan.textContent = 'Analyse it now';
+        result.appendChild(scan);
+        result.appendChild(document.createTextNode(' (opens a public GitHub issue, runs automatically) · '));
         var link = document.createElement('a');
-        link.href = form.dataset.repo + '/issues/new?template=add-site.yml&title=' + encodeURIComponent('[Add site] ' + host);
+        link.href = issues + 'add-site.yml&title=' + encodeURIComponent('[Add site] ' + host);
         link.rel = 'noopener';
-        link.textContent = 'Suggest adding it.';
+        link.textContent = 'Suggest adding it to the weekly list';
         result.appendChild(link);
       }
     });
   }
+
+  // "Try it" forms: build a pre-filled GitHub issue address. Nothing is sent until the visitor opens it.
+  document.querySelectorAll('form[data-template]').forEach(function (f) {
+    f.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var note = f.querySelector('.note');
+      var raw = f.querySelector('input').value.trim();
+      var address = '';
+      try {
+        var u = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : 'https://' + raw);
+        if ((u.protocol === 'http:' || u.protocol === 'https:') && u.hostname.indexOf('.') !== -1) address = u.href;
+      } catch (e) { address = ''; }
+      if (!address || !f.dataset.repo) {
+        note.hidden = false;
+        note.textContent = 'Please type a public web address, for example https://www.example-news.com/page.';
+        return;
+      }
+      var url = f.dataset.repo + '/issues/new?template=' + f.dataset.template + '&title=' +
+        encodeURIComponent(f.dataset.title + ' ' + new URL(address).hostname) + '&' + f.dataset.field + '=' + encodeURIComponent(address);
+      var extra = f.querySelector('[data-extra-input]');
+      if (extra && extra.value.trim()) url += '&' + f.dataset.extra + '=' + encodeURIComponent(extra.value.trim().toLowerCase());
+      window.open(url, '_blank', 'noopener');
+      note.hidden = false;
+      note.textContent = 'A public GitHub issue is open in a new tab. Review it and press “Submit new issue”; the reply appears there.';
+    });
+  });
 
   var table = document.getElementById('sites-table');
   if (!table) return;

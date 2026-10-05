@@ -21,7 +21,7 @@
         <input type="text" id="check-url" inputmode="url" autocomplete="off" placeholder="example-news.com" aria-describedby="check-help">
         <button class="btn" type="submit">Look up</button>
       </div>
-      <p class="small" id="check-help">Looks only at the sites we already measure each week. What you type never leaves your browser.</p>
+      <p class="small" id="check-help">Looks first at the sites we measure each week, inside your browser. If yours is not there, you can ask for an analysis: that opens a public GitHub issue only when you choose to.</p>
       <p class="note" id="check-result" role="status" hidden></p>
     </form>
     <script type="application/json" id="site-lookup">{{ lookup|tojson }}</script>
@@ -34,6 +34,34 @@
 </div>
 
 <section>
+  <div class="wrap">
+    <h2>Try it on your own address</h2>
+    <p class="sub">Two free tools, no approval needed. They run automatically from a public GitHub issue.</p>
+    <div class="cards">
+      <div class="card"><h3>Analyse an address</h3><p class="small">One measurement of any public site: how many third-party tracking services it contacts before any interaction. Not added to the ranking.</p><a class="btn" href="{{ root }}request.html">Analyse an address</a></div>
+      <div class="card"><h3>Create a short link</h3><p class="small">A short link that shows where it leads, and what we measured there, before the visitor continues. It never redirects by itself.</p><a class="btn" href="{{ root }}request.html">Create a short link</a></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What you get here</h2>
+    <p class="sub">One weekly, reproducible measurement of third-party tracking on news sites, with open data and its limits stated. Everything below is published, and nothing here is a verdict.</p>
+    <div class="cards">
+      <div class="card"><h3>The weekly ranking</h3><p class="small">Which tracking services each site contacts before you click anything, with a fixed band, a week-to-week comparison and the raw reports behind every number.</p><a class="btn sec" href="#sites">See the sites</a></div>
+      <div class="card"><h3>Companies</h3><p class="small">How many of the measured sites each company's tracking services reach, for example “Google on 19 of 29 sites”.</p><a class="btn sec" href="{{ root }}companies.html">See the companies</a></div>
+      <div class="card"><h3>Weight</h3><p class="small">How much of what a page downloads comes from third parties, in megabytes, not just in counts.</p><a class="btn sec" href="{{ root }}method.html#weight">How it is measured</a></div>
+      <div class="card"><h3>Countries</h3><p class="small">The same pages measured from different places, because what loads often depends on where the reader is. Volunteers can add their own country, always labelled unverified.</p><a class="btn sec" href="{{ root }}origins.html">Compare countries</a></div>
+      <div class="card"><h3>After the banner</h3><p class="small">What happens once you press the banner's “reject” or “accept” button: does the tracking stop, and are there new trackers?</p><a class="btn sec" href="{{ root }}consent.html">See the test</a></div>
+      <div class="card"><h3>Blocking list</h3><p class="small">The same pages with a public privacy filter list applied: how much third-party traffic disappears, and what still loads.</p><a class="btn sec" href="{{ root }}protection.html">See the test</a></div>
+      <div class="card"><h3>Open data</h3><p class="small">CSV and JSON downloads, full history and the raw request log of every pass, free to reuse with credit (CC BY 4.0).</p><a class="btn sec" href="{{ root }}method.html#data">Download</a></div>
+    </div>
+    <div class="note" id="why-clicks"><b>Why also test what happens after a click?</b> The weekly ranking deliberately never clicks anything, so it shows the state before you have made any choice. But many sites load very little until you accept, and others keep contacting trackers even after you reject, so a count taken before the click can be misleading in both directions. The two tests above press one consent button, or block a public list, in separate runs and publish the results next to the ranking without changing it. They help answer a simple question: <i>does my choice at the banner change what the site does?</i> They are limited by what our detector can find, and a number there is a measured fact, not a finding of wrongdoing.</div>
+  </div>
+</section>
+
+<section id="sites">
   <div class="wrap">
     <h2>Sites</h2>
     <p class="sub">Tracking services = third-party services classified as advertising, analytics, social or audience measurement. The band is a fixed range of that count (<a href="{{ root }}method.html#bands">see the ranges</a>), not a verdict. Click a column heading to sort.</p>

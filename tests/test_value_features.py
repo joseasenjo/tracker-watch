@@ -289,3 +289,11 @@ def test_reports_missing_run_fields_are_rejected_not_crashing_the_build(tmp_path
     report = contributed()
     report["runs"][0]["cookies"] = [{"name": "x"}]
     assert any("cookie" in p for p in check_report(report, SLUG, SITES))
+
+
+def test_home_page_summarises_what_the_tool_offers_and_why_clicks_matter(full_site):
+    out, _ = full_site
+    home = (out / "index.html").read_text(encoding="utf-8")
+    assert "What you get here" in home and "Why also test what happens after a click?" in home
+    for page in ("companies.html", "origins.html", "consent.html", "protection.html"):
+        assert f'href="{page}"' in home

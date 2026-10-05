@@ -13,7 +13,7 @@
 
     <h2 style="margin-top:28px">What the numbers mean</h2>
     <ul>
-      <li><b>Tracking services</b> are the distinct third-party services in our list classified as advertising, analytics, social or audience measurement that were contacted during the observation window. Tag managers, consent tools and paywalls are listed but not counted.</li>
+      <li><b>Tracking services</b> are the distinct third-party services in our list classified as advertising, analytics, social or audience measurement that were contacted during the observation window. Tag managers, consent tools and paywalls are listed but not counted. <a href="{{ root }}glossary.html">What each category means</a>.</li>
       <li>The count is <b>before any interaction</b>. A site that blocks everything until you accept shows a low number here; what happens after a choice is measured separately on <a href="{{ root }}consent.html">After the banner</a>.</li>
       <li>Counts describe what was contacted. They do not say what data was sent, why, or whether it was lawful.</li>
     </ul>
@@ -41,6 +41,9 @@
 
     <h2 id="weight">Weight of third-party content</h2>
     <p>For each request we also record the transfer size of its response (headers plus compressed body) when it finished loading inside the observation window. “Third-party data” is the sum for third-party domains, and the share is measured against everything transferred in the same window. Sizes of responses that were still loading when the window closed are not counted, cached responses are not a factor (every pass uses a fresh browser), and pages that stream or load more later (video, infinite scroll) are cut at the window. Reports measured before sizes were collected show a dash.</p>
+
+    <h2 id="behaviour">What each service did in the browser</h2>
+    <p>Each site page lists, for every tracking service seen in most passes, how many scripts, image requests, background requests and frames it made and which cookies it set (name and lifetime, never the value). The numbers are medians of the passes that worked, taken from the raw request log, so they can be checked in the published reports. They describe what happened in the browser, not what the service does with the data. Cookie lifetimes are recorded from schema 0.2 on; earlier reports only tell whether a cookie persists.</p>
 
     <h2 id="companies">Reach by company</h2>
     <p>The <a href="{{ root }}companies.html">Companies</a> page counts, for each operator named in our list, the sites where one of its services in a tracking category was contacted in most passes. Subsidiaries are not merged into parents.</p>

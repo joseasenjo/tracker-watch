@@ -41,6 +41,22 @@
         </ul>
       {% endif %}
 
+      {% if s.activity_rows %}
+      <h2>What each tracking service did on your computer</h2>
+      <p class="sub">Counted in the browser that loaded this page, before any interaction: {{ s.activity_totals.services }} tracking services ran {{ s.activity_totals.scripts }} scripts, made {{ s.activity_totals.requests }} requests in total and set {{ s.activity_totals.cookies }} cookies{% if s.activity_totals.persistent_cookies %} ({{ s.activity_totals.persistent_cookies }} that stay after you close the browser){% endif %}. We see that these things happened, <b>not what was sent or what the service does with it afterwards</b>. <a href="{{ root }}glossary.html#on-your-computer">What these mean</a>.</p>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr><th>Service</th><th>Operator and type</th><th>In your browser</th></tr></thead>
+          <tbody>
+          {% for a in s.activity_rows %}
+            <tr><td><code>{{ a.service }}</code></td><td>{{ a.entity }}<br><span class="small">{{ a.category|catlink }}</span></td>
+              <td class="small">{% if a.phrases %}{{ a.phrases|join('; ') }}{% else %}contacted, with no further activity counted{% endif %}.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
       {% if s.company_rows %}
       <h2>Companies behind the tracking services</h2>
       <p class="sub">Operators as named in our list; subsidiaries are not merged. See <a href="{{ root }}companies.html">how many sites each operator reaches</a>.</p>
@@ -76,7 +92,7 @@
           <thead><tr><th>Domain</th><th>Service</th><th>Category</th><th class="num">Passes seen</th></tr></thead>
           <tbody>
           {% for d in s.domain_rows %}
-            <tr><td>{{ d.domain }}</td><td>{{ d.entity or 'Unclassified' }}</td><td>{{ (d.category or '')|replace('_', ' ') }}</td><td class="num">{{ d.passes_seen }}/{{ s.passes_ok }}</td></tr>
+            <tr><td>{{ d.domain }}</td><td>{{ d.entity or 'Unclassified' }}</td><td>{% if d.category %}{{ d.category|catlink }}{% endif %}</td><td class="num">{{ d.passes_seen }}/{{ s.passes_ok }}</td></tr>
           {% else %}
             <tr><td colspan="4">No third-party domains were contacted.</td></tr>
           {% endfor %}

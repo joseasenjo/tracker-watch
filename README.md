@@ -44,6 +44,25 @@ python -m traceguard --sites-file data/sites.json --blocklist /tmp/easyprivacy.t
 
 The consent detector (`traceguard/consent.py`) tries known consent tools by their button ids, then exact button texts in five languages inside a cookie/consent/privacy block. It presses one button, never follows a link off the page and never presses a paid option; "not found" means "not found by our detector". The blocking test (`traceguard/blocker.py`) applies only `||domain^` rules with party and resource-type options and records the list's name, address and SHA-256. Neither writes to `data/runs`.
 
+## Public requests: analyse an address, create a short link (no approval)
+
+Anyone with a GitHub account can open an issue from the site's *Try it* page. A workflow (`.github/workflows/requests.yml`) answers it automatically:
+
+- **Analyse an address** (`traceguard/ondemand.py`): validates the address (public sites only), applies the limits, measures it once, replies in the issue and closes it. The result is not added to the ranking.
+- **Short link** (`traceguard/links.py request`): validates the address and code (no other shorteners, no blocked domains, no private addresses), measures the target, adds it to `data/links.json`, pushes, and starts `publish-site.yml` to republish the site. The link page always shows the destination and never redirects by itself. Remove one with `python -m traceguard.links remove CODE`.
+- **Limits** live in `data/limits.json`: per GitHub account (requests per window, minimum account age), a daily cap for the whole site, a total cap for links, an on/off switch per feature and a list of blocked accounts. A broken file pauses both features instead of lifting the limits. The public pages show the current values.
+- **Edit the limits from the local dashboard:**
+
+```bash
+python -m traceguard.site data/runs --out site --dashboard dashboard_local
+python -m traceguard.admin          # opens http://127.0.0.1:8765/ ; saves data/limits.json, shows the last 24 h of requests
+python -m traceguard.limits set scan.per_account=1 links.enabled=false     # same thing from the command line
+```
+
+The admin server listens on 127.0.0.1 only, needs a token for changes and never commits or pushes: commit `data/limits.json` yourself for the workflows to use it. Issue text never reaches a shell command (it travels through environment variables and files), and the labels `scan-request` and `link-request` are created by the workflow on the first request.
+
+`traceguard/categories.py` holds the plain-language explanation of each category shown on the *What the categories mean* page (the type of service, not any company, and no invasiveness score).
+
 ## What the site adds beyond the ranking
 
 - **Weight of third-party content:** every request records the transfer size of its response (compressed, if it finished inside the window); reports show the third-party share and the part from tracking services. Reports made before schema 0.2 have no sizes.
@@ -84,4 +103,5 @@ This tool is meant for measuring public pages as an ordinary visitor would load 
 - A larger, licensed classification list.
 - Running the two separate tests on a schedule, from more than one origin.
 - Publishing drafts to Bluesky and Mastodon (drafts are generated; posting is not implemented).
-- Live analysis of any address (a server is needed); a limited on-demand mode through issues is being prepared.
+- Live analysis of any address without a GitHub issue (needs a server); today it runs through issues and is not instant.
+- A page per company with sourced descriptions (phase 2 of the explanations; phase 1 is the category glossary).

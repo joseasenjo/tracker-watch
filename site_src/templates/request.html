@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Try it on your own address{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1>Try it on your own address</h1>
+    <p class="sub">Two free tools, no approval and no account on this site. They run automatically through a public GitHub issue, so you need a GitHub account{% if limits.scan.min_account_age_days %} at least {{ limits.scan.min_account_age_days }} days old{% endif %}.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Analyse an address</h3>
+        {% if limits.scan.enabled %}
+        <p class="small">We load the page once, like an ordinary visitor (no clicks, no consent), and reply with the number of third-party tracking services it contacted, the services seen and how confident the result is.</p>
+        <form class="checker" id="scan-form" data-repo="{{ repo_url }}" data-template="scan-request.yml" data-field="url" data-title="[Scan]" novalidate>
+          <div class="checker-row">
+            <input type="text" inputmode="url" autocomplete="off" placeholder="https://www.example-news.com" aria-label="Address to analyse">
+            <button class="btn" type="submit"{% if not repo_url %} disabled{% endif %}>Analyse</button>
+          </div>
+          <p class="note" role="status" hidden></p>
+        </form>
+        <p class="small">Limit: {{ limits.scan.per_account }} per GitHub account every {{ limits.scan.window_hours }} hours; {{ limits.scan.global_per_day }} per day for the whole site.</p>
+        {% else %}
+        <p class="note">Analyses are switched off for now.</p>
+        {% endif %}
+      </div>
+      <div class="card">
+        <h3>Create a short link</h3>
+        {% if limits.links.enabled %}
+        <p class="small">A short link that opens a page showing where it leads, and what we measured there, before the visitor chooses to continue. It never redirects by itself.</p>
+        <form class="checker" id="link-form" data-repo="{{ repo_url }}" data-template="link-request.yml" data-field="target" data-title="[Link]" data-extra="code" novalidate>
+          <div class="checker-row">
+            <input type="text" inputmode="url" autocomplete="off" placeholder="https://www.example.com/page" aria-label="Address to shorten">
+            <input type="text" data-extra-input="code" autocomplete="off" placeholder="short-code (optional)" aria-label="Preferred short code" style="max-width:190px">
+            <button class="btn" type="submit"{% if not repo_url %} disabled{% endif %}>Create</button>
+          </div>
+          <p class="note" role="status" hidden></p>
+        </form>
+        <p class="small">Limit: {{ limits.links.per_account }} per GitHub account every {{ limits.links.window_hours }} hours; {{ limits.links.global_per_day }} per day for the whole site. <a href="{{ root }}shortlinks.html">Rules and existing links</a>.</p>
+        {% else %}
+        <p class="note">Short links are switched off for now.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><h3>1. Ask</h3><p>Pressing the button opens a GitHub issue with the address already filled in. You review it and submit it. Nothing is sent from this page.</p></div>
+      <div class="step"><h3>2. Automatic check</h3><p>A workflow validates the address (public websites only), applies the limits, and then measures it or creates the link. Nobody approves it by hand.</p></div>
+      <div class="step"><h3>3. Reply</h3><p>The result is posted in the same issue, which is then closed. A new short link goes live a few minutes later, once the site has been republished.</p></div>
+    </div>
+
+    <h2>What to know</h2>
+    <ul>
+      <li><b>Public.</b> The issue, your GitHub account name and the address you enter are visible on GitHub. Do not enter anything private, and do not include personal data.</li>
+      <li><b>One measurement.</b> An analysis is taken from servers in the US at one moment, with no clicks. It is not added to the weekly ranking and the counts are not verdicts: <a href="{{ root }}method.html#limits">see the limits</a>.</li>
+      <li><b>Refused addresses.</b> Private or local addresses, addresses with credentials, other link shorteners and blocked domains are refused, and so are requests beyond the limits above or from blocked accounts.</li>
+      <li><b>Removal.</b> We can remove any short link at any time, for example if it leads to harmful or misleading content. If you see one, <a href="{{ repo_url }}/issues/new?template=correction.yml" rel="noopener">tell us</a>.</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,57 @@
+# Rebuilds the site from the data already in the repository and publishes it to GitHub Pages, without scanning.
+# Started by the link workflow after a new short link is added, or by hand. Publishes only when the repository
+# variable PUBLISH_SITE is "true", like the weekly workflow.
+name: publish-site
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+  REPO_URL: https://github.com/${{ github.repository }}
+
+jobs:
+  publish:
+    if: ${{ vars.PUBLISH_SITE == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies and Chromium
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Build site
+        run: >
+          python -m traceguard.site data/runs --out site --sites-file data/sites.json
+          --base-url "$SITE_URL" --subscribe-url "${{ vars.SUBSCRIBE_URL }}"
+          --repo-url "$REPO_URL" --share-cards
+          --contact-email "${{ vars.CONTACT_EMAIL }}" --linkedin-url "${{ vars.LINKEDIN_URL }}"
+          --author "${{ vars.AUTHOR_NAME }}" --next-scan "${{ vars.NEXT_SCAN }}"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

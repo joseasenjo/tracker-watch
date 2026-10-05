@@ -1,11 +1,14 @@
-name: Request a short link
-description: Ask for a short link that shows where it leads before the visitor continues.
+name: Create a short link
+description: Get a short link that shows where it leads before the visitor continues. No approval needed.
 title: "[Link] "
 labels: ["link-request"]
 body:
   - type: markdown
     attributes:
-      value: "Issues are public. Every link is reviewed by hand and only added if it follows the rules on the Short links page."
+      value: |
+        **This issue is public** and so is the address you enter. Do not include personal data.
+        An automatic workflow checks the address, measures it, creates the link and replies here with it (usually within a few minutes; the site then republishes). The link page always shows the destination and never redirects by itself.
+        Public websites only. Addresses of other link shorteners, blocked domains and private or local addresses are refused. Limits apply per GitHub account (see the site's "Short links" page). Links that break the rules can be removed at any time.
   - type: input
     id: target
     attributes:
@@ -17,8 +20,9 @@ body:
     id: code
     attributes:
       label: Preferred short code
-      description: "3-32 characters: lowercase letters, digits and hyphens. Optional."
+      description: "Optional. 3-32 characters: lowercase letters, digits and hyphens. Leave empty to get a random one."
   - type: textarea
     id: reason
     attributes:
       label: Why do you need it?
+      description: Optional.

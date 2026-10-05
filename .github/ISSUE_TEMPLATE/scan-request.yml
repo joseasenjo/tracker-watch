@@ -1,0 +1,18 @@
+name: Analyse an address
+description: Measure the third-party tracking services contacted by one public web address. No approval needed.
+title: "[Scan] "
+labels: ["scan-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This issue is public** and so is the address you enter. Do not include personal data.
+        An automatic workflow loads the page once like an ordinary visitor (no clicks, no consent), replies here with counts and closes the issue, usually within a few minutes.
+        The result is a single measurement from US servers. It is **not** added to the public ranking. Limits apply per GitHub account (see the site's "Analyse an address" page). Public websites only: private or local addresses are refused.
+  - type: input
+    id: url
+    attributes:
+      label: Site address
+      placeholder: "https://www.example-news.com"
+    validations:
+      required: true

@@ -42,7 +42,7 @@
               <td class="num"><b>{{ r.n }}</b></td>
               <td class="num">{{ r.share }}%</td>
               {% for g in entities.groups %}<td class="num">{{ r.by_group[g] }}</td>{% endfor %}
-              <td class="small">{{ r.services|join(', ') }}<br>{{ r.categories|join(', ')|replace('_', ' ') }}</td>
+              <td class="small">{{ r.services|join(', ') }}<br>{% if r.footprint %}<span title="Number of this operator's sites where it did each thing">On its {{ r.footprint.sites }} site{{ '' if r.footprint.sites == 1 else 's' }} it ran scripts on {{ r.footprint.script }}, made image requests on {{ r.footprint.image }}, background requests on {{ r.footprint.background }} and set cookies on {{ r.footprint.cookies }}.</span><br>{% endif %}{% for c in r.categories %}{{ c|catlink }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
             </tr>
           {% endfor %}
           </tbody>
@@ -54,6 +54,7 @@
         <li>Reach is a count of sites, not of readers, requests or data, and it describes the moment before the visitor interacts. It says nothing about what the operator does with a request, nor whether it is lawful.</li>
         <li>Operators are named as in our classification list. Subsidiaries and brands of the same group are <b>not</b> merged (for example “Microsoft” and “Microsoft (Xandr)” are separate rows), so a group's real reach can be higher than its largest row. Our list is limited, so every figure is a minimum.</li>
         <li><b>Inferred</b> marks operators whose every entry was identified from general knowledge of the vendor and not verified one by one (<a href="{{ root }}method.html#limits">see the limits</a>).</li>
+        <li>“On its sites it ran scripts on…” counts the sites where that kind of activity was seen, taken from the measured request log; <a href="{{ root }}glossary.html#on-your-computer">what these things mean on your computer</a>.</li>
         <li>Only sites measured with high or medium confidence are in the denominator. Sites that refused the automated browser are listed under <a href="{{ root }}unmeasured.html">not measured</a>; they may well contact more.</li>
         <li>The download <a href="{{ root }}data/entities.csv">entities.csv</a> has these rows. Each site's page lists the operators behind its own count.</li>
       </ul>

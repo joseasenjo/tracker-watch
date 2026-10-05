@@ -1,13 +1,15 @@
-"""On-demand analysis of one address requested through a GitHub issue (designed to run in GitHub Actions).
+"""On-demand analysis of one address requested through a GitHub issue (runs in GitHub Actions).
 
-GitHub never shows a visitor's IP address to a workflow, only the account that opened the issue, so the
-limits are per account: a maximum number of requests per rolling window, a minimum account age and a daily
-cap for the whole site. The workflow supplies issue data through files and environment variables, never by
-pasting it into a shell command.
+There is no approval step: anyone with a GitHub account can ask, and the limits in data/limits.json (editable
+from the local dashboard) decide whether the request is processed. GitHub never shows a visitor's IP address
+to a workflow, only the account that opened the issue, so the limits are per account: a maximum number of
+requests per rolling window, a minimum account age, a daily cap for the whole site, a list of blocked
+accounts and an on/off switch. The workflow supplies issue data through files and environment variables,
+never by pasting it into a shell command.
 
 Usage (from the workflow):
   python -m traceguard.ondemand --body-file body.txt --author LOGIN --account-created 2020-01-01T00:00:00Z \
-      --history-file history.json --out comment.md --result-file result.json
+      --history-file history.json --limits data/limits.json --out comment.md --result-file result.json
 """
 from __future__ import annotations
 
@@ -18,12 +20,13 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from .limits import DEFAULTS, LimitsError, check_account, load_limits
 from .safety import UnsafeURL, check_target
 
-PER_ACCOUNT = 2          # requests per account in the window
-WINDOW_HOURS = 24
-MIN_ACCOUNT_AGE_DAYS = 7
-GLOBAL_PER_DAY = 30
+PER_ACCOUNT = DEFAULTS["scan"]["per_account"]  # kept for callers that use the defaults
+WINDOW_HOURS = DEFAULTS["scan"]["window_hours"]
+MIN_ACCOUNT_AGE_DAYS = DEFAULTS["scan"]["min_account_age_days"]
+GLOBAL_PER_DAY = DEFAULTS["scan"]["global_per_day"]
 PASSES = 2
 OBSERVE_SECONDS = 10.0
 URL_PATTERN = re.compile(r"https?://[^\s<>\"'`)\]]+", re.IGNORECASE)
@@ -39,25 +42,14 @@ def extract_url(body: str) -> str | None:
     return found.group(0).rstrip(".,;") if found else None
 
 
-def _parse(stamp: str) -> datetime:
-    return datetime.fromisoformat(stamp.replace("Z", "+00:00"))
-
-
 def check_limits(author: str, account_created: str, history: list[dict], now: datetime, *,
                  per_account: int = PER_ACCOUNT, window_hours: int = WINDOW_HOURS,
-                 min_age_days: int = MIN_ACCOUNT_AGE_DAYS, global_per_day: int = GLOBAL_PER_DAY) -> tuple[bool, str]:
+                 min_age_days: int = MIN_ACCOUNT_AGE_DAYS, global_per_day: int = GLOBAL_PER_DAY,
+                 enabled: bool = True, blocked: list[str] = ()) -> tuple[bool, str]:
     """history: every request issue (including the current one) as {'author', 'created_at'}."""
-    if now - _parse(account_created) < timedelta(days=min_age_days):
-        return False, f"Accounts must be at least {min_age_days} days old to request an analysis."
-    own = [h for h in history if h["author"].lower() == author.lower()
-           and now - _parse(h["created_at"]) < timedelta(hours=window_hours)]
-    if len(own) > per_account:
-        return False, (f"Limit reached: at most {per_account} requests per account every {window_hours} hours. "
-                       "Please try again later.")
-    today = [h for h in history if now - _parse(h["created_at"]) < timedelta(hours=24)]
-    if len(today) > global_per_day:
-        return False, "The daily capacity for on-demand analyses has been reached. Please try again tomorrow."
-    return True, ""
+    section = {"enabled": enabled, "per_account": per_account, "window_hours": window_hours,
+               "min_account_age_days": min_age_days, "global_per_day": global_per_day}
+    return check_account(section, list(blocked), author, account_created, history, now, "an analysis")
 
 
 def _safe_host(value: str) -> str:
@@ -103,6 +95,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--author", required=True)
     parser.add_argument("--account-created", required=True)
     parser.add_argument("--history-file", required=True)
+    parser.add_argument("--limits", default="data/limits.json", help="limits file (default data/limits.json)")
     parser.add_argument("--out", required=True, help="markdown comment to post")
     parser.add_argument("--result-file", help="JSON with the outcome (processed, reason)")
     parser.add_argument("--dry-run", action="store_true", help="validate and apply limits but do not scan")
@@ -118,7 +111,12 @@ def main(argv: list[str] | None = None) -> int:
             Path(args.result_file).write_text(json.dumps({"processed": processed, "reason": reason}), encoding="utf-8")
         return 0
 
-    allowed, reason = check_limits(args.author, args.account_created, history, now)
+    try:
+        limits = load_limits(args.limits)
+    except LimitsError as exc:  # never run unlimited because the file is broken
+        return finish(refusal_comment("Analyses are paused while the limits are being fixed."), False, f"limits-file: {exc}")
+    allowed, reason = check_account(limits["scan"], limits["blocked_accounts"], args.author, args.account_created,
+                                    history, now, "an analysis")
     if not allowed:
         return finish(refusal_comment(reason), False, "limit")
     url = extract_url(body)
