@@ -52,6 +52,17 @@ SERP = f"""<!doctype html><meta charset="utf-8"><title>results</title>
 <a id="r2" href="{U('site.test', '/dest2')}" ping="/gen_204?r=2">result two</a>
 <a href="/preferences">settings</a>"""
 
+# A Spanish-style banner with custom buttons (as on elmundo.es), and a same-site page prerendered with
+# speculation rules (Chromium shows it on click without a new navigation request).
+ES_PAGE = f"""<!doctype html><meta charset="utf-8"><title>es</title>
+<div id="didomi-popup" style="position:fixed;bottom:0;left:0;right:0;background:#eee;padding:10px">
+  <span class="custom-cta"><button id="pay">Rechazar y suscribirse</button></span>
+  <button id="ok">Aceptar y continuar</button></div>
+<a id="next" href="/prerendered">next page</a>
+<script type="speculationrules">{{"prerender": [{{"source": "list", "urls": ["/prerendered"]}}]}}</script>"""
+PRERENDERED = f"""<!doctype html><meta charset="utf-8"><title>prerendered</title>
+<img src="{U('ib.adnxs.com', '/pre.gif')}"><img src="{U('stats.g.doubleclick.net', '/pre.gif')}">"""
+
 EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 6, "band": "A"}
 
 
@@ -72,6 +83,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
         path = self.path.split("?")[0]
         if host == "site.test" and path == "/":
             body, ctype = PAGE.encode(), "text/html; charset=utf-8"
+        elif host == "site.test" and path == "/es":
+            body, ctype = ES_PAGE.encode(), "text/html; charset=utf-8"
+        elif host == "site.test" and path == "/prerendered":
+            body, ctype = PRERENDERED.encode(), "text/html; charset=utf-8"
         elif host == "site.test":
             body, ctype = b"<!doctype html><title>dest</title><p>destination</p>", "text/html"
         elif host == "www.google.com" and path == "/search":
@@ -227,6 +242,31 @@ def search_scenario(ctx, control, browser: str, screenshot: str | None = None) -
     return errors
 
 
+def custom_banner_and_prerender(ctx, control, browser: str) -> list[str]:
+    errors = []
+    tab = ctx.new_page()
+    tab.goto(U("site.test", "/es"), wait_until="load")
+    tab.wait_for_timeout(2500)  # time for Chromium to prerender the next page
+    tab.click("#pay")
+    tab.wait_for_timeout(500)
+    reports = read_reports(control)
+    es = [r for r in reports.values() if r.get("consent") and r["consent"]["banners"] == ["Didomi"]]
+    if not es or es[0]["consent"]["click"] != {"tool": "Didomi", "choice": "pay"}:
+        errors.append(f"custom 'pay or accept' button not named: {[r.get('consent') for r in reports.values()]}")
+    tab.click("#next")
+    tab.wait_for_url("**/prerendered", timeout=8000)
+    tab.wait_for_timeout(1500)
+    activated = tab.evaluate("() => performance.getEntriesByType('navigation')[0].activationStart > 0")
+    reports = read_reports(control)
+    pre = [r["page"] for r in reports.values() if r.get("page") and r["page"]["trackingBefore"] == 2
+           and not r.get("consent", {}).get("banners") and r["page"]["thirdPartyDomains"] == 2]
+    if not pre:
+        errors.append(f"prerendered page not reported (activated={activated}): "
+                      f"{[(r['page']['host'], r['page']['trackingBefore'], r['page']['thirdPartyDomains']) for r in reports.values() if r.get('page')]}")
+    print(f"{browser}: custom banner ok={not errors}, prerender activated={activated}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -291,6 +331,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append("tag manager should be listed and not counted")
     print(f"{browser}: {json.dumps(got)} size={s['bytes']}")
     errors += search_scenario(ctx, control, browser, screenshot)
+    errors += custom_banner_and_prerender(ctx, control, browser)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
         ext_id = sw.url.split("/")[2]
