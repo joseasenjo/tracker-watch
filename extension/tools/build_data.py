@@ -32,6 +32,7 @@ import tldextract  # noqa: E402
 from traceguard import bands, behaviour, categories  # noqa: E402
 from traceguard.classify import DEFAULT_TRACKER_LIST, TrackerList, registrable_domain  # noqa: E402
 from traceguard.findings import SCRIPT_BEHAVIOURS, SCRIPT_CAVEAT  # noqa: E402
+from traceguard.report import passive_requests, summarize_run  # noqa: E402
 
 EXT = ROOT / "extension"
 DATA_DIR = EXT / "data"
@@ -170,7 +171,59 @@ def build_parity(tracker_list: TrackerList, sites: dict, history) -> dict:
     for host in sorted(h for h in hosts if isinstance(h, str)):
         cases.append({"host": host, "registrable": registrable_domain(host), "lookup": tracker_list.lookup(host)})
     band_cases = [{"count": n, "band": bands.band_for(n)} for n in range(0, 61)]
-    return {"schema": SCHEMA, "cases": cases, "bands": band_cases}
+    return {"schema": SCHEMA, "cases": cases, "bands": band_cases, "phrases": build_phrase_cases(),
+            "replays": build_replays(tracker_list, history)}
+
+
+# Playwright resource type (engine) -> webRequest type (extension), to replay measured passes.
+REPLAY_TYPE = {"document": "sub_frame", "xhr": "xmlhttprequest", "fetch": "xmlhttprequest",
+               "eventsource": "xmlhttprequest", "ping": "ping", "websocket": "websocket", "script": "script",
+               "image": "image", "stylesheet": "stylesheet", "font": "font", "media": "media"}
+
+
+def build_phrase_cases() -> list[dict]:
+    """Synthetic activities with the engine's wording (behaviour.phrases)."""
+    zero = {k: 0 for k in behaviour.KINDS}
+    activities = [
+        {"requests": {**zero, "script": 1}, "cookies": [], "behaviours": []},
+        {"requests": {**zero, "script": 3, "image": 1, "background": 2, "frame": 1, "other": 4},
+         "cookies": [{"name": "a", "persistent": False, "days": None}], "behaviours": ["canvas_read"]},
+        {"requests": {**zero, "image": 2}, "cookies": [{"name": "a", "persistent": True, "days": 390},
+                                                        {"name": "b", "persistent": True, "days": 30},
+                                                        {"name": "c", "persistent": False, "days": None}],
+         "behaviours": ["geolocation_request", "webrtc_connection"]},
+        {"requests": {**zero, "background": 1}, "cookies": [{"name": "a", "persistent": True, "days": None}],
+         "behaviours": []},
+        {"requests": dict(zero), "cookies": [], "behaviours": []},
+    ]
+    return [{"activity": a, "phrases": behaviour.phrases(a)} for a in activities]
+
+
+def build_replays(tracker_list: TrackerList, history) -> list[dict]:
+    """First good pass of every site in the latest run, with the engine's per-pass counts."""
+    _, latest = history[-1]
+    replays = []
+    for stem, rep in sorted(latest.items()):
+        run = next((r for r in rep.get("runs") or [] if r["status"] == "ok"), None)
+        if run is None:
+            continue
+        summary = summarize_run(run, tracker_list)
+        kinds: dict[str, dict[str, int]] = {}
+        for r in passive_requests(run):
+            t = r.get("tracker")
+            if r.get("party") == "third" and t and t["service"] in summary["tracking_services"]:
+                k = behaviour.KIND_OF.get(r.get("resource_type"), "other")
+                kinds.setdefault(t["service"], {}).setdefault(k, 0)
+                kinds[t["service"]][k] += 1
+        replays.append({
+            "site": stem, "url": rep["site"]["url"], "final_url": run.get("final_url"),
+            "first_party_domains": rep["site"]["first_party_domains"],
+            "requests": [[r["host"], REPLAY_TYPE.get(r["resource_type"], "other")] for r in passive_requests(run)],
+            "expected": {"tracking_services": sorted(summary["tracking_services"]),
+                         "third_party_requests": summary["third_party_requests"],
+                         "third_party_domains": len(summary["third_party_domains"]), "kinds": kinds},
+        })
+    return replays
 
 
 def build_all() -> dict[Path, str]:
@@ -189,7 +242,7 @@ def build_all() -> dict[Path, str]:
              "sites": len(sites["sites"]), "psl_rules": len(psl["rules"]),
              "files": {p.name: hashlib.sha256(t.encode("utf-8")).hexdigest() for p, t in files.items()}}
     files[DATA_DIR / "index.json"] = dumps(index)
-    files[PARITY_FILE] = dumps(build_parity(tracker_list, sites, history))
+    files[PARITY_FILE] = dumps(build_parity(tracker_list, sites, history), compact=True)
     return files
 
 
