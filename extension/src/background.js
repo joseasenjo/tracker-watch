@@ -121,7 +121,7 @@ function navigate(id, d) {
   delete prerendered[id]; // a normal navigation: pages prerendered so far were not used
   const next = begin(d, arrivalFrom(page, d));
   // Some sites reload the whole page right after you answer their banner: keep that answer in view.
-  if (page && page.consent.click && page.consent.click.tool && page.site === next.site
+  if (page && page.consent.click && page.consent.click.choice !== 'other' && page.site === next.site
       && page.interactionAt !== null && d.timeStamp - page.interactionAt < RELOAD_AFTER_ANSWER_MS) {
     next.consent.previous = page.consent.click;
   }
@@ -344,8 +344,10 @@ async function report(tabId, url) {
   }
   const consentTools = [...new Set(summary.operators.flatMap((o) => o.services)
     .filter((x) => x.category === 'consent_management').map((x) => x.entity))];
+  const inFlight = Object.values(page.pending).filter((p) => !p.c).length;
+  const loading = inFlight > 0 || (typeof page.lastAt === 'number' && Date.now() - page.lastAt < 2000);
   return {
-    page: summary, told: page.told, baseline, index, categories: glossary.categories,
+    page: summary, told: page.told, baseline, index, categories: glossary.categories, loading,
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,

@@ -61,6 +61,10 @@ ES_PAGE = f"""<!doctype html><meta charset="utf-8"><title>es</title>
   <button id="ok">Aceptar y continuar</button></div>
 <a id="next" href="/prerendered">next page</a>
 <script type="speculationrules">{{"prerender": [{{"source": "list", "urls": ["/prerendered"]}}]}}</script>"""
+UNKNOWN_BANNER = """<!doctype html><meta charset="utf-8"><title>unknown cmp</title>
+<div class="consent-wall"><p>Usamos cookies y tecnolog\u00edas similares con nuestros socios.</p>
+<button id="yes" onclick="setTimeout(() => location.reload(), 200)">Aceptar y cerrar</button>
+<button>Rechazar y pagar</button></div>"""
 PRERENDERED = f"""<!doctype html><meta charset="utf-8"><title>prerendered</title>
 <img src="{U('ib.adnxs.com', '/pre.gif')}"><img src="{U('stats.g.doubleclick.net', '/pre.gif')}">"""
 
@@ -86,6 +90,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             body, ctype = PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/es":
             body, ctype = ES_PAGE.encode(), "text/html; charset=utf-8"
+        elif host == "site.test" and path == "/unknown":
+            body, ctype = UNKNOWN_BANNER.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/prerendered":
             body, ctype = PRERENDERED.encode(), "text/html; charset=utf-8"
         elif host == "site.test":
@@ -256,6 +262,15 @@ def custom_banner_and_prerender(ctx, control, browser: str) -> list[str]:
     es = [r for r in reports.values() if r.get("consent") and r["consent"]["banners"] == ["Didomi"]]
     if not es or es[0]["consent"]["click"] != {"tool": "Didomi", "choice": "pay"}:
         errors.append(f"custom 'pay or accept' button not named: {[r.get('consent') for r in reports.values()]}")
+    unknown = ctx.new_page()
+    unknown.goto(U("site.test", "/unknown"), wait_until="load")
+    unknown.wait_for_timeout(800)
+    unknown.click("#yes")
+    unknown.wait_for_timeout(2500)
+    reports = read_reports(control)
+    prev = [r["consent"].get("previous") for r in reports.values() if r.get("consent") and r["consent"].get("previous")]
+    if prev != [{"tool": None, "choice": "accept"}]:
+        errors.append(f"answer to an unknown banner not kept across the reload: {prev}")
     tab.click("#next")
     tab.wait_for_url("**/prerendered", timeout=8000)
     tab.wait_for_timeout(1500)

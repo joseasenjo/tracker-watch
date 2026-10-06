@@ -28,8 +28,8 @@ export function differenceReasons(summary, page, baseline, env) {
   if (baseline && env.browser === 'firefox') out.push({ id: 'whyOtherBrowser', args: ['Firefox'] });
 
   const banners = page.consent.banners;
-  if (page.consent.previous && page.consent.previous.tool) {
-    out.push({ id: 'whyAnsweredJustBefore', args: [page.consent.previous.tool] });
+  if (page.consent.previous) {
+    out.push({ id: 'whyAnsweredJustBefore', args: [page.consent.previous.tool || 'consent'] });
   } else if (page.interactionAt !== null) {
     out.push({ id: 'whyClicked', args: [] });
   } else if (banners.length) {

@@ -145,6 +145,7 @@ export function onRequest(page, { requestId, url, type, now }, ctx) {
     return page;
   }
   page.events += 1;
+  page.lastAt = now;
   if (has(page.pending, requestId)) delete page.pending[requestId];
   if (Object.keys(page.pending).length >= LIMITS.pending) {
     page.truncated = true;

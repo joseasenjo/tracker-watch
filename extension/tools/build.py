@@ -110,11 +110,17 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--edition", default="analysis", choices=["analysis"])
     ap.add_argument("--test", action="store_true")
     args = ap.parse_args(argv)
+    import time
+    started = time.time()
+    print("Checking the data snapshot...", flush=True)
     check = subprocess.run([sys.executable, str(EXT / "tools" / "build_data.py"), "--check"])
     if check.returncode:
+        print("STOPPED: the data is out of date (run extension/tools/build_data.py first).")
         return check.returncode
     for browser in (["chrome", "firefox"] if args.browser == "all" else [args.browser]):
-        print("built", build(browser, args.test).relative_to(EXT.parent))
+        print(f"Building {browser}...", flush=True)
+        print("  built", build(browser, args.test).relative_to(EXT.parent))
+    print(f"DONE in {time.time() - started:.1f} s. In chrome://extensions press the reload arrow of Tracker Watch Lens.")
     return 0
 
 

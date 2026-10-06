@@ -13,6 +13,7 @@
   const rejectTexts = new Set(data.buttons.reject);
   const acceptTexts = new Set(data.buttons.accept);
   const paidRe = new RegExp(data.buttons.paid, 'i');
+  const contextRe = new RegExp(data.buttons.context || '$^', 'i');
   const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim().replace(/[.!\u2026]+$/, '');
   const send = (msg) => { try { api.runtime.sendMessage(msg); } catch { /* extension reloaded */ } };
   const matches = (node, selector) => { try { return Boolean(node && node.closest && node.closest(selector)); } catch { return false; } };
@@ -43,7 +44,20 @@
     });
     const choice = textChoice(target);
     if (shown && choice) return { tool: shown.name, choice };
+    // a banner of an unknown tool: the button's label is a consent phrase and a small block around it talks
+    // about cookies or consent (the engine's rule); only that block's text is read, once, on the first click
+    if (choice && aroundTalksAboutConsent(target)) return { tool: null, choice };
     return null;
+  }
+
+  function aroundTalksAboutConsent(target) {
+    let node = target;
+    for (let i = 0; i < 8 && node && node !== document.body; i++, node = node.parentElement) {
+      const text = (node.innerText || '').slice(0, 3000);
+      if (text.length > 3000) break;
+      if (contextRe.test(text)) return true;
+    }
+    return false;
   }
 
   let sent = false;

@@ -39,10 +39,15 @@ function render(tab, data) {
   const chips = add(el('div', undefined, 'chips'), el('span', t('oneVisit'), 'chip'));
   if (s.band) chips.appendChild(el('span', t('band', s.band), 'chip'));
   add(app, head, chips);
+  if (data.loading) {
+    add(app, add(el('p', undefined, 'loading'), el('span', undefined, 'spinner'), el('span', t('stillLoading'))));
+  }
   renderArrival(data.arrival);
   const c = data.consent || { banners: [], toolsContacted: [], click: null };
-  if (c.previous && c.previous.tool) {
-    app.appendChild(el('p', t('reloadedAfterAnswer', c.previous.tool, t('choice_' + c.previous.choice)), 'note'));
+  if (c.previous) {
+    app.appendChild(el('p', c.previous.tool
+      ? t('reloadedAfterAnswer', c.previous.tool, t('choice_' + c.previous.choice))
+      : t('reloadedAfterAnswerUnknown', t('choice_' + c.previous.choice)), 'note'));
   }
   if (c.banners.length) app.appendChild(el('p', t('bannerShown', c.banners.join(', ')), 'note'));
   else if (c.toolsContacted.length) app.appendChild(el('p', t('consentContacted', c.toolsContacted.join(', ')), 'note'));
@@ -77,6 +82,8 @@ function render(tab, data) {
     let text = t('clickPage');
     if (click && click.tool) {
       text = t({ reject: 'clickReject', accept: 'clickAccept', pay: 'clickPay', other: 'clickOther' }[click.choice], click.tool);
+    } else if (click) {
+      text = t('clickUnknown', t('choice_' + click.choice));
     }
     app.appendChild(el('p', text, 'note'));
     if (s.trackingNewAfter.length) {
@@ -199,10 +206,16 @@ function renderTold(told) {
   app.appendChild(el('p', t('toldNote'), 'note'));
 }
 
+let refresh = null;
 async function load() {
   const tab = await currentTab();
   const data = tab ? await api.runtime.sendMessage({ type: 'report', tabId: tab.id, url: tab.url }) : null;
+  const scroll = document.scrollingElement.scrollTop;
   render(tab, data);
+  document.scrollingElement.scrollTop = scroll;
+  // while the page is still loading, numbers can grow: refresh every second until it settles
+  clearTimeout(refresh);
+  if (data && data.loading) refresh = setTimeout(load, 1000);
 }
 
 document.documentElement.lang = api.i18n.getUILanguage();
