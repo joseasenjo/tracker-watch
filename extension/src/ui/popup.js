@@ -85,6 +85,8 @@ function render(tab, data) {
     add(app, add(box, ul));
   }
 
+  renderTold(data.told);
+
   app.appendChild(el('h2', t('baselineTitle')));
   const b = data.baseline;
   if (b && b.weekly !== null) {
@@ -97,6 +99,34 @@ function render(tab, data) {
   if (s.truncated) app.appendChild(el('p', t('truncated'), 'note'));
   app.appendChild(el('p', t('honesty'), 'note'));
   if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
+}
+
+function renderTold(told) {
+  if (!told) return;
+  app.appendChild(el('h2', t('toldTitle')));
+  const me = told.self;
+  if (me) {
+    const dl = el('dl', undefined, 'told');
+    const row = (k, v) => add(dl, el('dt', k), el('dd', v));
+    if (me.userAgent) row(t('toldAgent'), me.userAgent);
+    if (me.language) row(t('toldLanguage'), me.language);
+    const hints = Object.values(me.hints || {});
+    if (hints.length) row(t('toldHints'), hints.join(' · '));
+    row(t('toldGpc'), me.gpc ? t('sent') : t('notSent'));
+    if (me.cameFrom) row(t('toldCameFrom'), me.cameFrom);
+    app.appendChild(dl);
+  } else {
+    app.appendChild(el('p', t('toldNoSelf'), 'note'));
+  }
+  const dl = el('dl');
+  const row = (k, v) => add(dl, el('dt', k), el('dd', v));
+  row(t('toldCookies'), String(told.thirdWithCookies));
+  row(t('toldCookieServices'), String(Object.keys(told.cookieServices || {}).length));
+  row(t('toldReferer'), String(told.thirdWithReferer));
+  const params = Object.entries(told.params || {}).map(([n, c]) => `${n} ×${c}`);
+  if (params.length) row(t('toldParams'), params.join(', '));
+  app.appendChild(dl);
+  app.appendChild(el('p', t('toldNote'), 'note'));
 }
 
 async function load() {

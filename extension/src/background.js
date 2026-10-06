@@ -94,13 +94,20 @@ api.webRequest.onBeforeRequest.addListener((d) => {
   });
 }, { urls: ['<all_urls>'] });
 
-api.webRequest.onSendHeaders.addListener((d) => {
+const sentListener = (d) => {
   if (skip(d)) return;
   whenReady(() => {
     const page = own(String(d.tabId));
-    if (page) { onSent(page, { requestId: d.requestId }); touch(d.tabId); }
+    if (page) { onSent(page, { requestId: d.requestId, headers: d.requestHeaders }, ctx); touch(d.tabId); }
   });
-}, { urls: ['<all_urls>'] });
+};
+// Chromium hides Cookie, Referer and Accept-Language unless asked with "extraHeaders"; Firefox has no such
+// option and rejects it (M0 spike).
+try {
+  api.webRequest.onSendHeaders.addListener(sentListener, { urls: ['<all_urls>'] }, ['requestHeaders', 'extraHeaders']);
+} catch {
+  api.webRequest.onSendHeaders.addListener(sentListener, { urls: ['<all_urls>'] }, ['requestHeaders']);
+}
 
 api.webRequest.onCompleted.addListener((d) => {
   if (skip(d)) return;
@@ -151,7 +158,7 @@ async function report(tabId, url) {
   for (const key of Object.keys(cookies)) if (!contacted.has(key)) delete cookies[key];
   const summary = summarizePage(page, glossary, { cookies });
   const site = url ? findSite(sites, url, ctx.trie) : null;
-  return { page: summary, baseline: compareWithBaseline(summary, site), index, categories: glossary.categories };
+  return { page: summary, told: page.told, baseline: compareWithBaseline(summary, site), index, categories: glossary.categories };
 }
 
 api.runtime.onMessage.addListener((msg, sender, sendResponse) => {

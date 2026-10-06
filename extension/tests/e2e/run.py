@@ -35,6 +35,7 @@ PAGE = f"""<!doctype html><meta charset="utf-8"><title>e2e</title>
 <script src="{U('www.googletagmanager.com', '/gtm.js')}"></script>
 <script src="{U('ib.adnxs.com', '/ut.js')}"></script>
 <script src="{U('cdn.unknown.test', '/x.js')}"></script>
+<script>window.addEventListener('load', () => {{ new Image().src = "{U('ib.adnxs.com', '/px')}"; }});</script>
 <img src="{U('stats.g.doubleclick.net', '/collect?gclid=SECRET')}">
 <button id="go">Accept</button>
 <script>
@@ -62,6 +63,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         else:
             body, ctype = b"/* ok */", "application/javascript"
         self.send_response(200)
+        if host == "ib.adnxs.com" and path == "/ut.js":
+            self.send_header("Set-Cookie", "uuid2=SECRETVALUE; Max-Age=3600; Path=/; Secure; SameSite=None")
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
@@ -179,6 +182,13 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append(f"report {got} != expected {EXPECTED}")
     if s["interaction"] is None or s["interaction"]["kind"] != "click":
         errors.append(f"interaction not recorded: {s['interaction']}")
+    told = rep.get("told") or {}
+    if not (told.get("self") or {}).get("userAgent"):
+        errors.append(f"no self description: {told.get('self')}")
+    if told.get("params") != {"gclid": 1}:
+        errors.append(f"tracking parameters {told.get('params')} != {{'gclid': 1}}")
+    if told.get("thirdWithCookies", 0) < 1 or "adnxs.com" not in told.get("cookieServices", {}):
+        errors.append(f"third-party cookie not seen: {told.get('thirdWithCookies')} {told.get('cookieServices')}")
     if "SECRET" in json.dumps(reports):
         errors.append("a query string leaked into the report")
     gtm = [x for o in s["operators"] for x in o["services"] if x["service"] == "googletagmanager.com"]

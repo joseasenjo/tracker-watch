@@ -30,7 +30,9 @@ def manifest(browser: str, test: bool) -> dict:
         "default_locale": "en",
         "permissions": ["webRequest", "storage", "cookies"],
         "host_permissions": ["<all_urls>"],
-        "action": {"default_popup": "popup.html", "default_title": "__MSG_extName__"},
+        "icons": {str(n): f"icons/icon-{n}.png" for n in (16, 32, 48, 128)},
+        "action": {"default_popup": "popup.html", "default_title": "__MSG_extName__",
+                   "default_icon": {str(n): f"icons/icon-{n}.png" for n in (16, 32)}},
         "content_scripts": [{"matches": ["<all_urls>"], "js": ["content.js"], "run_at": "document_start"}],
         "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"},
     }
@@ -77,6 +79,7 @@ def build(browser: str, test: bool) -> Path:
     (out / "background.js").write_text(background, encoding="utf-8", newline="\n")
     shutil.copytree(EXT / "data", out / "data")
     shutil.copytree(EXT / "_locales", out / "_locales")
+    shutil.copytree(EXT / "icons", out / "icons")
     shutil.copy2(EXT / "THIRD_PARTY.md", out / "THIRD_PARTY.md")
     shutil.copy2(EXT.parent / "LICENSE", out / "LICENSE")
     (out / "manifest.json").write_text(json.dumps(manifest(browser, test), indent=2, ensure_ascii=False) + "\n",

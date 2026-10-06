@@ -12,6 +12,7 @@
 import { registrableDomain } from './psl.js';
 import { firstPartySet, isTracking, lookup } from './classify.js';
 import { errorReason, hostOf, KINDS, kindOf } from './requests.js';
+import { countParams, countThirdParty, describeSelf, emptyTold, trackingParams } from './headers.js';
 
 /** Caps per tab, as in the scanner: a hostile or endless page cannot grow the state without limit. */
 export const LIMITS = { events: 5000, pending: 2000, services: 400, domains: 1000, recent: 300 };
@@ -35,7 +36,7 @@ export const RECENT_MS = 5000;
  *   stopped: Stopped,
  *   bytes: { sum: number, exact: number, approx: number, unknown: number },
  *   services: Record<string, ServiceState>, domains: Record<string, DomainState>,
- *   pending: Record<string, Pending>, recent: Pending[]
+ *   pending: Record<string, Pending>, recent: Pending[], told: import('./headers.js').Told
  * }} PageState
  */
 
@@ -65,7 +66,7 @@ export function startPage({ url, now, requestId = null, declared = [] }, ctx) {
     totals: { requests: 0, third: 0, cached: 0 },
     stopped: stopped(),
     bytes: { sum: 0, exact: 0, approx: 0, unknown: 0 },
-    services: {}, domains: {}, pending: {}, recent: [],
+    services: {}, domains: {}, pending: {}, recent: [], told: emptyTold(),
   };
 }
 
@@ -151,17 +152,25 @@ export function onRequest(page, { requestId, url, type, now }, ctx) {
     if (ensureDomain(page, reg)) domain = reg;
   }
   put(page.pending, requestId, { k: kindOf(type), w, t: third, s: service, d: domain, c: 0, n: now });
+  if (third || requestId === page.mainRequestId) countParams(page.told, trackingParams(url));
   return page;
 }
 
 /**
- * onSendHeaders: the request went out.
+ * onSendHeaders: the request went out. With its headers (F12): the page's own request tells what the
+ * browser says about itself; third-party ones are only counted (cookies carried, page address carried).
  * @param {PageState} page
- * @param {{ requestId: string }} ev
+ * @param {{ requestId: string, headers?: Array<{ name: string, value?: string }> }} ev
+ * @param {Ctx} [ctx]
  */
-export function onSent(page, { requestId }) {
+export function onSent(page, { requestId, headers }, ctx) {
   const p = own(page.pending, requestId);
-  if (p && !p.c) count(page, p, false);
+  if (!p || p.c) return page;
+  if (headers && ctx) {
+    if (requestId === page.mainRequestId) page.told.self = describeSelf(headers, ctx.trie);
+    else if (p.t) countThirdParty(page.told, headers, p.s);
+  }
+  count(page, p, false);
   return page;
 }
 
