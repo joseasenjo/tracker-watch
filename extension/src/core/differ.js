@@ -28,7 +28,9 @@ export function differenceReasons(summary, page, baseline, env) {
   if (baseline && env.browser === 'firefox') out.push({ id: 'whyOtherBrowser', args: ['Firefox'] });
 
   const banners = page.consent.banners;
-  if (page.interactionAt !== null) {
+  if (page.consent.previous && page.consent.previous.tool) {
+    out.push({ id: 'whyAnsweredJustBefore', args: [page.consent.previous.tool] });
+  } else if (page.interactionAt !== null) {
     out.push({ id: 'whyClicked', args: [] });
   } else if (banners.length) {
     out.push({ id: 'whyBannerWaiting', args: [banners.join(', ')] });

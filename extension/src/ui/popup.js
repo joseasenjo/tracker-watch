@@ -41,6 +41,9 @@ function render(tab, data) {
   add(app, head, chips);
   renderArrival(data.arrival);
   const c = data.consent || { banners: [], toolsContacted: [], click: null };
+  if (c.previous && c.previous.tool) {
+    app.appendChild(el('p', t('reloadedAfterAnswer', c.previous.tool, t('choice_' + c.previous.choice)), 'note'));
+  }
   if (c.banners.length) app.appendChild(el('p', t('bannerShown', c.banners.join(', ')), 'note'));
   else if (c.toolsContacted.length) app.appendChild(el('p', t('consentContacted', c.toolsContacted.join(', ')), 'note'));
   renderSearch(data.search); // on a results page this is the main content
@@ -115,6 +118,8 @@ function render(tab, data) {
   app.appendChild(add(el('ul'), ...(data.reasons || []).map((r) => el('li', t(r.id, ...r.args)))));
   app.appendChild(el('p', t('honesty'), 'note'));
   if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
+  const build = api.runtime.getManifest().version_name;
+  if (build) app.appendChild(el('p', build, 'note'));
 }
 
 function renderArrival(a) {

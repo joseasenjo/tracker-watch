@@ -44,6 +44,7 @@ const frameRoot = {};
 const prerenderDocs = {};
 const MAX_PRERENDERS = 4;
 const PING_WINDOW_MS = 5000;
+const RELOAD_AFTER_ANSWER_MS = 30000;
 
 const loadJson = async (path) => (await fetch(api.runtime.getURL(path))).json();
 
@@ -119,6 +120,11 @@ function navigate(id, d) {
   }
   delete prerendered[id]; // a normal navigation: pages prerendered so far were not used
   const next = begin(d, arrivalFrom(page, d));
+  // Some sites reload the whole page right after you answer their banner: keep that answer in view.
+  if (page && page.consent.click && page.consent.click.tool && page.site === next.site
+      && page.interactionAt !== null && d.timeStamp - page.interactionAt < RELOAD_AFTER_ANSWER_MS) {
+    next.consent.previous = page.consent.click;
+  }
   if (target && target.kind === 'redirect') next.engineRedirect = target.engine.id;
   if (target && target.kind === 'results') {
     noteSerp(next, { engine: target.engine.id, params: searchParams(target.engine, d.url),
@@ -329,7 +335,8 @@ async function report(tabId, url) {
     .filter((x) => x.category === 'consent_management').map((x) => x.entity))];
   return {
     page: summary, told: page.told, baseline, index, categories: glossary.categories,
-    consent: { banners: page.consent.banners, click: page.consent.click, toolsContacted: consentTools },
+    consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
+      toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
     reasons: differenceReasons(summary, page, baseline, { browser: ENV_BROWSER, nowMs: Date.now() }),
   };

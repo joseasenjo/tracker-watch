@@ -9,6 +9,7 @@ test builds are never published. Editions "full" and "clean" (spec §10) arrive 
 from __future__ import annotations
 
 import argparse
+import datetime
 import json
 import shutil
 import subprocess
@@ -27,6 +28,7 @@ def manifest(browser: str, test: bool) -> dict:
         "name": "__MSG_extName__",
         "description": "__MSG_extDescription__",
         "version": VERSION if VERSION != "0.0.0" else "0.1.0",
+        "version_name": "build " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
         "default_locale": "en",
         "permissions": ["webRequest", "webNavigation", "storage", "cookies"],
         "host_permissions": ["<all_urls>"],

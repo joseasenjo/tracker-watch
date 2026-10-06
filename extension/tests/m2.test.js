@@ -76,6 +76,13 @@ test('reasons: a banner still on screen, or a click, replace the "answered befor
   assert.ok(!ids.includes('whyPlace')); // no baseline: nothing to compare
 });
 
+test('reasons: an answer just before a reload is named, not guessed', () => {
+  const page = visit(['https://cdn.cookielaw.org/x.js']);
+  page.consent.previous = { tool: 'Didomi', choice: 'accept' };
+  const ids = differenceReasons(summarizePage(page, glossary), page, null, { browser: 'chromium', nowMs: 0 }).map((r) => r.id);
+  assert.ok(ids.includes('whyAnsweredJustBefore') && !ids.includes('whyAnsweredBefore'));
+});
+
 test('search engines: hosts, results pages and click redirects', () => {
   assert.equal(engineForHost(engines, 'www.google.es').id, 'google');
   assert.equal(engineForHost(engines, 'www.google.co.uk').id, 'google');
