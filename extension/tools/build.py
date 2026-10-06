@@ -28,7 +28,6 @@ def manifest(browser: str, test: bool) -> dict:
         "name": "__MSG_extName__",
         "description": "__MSG_extDescription__",
         "version": VERSION if VERSION != "0.0.0" else "0.1.0",
-        "version_name": "build " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
         "default_locale": "en",
         "permissions": ["webRequest", "webNavigation", "storage", "cookies"],
         "host_permissions": ["<all_urls>"],
@@ -94,6 +93,9 @@ def build(browser: str, test: bool) -> Path:
     shutil.copy2(EXT / "profiles" / "search_engines.json", out / "data" / "search_engines.json")
     (out / "content-data.js").write_text(content_data(), encoding="utf-8", newline="\n")
     shutil.copytree(EXT / "_locales", out / "_locales")
+    # build stamp shown in the panel footer (Firefox rejects the manifest's version_name)
+    (out / "data" / "build.json").write_text(json.dumps({"built": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")}),
+                                             encoding="utf-8", newline="\n")
     shutil.copytree(EXT / "icons", out / "icons")
     shutil.copy2(EXT / "THIRD_PARTY.md", out / "THIRD_PARTY.md")
     shutil.copy2(EXT.parent / "LICENSE", out / "LICENSE")

@@ -118,8 +118,8 @@ function render(tab, data) {
   app.appendChild(add(el('ul'), ...(data.reasons || []).map((r) => el('li', t(r.id, ...r.args)))));
   app.appendChild(el('p', t('honesty'), 'note'));
   if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
-  const build = api.runtime.getManifest().version_name;
-  if (build) app.appendChild(el('p', build, 'note'));
+  fetch(api.runtime.getURL('data/build.json')).then((r) => r.json())
+    .then((b) => app.appendChild(el('p', `build ${b.built}`, 'note')), () => {});
 }
 
 function renderArrival(a) {
