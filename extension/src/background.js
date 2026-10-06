@@ -174,9 +174,15 @@ function begin(d, arrival) {
 }
 
 /**
- * Hyperlink-auditing pings to a search engine around a click on a result. On the results page they are noted
- * (and counted as usual); on the page the click led to they belong to the click, not to that page.
+ * Hyperlink-auditing pings (<a ping>) to a search engine around a click on a result. Chromium gives the same
+ * request type "ping" to navigator.sendBeacon, so only requests carrying the Ping-To header (sent with
+ * hyperlink pings only) count. On the results page they are noted; on the page the click led to they belong
+ * to the click and are not counted as contacts of that page.
  */
+function isClickPing(d) {
+  return d.type === 'ping' && (d.requestHeaders || []).some((h) => h.name.toLowerCase() === 'ping-to');
+}
+
 function pingFromEngine(page, d) {
   const engine = engineForHost(engines, hostOf(d.url) || '');
   if (!engine) return false;
@@ -219,7 +225,6 @@ api.webRequest.onBeforeRequest.addListener((d) => {
     if (d.type === 'main_frame') navigate(id, d);
     const page = own(id);
     if (!page) return;
-    if (d.type === 'ping' && pingFromEngine(page, d)) { touch(id); return; }
     onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp }, ctx);
     touch(id);
   });
@@ -229,7 +234,13 @@ const sentListener = (d) => {
   if (skip(d)) return;
   whenReady(() => {
     const page = pageOf(d);
-    if (page) { onSent(page, { requestId: d.requestId, headers: d.requestHeaders }, ctx); touch(d.tabId); }
+    if (!page) return;
+    if (isClickPing(d) && pingFromEngine(page, d)) {
+      if (Object.prototype.hasOwnProperty.call(page.pending, d.requestId)) delete page.pending[d.requestId];
+      touch(d.tabId);
+      return;
+    }
+    onSent(page, { requestId: d.requestId, headers: d.requestHeaders }, ctx); touch(d.tabId);
   });
 };
 // Chromium hides Cookie, Referer and Accept-Language unless asked with "extraHeaders"; Firefox has no such

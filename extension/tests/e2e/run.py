@@ -50,7 +50,8 @@ document.getElementById('onetrust-reject-all-handler').addEventListener('click',
 SERP = f"""<!doctype html><meta charset="utf-8"><title>results</title>
 <a id="r1" href="/url?q={U('site.test', '/dest1')}&sa=U">result one</a>
 <a id="r2" href="{U('site.test', '/dest2')}" ping="/gen_204?r=2">result two</a>
-<a href="/preferences">settings</a>"""
+<a href="/preferences">settings</a>
+<script>navigator.sendBeacon("/gen_204?beacon=1", "x");</script>"""
 
 # A Spanish-style banner with custom buttons (as on elmundo.es), and a same-site page prerendered with
 # speculation rules (Chromium shows it on click without a new navigation request).
@@ -201,6 +202,8 @@ def search_scenario(ctx, control, browser: str, screenshot: str | None = None) -
     if len(serps) != 2:
         return [f"expected 2 results pages, got {len(serps)}"]
     q = serps[0]["search"]
+    if q["pings"] != 0:
+        errors.append(f"background beacons counted as click pings: {q['pings']}")
     if q["links"] != {"total": 2, "ping": 1, "redirect": 1, "mousedown": 0}:
         errors.append(f"result links {q['links']}")
     if [x["name"] for x in q["params"]] != ["q", "ei"] or not q["params"][0]["isQuery"]:
