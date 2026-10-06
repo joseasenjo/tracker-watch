@@ -1,0 +1,134 @@
+{
+ "banded_confidence": [
+  "high",
+  "medium"
+ ],
+ "bands": [
+  {
+   "high": 2,
+   "label": "A",
+   "low": 0
+  },
+  {
+   "high": 9,
+   "label": "B",
+   "low": 3
+  },
+  {
+   "high": 24,
+   "label": "C",
+   "low": 10
+  },
+  {
+   "high": 49,
+   "label": "D",
+   "low": 25
+  },
+  {
+   "high": null,
+   "label": "E",
+   "low": 50
+  }
+ ],
+ "categories": {
+  "advertising": {
+   "counted": true,
+   "data": "Typically the address of the page, browser and device details, an approximate location derived from the connection, and an identifier kept in a cookie or similar. Some companies also match their identifiers with each other (often called “cookie syncing”), which can let one company recognise a visitor another one already knows.",
+   "label": "Advertising",
+   "what": "Services that take part in buying, selling or delivering online ads: ad servers, ad exchanges, bidding platforms and the companies that match ads to audiences. When a page loads, several of them can be contacted within milliseconds to decide which ad to show."
+  },
+  "analytics": {
+   "counted": true,
+   "data": "Typically the page address, where the visitor came from, device and browser details and an identifier that recognises returning visitors. Some analytics services belong to advertising companies and can combine this with data from their other services.",
+   "label": "Analytics",
+   "what": "Services that count visits, pages and interactions to produce statistics for the site's operator."
+  },
+  "audience_measurement": {
+   "counted": true,
+   "data": "Typically page views with an identifier, sometimes combined with panel data from volunteers. Because the same service is present on many sites, it can build a picture of browsing across them.",
+   "label": "Audience measurement",
+   "what": "Services that measure how many people, and what kind of audience, visit sites, often to produce the ratings used to sell advertising."
+  },
+  "consent_management": {
+   "counted": false,
+   "data": "They are contacted to display the banner and to store the choice, so they are listed but not counted. Our “After the banner” test uses their buttons.",
+   "label": "Consent management",
+   "what": "Services that show the cookie banner and remember the visitor's choice."
+  },
+  "paywall": {
+   "counted": false,
+   "data": "They often need to recognise returning visitors to count free articles, so they are listed but not counted as tracking.",
+   "label": "Paywalls and subscriptions",
+   "what": "Services that manage subscriptions and limits on free articles."
+  },
+  "session_replay": {
+   "counted": true,
+   "data": "Interaction data from the page. Vendors offer ways to mask sensitive fields; whether a site uses them is not visible to a passive measurement, so we only report that the service was contacted.",
+   "label": "Session replay",
+   "what": "Services that record or reconstruct what a visitor does on a page (mouse movements, clicks, scrolling and, unless masked, sometimes typed text) so the site's operator can watch it back."
+  },
+  "social": {
+   "counted": true,
+   "data": "Contacting them can tell the network that the page was loaded, even if the visitor never presses anything. For a visitor who is logged in to that network, the request may be linked to their account, depending on their settings.",
+   "label": "Social networks",
+   "what": "Buttons, embeds and tracking pixels of social networks."
+  },
+  "tag_manager": {
+   "counted": false,
+   "data": "A tag manager is not tracking by itself, so it is not counted. What it loads can belong to any other category; when those services are contacted they are classified and counted separately.",
+   "label": "Tag managers",
+   "what": "Containers that load other scripts on behalf of the site."
+  }
+ },
+ "kind_phrases": {
+  "background": {
+   "plural": "background requests",
+   "singular": "background request",
+   "text": "made {n} {noun} that send or fetch data"
+  },
+  "frame": {
+   "plural": "embedded frames",
+   "singular": "embedded frame",
+   "text": "loaded {n} {noun}"
+  },
+  "image": {
+   "plural": "image requests",
+   "singular": "image request",
+   "text": "made {n} {noun} (often tiny “pixels”)"
+  },
+  "other": {
+   "plural": "other resources",
+   "singular": "other resource",
+   "text": "loaded {n} {noun} (styles, fonts, media)"
+  },
+  "script": {
+   "plural": "scripts",
+   "singular": "script",
+   "text": "ran {n} {noun} in the browser"
+  }
+ },
+ "order": [
+  "advertising",
+  "analytics",
+  "audience_measurement",
+  "social",
+  "session_replay",
+  "tag_manager",
+  "consent_management",
+  "paywall"
+ ],
+ "request_kinds": [
+  "script",
+  "image",
+  "background",
+  "frame",
+  "other"
+ ],
+ "schema": 1,
+ "script_behaviours": {
+  "canvas_read": "read image data from a canvas element",
+  "geolocation_request": "requested the device location",
+  "webrtc_connection": "created a WebRTC connection"
+ },
+ "script_caveat": "This API is also used for legitimate purposes and does not by itself indicate tracking."
+}
