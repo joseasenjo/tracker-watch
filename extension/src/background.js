@@ -3,11 +3,15 @@
 // so every tab report is kept in storage.session (written with a short delay) and reloaded on wake.
 // Nothing leaves the browser.
 
-import { buildSuffixTrie } from './core/psl.js';
+import { buildSuffixTrie, registrableDomain } from './core/psl.js';
 import { createTrackerList } from './core/classify.js';
-import { markInteraction, onCompleted, onError, onRequest, onSent, redirectPage, startPage } from './core/page.js';
+import { markInteraction, noteBanner, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
+  startPage } from './core/page.js';
 import { compareWithBaseline, findSite, summarizePage } from './core/report.js';
 import { cookiesByService } from './core/activity.js';
+import { hostOf } from './core/requests.js';
+import { differenceReasons } from './core/differ.js';
+import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams } from './core/search.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const TEST_HOOKS = false; // set to true only by tools/build.py --test
@@ -21,21 +25,31 @@ let ctx = null;
 let glossary = null;
 let sites = null;
 let index = null;
+let engines = [];
+let profiles = null;
+let consentNames = new Set();
 const queue = [];
+const ENV_BROWSER = typeof (globalThis.browser ?? {}).runtime?.getBrowserInfo === 'function' ? 'firefox' : 'chromium';
+const CHOICES = new Set(['reject', 'accept', 'other']);
+const PING_WINDOW_MS = 5000;
 
 const loadJson = async (path) => (await fetch(api.runtime.getURL(path))).json();
 
 const ready = (async () => {
-  const [psl, trackers, g, s, i, stored] = await Promise.all([
+  const [psl, trackers, g, s, i, engineProfiles, stored] = await Promise.all([
     loadJson('data/psl.json'), loadJson('data/trackers.json'), loadJson('data/glossary.json'),
-    loadJson('data/sites.json'), loadJson('data/index.json'), api.storage.session.get(null),
+    loadJson('data/sites.json'), loadJson('data/index.json'), loadJson('data/search_engines.json'),
+    api.storage.session.get(null),
   ]);
+  profiles = engineProfiles;
+  engines = compileEngines(engineProfiles);
+  consentNames = new Set(g.consent_tools.map((c) => c.name));
   ctx = { trie: buildSuffixTrie(psl.rules), list: createTrackerList(trackers) };
   glossary = g;
   sites = s;
   index = i;
   for (const [key, value] of Object.entries(stored)) {
-    if (key.startsWith('tab:') && value && value.v === 1) tabs[key.slice(4)] = value;
+    if (key.startsWith('tab:') && value && value.v === 2) tabs[key.slice(4)] = value;
   }
   for (const fn of queue.splice(0)) fn();
 })();
@@ -70,6 +84,66 @@ function updateBadge(tabId) {
   api.action.setBadgeBackgroundColor({ tabId: id, color: '#3a3f4b' }).catch(() => {});
 }
 
+/**
+ * A top-level navigation. Same request id = a redirect of the current navigation: same-site hops stay one page
+ * (as in the engine: target and final domain are both first party), but a cross-site hop such as a search
+ * engine's click redirect starts the destination as its own page, remembering how the visitor arrived.
+ */
+function navigate(id, d) {
+  const page = own(id);
+  const target = classifyEngineUrl(engines, d.url);
+  if (page && page.mainRequestId === d.requestId) {
+    const reg = registrableDomain(ctx.trie, hostOf(d.url) || '');
+    if (page.firstParty.includes(reg)) {
+      redirectPage(page, d.url, ctx);
+      return;
+    }
+    const arrival = {
+      engine: page.engineRedirect ?? page.arrival?.engine ?? null, fromSite: page.arrival?.fromSite ?? page.site,
+      redirect: Boolean(page.engineRedirect) || Boolean(page.arrival?.redirect), ping: Boolean(page.arrival?.ping),
+    };
+    tabs[id] = begin(d, arrival);
+    return;
+  }
+  let arrival = null;
+  if (page && page.search) {
+    arrival = { engine: page.search.engine, fromSite: page.site, redirect: false,
+      ping: page.search.lastPingAt !== null && Math.abs(d.timeStamp - page.search.lastPingAt) < PING_WINDOW_MS };
+  }
+  const next = begin(d, arrival);
+  if (target && target.kind === 'redirect') next.engineRedirect = target.engine.id;
+  if (target && target.kind === 'results') {
+    noteSerp(next, { engine: target.engine.id, params: searchParams(target.engine, d.url),
+      links: { total: 0, ping: 0, redirect: 0, mousedown: 0 } });
+  }
+  tabs[id] = next;
+}
+
+function begin(d, arrival) {
+  const site = findSite(sites, d.url, ctx.trie);
+  return startPage({ url: d.url, now: d.timeStamp, requestId: d.requestId,
+    declared: site ? site.first_party_domains : [], arrival }, ctx);
+}
+
+/**
+ * Hyperlink-auditing pings to a search engine around a click on a result. On the results page they are noted
+ * (and counted as usual); on the page the click led to they belong to the click, not to that page.
+ */
+function pingFromEngine(page, d) {
+  const engine = engineForHost(engines, hostOf(d.url) || '');
+  if (!engine) return false;
+  if (page.search && page.search.engine === engine.id) {
+    notePing(page, d.timeStamp);
+    return false;
+  }
+  const from = page.arrival?.engine ?? page.engineRedirect;
+  if (from === engine.id && d.timeStamp - page.startedAt < PING_WINDOW_MS) {
+    if (page.arrival) page.arrival.ping = true;
+    return true;
+  }
+  return false;
+}
+
 const own = (id) => (Object.prototype.hasOwnProperty.call(tabs, id) ? tabs[id] : undefined);
 const skip = (d) => d.tabId < 0 || d.documentLifecycle === 'prerender';
 
@@ -77,18 +151,10 @@ api.webRequest.onBeforeRequest.addListener((d) => {
   if (skip(d)) return;
   whenReady(() => {
     const id = String(d.tabId);
-    if (d.type === 'main_frame') {
-      const page = own(id);
-      if (page && page.mainRequestId === d.requestId) {
-        redirectPage(page, d.url, ctx);
-      } else {
-        const site = findSite(sites, d.url, ctx.trie);
-        tabs[id] = startPage({ url: d.url, now: d.timeStamp, requestId: d.requestId,
-          declared: site ? site.first_party_domains : [] }, ctx);
-      }
-    }
+    if (d.type === 'main_frame') navigate(id, d);
     const page = own(id);
     if (!page) return;
+    if (d.type === 'ping' && pingFromEngine(page, d)) { touch(id); return; }
     onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp }, ctx);
     touch(id);
   });
@@ -158,7 +224,26 @@ async function report(tabId, url) {
   for (const key of Object.keys(cookies)) if (!contacted.has(key)) delete cookies[key];
   const summary = summarizePage(page, glossary, { cookies });
   const site = url ? findSite(sites, url, ctx.trie) : null;
-  return { page: summary, told: page.told, baseline: compareWithBaseline(summary, site), index, categories: glossary.categories };
+  const baseline = compareWithBaseline(summary, site);
+  const name = (id) => engines.find((e) => e.id === id)?.name ?? null;
+  let search = null;
+  if (page.search) {
+    const engine = engines.find((e) => e.id === page.search.engine);
+    let engineCookieList = [];
+    try {
+      engineCookieList = engineCookies(engine, await api.cookies.getAll({ domain: page.site }), Date.now());
+    } catch { /* cookies unavailable */ }
+    search = { ...page.search, name: engine.name, cookies: engineCookieList, cookieSource: engine.cookie_source,
+      accountLinks: engine.account_links, checked: profiles.checked };
+  }
+  const consentTools = [...new Set(summary.operators.flatMap((o) => o.services)
+    .filter((x) => x.category === 'consent_management').map((x) => x.entity))];
+  return {
+    page: summary, told: page.told, baseline, index, categories: glossary.categories,
+    consent: { banners: page.consent.banners, click: page.consent.click, toolsContacted: consentTools },
+    search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
+    reasons: differenceReasons(summary, page, baseline, { browser: ENV_BROWSER, nowMs: Date.now() }),
+  };
 }
 
 api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -170,7 +255,29 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       // the page's own clock, never in the future and at most a few seconds back
       const now = Date.now();
       const at = Number.isFinite(msg.at) ? Math.min(now, Math.max(msg.at, now - 3000)) : now;
-      if (page && sender.frameId === 0) { markInteraction(page, { now: at, kind: String(msg.kind) }); touch(sender.tab.id); }
+      // a click inside a consent banner may happen in a sub-frame (several tools draw the banner in a frame)
+      let on = null;
+      if (msg.on && typeof msg.on === 'object' && CHOICES.has(msg.on.choice)) {
+        on = { tool: consentNames.has(msg.on.tool) ? msg.on.tool : null, choice: msg.on.choice };
+      }
+      if (page) { markInteraction(page, { now: at, kind: msg.kind === 'key' ? 'key' : 'click', on }); touch(sender.tab.id); }
+    });
+    return false;
+  }
+  if (msg && msg.type === 'banner' && fromPage) {
+    whenReady(() => {
+      const page = own(String(sender.tab.id));
+      if (page && consentNames.has(msg.tool)) { noteBanner(page, msg.tool); touch(sender.tab.id); }
+    });
+    return false;
+  }
+  if (msg && msg.type === 'serp' && fromPage && sender.frameId === 0) {
+    whenReady(() => {
+      const page = own(String(sender.tab.id));
+      if (page && page.search && msg.links && typeof msg.links === 'object') {
+        noteSerp(page, { engine: page.search.engine, params: page.search.params, links: msg.links });
+        touch(sender.tab.id);
+      }
     });
     return false;
   }

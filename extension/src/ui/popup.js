@@ -39,6 +39,11 @@ function render(tab, data) {
   const chips = add(el('div', undefined, 'chips'), el('span', t('oneVisit'), 'chip'));
   if (s.band) chips.appendChild(el('span', t('band', s.band), 'chip'));
   add(app, head, chips);
+  renderArrival(data.arrival);
+  const c = data.consent || { banners: [], toolsContacted: [], click: null };
+  if (c.banners.length) app.appendChild(el('p', t('bannerShown', c.banners.join(', ')), 'note'));
+  else if (c.toolsContacted.length) app.appendChild(el('p', t('consentContacted', c.toolsContacted.join(', ')), 'note'));
+  renderSearch(data.search); // on a results page this is the main content
 
   const dl = el('dl');
   const row = (k, v) => add(dl, el('dt', k), el('dd', v));
@@ -65,7 +70,11 @@ function render(tab, data) {
     });
     add(app, el('p', t('noInteraction'), 'note'), btn);
   } else {
-    app.appendChild(el('p', s.trackingNewAfter.length ? s.trackingNewAfter.join(', ') : '0', 'note'));
+    const click = c.click;
+    let text = t('clickPage');
+    if (click && click.tool) text = t({ reject: 'clickReject', accept: 'clickAccept', other: 'clickOther' }[click.choice], click.tool);
+    app.appendChild(el('p', text, 'note'));
+    app.appendChild(el('p', s.trackingNewAfter.length ? s.trackingNewAfter.join(', ') : '0'));
   }
 
   app.appendChild(el('h2', t('operatorsTitle')));
@@ -95,10 +104,59 @@ function render(tab, data) {
   } else {
     app.appendChild(el('p', t('notMeasured'), 'note'));
   }
-  app.appendChild(el('p', t('why'), 'note'));
-  if (s.truncated) app.appendChild(el('p', t('truncated'), 'note'));
+  app.appendChild(el('h2', t('whyTitle')));
+  app.appendChild(add(el('ul'), ...(data.reasons || []).map((r) => el('li', t(r.id, ...r.args)))));
   app.appendChild(el('p', t('honesty'), 'note'));
   if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
+}
+
+function renderArrival(a) {
+  if (!a || !a.engineName) return;
+  const lines = [a.redirect ? t('arrivedRedirect', a.engineName) : t('arrivedVia', a.engineName)];
+  if (a.ping) lines.push(t('arrivedPing', a.engineName));
+  for (const line of lines) app.appendChild(el('p', line, 'note'));
+}
+
+/** A link from the extension's own profile file (never from the page). */
+function link(label, url) {
+  const a = el('a', label);
+  if (/^https:\/\//.test(url)) a.href = url;
+  a.target = '_blank';
+  a.rel = 'noreferrer noopener';
+  return a;
+}
+
+function renderSearch(q) {
+  if (!q) return;
+  app.appendChild(el('h2', t('searchTitle', q.name)));
+  const query = q.params.find((p) => p.isQuery);
+  app.appendChild(el('p', t('searchParams', query ? query.name : 'q')));
+  app.appendChild(el('p', q.params.map((p) => p.name).join(', '), 'svc'));
+  const dl = el('dl');
+  const row = (k, v) => add(dl, el('dt', k), el('dd', String(v)));
+  row(t('linksTotal'), q.links.total);
+  row(t('linksRedirect'), q.links.redirect);
+  row(t('linksPing'), q.links.ping);
+  row(t('linksMousedown'), q.links.mousedown);
+  row(t('pingsSent'), q.pings);
+  add(app, el('p', t('searchLinks'), 'note'), dl);
+  app.appendChild(el('p', t('searchCookies', q.cookies.length)));
+  if (q.cookies.length) {
+    const ul = el('ul');
+    for (const ck of q.cookies) {
+      const life = ck.session ? t('cookieSession') : (ck.days !== null ? t('cookieDays', ck.days) : '');
+      add(ul, add(el('li'), el('span', ck.name), el('span', ` · ${life}`, 'svc'),
+        el('div', ck.purpose || t('cookieNoPurpose'), 'svc')));
+    }
+    app.appendChild(ul);
+    if (q.cookieSource) add(app, add(el('p', undefined, 'note'), el('span', t('cookieSource') + ' '), link(q.cookieSource, q.cookieSource)));
+  }
+  app.appendChild(el('p', t('searchServer'), 'note'));
+  if (q.accountLinks.length) {
+    app.appendChild(add(el('ul'), ...q.accountLinks.map((l) => add(el('li'), link(l.label, l.url)))));
+  } else {
+    app.appendChild(el('p', t('noAccountLinks'), 'note'));
+  }
 }
 
 function renderTold(told) {

@@ -28,7 +28,7 @@ EXT = Path(__file__).resolve().parents[2]
 PORT = 18543
 RDP_PORT = 18602
 HOSTS = ["site.test", "control.test", "www.googletagmanager.com", "stats.g.doubleclick.net", "ib.adnxs.com",
-         "cdn.unknown.test", "connect.facebook.net"]
+         "cdn.unknown.test", "connect.facebook.net", "www.google.com", "cdn.cookielaw.org"]
 U = lambda host, path: f"https://{host}:{PORT}{path}"  # noqa: E731
 
 PAGE = f"""<!doctype html><meta charset="utf-8"><title>e2e</title>
@@ -37,14 +37,22 @@ PAGE = f"""<!doctype html><meta charset="utf-8"><title>e2e</title>
 <script src="{U('cdn.unknown.test', '/x.js')}"></script>
 <script>window.addEventListener('load', () => {{ new Image().src = "{U('ib.adnxs.com', '/px')}"; }});</script>
 <img src="{U('stats.g.doubleclick.net', '/collect?gclid=SECRET')}">
-<button id="go">Accept</button>
+<script src="{U('cdn.cookielaw.org', '/otSDKStub.js')}"></script>
+<div id="onetrust-banner-sdk" style="position:fixed;bottom:0;left:0;right:0;background:#eee;padding:10px">
+  We use cookies. <button id="onetrust-reject-all-handler">Reject all</button>
+  <button id="onetrust-accept-btn-handler">Accept all</button></div>
 <script>
-document.getElementById('go').addEventListener('click', () => {{
+document.getElementById('onetrust-reject-all-handler').addEventListener('click', () => {{
   const s = document.createElement('script'); s.src = "{U('connect.facebook.net', '/sdk.js')}"; document.head.appendChild(s);
 }});
 </script>"""
 
-EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 5, "band": "A"}
+SERP = f"""<!doctype html><meta charset="utf-8"><title>results</title>
+<a id="r1" href="/url?q={U('site.test', '/dest1')}&sa=U">result one</a>
+<a id="r2" href="{U('site.test', '/dest2')}" ping="/gen_204?r=2">result two</a>
+<a href="/preferences">settings</a>"""
+
+EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 6, "band": "A"}
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -53,16 +61,36 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    def do_POST(self):
+        self.rfile.read(int(self.headers.get("Content-Length") or 0))
+        self.send_response(204)
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
     def do_GET(self):
         host = (self.headers.get("Host") or "").split(":")[0]
         path = self.path.split("?")[0]
         if host == "site.test" and path == "/":
             body, ctype = PAGE.encode(), "text/html; charset=utf-8"
+        elif host == "site.test":
+            body, ctype = b"<!doctype html><title>dest</title><p>destination</p>", "text/html"
+        elif host == "www.google.com" and path == "/search":
+            body, ctype = SERP.encode(), "text/html; charset=utf-8"
+        elif host == "www.google.com" and path == "/url":
+            from urllib.parse import parse_qs, urlsplit
+            target = parse_qs(urlsplit(self.path).query)["q"][0]
+            self.send_response(302)
+            self.send_header("Location", target)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
         elif host == "control.test":
             body, ctype = b"<!doctype html><title>control</title><p>control</p>", "text/html"
         else:
             body, ctype = b"/* ok */", "application/javascript"
         self.send_response(200)
+        if host == "www.google.com" and path == "/search":
+            self.send_header("Set-Cookie", "NID=SECRETVALUE; Domain=google.com; Path=/; Max-Age=15552000; Secure; SameSite=None")
         if host == "ib.adnxs.com" and path == "/ut.js":
             self.send_header("Set-Cookie", "uuid2=SECRETVALUE; Max-Age=3600; Path=/; Secure; SameSite=None")
         self.send_header("Content-Type", ctype)
@@ -137,6 +165,68 @@ def rdp_install(path: Path):
     return [a.get("warnings") for a in lst.get("addons", []) if a.get("id") == "lens@trackerwatch.github.io"]
 
 
+def read_reports(control):
+    control.goto(U("control.test", "/"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    return json.loads(control.text_content("#lens-reports"))
+
+
+def search_scenario(ctx, control, browser: str, screenshot: str | None = None) -> list[str]:
+    """Results page, then a click through the engine's redirect and a click on a link with a ping."""
+    errors = []
+    serp_url = U("www.google.com", "/search?q=private+words&ei=SECRET")
+    tabs = []
+    for link in ("#r1", "#r2"):
+        tab = ctx.new_page()
+        tab.goto(serp_url, wait_until="load")
+        tab.wait_for_timeout(2000)
+        tabs.append((tab, link))
+    reports = read_reports(control)
+    serps = [r for r in reports.values() if r.get("search")]
+    if len(serps) != 2:
+        return [f"expected 2 results pages, got {len(serps)}"]
+    q = serps[0]["search"]
+    if q["links"] != {"total": 2, "ping": 1, "redirect": 1, "mousedown": 0}:
+        errors.append(f"result links {q['links']}")
+    if [x["name"] for x in q["params"]] != ["q", "ei"] or not q["params"][0]["isQuery"]:
+        errors.append(f"search params {q['params']}")
+    if screenshot and browser == "chromium":
+        serp_tab = next(tid for tid, r in reports.items() if r.get("search"))
+        sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
+        popup = ctx.new_page()
+        popup.set_viewport_size({"width": 380, "height": 900})
+        popup.goto(f"chrome-extension://{sw.url.split('/')[2]}/popup.html?tabId={serp_tab}")
+        popup.wait_for_timeout(800)
+        popup.screenshot(path=screenshot.replace(".png", "-search.png"), full_page=True)
+        popup.close()
+    nid = [c for c in q["cookies"] if c["name"] == "NID"]
+    if not nid or not nid[0]["purpose"] or "SECRET" in json.dumps(q):
+        errors.append(f"engine cookies {q['cookies']}")
+    for tab, link in tabs:
+        tab.click(link)
+        tab.wait_for_url("**/dest*", timeout=8000)
+        tab.wait_for_timeout(1500)
+    reports = read_reports(control)
+    arrivals = {r["page"]["host"] + str(r["arrival"]["redirect"]): r["arrival"] for r in reports.values()
+                if r.get("arrival")}
+    via_redirect = arrivals.get("site.testTrue")
+    via_link = arrivals.get("site.testFalse")
+    if not via_redirect or via_redirect["engine"] != "google":
+        errors.append(f"no arrival through the redirect: {arrivals}")
+    if not via_link or via_link["engine"] != "google":
+        errors.append(f"no arrival from the results page: {arrivals}")
+    # Chromium sends hyperlink-auditing pings; Firefox does not by default (browser.send_pings).
+    expected_ping = browser == "chromium"
+    if via_link and via_link["ping"] != expected_ping:
+        errors.append(f"ping on arrival {via_link['ping']} != {expected_ping}")
+    dests = [r["page"] for r in reports.values() if r.get("arrival")]
+    if any(o["entity"] == "Google" and any(x["service"].startswith("google") for x in o["services"])
+           for d in dests for o in d["operators"]):
+        errors.append("the engine's ping was counted as a contact of the destination page")
+    print(f"{browser}: search {q['links']} arrivals {sorted(arrivals)} ping={via_link and via_link['ping']}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -163,12 +253,10 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     page = ctx.pages[0] if ctx.pages else ctx.new_page()
     page.goto(U("site.test", "/"), wait_until="load")
     page.wait_for_timeout(1200)
-    page.click("#go")
+    page.click("#onetrust-reject-all-handler")
     page.wait_for_timeout(1200)
     control = ctx.new_page()
-    control.goto(U("control.test", "/"), wait_until="load")
-    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
-    reports = json.loads(control.text_content("#lens-reports"))
+    reports = read_reports(control)
     match = [(tid, r) for tid, r in reports.items() if r.get("page") and r["page"]["host"] == "site.test"]
     if not match:
         errors.append(f"no report for site.test: {list(reports)}")
@@ -182,6 +270,13 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append(f"report {got} != expected {EXPECTED}")
     if s["interaction"] is None or s["interaction"]["kind"] != "click":
         errors.append(f"interaction not recorded: {s['interaction']}")
+    consent = rep.get("consent") or {}
+    if consent.get("banners") != ["OneTrust"] or consent.get("click") != {"tool": "OneTrust", "choice": "reject"} \
+            or "OneTrust" not in consent.get("toolsContacted", []):
+        errors.append(f"consent not recorded as expected: {consent}")
+    ids = [r["id"] for r in rep.get("reasons") or []]
+    if "whyClicked" not in ids or ids[-1] != "whyAuctions" or "whyRecognised" in ids:
+        errors.append(f"reasons: {ids}")
     told = rep.get("told") or {}
     if not (told.get("self") or {}).get("userAgent"):
         errors.append(f"no self description: {told.get('self')}")
@@ -195,6 +290,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     if not gtm or gtm[0]["tracking"]:
         errors.append("tag manager should be listed and not counted")
     print(f"{browser}: {json.dumps(got)} size={s['bytes']}")
+    errors += search_scenario(ctx, control, browser, screenshot)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
         ext_id = sw.url.split("/")[2]

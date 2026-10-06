@@ -29,15 +29,21 @@ export const RECENT_MS = 5000;
  * @typedef {{ window: Window | null, requests: number, before: number, stopped: number }} DomainState
  * @typedef {{ k: string, w: Window, t: 0 | 1, s: string | null, d: string | null, c: 0 | 1, n: number }} Pending
  * @typedef {{
- *   v: 1, host: string, site: string, firstParty: string[], mainRequestId: string | null,
+ *   v: 2, host: string, site: string, firstParty: string[], mainRequestId: string | null,
  *   startedAt: number, interactionAt: number | null, interaction: string | null,
  *   events: number, truncated: boolean,
  *   totals: { requests: number, third: number, cached: number },
  *   stopped: Stopped,
  *   bytes: { sum: number, exact: number, approx: number, unknown: number },
  *   services: Record<string, ServiceState>, domains: Record<string, DomainState>,
- *   pending: Record<string, Pending>, recent: Pending[], told: import('./headers.js').Told
+ *   pending: Record<string, Pending>, recent: Pending[], told: import('./headers.js').Told,
+ *   consent: { banners: string[], click: { tool: string | null, choice: string } | null },
+ *   search: { engine: string, params: Array<{ name: string, isQuery: boolean }>,
+ *             links: { total: number, ping: number, redirect: number, mousedown: number }, pings: number,
+ *             lastPingAt: number | null } | null,
+ *   arrival: Arrival | null, engineRedirect: string | null
  * }} PageState
+ * @typedef {{ engine: string | null, fromSite: string | null, redirect: boolean, ping: boolean }} Arrival
  */
 
 // Keys come from the network (host names, request ids): never read inherited properties and never assign
@@ -51,15 +57,15 @@ const stopped = () => ({ client: 0, browser: 0, cancelled: 0, failed: 0 });
 
 /**
  * A new page in a tab, from its top-level navigation request.
- * @param {{ url: string, now: number, requestId?: string | null, declared?: string[] }} nav
+ * @param {{ url: string, now: number, requestId?: string | null, declared?: string[], arrival?: Arrival | null }} nav
  *   declared: first_party_domains of the site when it is in the weekly snapshot
  * @param {Ctx} ctx
  * @returns {PageState}
  */
-export function startPage({ url, now, requestId = null, declared = [] }, ctx) {
+export function startPage({ url, now, requestId = null, declared = [], arrival = null }, ctx) {
   const host = hostOf(url) ?? '';
   return {
-    v: 1, host, site: registrableDomain(ctx.trie, host),
+    v: 2, host, site: registrableDomain(ctx.trie, host),
     firstParty: [...firstPartySet(ctx.trie, host, declared)].sort(),
     mainRequestId: requestId, startedAt: now, interactionAt: null, interaction: null,
     events: 0, truncated: false,
@@ -67,6 +73,7 @@ export function startPage({ url, now, requestId = null, declared = [] }, ctx) {
     stopped: stopped(),
     bytes: { sum: 0, exact: 0, approx: 0, unknown: 0 },
     services: {}, domains: {}, pending: {}, recent: [], told: emptyTold(),
+    consent: { banners: [], click: null }, search: null, arrival, engineRedirect: null,
   };
 }
 
@@ -93,12 +100,14 @@ export function redirectPage(page, url, ctx) {
  * The first real interaction of the user (trusted click or key) or the "mark now" button.
  * Requests issued from then on belong to the "after" window.
  * @param {PageState} page
- * @param {{ now: number, kind: string }} ev
+ * @param {{ now: number, kind: string, on?: { tool: string | null, choice: string } | null }} ev
+ *   on: what the click landed on, when it was a consent banner (already validated by the caller)
  */
-export function markInteraction(page, { now, kind }) {
+export function markInteraction(page, { now, kind, on = null }) {
   if (page.interactionAt !== null) return page;
   page.interactionAt = now;
   page.interaction = kind;
+  if (on) page.consent.click = on;
   // Requests issued at or after the interaction but processed before its message arrived move to "after".
   for (const p of Object.values(page.pending)) if (p.n >= now) p.w = 'after';
   for (const p of page.recent) {
@@ -275,4 +284,44 @@ function ensureDomain(page, reg) {
   }
   put(page.domains, reg, { window: null, requests: 0, before: 0, stopped: 0 });
   return true;
+}
+
+/**
+ * A consent banner of a known tool was on screen (labelled only; the extension never clicks anything).
+ * @param {PageState} page
+ * @param {string} tool  a name from the consent_tools table (validated by the caller)
+ */
+export function noteBanner(page, tool) {
+  if (!page.consent.banners.includes(tool) && page.consent.banners.length < 10) page.consent.banners.push(tool);
+  return page;
+}
+
+/**
+ * What the results page of a search engine looks like from the browser (F13): parameter names of the
+ * search address and how its result links record a click.
+ * @param {PageState} page
+ * @param {{ engine: string, params: Array<{ name: string, isQuery: boolean }>,
+ *           links: { total: number, ping: number, redirect: number, mousedown: number } }} serp
+ */
+export function noteSerp(page, { engine, params, links }) {
+  const n = (v) => (Number.isInteger(v) && v >= 0 ? Math.min(v, 10000) : 0);
+  page.search = {
+    engine, params: params.slice(0, 40), pings: page.search ? page.search.pings : 0,
+    lastPingAt: page.search ? page.search.lastPingAt : null,
+    links: { total: n(links.total), ping: n(links.ping), redirect: n(links.redirect), mousedown: n(links.mousedown) },
+  };
+  return page;
+}
+
+/**
+ * A "ping" request (hyperlink auditing) sent by the results page when a result was clicked.
+ * @param {PageState} page
+ * @param {number} now
+ */
+export function notePing(page, now) {
+  if (page.search) {
+    page.search.pings += 1;
+    page.search.lastPingAt = now;
+  }
+  return page;
 }

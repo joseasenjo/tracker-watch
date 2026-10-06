@@ -38,12 +38,15 @@ export function trackingParams(url) {
  * @typedef {{ userAgent: string | null, language: string | null, hints: Record<string, string>,
  *   gpc: boolean, dnt: boolean, cameFrom: string | null }} SelfDescription
  * @typedef {{ self: SelfDescription | null, thirdWithCookies: number, thirdWithReferer: number,
- *   cookieServices: Record<string, number>, params: Record<string, number> }} Told
+ *   cookieServices: Record<string, number>, params: Record<string, number>,
+ *   seen: Record<string, 1>, recognised: Record<string, 1> }} Told
+ *   recognised: tracking services whose FIRST request on this page already carried cookies, so the cookies
+ *   were in the browser before the visit (a cookie set during the visit cannot be on the first request).
  */
 
 /** @returns {Told} */
 export function emptyTold() {
-  return { self: null, thirdWithCookies: 0, thirdWithReferer: 0, cookieServices: {}, params: {} };
+  return { self: null, thirdWithCookies: 0, thirdWithReferer: 0, cookieServices: {}, params: {}, seen: {}, recognised: {} };
 }
 
 const MAX_VALUE = 300;
@@ -94,6 +97,11 @@ export function describeSelf(headers, trie) {
  */
 export function countThirdParty(told, headers, service) {
   const h = lower(headers);
+  const define = (obj, key, value) => Object.defineProperty(obj, key, { value, enumerable: true, writable: true, configurable: true });
+  if (service && !Object.prototype.hasOwnProperty.call(told.seen, service)) {
+    define(told.seen, service, 1);
+    if (h.cookie) define(told.recognised, service, 1);
+  }
   if (h.cookie) {
     told.thirdWithCookies += 1;
     if (service) {

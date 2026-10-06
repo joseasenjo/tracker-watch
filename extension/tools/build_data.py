@@ -29,7 +29,7 @@ sys.path.insert(0, str(ROOT))
 
 import tldextract  # noqa: E402
 
-from traceguard import bands, behaviour, categories  # noqa: E402
+from traceguard import bands, behaviour, categories, consent  # noqa: E402
 from traceguard.classify import DEFAULT_TRACKER_LIST, TrackerList, registrable_domain  # noqa: E402
 from traceguard.findings import SCRIPT_BEHAVIOURS, SCRIPT_CAVEAT  # noqa: E402
 from traceguard.report import passive_requests, summarize_run  # noqa: E402
@@ -82,6 +82,8 @@ def build_glossary() -> dict:
         "kind_phrases": {k: {"singular": s, "plural": p, "text": t} for k, (s, p, t) in behaviour.PHRASES.items()},
         "script_behaviours": SCRIPT_BEHAVIOURS,
         "script_caveat": SCRIPT_CAVEAT,
+        # documented ids/classes of consent tools (traceguard.consent): the extension only labels them
+        "consent_tools": [{"name": n, "banner": b, "reject": r, "accept": a} for n, b, r, a in consent.CMPS],
     }
 
 

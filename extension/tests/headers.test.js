@@ -48,3 +48,13 @@ test('third-party requests: cookies and page address counted, values never store
   assert.deepEqual(told.params, { utm_campaign: 1, gclid: 1 });
   assert.ok(!JSON.stringify(page).includes('SECRET'));
 });
+
+test('recognised only when the first request to a service already carries cookies', () => {
+  const page = startPage({ url: 'https://www.example.co.uk/', now: 0, requestId: 'nav' }, ctx);
+  onRequest(page, { requestId: '1', url: 'https://ad.doubleclick.net/a', type: 'script', now: 1 }, ctx);
+  onSent(page, { requestId: '1', headers: [] }, ctx); // no cookie yet: the response may set one
+  onRequest(page, { requestId: '2', url: 'https://ad.doubleclick.net/b', type: 'image', now: 2 }, ctx);
+  onSent(page, { requestId: '2', headers: [{ name: 'Cookie', value: 'IDE=x' }] }, ctx);
+  assert.deepEqual(page.told.recognised, {});
+  assert.equal(page.told.thirdWithCookies, 1);
+});
