@@ -176,7 +176,11 @@ export function onSent(page, { requestId, headers }, ctx) {
   const p = own(page.pending, requestId);
   if (!p || p.c) return page;
   if (headers && ctx) {
-    if (requestId === page.mainRequestId) page.told.self = describeSelf(headers, ctx.trie);
+    if (requestId === page.mainRequestId) {
+      page.told.self = describeSelf(headers, ctx.trie);
+      // "came from" only tells something when it is another site
+      if (page.told.self.cameFrom && page.firstParty.includes(page.told.self.cameFrom)) page.told.self.cameFrom = null;
+    }
     else if (p.t) countThirdParty(page.told, headers, p.s);
   }
   count(page, p, false);

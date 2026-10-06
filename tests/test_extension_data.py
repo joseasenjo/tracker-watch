@@ -47,6 +47,9 @@ def test_sites_cover_the_latest_run(files):
     for site in sites["sites"].values():
         assert site["host"] == registrable_domain(site["host"])
         assert site["band"] is None or site["band"] in "ABCDE"
+        if site["status"] == "ok":
+            # headline = median count per pass; list = services seen in most passes: equal or off by one or two
+            assert abs(len(site["services"]) - site["tracking_services"]) <= 2, site["name"]
 
 
 def test_psl_has_wildcards_exceptions_and_punycode(files):

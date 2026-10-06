@@ -58,3 +58,10 @@ test('recognised only when the first request to a service already carries cookie
   assert.deepEqual(page.told.recognised, {});
   assert.equal(page.told.thirdWithCookies, 1);
 });
+
+test('"came from" is dropped when it is the same site', () => {
+  const page = startPage({ url: 'https://www.example.co.uk/news', now: 0, requestId: 'nav' }, ctx);
+  onRequest(page, { requestId: 'nav', url: 'https://www.example.co.uk/news', type: 'main_frame', now: 0 }, ctx);
+  onSent(page, { requestId: 'nav', headers: [{ name: 'Referer', value: 'https://www.example.co.uk/' }] }, ctx);
+  assert.equal(page.told.self.cameFrom, null);
+});

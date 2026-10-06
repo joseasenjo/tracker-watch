@@ -118,7 +118,8 @@ def build_sites(history: list[tuple[str, dict[str, dict]]]) -> dict:
             "status": summary.get("status"), "confidence": summary.get("confidence"),
             "tracking_services": count, "third_party_domains": summary.get("metrics", {}).get("third_party_domains"),
             "band": bands.band_for(count, summary.get("confidence")) if summary.get("status") == "ok" else None,
-            "services": sorted(s["service"] for s in summary.get("services", []) if s.get("tracking")),
+            # the same services the headline counts: tracking and seen in most passes ("stable")
+            "services": sorted(s["service"] for s in summary.get("services", []) if s.get("tracking") and s.get("stable")),
             "history": points,
         }
     return {"schema": SCHEMA, "date": latest_date, "sites": sites}
