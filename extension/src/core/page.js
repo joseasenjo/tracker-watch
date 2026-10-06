@@ -14,7 +14,9 @@ import { firstPartySet, isTracking, lookup } from './classify.js';
 import { errorReason, hostOf, KINDS, kindOf } from './requests.js';
 
 /** Caps per tab, as in the scanner: a hostile or endless page cannot grow the state without limit. */
-export const LIMITS = { events: 5000, pending: 2000, services: 400, domains: 1000 };
+export const LIMITS = { events: 5000, pending: 2000, services: 400, domains: 1000, recent: 300 };
+/** How far back an interaction can re-window requests (the click message may arrive after its requests). */
+export const RECENT_MS = 5000;
 
 /**
  * @typedef {{ trie: import('./psl.js').SuffixNode, list: import('./classify.js').TrackerList }} Ctx
@@ -23,8 +25,8 @@ export const LIMITS = { events: 5000, pending: 2000, services: 400, domains: 100
  * @typedef {{ client: number, browser: number, cancelled: number, failed: number }} Stopped
  * @typedef {{ entity: string, category: string, tracking: boolean, verified: boolean, window: Window | null,
  *             before: KindCounts, after: KindCounts, stopped: Stopped, bytes: number }} ServiceState
- * @typedef {{ window: Window | null, requests: number, stopped: number }} DomainState
- * @typedef {{ k: string, w: Window, t: 0 | 1, s: string | null, d: string | null, c: 0 | 1 }} Pending
+ * @typedef {{ window: Window | null, requests: number, before: number, stopped: number }} DomainState
+ * @typedef {{ k: string, w: Window, t: 0 | 1, s: string | null, d: string | null, c: 0 | 1, n: number }} Pending
  * @typedef {{
  *   v: 1, host: string, site: string, firstParty: string[], mainRequestId: string | null,
  *   startedAt: number, interactionAt: number | null, interaction: string | null,
@@ -33,7 +35,7 @@ export const LIMITS = { events: 5000, pending: 2000, services: 400, domains: 100
  *   stopped: Stopped,
  *   bytes: { sum: number, exact: number, approx: number, unknown: number },
  *   services: Record<string, ServiceState>, domains: Record<string, DomainState>,
- *   pending: Record<string, Pending>
+ *   pending: Record<string, Pending>, recent: Pending[]
  * }} PageState
  */
 
@@ -63,7 +65,7 @@ export function startPage({ url, now, requestId = null, declared = [] }, ctx) {
     totals: { requests: 0, third: 0, cached: 0 },
     stopped: stopped(),
     bytes: { sum: 0, exact: 0, approx: 0, unknown: 0 },
-    services: {}, domains: {}, pending: {},
+    services: {}, domains: {}, pending: {}, recent: [],
   };
 }
 
@@ -93,10 +95,27 @@ export function redirectPage(page, url, ctx) {
  * @param {{ now: number, kind: string }} ev
  */
 export function markInteraction(page, { now, kind }) {
-  if (page.interactionAt === null) {
-    page.interactionAt = now;
-    page.interaction = kind;
+  if (page.interactionAt !== null) return page;
+  page.interactionAt = now;
+  page.interaction = kind;
+  // Requests issued at or after the interaction but processed before its message arrived move to "after".
+  for (const p of Object.values(page.pending)) if (p.n >= now) p.w = 'after';
+  for (const p of page.recent) {
+    if (p.n < now || p.w === 'after') continue;
+    p.w = 'after';
+    if (p.s && has(page.services, p.s)) {
+      const svc = page.services[p.s];
+      svc.before[p.k] -= 1;
+      svc.after[p.k] += 1;
+      svc.window = KINDS.some((k) => svc.before[k] > 0) ? 'before' : 'after';
+    }
+    if (p.d && has(page.domains, p.d)) {
+      const dom = page.domains[p.d];
+      dom.before -= 1;
+      dom.window = dom.before > 0 ? 'before' : 'after';
+    }
   }
+  page.recent = [];
   return page;
 }
 
@@ -131,7 +150,7 @@ export function onRequest(page, { requestId, url, type, now }, ctx) {
     if (match && ensureService(page, match, ctx)) service = match.service;
     if (ensureDomain(page, reg)) domain = reg;
   }
-  put(page.pending, requestId, { k: kindOf(type), w, t: third, s: service, d: domain, c: 0 });
+  put(page.pending, requestId, { k: kindOf(type), w, t: third, s: service, d: domain, c: 0, n: now });
   return page;
 }
 
@@ -196,6 +215,10 @@ export function onError(page, { requestId, error }) {
  */
 function count(page, p, cached) {
   p.c = 1;
+  if (page.interactionAt === null && p.t) {
+    page.recent.push(p);
+    while (page.recent.length > LIMITS.recent || (page.recent.length && page.recent[0].n < p.n - RECENT_MS)) page.recent.shift();
+  }
   page.totals.requests += 1;
   if (cached) page.totals.cached += 1;
   if (!p.t) return;
@@ -208,6 +231,7 @@ function count(page, p, cached) {
   if (p.d) {
     const dom = page.domains[p.d];
     dom.requests += 1;
+    if (p.w === 'before') dom.before += 1;
     if (dom.window === null || (dom.window === 'after' && p.w === 'before')) dom.window = p.w;
   }
 }
@@ -240,6 +264,6 @@ function ensureDomain(page, reg) {
     page.truncated = true;
     return false;
   }
-  put(page.domains, reg, { window: null, requests: 0, stopped: 0 });
+  put(page.domains, reg, { window: null, requests: 0, before: 0, stopped: 0 });
   return true;
 }

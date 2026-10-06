@@ -149,6 +149,20 @@ test('before and after the first interaction: new services after the click', () 
   assert.deepEqual(s.interaction, { kind: 'click', at: 10 });
 });
 
+test('requests processed before the click message arrived move to "after"', () => {
+  const page = newPage();
+  request(page, 'https://stats.g.doubleclick.net/a', 'image', { now: 5 });
+  request(page, 'https://connect.facebook.net/sdk.js', 'script', { now: 12 }); // issued by the click handler
+  request(page, 'https://stats.g.doubleclick.net/b', 'image', { now: 13 });
+  markInteraction(page, { now: 10, kind: 'click' }); // message arrives later, carrying the click time
+  const s = summarizePage(page, glossary);
+  assert.equal(s.trackingBefore, 1);
+  assert.deepEqual(s.trackingNewAfter, ['facebook.net']);
+  assert.equal(s.thirdPartyDomainsBefore, 1);
+  assert.equal(page.services['doubleclick.net'].window, 'before');
+  assert.equal(page.services['doubleclick.net'].after.image, 1);
+});
+
 test('a redirect reuses the request id: the first hop stays counted, the new host is tracked', () => {
   const page = newPage();
   onRequest(page, { requestId: 'r', url: 'https://ad.doubleclick.net/click', type: 'script', now: 1 }, ctx);
