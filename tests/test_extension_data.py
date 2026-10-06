@@ -47,9 +47,12 @@ def test_sites_cover_the_latest_run(files):
     for site in sites["sites"].values():
         assert site["host"] == registrable_domain(site["host"])
         assert site["band"] is None or site["band"] in "ABCDE"
-        if site["status"] == "ok":
-            # headline = median count per pass; list = services seen in most passes: equal or off by one or two
-            assert abs(len(site["services"]) - site["tracking_services"]) <= 2, site["name"]
+    # The list holds exactly the tracking services seen in most passes; the headline is the median count per
+    # pass, so the two can differ by a few on sites with rotating advertisers (e.g. 89 listed vs 86 counted).
+    for stem, site in sites["sites"].items():
+        report = json.loads((latest / f"{stem}.json").read_text(encoding="utf-8"))
+        stable = sorted(s["service"] for s in report["summary"].get("services", []) if s["tracking"] and s["stable"])
+        assert site["services"] == stable, site["name"]
 
 
 def test_psl_has_wildcards_exceptions_and_punycode(files):
