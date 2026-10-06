@@ -30,7 +30,19 @@ let profiles = null;
 let consentNames = new Set();
 const queue = [];
 const ENV_BROWSER = typeof (globalThis.browser ?? {}).runtime?.getBrowserInfo === 'function' ? 'firefox' : 'chromium';
-const CHOICES = new Set(['reject', 'accept', 'other']);
+const CHOICES = new Set(['reject', 'accept', 'pay', 'other']);
+
+// Chromium prerenders pages it expects you to open (search results, the top result): their requests arrive
+// with documentLifecycle "prerender" before the page is shown. Each one gets its own report, keyed by its
+// outermost frame, and becomes the tab's report when Chromium shows it (webNavigation reports the same
+// documentId as "active"). Kept in memory only; reports never shown are dropped.
+/** @type {Record<string, Record<string, import('./core/page.js').PageState>>} tabId -> frameId -> page */
+const prerendered = {};
+/** @type {Record<string, string>} `${tabId}:${frameId}` -> outermost prerendered frameId */
+const frameRoot = {};
+/** @type {Record<string, { tab: string, frame: string }>} documentId -> prerendered page */
+const prerenderDocs = {};
+const MAX_PRERENDERS = 4;
 const PING_WINDOW_MS = 5000;
 
 const loadJson = async (path) => (await fetch(api.runtime.getURL(path))).json();
@@ -105,18 +117,48 @@ function navigate(id, d) {
     tabs[id] = begin(d, arrival);
     return;
   }
-  let arrival = null;
-  if (page && page.search) {
-    arrival = { engine: page.search.engine, fromSite: page.site, redirect: false,
-      ping: page.search.lastPingAt !== null && Math.abs(d.timeStamp - page.search.lastPingAt) < PING_WINDOW_MS };
-  }
-  const next = begin(d, arrival);
+  delete prerendered[id]; // a normal navigation: pages prerendered so far were not used
+  const next = begin(d, arrivalFrom(page, d));
   if (target && target.kind === 'redirect') next.engineRedirect = target.engine.id;
   if (target && target.kind === 'results') {
     noteSerp(next, { engine: target.engine.id, params: searchParams(target.engine, d.url),
       links: { total: 0, ping: 0, redirect: 0, mousedown: 0 } });
   }
   tabs[id] = next;
+}
+
+/** Start a prerendered page's own report, or map a frame inside it to its outermost frame. */
+function notePrerenderRequest(tab, d) {
+  const pages = (prerendered[tab] ??= {});
+  if (d.frameType === 'outermost_frame' && d.type === 'main_frame') {
+    const frame = String(d.frameId);
+    if (!Object.prototype.hasOwnProperty.call(pages, frame)) {
+      const keys = Object.keys(pages);
+      if (keys.length >= MAX_PRERENDERS) delete pages[keys[0]];
+      const from = own(tab);
+      const next = begin(d, arrivalFrom(from, d));
+      const target = classifyEngineUrl(engines, d.url);
+      if (target && target.kind === 'redirect') next.engineRedirect = target.engine.id;
+      if (target && target.kind === 'results') {
+        noteSerp(next, { engine: target.engine.id, params: searchParams(target.engine, d.url),
+          links: { total: 0, ping: 0, redirect: 0, mousedown: 0 } });
+      }
+      pages[frame] = next;
+    }
+  } else if (d.type === 'sub_frame') {
+    const parent = String(d.parentFrameId);
+    const root = Object.prototype.hasOwnProperty.call(pages, parent) ? parent : frameRoot[`${tab}:${parent}`];
+    if (root !== undefined) frameRoot[`${tab}:${d.frameId}`] = root;
+  }
+}
+
+/** How the visitor arrived from the page currently shown in the tab (only from a results page of another site). */
+function arrivalFrom(from, d) {
+  if (!from || !from.search) return null;
+  const reg = registrableDomain(ctx.trie, hostOf(d.url) || '');
+  if (reg && reg === from.site) return null; // another page of the search engine itself
+  return { engine: from.search.engine, fromSite: from.site, redirect: false,
+    ping: from.search.lastPingAt !== null && Math.abs(d.timeStamp - from.search.lastPingAt) < PING_WINDOW_MS };
 }
 
 function begin(d, arrival) {
@@ -145,12 +187,29 @@ function pingFromEngine(page, d) {
 }
 
 const own = (id) => (Object.prototype.hasOwnProperty.call(tabs, id) ? tabs[id] : undefined);
-const skip = (d) => d.tabId < 0 || d.documentLifecycle === 'prerender';
+const skip = (d) => d.tabId < 0;
+const isPrerender = (d) => d.documentLifecycle === 'prerender';
+
+/** The report a webRequest event belongs to: the tab's, or that of a page being prerendered in it. */
+function pageOf(d) {
+  const tab = String(d.tabId);
+  if (!isPrerender(d)) return own(tab);
+  const pages = prerendered[tab] || {};
+  const frame = String(d.frameId);
+  const root = Object.prototype.hasOwnProperty.call(pages, frame) ? frame : frameRoot[`${tab}:${frame}`];
+  return root !== undefined ? pages[root] : undefined;
+}
 
 api.webRequest.onBeforeRequest.addListener((d) => {
   if (skip(d)) return;
   whenReady(() => {
     const id = String(d.tabId);
+    if (isPrerender(d)) {
+      notePrerenderRequest(id, d);
+      const page = pageOf(d);
+      if (page) onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp }, ctx);
+      return;
+    }
     if (d.type === 'main_frame') navigate(id, d);
     const page = own(id);
     if (!page) return;
@@ -163,7 +222,7 @@ api.webRequest.onBeforeRequest.addListener((d) => {
 const sentListener = (d) => {
   if (skip(d)) return;
   whenReady(() => {
-    const page = own(String(d.tabId));
+    const page = pageOf(d);
     if (page) { onSent(page, { requestId: d.requestId, headers: d.requestHeaders }, ctx); touch(d.tabId); }
   });
 };
@@ -178,7 +237,7 @@ try {
 api.webRequest.onCompleted.addListener((d) => {
   if (skip(d)) return;
   whenReady(() => {
-    const page = own(String(d.tabId));
+    const page = pageOf(d);
     if (!page) return;
     let size = null;
     let sizeExact = false;
@@ -198,12 +257,42 @@ api.webRequest.onCompleted.addListener((d) => {
 api.webRequest.onErrorOccurred.addListener((d) => {
   if (skip(d)) return;
   whenReady(() => {
-    const page = own(String(d.tabId));
+    const page = pageOf(d);
     if (page) { onError(page, { requestId: d.requestId, error: d.error }); touch(d.tabId); }
   });
 }, { urls: ['<all_urls>'] });
 
+// A prerendered page is committed (still hidden): remember its document; when the same document becomes
+// "active", Chromium has shown it in the tab and its report becomes the tab's report.
+api.webNavigation.onCommitted.addListener((d) => {
+  if (d.tabId < 0 || d.frameType !== 'outermost_frame' || !d.documentId) return;
+  whenReady(() => {
+    const tab = String(d.tabId);
+    if (d.documentLifecycle === 'prerender') {
+      const frame = String(d.frameId);
+      if (prerendered[tab] && Object.prototype.hasOwnProperty.call(prerendered[tab], frame)) {
+        prerenderDocs[d.documentId] = { tab, frame };
+      }
+      return;
+    }
+    const doc = prerenderDocs[d.documentId];
+    if (!doc || doc.tab !== tab || d.documentLifecycle !== 'active') return;
+    const page = prerendered[tab] && prerendered[tab][doc.frame];
+    delete prerenderDocs[d.documentId];
+    if (!page) return;
+    const from = own(tab);
+    // the click that showed it may have sent a ping from the results page
+    if (page.arrival && from && from.search && from.search.lastPingAt !== null
+        && Math.abs(d.timeStamp - from.search.lastPingAt) < PING_WINDOW_MS) page.arrival.ping = true;
+    page.mainRequestId = null;
+    tabs[tab] = page;
+    delete prerendered[tab];
+    touch(tab);
+  });
+});
+
 api.tabs.onRemoved.addListener((tabId) => {
+  delete prerendered[String(tabId)];
   delete tabs[String(tabId)];
   api.storage.session.remove('tab:' + tabId);
 });
@@ -249,6 +338,7 @@ async function report(tabId, url) {
 api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   // Content scripts run inside web pages; our own pages (the panel) have an extension URL.
   const fromPage = !String(sender.url || '').startsWith(api.runtime.getURL(''));
+  if (fromPage && sender.documentLifecycle === 'prerender') return false; // not shown yet
   if (msg && msg.type === 'interaction' && fromPage) {
     whenReady(() => {
       const page = own(String(sender.tab.id));
@@ -271,7 +361,7 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     });
     return false;
   }
-  if (msg && msg.type === 'serp' && fromPage && sender.frameId === 0) {
+  if (msg && msg.type === 'serp' && fromPage) {
     whenReady(() => {
       const page = own(String(sender.tab.id));
       if (page && page.search && msg.links && typeof msg.links === 'object') {

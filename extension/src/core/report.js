@@ -52,6 +52,7 @@ export function summarizePage(page, glossary, extra = {}) {
     band: bandFor(trackingBefore.length, glossary.bands),
     trackingNewAfter: tracking.filter((s) => s.newAfterInteraction).map((s) => s.service).sort(byName),
     trackingTotal: tracking.length,
+    thirdPartyRequestsAfter: domains.reduce((n, d) => n + (d.requests - (d.before || 0)), 0),
     thirdPartyDomains: domains.filter((d) => d.requests > 0).length,
     thirdPartyDomainsBefore: domains.filter((d) => d.window === 'before').length,
     thirdPartyRequests: page.totals.third,

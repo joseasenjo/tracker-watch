@@ -72,9 +72,16 @@ function render(tab, data) {
   } else {
     const click = c.click;
     let text = t('clickPage');
-    if (click && click.tool) text = t({ reject: 'clickReject', accept: 'clickAccept', other: 'clickOther' }[click.choice], click.tool);
+    if (click && click.tool) {
+      text = t({ reject: 'clickReject', accept: 'clickAccept', pay: 'clickPay', other: 'clickOther' }[click.choice], click.tool);
+    }
     app.appendChild(el('p', text, 'note'));
-    app.appendChild(el('p', s.trackingNewAfter.length ? s.trackingNewAfter.join(', ') : '0'));
+    if (s.trackingNewAfter.length) {
+      app.appendChild(el('p', t('newAfter', s.trackingNewAfter.length, s.thirdPartyRequestsAfter)));
+      app.appendChild(el('p', s.trackingNewAfter.join(', '), 'svc'));
+    } else {
+      app.appendChild(el('p', t('noneAfter', s.thirdPartyRequestsAfter)));
+    }
   }
 
   app.appendChild(el('h2', t('operatorsTitle')));

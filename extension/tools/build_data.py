@@ -84,6 +84,9 @@ def build_glossary() -> dict:
         "script_caveat": SCRIPT_CAVEAT,
         # documented ids/classes of consent tools (traceguard.consent): the extension only labels them
         "consent_tools": [{"name": n, "banner": b, "reject": r, "accept": a} for n, b, r, a in consent.CMPS],
+        # exact button texts and the "pay or accept" pattern of the engine, to name a click on a custom button
+        "consent_buttons": {"reject": consent.REJECT_PHRASES, "accept": consent.ACCEPT_PHRASES,
+                            "paid": consent.PAID_WORDS},
     }
 
 
