@@ -36,7 +36,9 @@ def manifest(browser: str, test: bool) -> dict:
         "action": {"default_popup": "popup.html", "default_title": "__MSG_extName__",
                    "default_icon": {str(n): f"icons/icon-{n}.png" for n in (16, 32)}},
         "content_scripts": [{"matches": ["<all_urls>"], "js": ["content-data.js", "content.js"],
-                             "run_at": "document_start", "all_frames": True}],
+                             "run_at": "document_start", "all_frames": True},
+                            {"matches": ["<all_urls>"], "js": ["content-main.js"], "run_at": "document_start",
+                             "all_frames": True, "world": "MAIN"}],
         "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"},
     }
     if browser == "chrome":
@@ -82,7 +84,7 @@ def build(browser: str, test: bool) -> Path:
     out.mkdir(parents=True)
     src = EXT / "src"
     shutil.copytree(src / "core", out / "core")
-    for name in ("content.js",):
+    for name in ("content.js", "content-main.js"):
         shutil.copy2(src / name, out / name)
     for name in ("popup.html", "popup.css", "popup.js"):
         shutil.copy2(src / "ui" / name, out / name)

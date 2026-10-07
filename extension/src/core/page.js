@@ -292,6 +292,32 @@ function ensureDomain(page, reg) {
   return true;
 }
 
+export const BEHAVIOUR_KINDS = ['canvas_read', 'geolocation_request', 'webrtc_connection'];
+
+/**
+ * A script behaviour noticed in the page (an indication: the page could fake it). Attributed like the engine:
+ * to the listed third-party service of the calling script's host; other third-party hosts are kept apart by
+ * registrable domain (at most 20), first-party scripts and unknown callers are ignored.
+ * @param {PageState} page
+ * @param {{ kind: string, host: string }} ev
+ * @param {{ trie: import('./psl.js').SuffixNode, list: import('./classify.js').TrackerList }} ctx
+ */
+export function noteBehaviour(page, { kind, host }, ctx) {
+  if (!BEHAVIOUR_KINDS.includes(kind) || !/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(host)) return page;
+  const reg = registrableDomain(ctx.trie, host);
+  if (!reg || page.firstParty.includes(reg)) return page;
+  const add = (map, key) => {
+    const list = Object.prototype.hasOwnProperty.call(map, key) ? map[key] : [];
+    if (!list.includes(kind)) Object.defineProperty(map, key, { value: [...list, kind].sort(), enumerable: true, writable: true, configurable: true });
+  };
+  const match = lookup(ctx.list, host);
+  if (match) add(page.behaviours ??= {}, match.service);
+  else if (Object.keys(page.behavioursOther ??= {}).length < 20 || Object.prototype.hasOwnProperty.call(page.behavioursOther, reg)) {
+    add(page.behavioursOther, reg);
+  }
+  return page;
+}
+
 /**
  * A consent banner of a known tool was on screen (labelled only; the extension never clicks anything).
  * @param {PageState} page

@@ -90,6 +90,17 @@
     }
   }
 
+  // Script behaviours noticed by content-main.js (MAIN world). Only a known kind and a host name pass.
+  const KINDS = new Set(['canvas_read', 'geolocation_request', 'webrtc_connection']);
+  let relayed = 0;
+  document.addEventListener('trackerwatch-lens:behaviour', (e) => {
+    let d = null;
+    try { d = JSON.parse(e.detail); } catch { return; }
+    if (!d || !KINDS.has(d.kind) || typeof d.host !== 'string' || !/^[a-z0-9.-]{0,253}$/i.test(d.host)) return;
+    if (relayed++ >= 50) return;
+    send({ type: 'behaviour', kind: d.kind, host: d.host.toLowerCase() });
+  });
+
   const engine = window === window.top
     ? data.engines.find((e) => new RegExp(e.hosts).test(location.hostname) && e.results_paths.includes(location.pathname))
     : null;

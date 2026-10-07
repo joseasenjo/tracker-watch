@@ -5,7 +5,7 @@
 
 import { buildSuffixTrie, registrableDomain } from './core/psl.js';
 import { createTrackerList } from './core/classify.js';
-import { markInteraction, noteBanner, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
+import { markInteraction, noteBanner, noteBehaviour, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
   startPage } from './core/page.js';
 import { compareWithBaseline, findSite, summarizePage } from './core/report.js';
 import { cookiesByService } from './core/activity.js';
@@ -423,7 +423,8 @@ async function report(tabId, url) {
   const cookies = await serviceCookies(page);
   const contacted = new Set(Object.keys(page.services));
   for (const key of Object.keys(cookies)) if (!contacted.has(key)) delete cookies[key];
-  const summary = summarizePage(page, glossary, { cookies });
+  const summary = summarizePage(page, glossary, { cookies, behaviours: page.behaviours ?? {},
+    behavioursOther: page.behavioursOther ?? {} });
   const site = url ? findSite(sites, url, ctx.trie) : null;
   const baseline = compareWithBaseline(summary, site);
   const name = (id) => engines.find((e) => e.id === id)?.name ?? null;
@@ -484,6 +485,16 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     whenReady(() => {
       const page = own(String(sender.tab.id));
       if (page && consentNames.has(msg.tool)) { noteBanner(page, msg.tool); touch(sender.tab.id); }
+    });
+    return false;
+  }
+  if (msg && msg.type === 'behaviour' && fromPage) {
+    whenReady(() => {
+      const page = own(String(sender.tab.id));
+      if (page && typeof msg.kind === 'string' && typeof msg.host === 'string') {
+        noteBehaviour(page, { kind: msg.kind, host: msg.host }, ctx);
+        touch(sender.tab.id);
+      }
     });
     return false;
   }

@@ -68,6 +68,9 @@ export function summarizePage(page, glossary, extra = {}) {
     stoppedServices: services.filter((s) => !s.contacted).map((s) => s.service).sort(byName),
     operators: operatorList,
     unverifiedServices: contacted.filter((s) => !s.verified).length,
+    behaviourServices: Object.keys(behaviours).filter((k) => behaviours[k].length).length,
+    behavioursOther: Object.entries(extra.behavioursOther ?? {}).map(([domain, kinds]) => ({ domain, kinds }))
+      .sort((a, b) => byName(a.domain, b.domain)),
     truncated: page.truncated,
   };
 }

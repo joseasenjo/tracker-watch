@@ -108,6 +108,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
         elif host == "control.test":
             body, ctype = b"<!doctype html><title>control</title><p>control</p>", "text/html"
+        elif host == "ib.adnxs.com" and path == "/ut.js":  # a listed service reads a canvas
+            body, ctype = b"document.createElement('canvas').toDataURL();", "application/javascript"
+        elif host == "cdn.unknown.test" and path == "/x.js":  # an unlisted third party opens WebRTC
+            body, ctype = b"try { new RTCPeerConnection(); } catch (e) {}", "application/javascript"
         else:
             body, ctype = b"/* ok */", "application/javascript"
         self.send_response(200)
@@ -355,6 +359,11 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append(f"own banner test not recorded as expected: {mine}")
     elif "http" in json.dumps(runs):
         errors.append("an address leaked into the stored banner test")
+    adnxs = [x for o in s["operators"] for x in o["services"] if x["service"] == "adnxs.com"]
+    if not adnxs or not any("canvas" in ph for ph in adnxs[0]["phrases"]):
+        errors.append(f"canvas reading not attributed to adnxs.com: {adnxs}")
+    if s.get("behavioursOther") != [{"domain": "cdn.unknown.test", "kinds": ["webrtc_connection"]}]:
+        errors.append(f"unlisted script behaviour: {s.get('behavioursOther')}")
     print(f"{browser}: {json.dumps(got)} size={s['bytes']}")
     errors += search_scenario(ctx, control, browser, screenshot)
     errors += custom_banner_and_prerender(ctx, control, browser)

@@ -114,6 +114,15 @@ function render(tab, data) {
     add(app, add(box, ul));
   }
 
+  if (s.behaviourServices || s.behavioursOther.length) {
+    app.appendChild(el('p', t('behaviourNote'), 'note'));
+    if (s.behavioursOther.length) {
+      app.appendChild(el('p', t('behaviourOther', s.behavioursOther.length)));
+      app.appendChild(add(el('ul'), ...s.behavioursOther.map((o) => el('li',
+        `${o.domain}: ${o.kinds.map((k) => t('beh_' + k)).join('; ')}`, 'svc'))));
+    }
+  }
+
   renderTold(data.told);
 
   app.appendChild(el('h2', t('baselineTitle')));
