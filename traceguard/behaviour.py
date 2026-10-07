@@ -24,7 +24,7 @@ KINDS = ("script", "image", "background", "frame", "other")
 PHRASES = {
     "script": ("script", "scripts", "ran {n} {noun} in the browser"),
     "image": ("image request", "image requests", "made {n} {noun} (often tiny “pixels”)"),
-    "background": ("background request", "background requests", "made {n} {noun} that send or fetch data"),
+    "background": ("background request", "background requests", "made {n} {noun} to send or fetch data"),
     "frame": ("embedded frame", "embedded frames", "loaded {n} {noun}"),
     "other": ("other resource", "other resources", "loaded {n} {noun} (styles, fonts, media)"),
 }

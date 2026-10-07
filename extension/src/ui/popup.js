@@ -35,6 +35,7 @@ function render(tab, data) {
     add(app, el('p', t('noData'), 'note'));
     return;
   }
+  app.appendChild(el('p', s.host, 'host'));
   const head = add(el('div', undefined, 'headline'), el('span', String(s.trackingBefore), 'big'), el('span', t('headline')));
   const chips = add(el('div', undefined, 'chips'), el('span', t('oneVisit'), 'chip'));
   if (s.band) chips.appendChild(el('span', t('band', s.band), 'chip'));
@@ -157,8 +158,12 @@ function renderMyTests(tab, m) {
   const li = el('li', t('myStep2'));
   li.appendChild(el('br'));
   li.appendChild(button(t('myClear'), async () => {
-    try { await api.permissions.request({ permissions: ['browsingData'] }); } catch { /* cookies only */ }
+    // Chrome may close the panel while it asks for a permission: clear first (cookies always; other site data
+    // once the optional permission is granted), then ask, so the next clearing is complete.
+    let granted = false;
+    try { granted = await api.permissions.contains({ permissions: ['browsingData'] }); } catch { /* no API */ }
     await send({ type: 'mytests:clearSite', tabId: tab.id });
+    if (!granted) { try { await api.permissions.request({ permissions: ['browsingData'] }); } catch { /* cookies only */ } }
   }));
   steps.appendChild(li);
   step(v.accept.runs.length > 0, t('myStep3'));
