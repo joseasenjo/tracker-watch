@@ -1,7 +1,8 @@
 // The panel. Every text from the page or the data goes through textContent: never innerHTML.
 const api = globalThis.browser ?? globalThis.chrome;
 const t = (key, ...subs) => api.i18n.getMessage(key, subs.map(String)) || key;
-const app = document.getElementById('app');
+const root = document.getElementById('app');
+let app = root; // where render functions append: the panel, or the open section
 const status = document.getElementById('status');
 const hidden = document.getElementById('announce');
 /** Short announcements go to live regions, never the whole panel: the headline only for screen readers,
@@ -33,83 +34,162 @@ async function currentTab() {
   return tab ? { id: tab.id, url: tab.url || '' } : null;
 }
 
+/** Which sections the viewer left open (this browser only; the panel works without it). */
+const OPEN_KEY = 'lens:open';
+function openState() {
+  try { return JSON.parse(localStorage.getItem(OPEN_KEY) || '{}') || {}; } catch { return {}; }
+}
+function rememberOpen(id, open) {
+  try { const s = openState(); s[id] = open; localStorage.setItem(OPEN_KEY, JSON.stringify(s)); } catch { /* not kept */ }
+}
+
+/** A folded section with its title; render functions inside append to it. Empty sections are left out. */
+function section(id, title, fn, openByDefault = false) {
+  const box = el('details', undefined, 'sec');
+  const remembered = openState()[id];
+  box.open = remembered === undefined ? openByDefault : remembered;
+  box.addEventListener('toggle', () => rememberOpen(id, box.open));
+  box.appendChild(add(el('summary'), el('h2', title)));
+  const prev = app;
+  app = box;
+  fn();
+  app = prev;
+  if (box.childNodes.length > 1) app.appendChild(box);
+}
+
+/** The first screen: the number, what your answer changed, who brings most, your protection, embedded frames. */
+function renderGlance(s, data) {
+  const ul = el('ul', undefined, 'glance');
+  const line = (text, cls) => ul.appendChild(el('li', text, cls));
+  const c = data.consent || {};
+  if (c.payOrAccept) line(t('payOrAccept'), 'warn');
+  if (!s.interaction) {
+    line(c.banners && c.banners.length ? t('glanceBannerWaiting', c.banners.join(', ')) : t('glanceNoClick'));
+  } else {
+    const choice = c.click ? c.click.choice : null;
+    const how = choice === 'accept' ? t('glanceAccepted') : choice === 'reject' ? t('glanceRejected') : t('glanceClicked');
+    line(s.trackingNewAfter.length ? t('glanceNewAfter', s.trackingNewAfter.length, how) : t('glanceNoneAfter', how));
+  }
+  const top = s.operators.filter((o) => o.trackingServices).slice(0, 3);
+  if (top.length) line(t('glanceTop', top.map((o) => `${o.entity} (${o.trackingServices})`).join(', ')));
+  if (s.frames.length) {
+    const n = new Set(s.frames.flatMap((f) => f.services)).size;
+    line(t('glanceFrames', n, s.frames.map((f) => f.site).slice(0, 3).join(', ')));
+  }
+  const pr = s.protection;
+  if (pr.met) {
+    line(pr.stopped ? t('glanceProtected', pr.stopped, pr.met) : t('glanceUnprotected', pr.met), pr.stopped ? '' : 'warn');
+  }
+  const b = data.baseline;
+  if (b && b.weekly !== null) line(t('glanceWeekly', b.weekly, b.date));
+  app.appendChild(ul);
+}
+
 function render(tab, data) {
-  app.replaceChildren();
-  add(app, el('h1', t('extName')));
+  app = root;
+  root.replaceChildren();
+  add(root, el('h1', t('extName')));
   const s = data && data.page;
   if (!s || !s.host) {
-    add(app, el('p', t('noData'), 'note'));
-    app.appendChild(settingsLink());
+    add(root, el('p', t('noData'), 'note'));
+    root.appendChild(settingsLink());
     return;
   }
-  app.appendChild(el('p', s.host, 'host'));
+  root.appendChild(el('p', s.host, 'host'));
   const head = add(el('div', undefined, 'headline'), el('span', String(s.trackingBefore), 'big'), el('span', t('headline')));
   const chips = add(el('div', undefined, 'chips'), el('span', t('oneVisit'), 'chip'));
   if (s.band) chips.appendChild(el('span', t('band', s.band), 'chip'));
-  add(app, head, chips);
+  add(root, head, chips);
   if (data.loading) {
-    add(app, add(el('p', undefined, 'loading'), el('span', undefined, 'spinner'), el('span', t('stillLoading'))));
+    add(root, add(el('p', undefined, 'loading'), el('span', undefined, 'spinner'), el('span', t('stillLoading'))));
   }
   announce(data.loading ? t('stillLoading') : t('headlineStatus', s.trackingBefore));
   renderArrival(data.arrival);
+  renderGlance(s, data);
   const c = data.consent || { banners: [], toolsContacted: [], click: null };
-  if (c.previous) {
-    app.appendChild(el('p', c.previous.tool
-      ? t('reloadedAfterAnswer', c.previous.tool, t('choice_' + c.previous.choice))
-      : t('reloadedAfterAnswerUnknown', t('choice_' + c.previous.choice)), 'note'));
-  }
-  if (c.banners.length) app.appendChild(el('p', t('bannerShown', c.banners.join(', ')), 'note'));
-  else if (c.toolsContacted.length) app.appendChild(el('p', t('consentContacted', c.toolsContacted.join(', ')), 'note'));
-  if (c.payOrAccept) app.appendChild(el('p', t('payOrAccept'), 'warn'));
-  renderSearch(data.search); // on a results page this is the main content
 
-  const dl = el('dl');
-  const row = (k, v) => add(dl, el('dt', k), el('dd', v));
-  row(t('thirdDomains'), String(s.thirdPartyDomains));
-  row(t('thirdRequests'), String(s.thirdPartyRequests));
-  row(t('size'), s.bytes.total === null ? t('sizeNone') : (s.bytes.exact ? t('sizeExact', formatBytes(s.bytes.total)) : t('sizeMin', formatBytes(s.bytes.total))));
-  app.appendChild(dl);
-  if (s.bytes.unknown) app.appendChild(el('p', t('unknownSizes', s.bytes.unknown), 'note'));
+  // on a results page the search engine view is the main content: open by default
+  if (data.search) section('search', t('searchTitle', data.search.name), () => renderSearch(data.search), true);
+  if (data.search) section('server', t('serverTitle', data.search.name), () => renderServer(data.search));
 
-  const stopped = [];
-  if (s.stopped.client) stopped.push(t('stoppedClient', s.stopped.client));
-  if (s.stopped.browser) stopped.push(t('stoppedBrowser', s.stopped.browser));
-  if (s.stopped.cancelled) stopped.push(t('stoppedCancelled', s.stopped.cancelled));
-  if (stopped.length) {
-    add(app, el('h2', t('stoppedTitle')), add(el('ul'), ...stopped.map((x) => el('li', x))));
-  }
+  section('protection', t('protectionTitle'), () => renderProtection(s, data.clean, tab));
 
-  app.appendChild(el('h2', t('afterTitle')));
-  if (!s.interaction) {
-    const btn = el('button', t('markNow'));
-    btn.addEventListener('click', async () => {
-      await api.runtime.sendMessage({ type: 'mark', tabId: tab.id });
-      load();
-    });
-    add(app, el('p', t('noInteraction'), 'note'), btn);
-  } else {
-    const click = c.click;
-    let text = t('clickPage');
-    if (click && click.tool) {
-      text = t({ reject: 'clickReject', accept: 'clickAccept', pay: 'clickPay', other: 'clickOther' }[click.choice], click.tool);
-    } else if (click) {
-      text = t('clickUnknown', t('choice_' + click.choice));
+  section('after', t('afterTitle'), () => {
+    if (c.previous) {
+      app.appendChild(el('p', c.previous.tool
+        ? t('reloadedAfterAnswer', c.previous.tool, t('choice_' + c.previous.choice))
+        : t('reloadedAfterAnswerUnknown', t('choice_' + c.previous.choice)), 'note'));
     }
-    app.appendChild(el('p', text, 'note'));
-    if (s.trackingNewAfter.length) {
-      app.appendChild(el('p', t('newAfter', s.trackingNewAfter.length, s.thirdPartyRequestsAfter)));
-      app.appendChild(el('p', s.trackingNewAfter.join(', '), 'svc'));
+    if (c.banners.length) app.appendChild(el('p', t('bannerShown', c.banners.join(', ')), 'note'));
+    else if (c.toolsContacted.length) app.appendChild(el('p', t('consentContacted', c.toolsContacted.join(', ')), 'note'));
+    if (!s.interaction) {
+      const btn = el('button', t('markNow'));
+      btn.addEventListener('click', async () => {
+        await api.runtime.sendMessage({ type: 'mark', tabId: tab.id });
+        load();
+      });
+      add(app, el('p', t('noInteraction'), 'note'), btn);
     } else {
-      app.appendChild(el('p', t('noneAfter', s.thirdPartyRequestsAfter)));
+      const click = c.click;
+      let text = t('clickPage');
+      if (click && click.tool) {
+        text = t({ reject: 'clickReject', accept: 'clickAccept', pay: 'clickPay', other: 'clickOther' }[click.choice], click.tool);
+      } else if (click) {
+        text = t('clickUnknown', t('choice_' + click.choice));
+      }
+      app.appendChild(el('p', text, 'note'));
+      if (s.trackingNewAfter.length) {
+        app.appendChild(el('p', t('newAfter', s.trackingNewAfter.length, s.thirdPartyRequestsAfter)));
+        app.appendChild(el('p', s.trackingNewAfter.join(', '), 'svc'));
+      } else {
+        app.appendChild(el('p', t('noneAfter', s.thirdPartyRequestsAfter)));
+      }
     }
-  }
+  });
 
-  renderBlocking(s.blocking);
-  renderJourney(data.journey);
-  if (!data.search) renderMyTests(tab, data.mytests, Boolean(c.payOrAccept)); // a results page has no banner to test
+  if (!data.search) section('mytests', t('myTitle'), () => renderMyTests(tab, data.mytests, Boolean(c.payOrAccept)));
+  section('operators', t('operatorsTitle'), () => renderOperators(s));
+  section('frames', t('framesTitle'), () => renderFrames(s));
 
-  renderFrames(s);
-  app.appendChild(el('h2', t('operatorsTitle')));
+  section('traffic', t('trafficTitle'), () => {
+    const dl = el('dl');
+    const row = (k, v) => add(dl, el('dt', k), el('dd', v));
+    row(t('thirdDomains'), String(s.thirdPartyDomains));
+    row(t('thirdRequests'), String(s.thirdPartyRequests));
+    row(t('size'), s.bytes.total === null ? t('sizeNone') : (s.bytes.exact ? t('sizeExact', formatBytes(s.bytes.total)) : t('sizeMin', formatBytes(s.bytes.total))));
+    app.appendChild(dl);
+    if (s.bytes.unknown) app.appendChild(el('p', t('unknownSizes', s.bytes.unknown), 'note'));
+    const stopped = [];
+    if (s.stopped.client) stopped.push(t('stoppedClient', s.stopped.client));
+    if (s.stopped.browser) stopped.push(t('stoppedBrowser', s.stopped.browser));
+    if (s.stopped.cancelled) stopped.push(t('stoppedCancelled', s.stopped.cancelled));
+    if (stopped.length) add(app, el('p', t('stoppedTitle')), add(el('ul'), ...stopped.map((x) => el('li', x))));
+  });
+  section('blocking', t('blockTitle'), () => renderBlocking(s.blocking));
+  section('journey', t('journeyTitle'), () => renderJourney(data.journey));
+  section('told', t('toldTitle'), () => renderTold(data.told));
+  section('weekly', t('baselineTitle'), () => {
+    const b = data.baseline;
+    if (b && b.weekly !== null) {
+      app.appendChild(el('p', t('baselineText', b.weekly, b.date, b.vantage || '?')));
+      app.appendChild(el('p', t('baselineDiff', b.onlyHere.length, b.onlyWeekly.length), 'note'));
+    } else {
+      app.appendChild(el('p', t('notMeasured'), 'note'));
+    }
+    app.appendChild(el('p', t('whyTitle')));
+    app.appendChild(add(el('ul'), ...(data.reasons || []).map((r) => el('li', t(r.id, ...r.args)))));
+  });
+  section('share', t('shareTitle'), () => renderShare(tab, data));
+
+  root.appendChild(el('p', t('honesty'), 'note'));
+  if (data.index) root.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
+  root.appendChild(settingsLink());
+  fetch(api.runtime.getURL('data/build.json')).then((r) => r.json())
+    .then((b) => root.appendChild(el('p', `build ${b.built}`, 'note')), () => {});
+}
+
+/** Companies and their services, with what each did. */
+function renderOperators(s) {
   if (!s.operators.length) app.appendChild(el('p', t('noneContacted'), 'note'));
   const FIRST = 10;
   let more = null;
@@ -129,13 +209,12 @@ function render(tab, data) {
       if (svc.tracking && svc.via.length) {
         labels.push(t(s.onlyFromFrames.includes(svc.service) ? 'viaOnlyLabel' : 'viaLabel', svc.via.map((v) => v.site).join(', ')));
       }
-      add(li, el('span', svc.service), el('span', ` · ${labels.join(' · ')}`, 'svc'));
+      add(li, el('span', svc.service), el('span', ` \u00b7 ${labels.join(' \u00b7 ')}`, 'svc'));
       if (svc.phrases.length) li.appendChild(el('div', svc.phrases.join('; '), 'svc'));
       ul.appendChild(li);
     }
     add(more || app, add(box, ul));
   });
-
   if (s.behaviourServices || s.behavioursOther.length) {
     app.appendChild(el('p', t('behaviourNote'), 'note'));
     if (s.behavioursOther.length) {
@@ -144,25 +223,35 @@ function render(tab, data) {
         `${o.domain}: ${o.kinds.map((k) => t('beh_' + k)).join('; ')}`, 'svc'))));
     }
   }
+}
 
-  renderTold(data.told);
-
-  app.appendChild(el('h2', t('baselineTitle')));
-  const b = data.baseline;
-  if (b && b.weekly !== null) {
-    app.appendChild(el('p', t('baselineText', b.weekly, b.date, b.vantage || '?')));
-    app.appendChild(el('p', t('baselineDiff', b.onlyHere.length, b.onlyWeekly.length), 'note'));
+/** (a) "Your protection": what was stopped before going out, Lens's clean mode, and the guide. */
+function renderProtection(s, clean, tab) {
+  const pr = s.protection;
+  if (pr.met) {
+    app.appendChild(el('p', t('protectionLine', pr.stopped, pr.met, pr.through)));
+    if (pr.partly) app.appendChild(el('p', t('protectionPartly', pr.partly), 'note'));
+    if (pr.stoppedServices.length) app.appendChild(fold(t('protectionStoppedList', pr.stoppedServices.length), pr.stoppedServices.join(', ')));
   } else {
-    app.appendChild(el('p', t('notMeasured'), 'note'));
+    app.appendChild(el('p', t('protectionNone'), 'note'));
   }
-  app.appendChild(el('h2', t('whyTitle')));
-  app.appendChild(add(el('ul'), ...(data.reasons || []).map((r) => el('li', t(r.id, ...r.args)))));
-  app.appendChild(el('p', t('honesty'), 'note'));
-  renderShare(tab, data);
-  if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
-  app.appendChild(settingsLink());
-  fetch(api.runtime.getURL('data/build.json')).then((r) => r.json())
-    .then((b) => app.appendChild(el('p', `build ${b.built}`, 'note')), () => {});
+  app.appendChild(el('p', t('protectionNote'), 'note'));
+  if (clean) app.appendChild(el('p', clean.blocking ? t('cleanOn', t('cleanList_' + clean.blocking)) : t('cleanOff'), clean.blocking ? '' : 'note'));
+  const tools = el('div', undefined, 'tools');
+  if (clean && clean.blocking) {
+    if (clean.pausedHere) app.appendChild(el('p', t('cleanPausedHere', s.site), 'warn'));
+    tools.appendChild(button(clean.pausedHere ? t('cleanResume') : t('cleanPause'), async () => {
+      await send({ type: 'clean:pause', site: s.site, paused: !clean.pausedHere });
+      await api.tabs.reload(tab.id);
+    }));
+  }
+  const guide = el('button', t('guideOpen'));
+  guide.addEventListener('click', () => { api.tabs.create({ url: api.runtime.getURL('guide.html') }); window.close(); });
+  tools.appendChild(guide);
+  const settings = el('button', t('cleanSettings'));
+  settings.addEventListener('click', () => { api.runtime.openOptionsPage(); window.close(); });
+  tools.appendChild(settings);
+  app.appendChild(tools);
 }
 
 const send = (msg) => api.runtime.sendMessage(msg);
@@ -187,7 +276,6 @@ function button(label, onClick) {
 /** "Your own banner test": opt-in; only counts and service names, kept in this browser. */
 function renderMyTests(tab, m, payHere) {
   if (!m) return;
-  app.appendChild(el('h2', t('myTitle')));
   if (!m.settings.enabled) {
     add(app, el('p', t('myOff'), 'note'), button(t('myTurnOn'), () => send({ type: 'mytests:settings', enabled: true })));
     return;
@@ -274,7 +362,6 @@ const pct = (part, whole) => (whole ? Math.round((100 * part) / whole) : 0);
 /** F6: simulation with our own filter lists; nothing is blocked. */
 function renderBlocking(b) {
   if (!b || !b.full.services) return;
-  app.appendChild(el('h2', t('blockTitle')));
   const dl = el('dl');
   const row = (label, x) => add(dl, el('dt', label), el('dd', t('blockRow', x.requests, pct(x.requests, b.thirdRequests),
     x.bytes ? formatBytes(x.bytes) : '-')));
@@ -286,7 +373,6 @@ function renderBlocking(b) {
 /** F5: the pages opened in this tab (domain and count only, forgotten when the tab closes). */
 function renderJourney(j) {
   if (!j) return;
-  app.appendChild(el('h2', t('journeyTitle')));
   const ol = el('ol', undefined, 'steps');
   for (const r of j.rows) ol.appendChild(el('li', `${r.site} \u00b7 ${t('journeyCount', r.tracking)}`, r.current ? '' : 'done'));
   app.appendChild(ol);
@@ -328,7 +414,6 @@ function summaryText(data) {
 }
 
 function renderShare(tab, data) {
-  app.appendChild(el('h2', t('shareTitle')));
   const tools = el('div', undefined, 'tools');
   tools.appendChild(button(t('shareCopy'), async () => {
     try { await navigator.clipboard.writeText(summaryText(data)); notice(t('shareCopied')); }
@@ -352,7 +437,6 @@ function renderShare(tab, data) {
 /** Where tracking services were contacted from: the page itself or embedded frames (videos, ad slots). */
 function renderFrames(s) {
   if (!s.frames.length) return;
-  app.appendChild(el('h2', t('framesTitle')));
   const ul = el('ul');
   for (const f of s.frames) {
     ul.appendChild(add(el('li'), el('b', f.site), el('span', ' \u00b7 ' + t('framesRow', f.services.length, f.requests), 'svc'),
@@ -386,7 +470,6 @@ function link(label, url) {
 
 function renderSearch(q) {
   if (!q) return;
-  app.appendChild(el('h2', t('searchTitle', q.name)));
   const query = q.params.find((p) => p.isQuery);
   app.appendChild(el('p', t('searchParams', query ? query.name : 'q')));
   app.appendChild(el('p', q.params.map((p) => p.name).join(', '), 'svc'));
@@ -409,13 +492,12 @@ function renderSearch(q) {
     app.appendChild(ul);
     if (q.cookieSource) add(app, add(el('p', undefined, 'note'), el('span', t('cookieSource') + ' '), link(q.cookieSource, q.cookieSource)));
   }
-  renderServer(q.name, q.server, q.signedIn, q.checked);
 }
 
 /** M3b: what the engine says it keeps on its servers (its words, paraphrased) and where to see or ask for it. */
-function renderServer(name, g, signed, checked) {
+function renderServer(q) {
+  const { name, server: g, signedIn: signed, checked } = q;
   if (!g) return;
-  app.appendChild(el('h2', t('serverTitle', name)));
   app.appendChild(el('p', t('searchServer'), 'note'));
   if (signed === true) app.appendChild(el('p', t('signedIn', name), 'warn'));
   else if (signed === false) app.appendChild(el('p', t('signedOut', name), 'note'));
@@ -432,7 +514,6 @@ function renderServer(name, g, signed, checked) {
 
 function renderTold(told) {
   if (!told) return;
-  app.appendChild(el('h2', t('toldTitle')));
   const me = told.self;
   if (me) {
     const dl = el('dl', undefined, 'told');

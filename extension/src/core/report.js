@@ -92,6 +92,7 @@ export function summarizePage(page, glossary, extra = {}) {
     operators: operatorList,
     unverifiedServices: contacted.filter((s) => !s.verified).length,
     frames,
+    protection: protectionOf(services),
     // tracking services contacted only from inside embedded frames, never by the page itself
     onlyFromFrames: tracking.filter((s) => s.via.length && s.via.reduce((n, v) => n + v.requests, 0) >= sum(s.requests))
       .map((s) => s.service).sort(byName),
@@ -103,6 +104,26 @@ export function summarizePage(page, glossary, extra = {}) {
       verified: simulate(tracking.filter((s) => s.verified)), full: simulate(tracking),
       thirdRequests: page.totals.third, thirdBytes: sized ? page.bytes.sum : 0,
     },
+  };
+}
+
+/**
+ * "Your protection": tracking services of the list met on this page, and how many never got through because a
+ * blocker (an extension, Lens's own clean mode) or the browser's tracking protection stopped every request.
+ * Only services that tried are known: a blocker that stops a script also stops what it would have loaded.
+ * @param {Array<{ service: string, tracking: boolean, contacted: boolean,
+ *   stopped: { client: number, browser: number, cancelled: number, failed: number } }>} services
+ */
+export function protectionOf(services) {
+  const tracking = services.filter((s) => s.tracking);
+  const stoppedBy = (s) => s.stopped.client + s.stopped.browser;
+  const stopped = tracking.filter((s) => !s.contacted && stoppedBy(s) > 0);
+  const partly = tracking.filter((s) => s.contacted && stoppedBy(s) > 0);
+  const through = tracking.filter((s) => s.contacted);
+  return {
+    met: stopped.length + through.length, stopped: stopped.length, partly: partly.length, through: through.length,
+    requestsStopped: tracking.reduce((n, s) => n + stoppedBy(s), 0),
+    stoppedServices: stopped.map((s) => s.service).sort(byName),
   };
 }
 

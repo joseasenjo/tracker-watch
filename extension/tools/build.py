@@ -18,6 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mdpage import markdown_page  # noqa: E402
+from rules import rulesets  # noqa: E402
 
 EXT = Path(__file__).resolve().parents[1]
 DIST = EXT / "dist"
@@ -32,7 +33,7 @@ def manifest(browser: str, test: bool) -> dict:
         "description": "__MSG_extDescription__",
         "version": VERSION if VERSION != "0.0.0" else "0.1.0",
         "default_locale": "en",
-        "permissions": ["webRequest", "webNavigation", "storage", "cookies"],
+        "permissions": ["webRequest", "webNavigation", "storage", "cookies", "declarativeNetRequestWithHostAccess"],
         "host_permissions": ["<all_urls>"],
         "optional_permissions": ["browsingData"],
         "icons": {str(n): f"icons/icon-{n}.png" for n in (16, 32, 48, 128)},
@@ -43,6 +44,9 @@ def manifest(browser: str, test: bool) -> dict:
                             {"matches": ["<all_urls>"], "js": ["content-main.js"], "run_at": "document_start",
                              "all_frames": True, "world": "MAIN"}],
         "options_ui": {"page": "options.html", "open_in_tab": True},
+        # clean mode (F14): shipped disabled, turned on by the user in the settings page
+        "declarative_net_request": {"rule_resources": [
+            {"id": rid, "enabled": False, "path": f"rules/{rid}.json"} for rid in ("verified", "full", "params")]},
         "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"},
     }
     if browser == "chrome":
@@ -59,11 +63,21 @@ def manifest(browser: str, test: bool) -> dict:
     return m
 
 
+GUIDE_PAGE = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="popup.css"><link rel="stylesheet" href="options.css">
+<title>How to browse with less tracking</title></head>
+<body><main class="privacy">
+{{BODY}}</main></body></html>
+"""
+
 TESTHOOK = """// Test builds only: hand every tab report to the local test page.
 const api = globalThis.browser ?? globalThis.chrome;
 const first = location.search.includes('mytests=on') ? api.runtime.sendMessage({ type: 'test:mytests-on' }) : null;
 if (location.search.includes('summary=on')) api.runtime.sendMessage({ type: 'test:summary-on' });
-Promise.resolve(first).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
+const clean = new URLSearchParams(location.search).get('clean');
+const cleaning = clean ? api.runtime.sendMessage({ type: 'test:clean', blocking: clean === 'off' ? null : clean, params: clean !== 'off' }) : null;
+Promise.all([first, cleaning]).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
   const pre = document.createElement('pre');
   pre.id = 'lens-reports';
   pre.textContent = JSON.stringify(all);
@@ -108,6 +122,12 @@ def build(browser: str, test: bool) -> Path:
     shutil.copytree(EXT / "icons", out / "icons")
     shutil.copy2(EXT / "THIRD_PARTY.md", out / "THIRD_PARTY.md")
     shutil.copy2(EXT / "PRIVACY.md", out / "PRIVACY.md")
+    (out / "rules").mkdir()
+    for rid, rules in rulesets(EXT).items():
+        (out / "rules" / f"{rid}.json").write_text(json.dumps(rules, indent=1) + "\n", encoding="utf-8", newline="\n")
+    if (EXT / "GUIDE.md").exists():
+        guide = markdown_page((EXT / "GUIDE.md").read_text(encoding="utf-8"))
+        (out / "guide.html").write_text(GUIDE_PAGE.replace("{{BODY}}", guide), encoding="utf-8", newline="\n")
     (out / "privacy.html").write_text(markdown_page((EXT / "PRIVACY.md").read_text(encoding="utf-8")),
                                       encoding="utf-8", newline="\n")
     shutil.copy2(EXT.parent / "LICENSE", out / "LICENSE")

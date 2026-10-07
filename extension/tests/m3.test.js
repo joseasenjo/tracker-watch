@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { buildSuffixTrie } from '../src/core/psl.js';
 import { createTrackerList } from '../src/core/classify.js';
 import { onCompleted, onRequest, onSent, startPage } from '../src/core/page.js';
-import { commonOperators, journeyEntry, summarizePage } from '../src/core/report.js';
+import { commonOperators, journeyEntry, protectionOf, summarizePage } from '../src/core/report.js';
 
 const load = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 const glossary = load('../data/glossary.json');
@@ -80,4 +80,16 @@ test('requests are attributed to the outermost third-party frame; the frame docu
   assert.deepEqual(s.onlyFromFrames, []);
   const dc = s.operators.flatMap((o) => o.services).find((x) => x.service === 'doubleclick.net');
   assert.deepEqual(dc.via, [{ site: 'youtube.com', requests: 2 }]);
+});
+
+test('protection: services stopped entirely, partly, and those that got through', () => {
+  const st = (client, browser = 0) => ({ client, browser, cancelled: 0, failed: 0 });
+  const p = protectionOf([
+    { service: 'a', tracking: true, contacted: false, stopped: st(3) },
+    { service: 'b', tracking: true, contacted: true, stopped: st(1) },
+    { service: 'c', tracking: true, contacted: true, stopped: st(0) },
+    { service: 'd', tracking: true, contacted: false, stopped: st(0, 2) },
+    { service: 'gtm', tracking: false, contacted: false, stopped: st(5) },
+  ]);
+  assert.deepEqual(p, { met: 4, stopped: 2, partly: 1, through: 2, requestsStopped: 6, stoppedServices: ['a', 'd'] });
 });

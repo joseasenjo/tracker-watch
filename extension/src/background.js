@@ -4,7 +4,7 @@
 // Nothing leaves the browser.
 
 import { buildSuffixTrie, registrableDomain } from './core/psl.js';
-import { createTrackerList } from './core/classify.js';
+import { createTrackerList, isTracking, lookup } from './core/classify.js';
 import { markInteraction, noteBanner, noteBehaviour, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
   startPage } from './core/page.js';
 import { commonOperators, compareWithBaseline, findSite, journeyEntry, summarizePage } from './core/report.js';
@@ -79,6 +79,7 @@ const ready = (async () => {
   for (const [key, value] of Object.entries(stored)) {
     if (key.startsWith('tab:') && value && value.v === 2) tabs[key.slice(4)] = value;
   }
+  await cleanState().catch(() => null); // which list clean mode uses, if any
   for (const fn of queue.splice(0)) fn();
 })();
 
@@ -395,7 +396,10 @@ api.webRequest.onErrorOccurred.addListener((d) => {
   if (skip(d)) return;
   whenReady(() => {
     const page = pageOf(d);
-    if (page) { onError(page, { requestId: d.requestId, error: d.error }); touch(d.tabId); }
+    if (page) {
+      onError(page, { requestId: d.requestId, error: blockedByClean(d) ? 'net::ERR_BLOCKED_BY_CLIENT' : d.error });
+      touch(d.tabId);
+    }
   });
 }, { urls: ['<all_urls>'] });
 
@@ -434,6 +438,65 @@ api.tabs.onRemoved.addListener((tabId) => {
   delete tabs[String(tabId)];
   api.storage.session.remove('tab:' + tabId);
 });
+
+/**
+ * Firefox reports a request stopped by declarativeNetRequest as NS_ERROR_ABORT, like any cancelled request
+ * (Chromium says ERR_BLOCKED_BY_CLIENT). With clean mode on, a cancelled request to a tracking service of the
+ * active list, made by another site, was stopped by it.
+ */
+let cleanBlocking = null;
+function blockedByClean(d) {
+  if (!cleanBlocking || d.error !== 'NS_ERROR_ABORT') return false;
+  const host = hostOf(d.url) || '';
+  const match = lookup(ctx.list, host);
+  if (!match || !isTracking(ctx.list, match.category) || (cleanBlocking === 'verified' && !match.verified)) return false;
+  const top = hostOf(d.documentUrl || d.originUrl || '') || '';
+  return registrableDomain(ctx.trie, top) !== registrableDomain(ctx.trie, host);
+}
+
+// Clean mode (F14, opt-in): the browser's own rule sets (declarativeNetRequest), shipped disabled. Their state
+// is read from the browser itself, never kept in storage, so deleting Lens's data cannot leave it inconsistent.
+const dnr = api.declarativeNetRequest;
+const PAUSE_BASE = 1000;
+
+async function cleanState() {
+  if (!dnr) return { available: false, blocking: null, params: false, paused: [] };
+  const enabled = await dnr.getEnabledRulesets();
+  const dynamic = await dnr.getDynamicRules();
+  cleanBlocking = enabled.includes('full') ? 'full' : enabled.includes('verified') ? 'verified' : null;
+  return {
+    available: true,
+    blocking: cleanBlocking,
+    params: enabled.includes('params'),
+    paused: dynamic.filter((r) => r.id >= PAUSE_BASE).map((r) => r.condition.requestDomains[0]).sort(),
+  };
+}
+
+async function cleanMessage(msg) {
+  if (!dnr) return cleanState();
+  if (msg.type === 'clean:set') {
+    const enable = [];
+    const disable = [];
+    if (msg.blocking !== undefined) {
+      if (msg.blocking === 'verified' || msg.blocking === 'full') enable.push(msg.blocking);
+      for (const id of ['verified', 'full']) if (id !== msg.blocking) disable.push(id);
+    }
+    if (typeof msg.params === 'boolean') (msg.params ? enable : disable).push('params');
+    await dnr.updateEnabledRulesets({ enableRulesetIds: enable, disableRulesetIds: disable });
+  } else if (msg.type === 'clean:pause' && typeof msg.site === 'string' && /^[a-z0-9.-]+\.[a-z0-9-]+$/.test(msg.site)) {
+    // pausing a site: everything that page loads is allowed, as if clean mode were off there
+    const rules = await dnr.getDynamicRules();
+    const existing = rules.find((r) => r.id >= PAUSE_BASE && r.condition.requestDomains[0] === msg.site);
+    if (msg.paused && !existing) {
+      const id = Math.max(PAUSE_BASE - 1, ...rules.map((r) => r.id)) + 1;
+      await dnr.updateDynamicRules({ addRules: [{ id, priority: 2, action: { type: 'allowAllRequests' },
+        condition: { requestDomains: [msg.site], resourceTypes: ['main_frame', 'sub_frame'] } }] });
+    } else if (!msg.paused && existing) {
+      await dnr.updateDynamicRules({ removeRuleIds: [existing.id] });
+    }
+  }
+  return cleanState();
+}
 
 /** Settings page: "Your week" and "Delete all my data". */
 async function dataMessage(msg) {
@@ -518,6 +581,7 @@ async function report(tabId, url) {
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
     journey: journeyView(page, summary),
+    clean: await cleanState().then((c) => ({ ...c, pausedHere: c.paused.includes(page.site) })).catch(() => null),
     mytests: { settings: myStore.settings, site: page.site, view: siteView(myStore, page.site),
       running: page.myTest ? { choice: page.myTest.choice, continued: Boolean(page.myTestContinued) } : null },
     reasons: differenceReasons(summary, page, baseline, { browser: ENV_BROWSER, nowMs: Date.now() }),
@@ -593,12 +657,20 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     ready.then(() => dataMessage(msg)).then(sendResponse);
     return true;
   }
+  if (msg && typeof msg.type === 'string' && msg.type.startsWith('clean:') && !fromPage) {
+    (msg.type === 'clean:get' ? cleanState() : cleanMessage(msg)).then(sendResponse);
+    return true;
+  }
   if (msg && typeof msg.type === 'string' && msg.type.startsWith('mytests:') && !fromPage) {
     ready.then(() => myTestsMessage(msg)).then(sendResponse);
     return true;
   }
   if (msg && msg.type === 'report' && !fromPage) {
     report(msg.tabId, msg.url).then(sendResponse);
+    return true;
+  }
+  if (TEST_HOOKS && msg && msg.type === 'test:clean') {
+    cleanMessage({ type: 'clean:set', blocking: msg.blocking, params: msg.params }).then(sendResponse);
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:summary-on') {

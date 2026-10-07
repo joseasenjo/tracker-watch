@@ -296,6 +296,32 @@ def custom_banner_and_prerender(ctx, control, browser: str) -> list[str]:
     return errors
 
 
+def clean_scenario(ctx, control, browser: str) -> list[str]:
+    """Clean mode on (full list + parameter removal): tracking services stopped, gclid removed from the address."""
+    errors = []
+    control.goto(U("control.test", "/?clean=full"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab = ctx.new_page()
+    tab.goto(U("site.test", "/?gclid=SECRET&keep=1"), wait_until="load")
+    tab.wait_for_timeout(1500)
+    if "gclid" in tab.url or "keep=1" not in tab.url:
+        errors.append(f"tracking parameter not removed: {tab.url}")
+    reports = read_reports(control)
+    rep = [r for r in reports.values() if isinstance(r, dict) and r.get("page") and r["page"]["host"] == "site.test"
+           and (r.get("clean") or {}).get("blocking") == "full"]
+    if not rep:
+        errors.append("no site.test report with clean mode on")
+    else:
+        pr = rep[-1]["page"]["protection"]
+        if pr["stopped"] < 2 or rep[-1]["page"]["trackingBefore"] != 0:
+            errors.append(f"clean mode did not stop tracking services: {pr} stopped={rep[-1]['page']['stopped']}")
+    control.goto(U("control.test", "/?clean=off"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab.close()
+    print(f"{browser}: clean mode ok={not errors}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -384,6 +410,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     elif "SECRET" in json.dumps(journeys) or "private" in json.dumps(journeys):
         errors.append("a query leaked into the journey")
     errors += custom_banner_and_prerender(ctx, control, browser)
+    errors += clean_scenario(ctx, control, browser)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
         ext_id = sw.url.split("/")[2]

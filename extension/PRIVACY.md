@@ -35,7 +35,9 @@ no analytics, no accounts, no servers of ours, no third parties.
 | **Your own banner test**, only if you turn it on: per site, the date, counts, tracking-service names and cookie names after you answered its banner | Your browser (`storage.local`) | 7, 30 (default) or 90 days, as you choose; deletable at any time |
 | **Your week**, only if you turn it on: per day, the number of pages counted and, per company, on how many of them it was contacted. Which pages or sites is not kept | Your browser (`storage.local`) | 35 days; deletable at any time |
 
-Nothing else is stored. In particular: no full addresses, no search queries, no cookie values, no page content.
+Clean mode settings (which list is on, and the sites where you paused it) are kept as the browser's own
+blocking rules, not as Lens data. Which sections of the panel you leave open is kept in the panel's local
+storage. Nothing else is stored. In particular: no full addresses, no search queries, no cookie values, no page content.
 
 "Delete all my data" on the settings page removes everything in `storage.local`. Tab reports end with the tab.
 
@@ -60,6 +62,9 @@ Two buttons open something only because you press them:
 - **cookies**: to read the names and lifetimes of the cookies of the services a page contacted, and to delete a
   site's cookies when you press "Clear this site's data and reload" in your own banner test.
 - **storage**: to keep the tab reports and, if you turn them on, your banner tests and your week.
+- **declarativeNetRequestWithHostAccess**: for clean mode, off by default. When you turn it on, your browser
+  itself stops requests to the tracking services of our list and removes known tracking parameters from the
+  address of pages you open; Lens does not read or change those requests.
 - **browsingData** (optional, asked the first time you use "Clear this site's data"): to also clear that site's
   other stored data so its cookie banner shows again. Only the site of the tab is cleared.
 

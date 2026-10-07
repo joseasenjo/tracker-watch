@@ -71,6 +71,36 @@ async function render() {
       button(t('weekDelete'), () => send({ type: 'summary:delete' }))));
   }
 
+  const clean = await send({ type: 'clean:get' });
+  if (clean.available) {
+    app.appendChild(el('h2', t('cleanTitle')));
+    app.appendChild(el('p', t('cleanExplain'), 'note'));
+    const name = 'blocking';
+    for (const [value, label] of [['', t('cleanModeOff')], ['verified', t('cleanModeVerified')], ['full', t('cleanModeFull')]]) {
+      const input = el('input');
+      input.type = 'radio';
+      input.name = name;
+      input.value = value;
+      input.checked = (clean.blocking || '') === value;
+      input.addEventListener('change', async () => { await send({ type: 'clean:set', blocking: value || null }); render(); });
+      app.appendChild(add(el('label', undefined, 'switch'), input, el('span', label)));
+    }
+    app.appendChild(toggle(t('cleanParams'), clean.params, (on) => send({ type: 'clean:set', params: on })));
+    app.appendChild(el('p', t('cleanWarn'), 'warn'));
+    if (clean.paused.length) {
+      app.appendChild(el('p', t('cleanPausedList', clean.paused.length)));
+      const ul = el('ul');
+      for (const site of clean.paused) {
+        ul.appendChild(add(el('li'), el('span', site + ' '), button(t('cleanResume'), () => send({ type: 'clean:pause', site, paused: false }))));
+      }
+      app.appendChild(ul);
+    }
+    const guide = el('a', t('guideOpen'));
+    guide.href = api.runtime.getURL('guide.html');
+    guide.target = '_blank';
+    app.appendChild(add(el('p'), guide));
+  }
+
   const m = data.mytests;
   app.appendChild(el('h2', t('myTitle')));
   app.appendChild(toggle(t('myToggle'), m.settings.enabled, (on) => send({ type: 'mytests:settings', enabled: on })));

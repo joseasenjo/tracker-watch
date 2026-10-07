@@ -24,7 +24,8 @@ What it shows:
 - Optional: your own before/after banner tests, and a weekly summary of the companies that reached you.
 
 What it does not do:
-- It does not block, change or click anything. It describes; it does not protect.
+- By default it does not block, change or click anything. An optional clean mode stops the tracking services of
+  our small list; it is not complete protection, and the panel says so.
 - It sends nothing: no analytics, no account, no server. Its lists and weekly figures are bundled with it.
 - It keeps no browsing history: tab reports end with the tab; the optional features keep only counts,
   company and service names, and, for banner tests, the names of the sites you tested.
@@ -52,6 +53,9 @@ Show the user which tracking services the page they are viewing contacts, and ex
   one site's cookies when the user presses "Clear this site's data and reload".
 - **storage**: to keep each tab's report for the session and, if the user enables them, local banner tests and
   a weekly summary.
+- **declarativeNetRequestWithHostAccess**: optional clean mode, off by default: rule sets bundled with the
+  extension stop third-party requests to the tracking services of our list and remove tracking parameters from
+  page addresses. Rules are static files in the package; nothing is downloaded.
 - **browsingData (optional)**: requested only when the user first presses "Clear this site's data and reload",
   to clear that site's stored data so its cookie banner shows again.
 - **Remote code**: none. All code and data are in the package.
