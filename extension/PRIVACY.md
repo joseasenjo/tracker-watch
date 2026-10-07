@@ -48,6 +48,8 @@ Two buttons open something only because you press them:
 - **Report a list mistake** opens a pre-filled page on GitHub (github.com) in a new tab, listing the site name
   and the tracking services seen on it. Nothing is submitted unless you submit it yourself on GitHub, where
   GitHub's own privacy policy applies.
+- **Links to a search engine's own pages** (for example Google's My Activity), shown on its results page,
+  open that page only when you click them.
 
 ## Permissions, and why each one is needed
 

@@ -11,7 +11,7 @@ import { commonOperators, compareWithBaseline, findSite, journeyEntry, summarize
 import { cookiesByService } from './core/activity.js';
 import { hostOf } from './core/requests.js';
 import { differenceReasons } from './core/differ.js';
-import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams } from './core/search.js';
+import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams, signedIn } from './core/search.js';
 import { DAY_OPTIONS, STORE_KEY, carryTest, currentRun, exportStore, normalizeStore, purge, saveRun, siteView,
   startTest } from './core/mytests.js';
 import { SUMMARY_KEY, addPage, normalizeSummary, periodView, purgeSummary } from './core/summary.js';
@@ -501,7 +501,7 @@ async function report(tabId, url) {
       engineCookieList = engineCookies(engine, await api.cookies.getAll({ domain: page.site }), Date.now());
     } catch { /* cookies unavailable */ }
     search = { ...page.search, name: engine.name, cookies: engineCookieList, cookieSource: engine.cookie_source,
-      accountLinks: engine.account_links, checked: profiles.checked };
+      server: engine.server, signedIn: signedIn(engine, engineCookieList), checked: profiles.checked };
   }
   const consentTools = [...new Set(summary.operators.flatMap((o) => o.services)
     .filter((x) => x.category === 'consent_management').map((x) => x.entity))];

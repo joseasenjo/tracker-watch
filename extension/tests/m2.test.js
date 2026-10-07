@@ -8,7 +8,7 @@ import { createTrackerList } from '../src/core/classify.js';
 import { markInteraction, noteBanner, notePing, noteSerp, onRequest, onSent, startPage } from '../src/core/page.js';
 import { summarizePage } from '../src/core/report.js';
 import { differenceReasons } from '../src/core/differ.js';
-import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams } from '../src/core/search.js';
+import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams, signedIn } from '../src/core/search.js';
 
 const load = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 const glossary = load('../data/glossary.json');
@@ -129,6 +129,18 @@ test('results page: link structure and pings are recorded', () => {
 test('profiles only describe engines from their own documentation, with a source', () => {
   for (const e of engines) {
     if (Object.keys(e.cookies).length) assert.match(e.cookie_source, /^https:\/\//, e.id);
-    for (const l of e.account_links) assert.match(l.url, /^https:\/\//);
+    assert.ok(e.server.sources.length && e.server.sources.every((u) => /^https:\/\//.test(u)), e.id);
+    assert.ok(e.server.steps.length && e.server.steps.every((s) => /^https:\/\//.test(s.url) && s.what), e.id);
+    // statements are attributed to the company, never asserted by Lens
+    assert.match(e.server.signed_out, /says/, e.id);
+    if (e.server.signed_in) assert.match(e.server.signed_in, /says/, e.id);
   }
+});
+
+test('signed in only from the sign-in cookie the engine documents; unknown otherwise', () => {
+  const google = engines.find((e) => e.id === 'google');
+  const bing = engines.find((e) => e.id === 'bing');
+  assert.equal(signedIn(google, [{ name: 'NID' }]), false);
+  assert.equal(signedIn(google, [{ name: 'NID' }, { name: 'SID' }]), true);
+  assert.equal(signedIn(bing, [{ name: 'MUID' }]), null);
 });

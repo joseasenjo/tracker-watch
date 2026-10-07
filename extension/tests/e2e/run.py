@@ -251,6 +251,8 @@ def search_scenario(ctx, control, browser: str, screenshot: str | None = None) -
     if any(o["entity"] == "Google" and any(x["service"].startswith("google") for x in o["services"])
            for d in dests for o in d["operators"]):
         errors.append("the engine's ping was counted as a contact of the destination page")
+    if not (q.get("server") or {}).get("steps") or q.get("signedIn") is not False:
+        errors.append(f"server guide or signed-in state: {q.get('server')} {q.get('signedIn')}")
     print(f"{browser}: search {q['links']} arrivals {sorted(arrivals)} ping={via_link and via_link['ping']}")
     return errors
 

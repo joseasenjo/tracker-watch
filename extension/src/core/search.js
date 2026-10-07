@@ -6,8 +6,12 @@
 
 /**
  * @typedef {{ id: string, name: string, hosts: string, results_paths: string[], redirect_paths: string[],
- *   query_param: string, account_links: Array<{ label: string, url: string }>, cookie_source: string | null,
- *   cookies: Record<string, string> }} EngineProfile
+ *   query_param: string, cookie_source: string | null, cookies: Record<string, string>,
+ *   server: ServerGuide }} EngineProfile
+ * @typedef {{ sources: string[], signed_in_cookie: string | null, signed_out: string, signed_in: string | null,
+ *   steps: Array<{ label: string, url: string, what: string }> }} ServerGuide
+ *   What the engine says it keeps on its servers, paraphrased from its own pages (Lens cannot check it), and
+ *   where to see, delete or request it.
  * @typedef {EngineProfile & { re: RegExp }} Engine
  */
 
@@ -66,6 +70,19 @@ export function searchParams(engine, url) {
   }
   const names = [...new Set(u.searchParams.keys())].slice(0, 40);
   return names.map((name) => ({ name: name.slice(0, 40), isQuery: name === engine.query_param }));
+}
+
+/**
+ * Signed in to the engine's account in this browser? Only when the profile names the sign-in cookie that
+ * the engine documents (Google: SID, "signing in and security"); otherwise unknown (null).
+ * @param {Engine} engine
+ * @param {Array<{ name: string }>} cookies  from engineCookies
+ * @returns {boolean | null}
+ */
+export function signedIn(engine, cookies) {
+  const name = engine.server && engine.server.signed_in_cookie;
+  if (!name) return null;
+  return cookies.some((c) => c.name === name);
 }
 
 /**

@@ -3,8 +3,11 @@ const api = globalThis.browser ?? globalThis.chrome;
 const t = (key, ...subs) => api.i18n.getMessage(key, subs.map(String)) || key;
 const app = document.getElementById('app');
 const status = document.getElementById('status');
-/** Short announcements (copied, loading done) go to one live region, not the whole panel. */
-const announce = (text) => { if (status.textContent !== text) status.textContent = text; };
+const hidden = document.getElementById('announce');
+/** Short announcements go to live regions, never the whole panel: the headline only for screen readers,
+ *  the result of a button (copied) visible too. */
+const announce = (text) => { if (hidden.textContent !== text) hidden.textContent = text; };
+const notice = (text) => { status.textContent = text; };
 
 /** @param {string} tag @param {string} [text] @param {string} [cls] */
 function el(tag, text, cls) {
@@ -103,9 +106,10 @@ function render(tab, data) {
 
   renderBlocking(s.blocking);
   renderJourney(data.journey);
-  renderMyTests(tab, data.mytests, Boolean(c.payOrAccept));
+  if (!data.search) renderMyTests(tab, data.mytests, Boolean(c.payOrAccept)); // a results page has no banner to test
 
   app.appendChild(el('h2', t('operatorsTitle')));
+  if (!s.operators.length) app.appendChild(el('p', t('noneContacted'), 'note'));
   const FIRST = 10;
   let more = null;
   s.operators.forEach((op, i) => {
@@ -323,8 +327,8 @@ function renderShare(tab, data) {
   app.appendChild(el('h2', t('shareTitle')));
   const tools = el('div', undefined, 'tools');
   tools.appendChild(button(t('shareCopy'), async () => {
-    try { await navigator.clipboard.writeText(summaryText(data)); announce(t('shareCopied')); }
-    catch { announce(t('shareCopyFailed')); }
+    try { await navigator.clipboard.writeText(summaryText(data)); notice(t('shareCopied')); }
+    catch { notice(t('shareCopyFailed')); }
   }));
   tools.appendChild(button(t('shareExport'), async () => {
     const a = document.createElement('a');
@@ -387,12 +391,25 @@ function renderSearch(q) {
     app.appendChild(ul);
     if (q.cookieSource) add(app, add(el('p', undefined, 'note'), el('span', t('cookieSource') + ' '), link(q.cookieSource, q.cookieSource)));
   }
+  renderServer(q.name, q.server, q.signedIn, q.checked);
+}
+
+/** M3b: what the engine says it keeps on its servers (its words, paraphrased) and where to see or ask for it. */
+function renderServer(name, g, signed, checked) {
+  if (!g) return;
+  app.appendChild(el('h2', t('serverTitle', name)));
   app.appendChild(el('p', t('searchServer'), 'note'));
-  if (q.accountLinks.length) {
-    app.appendChild(add(el('ul'), ...q.accountLinks.map((l) => add(el('li'), link(l.label, l.url)))));
-  } else {
-    app.appendChild(el('p', t('noAccountLinks'), 'note'));
-  }
+  if (signed === true) app.appendChild(el('p', t('signedIn', name), 'warn'));
+  else if (signed === false) app.appendChild(el('p', t('signedOut', name), 'note'));
+  app.appendChild(el('p', g.signed_out));
+  if (g.signed_in) app.appendChild(el('p', g.signed_in));
+  const ol = el('ol', undefined, 'steps');
+  for (const s of g.steps) ol.appendChild(add(el('li'), link(s.label, s.url), el('div', s.what, 'svc')));
+  app.appendChild(ol);
+  app.appendChild(el('p', t('gdprAccess'), 'note'));
+  const src = add(el('p', undefined, 'note'), el('span', t('serverSources', checked) + ' '));
+  g.sources.forEach((u, i) => { if (i) src.appendChild(el('span', ' \u00b7 ')); src.appendChild(link(u.replace(/^https:\/\//, ''), u)); });
+  app.appendChild(src);
 }
 
 function renderTold(told) {
