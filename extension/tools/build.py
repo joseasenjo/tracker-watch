@@ -31,6 +31,7 @@ def manifest(browser: str, test: bool) -> dict:
         "default_locale": "en",
         "permissions": ["webRequest", "webNavigation", "storage", "cookies"],
         "host_permissions": ["<all_urls>"],
+        "optional_permissions": ["browsingData"],
         "icons": {str(n): f"icons/icon-{n}.png" for n in (16, 32, 48, 128)},
         "action": {"default_popup": "popup.html", "default_title": "__MSG_extName__",
                    "default_icon": {str(n): f"icons/icon-{n}.png" for n in (16, 32)}},
@@ -54,7 +55,8 @@ def manifest(browser: str, test: bool) -> dict:
 
 TESTHOOK = """// Test builds only: hand every tab report to the local test page.
 const api = globalThis.browser ?? globalThis.chrome;
-Promise.resolve(api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
+const first = location.search.includes('mytests=on') ? api.runtime.sendMessage({ type: 'test:mytests-on' }) : null;
+Promise.resolve(first).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
   const pre = document.createElement('pre');
   pre.id = 'lens-reports';
   pre.textContent = JSON.stringify(all);

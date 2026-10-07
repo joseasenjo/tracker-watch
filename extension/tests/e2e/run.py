@@ -309,10 +309,12 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append(f"manifest warnings: {warnings}")
     time.sleep(1.5)
     page = ctx.pages[0] if ctx.pages else ctx.new_page()
+    page.goto(U("control.test", "/?mytests=on"), wait_until="load")  # turn on "Your own banner test"
+    page.wait_for_selector("#lens-reports", state="attached", timeout=10000)
     page.goto(U("site.test", "/"), wait_until="load")
     page.wait_for_timeout(1200)
     page.click("#onetrust-reject-all-handler")
-    page.wait_for_timeout(1200)
+    page.wait_for_timeout(2500)  # the banner test is written at most every 1.5 s
     control = ctx.new_page()
     reports = read_reports(control)
     match = [(tid, r) for tid, r in reports.items() if r.get("page") and r["page"]["host"] == "site.test"]
@@ -347,6 +349,12 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     gtm = [x for o in s["operators"] for x in o["services"] if x["service"] == "googletagmanager.com"]
     if not gtm or gtm[0]["tracking"]:
         errors.append("tag manager should be listed and not counted")
+    mine = (rep.get("mytests") or {}).get("view") or {}
+    runs = (mine.get("reject") or {}).get("runs") or []
+    if len(runs) != 1 or not runs[0]["clean"] or runs[0]["after"] != EXPECTED["trackingNewAfter"]             or mine.get("next") != "accept" or rep["mytests"]["site"] != "site.test":
+        errors.append(f"own banner test not recorded as expected: {mine}")
+    elif "http" in json.dumps(runs):
+        errors.append("an address leaked into the stored banner test")
     print(f"{browser}: {json.dumps(got)} size={s['bytes']}")
     errors += search_scenario(ctx, control, browser, screenshot)
     errors += custom_banner_and_prerender(ctx, control, browser)

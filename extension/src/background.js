@@ -12,6 +12,8 @@ import { cookiesByService } from './core/activity.js';
 import { hostOf } from './core/requests.js';
 import { differenceReasons } from './core/differ.js';
 import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams } from './core/search.js';
+import { DAY_OPTIONS, STORE_KEY, carryTest, currentRun, exportStore, normalizeStore, purge, saveRun, siteView,
+  startTest } from './core/mytests.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const TEST_HOOKS = false; // set to true only by tools/build.py --test
@@ -45,6 +47,12 @@ const prerenderDocs = {};
 const MAX_PRERENDERS = 4;
 const PING_WINDOW_MS = 5000;
 const RELOAD_AFTER_ANSWER_MS = 30000;
+// "Your own banner test" (opt-in): kept in storage.local, written at most every MYTEST_DELAY_MS per tab.
+let myStore = normalizeStore(null);
+const myDirty = new Set();
+let myTimer = null;
+const MYTEST_DELAY_MS = 1500;
+const CLEARED_VALID_MS = 10 * 60000;
 
 const loadJson = async (path) => (await fetch(api.runtime.getURL(path))).json();
 
@@ -54,6 +62,7 @@ const ready = (async () => {
     loadJson('data/sites.json'), loadJson('data/index.json'), loadJson('data/search_engines.json'),
     api.storage.session.get(null),
   ]);
+  myStore = purge(normalizeStore((await api.storage.local.get(STORE_KEY))[STORE_KEY]), Date.now());
   profiles = engineProfiles;
   engines = compileEngines(engineProfiles);
   consentNames = new Set(g.consent_tools.map((c) => c.name));
@@ -85,8 +94,78 @@ async function save() {
   const data = {};
   for (const id of ids) if (tabs[id]) data['tab:' + id] = tabs[id];
   if (Object.keys(data).length) await api.storage.session.set(data);
-  for (const id of ids) updateBadge(id);
+  for (const id of ids) {
+    updateBadge(id);
+    if (myStore.settings.enabled && tabs[id] && tabs[id].myTest) myDirty.add(id);
+  }
+  if (myDirty.size && !myTimer) myTimer = setTimeout(saveMyTests, MYTEST_DELAY_MS);
 }
+
+/** Cookies per contacted service, as now in the browser (names and lifetimes, never values). */
+async function serviceCookies(page) {
+  try {
+    return cookiesByService(await api.cookies.getAll({ partitionKey: {} }), ctx, page, Date.now());
+  } catch {
+    try { return cookiesByService(await api.cookies.getAll({}), ctx, page, Date.now()); } catch { return {}; }
+  }
+}
+
+async function saveMyTests() {
+  myTimer = null;
+  const ids = [...myDirty];
+  myDirty.clear();
+  if (!myStore.settings.enabled) return;
+  for (const id of ids) {
+    const page = own(id);
+    if (!page || !page.myTest) continue;
+    const run = currentRun(page.myTest, summarizePage(page, glossary), page, await serviceCookies(page),
+      Boolean(page.myTestContinued));
+    saveRun(myStore, page.site, page.myTest.choice, run);
+  }
+  purge(myStore, Date.now());
+  await api.storage.local.set({ [STORE_KEY]: myStore });
+}
+
+/** Lens cleared this site's data a moment ago (the test then starts from a first visit). */
+async function wasCleared(site) {
+  const key = 'cleared:' + site;
+  const at = (await api.storage.session.get(key))[key];
+  return typeof at === 'number' && Date.now() - at < CLEARED_VALID_MS;
+}
+
+/**
+ * Step 2 of the guided test: remove this site's cookies (and, with the optional browsingData permission,
+ * its other site data) so its banner shows again, then reload. Third-party cookies outside this site's
+ * partition are left alone: they belong to every site.
+ */
+async function clearSite(tabId) {
+  const page = own(String(tabId));
+  if (!page || !page.site) return false;
+  const domains = [...new Set([page.site, ...page.firstParty])];
+  const mine = (d) => domains.some((x) => d === x || d.endsWith('.' + x));
+  let all = [];
+  try { all = await api.cookies.getAll({ partitionKey: {} }); } catch { all = await api.cookies.getAll({}); }
+  for (const c of all) {
+    const top = c.partitionKey && c.partitionKey.topLevelSite ? hostOf(c.partitionKey.topLevelSite) || '' : '';
+    if (!mine(c.domain.replace(/^\./, '')) && !(top && mine(top))) continue;
+    const details = { url: `http${c.secure ? 's' : ''}://${c.domain.replace(/^\./, '')}${c.path}`, name: c.name,
+      storeId: c.storeId };
+    if (c.partitionKey) details.partitionKey = c.partitionKey;
+    try { await api.cookies.remove(details); } catch { /* already gone */ }
+  }
+  if (api.browsingData && await api.permissions.contains({ permissions: ['browsingData'] })) {
+    const kinds = { cookies: true, localStorage: true, indexedDB: true, cacheStorage: true, serviceWorkers: true };
+    try {
+      await api.browsingData.remove({ origins: domains.flatMap((d) => [`https://${d}`, `https://www.${d}`]) }, kinds);
+    } catch {
+      try { await api.browsingData.remove({ hostnames: domains.flatMap((d) => [d, 'www.' + d]) }, { cookies: true, localStorage: true }); } catch { /* not supported */ }
+    }
+  }
+  await api.storage.session.set({ ['cleared:' + page.site]: Date.now() });
+  await api.tabs.reload(Number(tabId), { bypassCache: true });
+  return true;
+}
+
 
 function updateBadge(tabId) {
   const page = tabs[tabId];
@@ -124,6 +203,11 @@ function navigate(id, d) {
   if (page && page.consent.click && page.consent.click.choice !== 'other' && page.site === next.site
       && page.interactionAt !== null && d.timeStamp - page.interactionAt < RELOAD_AFTER_ANSWER_MS) {
     next.consent.previous = page.consent.click;
+    if (page.myTest) {
+      const run = currentRun(page.myTest, summarizePage(page, glossary), page, {}, Boolean(page.myTestContinued));
+      next.myTest = carryTest(page.myTest, run);
+      next.myTestContinued = true;
+    }
   }
   if (target && target.kind === 'redirect') next.engineRedirect = target.engine.id;
   if (target && target.kind === 'results') {
@@ -314,18 +398,29 @@ api.tabs.onRemoved.addListener((tabId) => {
   api.storage.session.remove('tab:' + tabId);
 });
 
+async function myTestsMessage(msg) {
+  if (msg.type === 'mytests:settings') {
+    if (typeof msg.enabled === 'boolean') myStore.settings.enabled = msg.enabled;
+    if (DAY_OPTIONS.includes(msg.days)) myStore.settings.days = msg.days;
+  } else if (msg.type === 'mytests:delete') {
+    if (typeof msg.site === 'string') delete myStore.sites[msg.site];
+    else myStore.sites = {};
+  } else if (msg.type === 'mytests:export') {
+    return exportStore(myStore, Date.now());
+  } else if (msg.type === 'mytests:clearSite') {
+    return clearSite(msg.tabId);
+  }
+  purge(myStore, Date.now());
+  await api.storage.local.set({ [STORE_KEY]: myStore });
+  return true;
+}
+
 /** Everything the panel shows for one tab. */
 async function report(tabId, url) {
   await ready;
   const page = own(String(tabId));
   if (!page) return { page: null, index };
-  let cookies = {};
-  try {
-    const all = await api.cookies.getAll({ partitionKey: {} });
-    cookies = cookiesByService(all, ctx, page, Date.now());
-  } catch {
-    try { cookies = cookiesByService(await api.cookies.getAll({}), ctx, page, Date.now()); } catch { /* no cookies */ }
-  }
+  const cookies = await serviceCookies(page);
   const contacted = new Set(Object.keys(page.services));
   for (const key of Object.keys(cookies)) if (!contacted.has(key)) delete cookies[key];
   const summary = summarizePage(page, glossary, { cookies });
@@ -351,6 +446,8 @@ async function report(tabId, url) {
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
+    mytests: { settings: myStore.settings, site: page.site, view: siteView(myStore, page.site),
+      running: page.myTest ? { choice: page.myTest.choice, continued: Boolean(page.myTestContinued) } : null },
     reasons: differenceReasons(summary, page, baseline, { browser: ENV_BROWSER, nowMs: Date.now() }),
   };
 }
@@ -370,7 +467,16 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.on && typeof msg.on === 'object' && CHOICES.has(msg.on.choice)) {
         on = { tool: consentNames.has(msg.on.tool) ? msg.on.tool : null, choice: msg.on.choice };
       }
-      if (page) { markInteraction(page, { now: at, kind: msg.kind === 'key' ? 'key' : 'click', on }); touch(sender.tab.id); }
+      if (!page) return;
+      const first = page.interactionAt === null;
+      markInteraction(page, { now: at, kind: msg.kind === 'key' ? 'key' : 'click', on });
+      if (first && myStore.settings.enabled && page.consent.click && !page.myTest) {
+        wasCleared(page.site).then((cleared) => {
+          page.myTest = startTest(summarizePage(page, glossary), page.consent.click, { nowMs: Date.now(), cleared });
+          touch(sender.tab.id);
+        });
+      }
+      touch(sender.tab.id);
     });
     return false;
   }
@@ -399,8 +505,16 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     });
     return true;
   }
+  if (msg && typeof msg.type === 'string' && msg.type.startsWith('mytests:') && !fromPage) {
+    ready.then(() => myTestsMessage(msg)).then(sendResponse);
+    return true;
+  }
   if (msg && msg.type === 'report' && !fromPage) {
     report(msg.tabId, msg.url).then(sendResponse);
+    return true;
+  }
+  if (TEST_HOOKS && msg && msg.type === 'test:mytests-on') {
+    ready.then(() => myTestsMessage({ type: 'mytests:settings', enabled: true })).then(sendResponse);
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:reports') {

@@ -94,6 +94,8 @@ function render(tab, data) {
     }
   }
 
+  renderMyTests(tab, data.mytests);
+
   app.appendChild(el('h2', t('operatorsTitle')));
   for (const op of s.operators) {
     const box = el('div', undefined, 'op');
@@ -127,6 +129,91 @@ function render(tab, data) {
   if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
   fetch(api.runtime.getURL('data/build.json')).then((r) => r.json())
     .then((b) => app.appendChild(el('p', `build ${b.built}`, 'note')), () => {});
+}
+
+const send = (msg) => api.runtime.sendMessage(msg);
+function button(label, onClick) {
+  const b = el('button', label);
+  b.addEventListener('click', async () => { b.disabled = true; await onClick(); load(); });
+  return b;
+}
+
+/** "Your own banner test": opt-in; only counts and service names, kept in this browser. */
+function renderMyTests(tab, m) {
+  if (!m) return;
+  app.appendChild(el('h2', t('myTitle')));
+  if (!m.settings.enabled) {
+    add(app, el('p', t('myOff'), 'note'), button(t('myTurnOn'), () => send({ type: 'mytests:settings', enabled: true })));
+    return;
+  }
+  const v = m.view;
+  if (m.running) {
+    app.appendChild(el('p', t(m.running.choice === 'reject' ? 'myRecordingReject' : 'myRecordingAccept')
+      + (m.running.continued ? ' ' + t('myContinued') : ''), 'note'));
+  }
+  const steps = el('ol', undefined, 'steps');
+  const step = (done, text) => add(steps, el('li', (done ? '\u2713 ' : '') + text, done ? 'done' : ''));
+  step(v.reject.runs.length > 0, t('myStep1'));
+  const li = el('li', t('myStep2'));
+  li.appendChild(el('br'));
+  li.appendChild(button(t('myClear'), async () => {
+    try { await api.permissions.request({ permissions: ['browsingData'] }); } catch { /* cookies only */ }
+    await send({ type: 'mytests:clearSite', tabId: tab.id });
+  }));
+  steps.appendChild(li);
+  step(v.accept.runs.length > 0, t('myStep3'));
+  app.appendChild(steps);
+  if (v.next === 'repeat') app.appendChild(el('p', t('myRepeat'), 'note'));
+
+  for (const choice of ['reject', 'accept']) {
+    const part = v[choice];
+    if (!part.runs.length) continue;
+    const last = part.runs[0];
+    const box = el('div', undefined, 'op');
+    box.appendChild(el('b', t(choice === 'reject' ? 'myAfterReject' : 'myAfterAccept', last.after.length, last.date)));
+    if (!last.clean) box.appendChild(el('div', t('myNotClean'), 'warn'));
+    if (last.cleared) box.appendChild(el('div', t('myCleared'), 'svc'));
+    if (last.after.length) box.appendChild(el('div', last.after.join(', '), 'svc'));
+    if (last.newAfter.length) box.appendChild(el('div', t('myNew', last.newAfter.length, last.newAfter.join(', ')), 'svc'));
+    const withCookies = Object.entries(last.cookies);
+    if (withCookies.length) {
+      box.appendChild(el('div', t('myCookies', withCookies.length), 'svc'));
+      box.appendChild(add(el('ul'), ...withCookies.map(([svc, names]) => el('li', `${svc}: ${names.join(', ')}`, 'svc'))));
+    }
+    if (last.notes.length) box.appendChild(el('div', t('myRecognised', last.notes.length), 'svc'));
+    if (part.runs.length > 1 && part.range) {
+      box.appendChild(el('div', t('myRange', part.runs.length, part.range[0], part.range[1]), 'svc'));
+      if (part.cleanRuns > 1) box.appendChild(el('div', t('myEvery', part.inEveryCleanRun.join(', ') || '-'), 'svc'));
+    }
+    app.appendChild(box);
+  }
+  if (v.comparison) {
+    const c = v.comparison;
+    app.appendChild(el('p', t('myCompare', c.reject, c.accept, c.both, c.onlyAccept)));
+  }
+  app.appendChild(el('p', t('myStored'), 'note'));
+  const keep = el('select');
+  for (const d of [7, 30, 90]) {
+    const o = el('option', t('myDays', d));
+    o.value = String(d);
+    o.selected = d === m.settings.days;
+    keep.appendChild(o);
+  }
+  keep.addEventListener('change', async () => { await send({ type: 'mytests:settings', days: Number(keep.value) }); load(); });
+  const tools = add(el('div', undefined, 'tools'), el('span', t('myKeep'), 'svc'), keep);
+  if (v.reject.runs.length || v.accept.runs.length) {
+    tools.appendChild(button(t('myDeleteSite'), () => send({ type: 'mytests:delete', site: m.site })));
+  }
+  tools.appendChild(button(t('myDeleteAll'), () => send({ type: 'mytests:delete' })));
+  tools.appendChild(button(t('myExport'), async () => {
+    const data = await send({ type: 'mytests:export' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = `lens-banner-tests-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+  }));
+  tools.appendChild(button(t('myTurnOff'), () => send({ type: 'mytests:settings', enabled: false })));
+  app.appendChild(tools);
 }
 
 function renderArrival(a) {
