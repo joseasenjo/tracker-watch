@@ -220,10 +220,7 @@ function renderPanelTools() {
   });
   const copy = el('button', t('copyAll'));
   copy.addEventListener('click', async () => {
-    const was = sections().map((d) => d.open);
-    for (const d of sections()) d.open = true;
-    const text = root.innerText;
-    sections().forEach((d, i) => { d.open = was[i]; });
+    const text = plainText(root);
     try { await navigator.clipboard.writeText(text); notice(t('copiedAll')); } catch { notice(t('shareCopyFailed')); }
   });
   const settings = el('button', t('settingsButton'));
@@ -329,6 +326,31 @@ function renderSiteOnly(s, so, tab) {
 }
 
 const send = (msg) => api.runtime.sendMessage(msg);
+
+/**
+ * The panel as plain text, closed sections and folds included: read from the elements, not from what is drawn
+ * (Chrome does not draw the content of a closed section, so innerText left it empty). Buttons are left out.
+ */
+function plainText(node) {
+  const BLOCK = new Set(['P', 'LI', 'H1', 'H2', 'H3', 'DT', 'SUMMARY', 'DIV', 'UL', 'OL', 'DL', 'DETAILS', 'FOOTER']);
+  const lines = [];
+  let cur = '';
+  const flush = () => { const s = cur.replace(/\s+/g, ' ').trim(); if (s) lines.push(s); cur = ''; };
+  const walk = (n) => {
+    if (n.nodeType === Node.TEXT_NODE) { cur += n.textContent; return; }
+    if (n.nodeType !== Node.ELEMENT_NODE || ['BUTTON', 'INPUT', 'SCRIPT', 'STYLE'].includes(n.tagName)) return;
+    if (n.tagName === 'DD') { cur += ': '; n.childNodes.forEach(walk); flush(); return; } // "term: value"
+    const block = BLOCK.has(n.tagName);
+    if (block) flush();
+    if (n.tagName === 'LI') cur += '- ';
+    if (n.tagName === 'LABEL' || n.tagName === 'SPAN') cur += ' '; // chips and numbers sit side by side
+    n.childNodes.forEach(walk);
+    if (block && n.tagName !== 'DT') flush();
+  };
+  walk(node);
+  flush();
+  return lines.join('\n');
+}
 
 /** "Open all" or "Close all", as the sections are now (the panel is drawn again while a page loads). */
 function updateToggleAll() {
