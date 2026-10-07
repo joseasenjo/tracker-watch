@@ -29,7 +29,10 @@ export function summarizePage(page, glossary, extra = {}) {
     return {
       service, entity: s.entity, category: s.category, tracking: s.tracking, verified: s.verified,
       contacted: before + after > 0, before, after, newAfterInteraction: before === 0 && after > 0,
-      stopped: s.stopped, bytes: s.bytes || null, requests, phrases: phrases(activity, glossary, { live: Boolean(extra.liveCookies) }),
+      stopped: s.stopped, bytes: s.bytes || null, requests,
+      // requests made from inside embedded third-party frames, by the frame's site (the rest: the page itself)
+      via: Object.entries(s.via || {}).map(([site, n]) => ({ site, requests: n })).sort((a, b) => b.requests - a.requests),
+      phrases: phrases(activity, glossary, { live: Boolean(extra.liveCookies) }),
     };
   });
   const contacted = services.filter((s) => s.contacted);
@@ -45,6 +48,17 @@ export function summarizePage(page, glossary, extra = {}) {
     services: list.sort((a, b) => byName(a.service, b.service)),
   })).sort((a, b) => b.trackingServices - a.trackingServices || byName(a.entity, b.entity));
 
+  // embedded frames that contacted tracking services, and which
+  const frameMap = {};
+  for (const s of tracking) {
+    for (const v of s.via) {
+      const f = (frameMap[v.site] ??= { site: v.site, services: [], requests: 0 });
+      f.services.push(s.service);
+      f.requests += v.requests;
+    }
+  }
+  const frames = Object.values(frameMap).map((f) => ({ ...f, services: f.services.sort(byName) }))
+    .sort((a, b) => b.services.length - a.services.length || byName(a.site, b.site));
   const sized = page.bytes.exact + page.bytes.approx;
   // F6: what our own filter lists (trackerwatch-verified.txt / -full.txt: one `||domain^$third-party` rule per
   // tracking service of the list) would have stopped directly. Simulated: nothing is blocked.
@@ -77,6 +91,10 @@ export function summarizePage(page, glossary, extra = {}) {
     stoppedServices: services.filter((s) => !s.contacted).map((s) => s.service).sort(byName),
     operators: operatorList,
     unverifiedServices: contacted.filter((s) => !s.verified).length,
+    frames,
+    // tracking services contacted only from inside embedded frames, never by the page itself
+    onlyFromFrames: tracking.filter((s) => s.via.length && s.via.reduce((n, v) => n + v.requests, 0) >= sum(s.requests))
+      .map((s) => s.service).sort(byName),
     behaviourServices: Object.keys(behaviours).filter((k) => behaviours[k].length).length,
     behavioursOther: Object.entries(extra.behavioursOther ?? {}).map(([domain, kinds]) => ({ domain, kinds }))
       .sort((a, b) => byName(a.domain, b.domain)),

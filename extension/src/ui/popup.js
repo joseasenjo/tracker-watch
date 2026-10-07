@@ -108,6 +108,7 @@ function render(tab, data) {
   renderJourney(data.journey);
   if (!data.search) renderMyTests(tab, data.mytests, Boolean(c.payOrAccept)); // a results page has no banner to test
 
+  renderFrames(s);
   app.appendChild(el('h2', t('operatorsTitle')));
   if (!s.operators.length) app.appendChild(el('p', t('noneContacted'), 'note'));
   const FIRST = 10;
@@ -125,6 +126,9 @@ function render(tab, data) {
       const labels = [category(svc.category)];
       if (!svc.tracking) labels.push(t('notCounted'));
       if (!svc.verified) labels.push(t('unverified'));
+      if (svc.tracking && svc.via.length) {
+        labels.push(t(s.onlyFromFrames.includes(svc.service) ? 'viaOnlyLabel' : 'viaLabel', svc.via.map((v) => v.site).join(', ')));
+      }
       add(li, el('span', svc.service), el('span', ` · ${labels.join(' · ')}`, 'svc'));
       if (svc.phrases.length) li.appendChild(el('div', svc.phrases.join('; '), 'svc'));
       ul.appendChild(li);
@@ -343,6 +347,20 @@ function renderShare(tab, data) {
     title: `List correction: ${data.page.site}`, body }).toString();
   tools.appendChild(link(t('shareIssue'), url));
   add(app, tools, el('p', t('shareNote'), 'note'));
+}
+
+/** Where tracking services were contacted from: the page itself or embedded frames (videos, ad slots). */
+function renderFrames(s) {
+  if (!s.frames.length) return;
+  app.appendChild(el('h2', t('framesTitle')));
+  const ul = el('ul');
+  for (const f of s.frames) {
+    ul.appendChild(add(el('li'), el('b', f.site), el('span', ' \u00b7 ' + t('framesRow', f.services.length, f.requests), 'svc'),
+      el('div', f.services.join(', '), 'svc')));
+  }
+  app.appendChild(ul);
+  if (s.onlyFromFrames.length) app.appendChild(el('p', t('framesOnly', s.onlyFromFrames.length), 'note'));
+  app.appendChild(el('p', t('framesNote'), 'note'));
 }
 
 /** A folded list: long lists of service names stay closed until opened. */

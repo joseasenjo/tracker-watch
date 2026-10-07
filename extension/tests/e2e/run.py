@@ -28,7 +28,7 @@ EXT = Path(__file__).resolve().parents[2]
 PORT = 18543
 RDP_PORT = 18602
 HOSTS = ["site.test", "control.test", "www.googletagmanager.com", "stats.g.doubleclick.net", "ib.adnxs.com",
-         "cdn.unknown.test", "connect.facebook.net", "www.google.com", "cdn.cookielaw.org"]
+         "cdn.unknown.test", "connect.facebook.net", "www.google.com", "cdn.cookielaw.org", "www.youtube.com"]
 U = lambda host, path: f"https://{host}:{PORT}{path}"  # noqa: E731
 
 PAGE = f"""<!doctype html><meta charset="utf-8"><title>e2e</title>
@@ -38,6 +38,7 @@ PAGE = f"""<!doctype html><meta charset="utf-8"><title>e2e</title>
 <script>window.addEventListener('load', () => {{ new Image().src = "{U('ib.adnxs.com', '/px')}"; }});</script>
 <img src="{U('stats.g.doubleclick.net', '/collect?gclid=SECRET')}">
 <script src="{U('cdn.cookielaw.org', '/otSDKStub.js')}"></script>
+<iframe src="{U('www.youtube.com', '/embed/x')}" width="10" height="10"></iframe>
 <div id="onetrust-banner-sdk" style="position:fixed;bottom:0;left:0;right:0;background:#eee;padding:10px">
   We use cookies. <button id="onetrust-reject-all-handler">Reject all</button>
   <button id="onetrust-accept-btn-handler">Accept all</button></div>
@@ -68,7 +69,7 @@ UNKNOWN_BANNER = """<!doctype html><meta charset="utf-8"><title>unknown cmp</tit
 PRERENDERED = f"""<!doctype html><meta charset="utf-8"><title>prerendered</title>
 <img src="{U('ib.adnxs.com', '/pre.gif')}"><img src="{U('stats.g.doubleclick.net', '/pre.gif')}">"""
 
-EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 6, "band": "A"}
+EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 7, "band": "A"}
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -106,6 +107,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_header("Content-Length", "0")
             self.end_headers()
             return
+        elif host == "www.youtube.com" and path == "/embed/x":  # an embedded video that contacts an ad service
+            body, ctype = f"<!doctype html><img src=\"{U('stats.g.doubleclick.net', '/yt.gif')}\">".encode(), "text/html"
         elif host == "control.test":
             body, ctype = b"<!doctype html><title>control</title><p>control</p>", "text/html"
         elif host == "ib.adnxs.com" and path == "/ut.js":  # a listed service reads a canvas
@@ -369,6 +372,8 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     if s.get("behavioursOther") != [{"domain": "cdn.unknown.test", "kinds": ["webrtc_connection"]}]:
         errors.append(f"unlisted script behaviour: {s.get('behavioursOther')}")
     print(f"{browser}: {json.dumps(got)} size={s['bytes']}")
+    if s.get("frames") != [{"site": "youtube.com", "services": ["doubleclick.net"], "requests": 1}]:
+        errors.append(f"embedded frame attribution: {s.get('frames')}")
     errors += search_scenario(ctx, control, browser, screenshot)
     b = s.get("blocking") or {}
     if (b.get("full") or {}).get("services") != 3 or (b.get("verified") or {}).get("requests", 0) < 1:

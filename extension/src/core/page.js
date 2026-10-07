@@ -137,7 +137,34 @@ export function markInteraction(page, { now, kind, on = null }) {
  * @param {{ requestId: string, url: string, type: string, now: number }} ev
  * @param {Ctx} ctx
  */
-export function onRequest(page, { requestId, url, type, now }, ctx) {
+const MAX_FRAMES = 300;
+
+/**
+ * Where a request was made: '' for the page itself, or the site of the outermost third-party frame that
+ * contains it (an embedded video, an ad slot). Scripts running in the page itself, including those loaded by
+ * other scripts, count as the page: webRequest gives the frame, not the script.
+ * @param {PageState} page  @param {number | undefined} frameId
+ */
+function viaFrame(page, frameId) {
+  const frames = page.frames || {};
+  let id = frameId;
+  let outer = '';
+  for (let i = 0; i < 12 && id !== undefined && id !== null && id > 0; i++) {
+    const f = own(frames, String(id));
+    if (!f) break;
+    if (f.s && !page.firstParty.includes(f.s)) outer = f.s;
+    id = f.p;
+  }
+  return outer;
+}
+
+/**
+ * @param {PageState} page
+ * @param {{ requestId: string, url: string, type: string, now: number, frameId?: number,
+ *   parentFrameId?: number }} ev  frameId/parentFrameId as given by webRequest (0 = the page's own frame)
+ * @param {Ctx} ctx
+ */
+export function onRequest(page, { requestId, url, type, now, frameId, parentFrameId }, ctx) {
   const host = hostOf(url);
   if (!host) return page;
   if (page.events >= LIMITS.events) {
@@ -153,6 +180,17 @@ export function onRequest(page, { requestId, url, type, now }, ctx) {
   }
   const reg = registrableDomain(ctx.trie, host);
   const third = page.firstParty.includes(reg) ? 0 : 1;
+  // a new frame: remember its parent and site; the frame's own document request belongs to its parent
+  let via = '';
+  if (type === 'sub_frame' && Number.isInteger(frameId) && frameId > 0) {
+    const frames = (page.frames ??= {});
+    if (has(frames, String(frameId)) || Object.keys(frames).length < MAX_FRAMES) {
+      put(frames, String(frameId), { p: Number.isInteger(parentFrameId) ? parentFrameId : 0, s: reg });
+    }
+    via = viaFrame(page, parentFrameId);
+  } else {
+    via = viaFrame(page, frameId);
+  }
   /** @type {Window} */
   const w = page.interactionAt !== null && now >= page.interactionAt ? 'after' : 'before';
   let service = null;
@@ -162,7 +200,7 @@ export function onRequest(page, { requestId, url, type, now }, ctx) {
     if (match && ensureService(page, match, ctx)) service = match.service;
     if (ensureDomain(page, reg)) domain = reg;
   }
-  put(page.pending, requestId, { k: kindOf(type), w, t: third, s: service, d: domain, c: 0, n: now });
+  put(page.pending, requestId, { k: kindOf(type), w, t: third, s: service, d: domain, c: 0, n: now, ...(via ? { f: via } : {}) });
   if (third || requestId === page.mainRequestId) countParams(page.told, trackingParams(url));
   return page;
 }
@@ -250,6 +288,10 @@ function count(page, p, cached) {
   if (p.s) {
     const svc = page.services[p.s];
     svc[p.w][p.k] += 1;
+    if (p.f) {
+      svc.via ??= {};
+      put(svc.via, p.f, (own(svc.via, p.f) || 0) + 1);
+    }
     if (svc.window === null || (svc.window === 'after' && p.w === 'before')) svc.window = p.w;
   }
   if (p.d) {

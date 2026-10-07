@@ -335,13 +335,17 @@ api.webRequest.onBeforeRequest.addListener((d) => {
     if (isPrerender(d)) {
       notePrerenderRequest(id, d);
       const page = pageOf(d);
-      if (page) onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp }, ctx);
+      if (page) {
+        onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp, frameId: d.frameId,
+          parentFrameId: d.parentFrameId }, ctx);
+      }
       return;
     }
     if (d.type === 'main_frame') navigate(id, d);
     const page = own(id);
     if (!page) return;
-    onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp }, ctx);
+    onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp, frameId: d.frameId,
+      parentFrameId: d.parentFrameId }, ctx);
     touch(id);
   });
 }, { urls: ['<all_urls>'] });

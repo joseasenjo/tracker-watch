@@ -61,3 +61,23 @@ test('cookies read from a real browser are "held", not "set" (they may come from
   assert.equal(phrases(activity, glossary, { live: true })[0],
     'holds 1 cookie in your browser, set on this visit or earlier (1 that stays after you close the browser, the longest lasting about 180 days)');
 });
+
+test('requests are attributed to the outermost third-party frame; the frame document itself to its parent', () => {
+  const page = startPage({ url: 'https://www.news.es/', now: 0, requestId: 'nav', declared: [], arrival: null }, ctx);
+  const req = (id, url, type, frameId, parentFrameId) => {
+    onRequest(page, { requestId: id, url, type, now: 1, frameId, parentFrameId }, ctx);
+    onSent(page, { requestId: id, headers: [] }, ctx);
+  };
+  req('1', 'https://ad.doubleclick.net/page', 'image', 0, -1); // the page itself
+  req('2', 'https://www.youtube.com/embed/x', 'sub_frame', 5, 0); // video frame
+  req('3', 'https://googleads.g.doubleclick.net/ads', 'script', 5, 0); // inside the video
+  req('4', 'https://ad.doubleclick.net/inner', 'sub_frame', 9, 5); // a frame inside the video
+  req('5', 'https://ib.adnxs.com/px', 'image', 9, 5); // inside that inner frame: still the video
+  req('6', 'https://static.news.es/frame', 'sub_frame', 11, 0); // a first-party frame
+  req('7', 'https://ib.adnxs.com/px2', 'image', 11, 0); // counts as the page
+  const s = summarizePage(page, glossary);
+  assert.deepEqual(s.frames, [{ site: 'youtube.com', services: ['adnxs.com', 'doubleclick.net'], requests: 3 }]);
+  assert.deepEqual(s.onlyFromFrames, []);
+  const dc = s.operators.flatMap((o) => o.services).find((x) => x.service === 'doubleclick.net');
+  assert.deepEqual(dc.via, [{ site: 'youtube.com', requests: 2 }]);
+});
