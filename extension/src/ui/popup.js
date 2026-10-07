@@ -46,6 +46,7 @@ function rememberOpen(id, open) {
 /** A folded section with its title; render functions inside append to it. Empty sections are left out. */
 function section(id, title, fn, openByDefault = false) {
   const box = el('details', undefined, 'sec');
+  box.dataset.id = id;
   const remembered = openState()[id];
   box.open = remembered === undefined ? openByDefault : remembered;
   box.addEventListener('toggle', () => rememberOpen(id, box.open));
@@ -106,6 +107,7 @@ function render(tab, data) {
   announce(data.loading ? t('stillLoading') : t('headlineStatus', s.trackingBefore));
   renderArrival(data.arrival);
   renderGlance(s, data);
+  renderPanelTools();
   const c = data.consent || { banners: [], toolsContacted: [], click: null };
 
   // on a results page the search engine view is the main content: open by default
@@ -186,6 +188,27 @@ function render(tab, data) {
   root.appendChild(settingsLink());
   fetch(api.runtime.getURL('data/build.json')).then((r) => r.json())
     .then((b) => root.appendChild(el('p', `build ${b.built}`, 'note')), () => {});
+}
+
+/** Open or close every section, and copy the whole report as text (closed sections included). */
+function renderPanelTools() {
+  const tools = el('div', undefined, 'tools');
+  const sections = () => [...root.querySelectorAll('details.sec')];
+  const toggleAll = el('button', t('openAll'));
+  toggleAll.addEventListener('click', () => {
+    const open = !sections().every((d) => d.open);
+    for (const d of sections()) { d.open = open; rememberOpen(d.dataset.id, open); }
+    toggleAll.textContent = open ? t('closeAll') : t('openAll');
+  });
+  const copy = el('button', t('copyAll'));
+  copy.addEventListener('click', async () => {
+    const was = sections().map((d) => d.open);
+    for (const d of sections()) d.open = true;
+    const text = root.innerText;
+    sections().forEach((d, i) => { d.open = was[i]; });
+    try { await navigator.clipboard.writeText(text); notice(t('copiedAll')); } catch { notice(t('shareCopyFailed')); }
+  });
+  root.appendChild(add(tools, toggleAll, copy));
 }
 
 /** Companies and their services, with what each did. */
