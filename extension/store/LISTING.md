@@ -6,6 +6,11 @@ Form fields and limits change: check each one against the live form when submitt
 ## Name
 Tracker Watch Lens
 
+## Developer and contact (decided by the user, 7 October 2026)
+- Developer name: Jose Luis Asenjo Tornero (credit shown in the extension: "Designed by jlasenjo")
+- Contact email for the store listings: asenjo.jose@hotmail.com
+- Price: free (see the note in PENDIENTES.md about paid listings)
+
 ## Short description (Chrome: at most 132 characters; AMO summary: at most 250)
 See which tracking services the page you are reading contacts, before and after you answer its cookie banner. Nothing is sent anywhere.
 
