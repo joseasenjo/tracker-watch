@@ -47,4 +47,9 @@ test('journey rows keep only the site, the count and the operators; common opera
   const b = journeyEntry(summarizePage(visit(['https://ad.doubleclick.net/a', 'https://www.googletagmanager.com/x']), glossary));
   assert.deepEqual(b.operators, ['Google']);
   assert.deepEqual(commonOperators(a, b), ['Google']);
+  const late = visit(['https://ad.doubleclick.net/a']);
+  late.interactionAt = 0.5; // requests after the first click do not enter the journey row
+  onRequest(late, { requestId: 'z', url: 'https://ib.adnxs.com/late', type: 'image', now: 2 }, ctx);
+  onSent(late, { requestId: 'z', headers: [] }, ctx);
+  assert.deepEqual(journeyEntry(summarizePage(late, glossary)).operators, ['Google']); // adnxs came after
 });

@@ -88,13 +88,15 @@ export function summarizePage(page, glossary, extra = {}) {
 
 /**
  * F5: one row of the tab's journey, kept in session memory only: the registrable domain, its count and the
- * operators (companies) of the tracking services it contacted. No address, no query.
+ * operators (companies) of the tracking services it contacted before the first interaction. No address, no query.
  * @param {ReturnType<typeof summarizePage>} summary
  */
 export function journeyEntry(summary) {
   return {
     site: summary.site, tracking: summary.trackingBefore,
-    operators: summary.operators.filter((o) => o.trackingServices > 0).map((o) => o.entity).sort(byName),
+    // same window as the count: tracking services contacted before the first interaction
+    operators: summary.operators.filter((o) => o.services.some((s) => s.tracking && s.before > 0))
+      .map((o) => o.entity).sort(byName),
   };
 }
 
