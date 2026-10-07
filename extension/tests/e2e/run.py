@@ -296,7 +296,7 @@ def custom_banner_and_prerender(ctx, control, browser: str) -> list[str]:
     return errors
 
 
-def clean_scenario(ctx, control, browser: str) -> list[str]:
+def clean_scenario(ctx, control, browser: str, screenshot: str | None = None) -> list[str]:
     """Clean mode on (full list + parameter removal): tracking services stopped, gclid removed from the address."""
     errors = []
     control.goto(U("control.test", "/?clean=full"), wait_until="load")
@@ -323,10 +323,58 @@ def clean_scenario(ctx, control, browser: str) -> list[str]:
            and r.get("page") and r["page"]["host"] == "site.test"]
     if not ext or ext[-1]["page"]["protection"]["stopped"] < 2:
         errors.append(f"extended clean mode: {[(r.get('clean'), r['page']['protection']) for r in ext]}")
+    errors += siteonly_scenario(ctx, control, tab, browser, screenshot)
     control.goto(U("control.test", "/?clean=off"), wait_until="load")
     control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
     tab.close()
     print(f"{browser}: clean mode ok={not errors}")
+    return errors
+
+
+def siteonly_scenario(ctx, control, tab, browser: str, screenshot: str | None = None) -> list[str]:
+    """"Site only": other sites' scripts stopped and listed (not the YouTube frame, allowed by default, nor the
+    trackers, stopped by the lists); allowing one from the panel lets it load on that site."""
+    errors = []
+
+    def site_report():
+        tab.goto(U("site.test", "/"), wait_until="load")
+        tab.wait_for_timeout(1500)
+        reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
+                and r["page"]["host"] == "site.test" and (r.get("clean") or {}).get("blocking") == "siteonly"]
+        return reps[-1] if reps else None
+
+    control.goto(U("control.test", "/?clean=siteonly"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    rep = site_report()
+    so = (rep or {}).get("clean", {}).get("siteonly")
+    blocked = [b["domain"] for b in (so or {}).get("blocked", [])]
+    if not so or "cdn.unknown.test" not in blocked or "youtube.com" in blocked or "cookielaw.org" in blocked or "doubleclick.net" in blocked \
+            or rep["page"]["trackingBefore"] != 0:
+        errors.append(f"site only: blocked={blocked} trackingBefore={rep and rep['page']['trackingBefore']}")
+    if screenshot and browser == "chromium":
+        tab_id = next(tid for tid, r in read_reports(control).items() if (isinstance(r, dict) and r.get("page")
+                      and r["page"]["host"] == "site.test" and ((r.get("clean") or {}).get("siteonly") or {}).get("blocked")))
+        sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
+        ext_id = sw.url.split("/")[2]
+        shot = ctx.new_page()
+        shot.set_viewport_size({"width": 380, "height": 900})
+        shot.goto(f"chrome-extension://{ext_id}/popup.html?tabId={tab_id}&url=" + U("site.test", "/"))
+        shot.wait_for_timeout(800)
+        shot.evaluate("document.querySelector('details[data-id=protection]').open = true")
+        shot.screenshot(path=screenshot.replace(".png", "-siteonly.png"), full_page=True)
+        shot.set_viewport_size({"width": 800, "height": 900})
+        shot.goto(f"chrome-extension://{ext_id}/options.html")
+        shot.wait_for_timeout(800)
+        shot.screenshot(path=screenshot.replace(".png", "-siteonly-options.png"), full_page=True)
+        shot.close()
+    control.goto(U("control.test", "/?allow=site.test:cdn.unknown.test"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    rep = site_report()
+    so = (rep or {}).get("clean", {}).get("siteonly") or {}
+    blocked = [b["domain"] for b in so.get("blocked", [])]
+    if "cdn.unknown.test" in blocked or so.get("allowedHere") != ["cdn.unknown.test"]:
+        errors.append(f"site only, after allowing cdn.unknown.test: {so}")
+    print(f"{browser}: site only ok={not errors} (stopped: {', '.join(blocked)})")
     return errors
 
 
@@ -418,7 +466,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     elif "SECRET" in json.dumps(journeys) or "private" in json.dumps(journeys):
         errors.append("a query leaked into the journey")
     errors += custom_banner_and_prerender(ctx, control, browser)
-    errors += clean_scenario(ctx, control, browser)
+    errors += clean_scenario(ctx, control, browser, screenshot)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
         ext_id = sw.url.split("/")[2]

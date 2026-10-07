@@ -89,7 +89,7 @@ async function render() {
       nExtended = new Set(ep.filter((r) => r.action.type === 'block').flatMap((r) => r.condition.requestDomains)).size.toLocaleString('en');
     } catch { /* not packaged */ }
     for (const [value, label] of [['', t('cleanModeOff')], ['verified', t('cleanModeVerified', nVerified)], ['full', t('cleanModeFull', nFull)],
-      ['extended', t('cleanModeExtended', nExtended)]]) {
+      ['extended', t('cleanModeExtended', nExtended)], ['siteonly', t('cleanModeSiteOnly')]]) {
       const input = el('input');
       input.type = 'radio';
       input.name = name;
@@ -100,6 +100,16 @@ async function render() {
     }
     app.appendChild(toggle(t('cleanParams'), clean.params, (on) => send({ type: 'clean:set', params: on })));
     app.appendChild(el('p', t('cleanWarn'), 'warn'));
+    if (clean.blocking === 'siteonly') app.appendChild(el('p', t('cleanSiteOnlyWarn'), 'warn'));
+    if (clean.allowed.length) {
+      app.appendChild(el('p', t('cleanAllowedList', clean.allowed.length)));
+      const ul = el('ul');
+      for (const a of clean.allowed) {
+        ul.appendChild(add(el('li'), el('span', t('cleanAllowedRow', a.domain, a.site) + ' '),
+          button(t('siteOnlyRemove'), () => send({ type: 'clean:allow', site: a.site, domain: a.domain, allowed: false }))));
+      }
+      app.appendChild(ul);
+    }
     if (clean.paused.length) {
       app.appendChild(el('p', t('cleanPausedList', clean.paused.length)));
       const ul = el('ul');

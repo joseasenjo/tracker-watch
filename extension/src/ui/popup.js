@@ -272,6 +272,7 @@ function renderProtection(s, clean, tab) {
   const tools = el('div', undefined, 'tools');
   if (clean && clean.blocking) {
     if (clean.pausedHere) app.appendChild(el('p', t('cleanPausedHere', s.site), 'warn'));
+    else if (clean.siteonly) renderSiteOnly(s, clean.siteonly, tab);
     tools.appendChild(button(clean.pausedHere ? t('cleanResume') : t('cleanPause'), async () => {
       await send({ type: 'clean:pause', site: s.site, paused: !clean.pausedHere });
       await api.tabs.reload(tab.id);
@@ -284,6 +285,35 @@ function renderProtection(s, clean, tab) {
   settings.addEventListener('click', () => { api.runtime.openOptionsPage(); window.close(); });
   tools.appendChild(settings);
   app.appendChild(tools);
+}
+
+/** "Site only" mode: the other sites it stopped here, each with a button to let it work on this site. */
+function renderSiteOnly(s, so, tab) {
+  app.appendChild(el('p', t('siteOnlyHere', s.site), 'warn'));
+  const allow = (domain, allowed) => async () => {
+    await send({ type: 'clean:allow', site: s.site, domain, allowed });
+    await api.tabs.reload(tab.id);
+    setTimeout(load, 1500);
+  };
+  if (so.blocked.length) {
+    app.appendChild(el('p', t('siteOnlyBlocked', so.blocked.length)));
+    const ul = el('ul', undefined, 'allowlist');
+    for (const b of so.blocked) {
+      const info = [t('siteOnlyRequests', b.requests)];
+      if (b.via) info.push(t('siteOnlyVia', b.via));
+      ul.appendChild(add(el('li'), el('b', b.domain), el('span', ` · ${info.join(' · ')} `, 'svc'),
+        button(t('siteOnlyAllow'), allow(b.domain, true))));
+    }
+    app.appendChild(ul);
+  } else {
+    app.appendChild(el('p', t('siteOnlyNone'), 'note'));
+  }
+  if (so.allowedHere.length) {
+    app.appendChild(el('p', t('siteOnlyAllowedHere', so.allowedHere.length)));
+    app.appendChild(add(el('ul', undefined, 'allowlist'), ...so.allowedHere.map((d) =>
+      add(el('li'), el('b', d + ' '), button(t('siteOnlyRemove'), allow(d, false))))));
+  }
+  app.appendChild(el('p', t('siteOnlyFix'), 'note'));
 }
 
 const send = (msg) => api.runtime.sendMessage(msg);

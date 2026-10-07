@@ -51,6 +51,14 @@ list without another extension. Its **extended** option adds the domain rules of
 authors) and, in Firefox, trackers disguised as the site itself. A dedicated blocker still covers more (it also
 uses path rules and hides empty ad slots).
 
+The strictest option, **site only**, also stops every script, frame and connection from other sites on the page
+you visit (their images, styles and fonts still load). It catches trackers that no list knows yet, but it breaks
+parts of many sites: comments, maps, chats, videos from players other than YouTube or Vimeo, sometimes the whole
+page. Cookie banners, subscription walls, sign-in with Google or Apple, Stripe and PayPal payments, captchas
+and YouTube or Vimeo videos are allowed from the start. When something is missing, open Lens's panel on that
+site: it lists the other sites that were stopped, each with an "Allow on this site" button (the tracker lists
+still apply to what you allow), or pause clean mode there.
+
 ## 4. Answer cookie banners with "reject"
 
 Where a banner offers a free refusal, rejecting usually means fewer services. The difference can be large: in one test

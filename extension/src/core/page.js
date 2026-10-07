@@ -263,11 +263,31 @@ export function onError(page, { requestId, error }) {
     if (p.t) {
       page.stopped[reason] += 1;
       if (p.s) page.services[p.s].stopped[reason] += 1;
-      if (p.d) page.domains[p.d].stopped += 1;
+      if (p.d) {
+        const dom = page.domains[p.d];
+        dom.stopped += 1;
+        // blocked by a blocker, and not as a tracking service of the list: what "site only" mode stops
+        if (reason === 'client' && !(p.s && page.services[p.s].tracking)) {
+          dom.blocked = (dom.blocked || 0) + 1;
+          if (p.f && !dom.bvia) dom.bvia = p.f;
+        }
+      }
     }
   }
   delete page.pending[requestId];
   return page;
+}
+
+/**
+ * Third-party domains whose requests a blocker stopped other than as tracking services of the list (with
+ * "site only" mode on: scripts, frames and connections of other sites), most requests first.
+ * @param {PageState} page
+ * @returns {Array<{ domain: string, requests: number, via: string | null }>}
+ */
+export function blockedDomains(page) {
+  return Object.entries(page.domains).filter(([, d]) => d.blocked > 0)
+    .map(([domain, d]) => ({ domain, requests: d.blocked, via: d.bvia || null }))
+    .sort((a, b) => b.requests - a.requests || (a.domain < b.domain ? -1 : 1));
 }
 
 /**

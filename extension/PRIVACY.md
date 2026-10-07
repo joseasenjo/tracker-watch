@@ -35,7 +35,7 @@ no analytics, no accounts, no servers of ours, no third parties.
 | **Your own banner test**, only if you turn it on: per site, the date, counts, tracking-service names and cookie names after you answered its banner | Your browser (`storage.local`) | 7, 30 (default) or 90 days, as you choose; deletable at any time |
 | **Your week**, only if you turn it on: per day, the number of pages counted and, per company, on how many of them it was contacted. Which pages or sites is not kept | Your browser (`storage.local`) | 35 days; deletable at any time |
 
-Clean mode settings (which list is on, and the sites where you paused it) are kept as the browser's own
+Clean mode settings (which list is on, the sites where you paused it, and in the site only mode which other site you allowed on which site) are kept as the browser's own
 blocking rules, not as Lens data. Which sections of the panel you leave open is kept in the panel's local
 storage. Nothing else is stored. In particular: no full addresses, no search queries, no cookie values, no page content.
 
@@ -64,8 +64,9 @@ Two buttons open something only because you press them:
 - **storage**: to keep the tab reports and, if you turn them on, your banner tests and your week.
 - **declarativeNetRequestWithHostAccess**: for clean mode, off by default. When you turn it on, your browser
   itself stops requests to the tracking services of our list (and, in the extended mode, to the domains of
-  EasyPrivacy, bundled with the extension) and removes known tracking parameters from the address of pages you
-  open; Lens does not read or change those requests.
+  EasyPrivacy, bundled with the extension; in the site only mode, to scripts, frames and connections of other
+  sites, except the ones you allow on a site, which your browser keeps as its own rules) and removes known
+  tracking parameters from the address of pages you open; Lens does not read or change those requests.
 - **dns** (Firefox only): to check whether an address that looks like part of the site you are visiting is in fact a
   tracking company's server in disguise (CNAME cloaking). Firefox looks the name up as it does for the page itself,
   usually from its own cache; the answer is compared with a bundled list and only the address and the company are kept.

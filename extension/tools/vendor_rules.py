@@ -53,7 +53,8 @@ def easyprivacy_rules() -> tuple[list[dict], dict]:
                 groups.setdefault((action, _rule_signature(rule)), {}).setdefault(domain, None)
     out = []
     for i, ((action, signature), domains) in enumerate(sorted(groups.items(), key=lambda kv: (kv[0][0], str(kv[0][1])))):
-        out.append({"id": i + 1, "priority": 2 if action == "allow" else 1, "action": {"type": action},
+        # same priorities as our lists (rules.py): above the "site only" allows, below a pause
+        out.append({"id": i + 1, "priority": 4 if action == "allow" else 3, "action": {"type": action},
                     "condition": _condition(sorted(domains), signature)})
     return out, {"domains": len(fl.block), "exceptions": len(fl.allow), "skipped": fl.skipped, "rules": len(out)}
 

@@ -47,7 +47,7 @@ def manifest(browser: str, test: bool) -> dict:
         "options_ui": {"page": "options.html", "open_in_tab": True},
         # clean mode (F14): shipped disabled, turned on by the user in the settings page
         "declarative_net_request": {"rule_resources": [
-            {"id": rid, "enabled": False, "path": f"rules/{rid}.json"} for rid in ("verified", "full", "params", "easyprivacy")]},
+            {"id": rid, "enabled": False, "path": f"rules/{rid}.json"} for rid in ("verified", "full", "params", "easyprivacy", "siteonly")]},
         "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"},
     }
     if browser == "firefox":
@@ -82,7 +82,9 @@ const first = location.search.includes('mytests=on') ? api.runtime.sendMessage({
 if (location.search.includes('summary=on')) api.runtime.sendMessage({ type: 'test:summary-on' });
 const clean = new URLSearchParams(location.search).get('clean');
 const cleaning = clean ? api.runtime.sendMessage({ type: 'test:clean', blocking: clean === 'off' ? null : clean, params: clean !== 'off' }) : null;
-Promise.all([first, cleaning]).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
+const allow = new URLSearchParams(location.search).get('allow'); // site:domain, for "site only" mode
+const allowing = allow ? api.runtime.sendMessage({ type: 'test:allow', site: allow.split(':')[0], domain: allow.split(':')[1] }) : null;
+Promise.all([first, cleaning, allowing]).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
   const pre = document.createElement('pre');
   pre.id = 'lens-reports';
   pre.textContent = JSON.stringify(all);

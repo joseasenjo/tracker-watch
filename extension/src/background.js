@@ -5,7 +5,7 @@
 
 import { buildSuffixTrie, registrableDomain } from './core/psl.js';
 import { createTrackerList, isTracking, lookup } from './core/classify.js';
-import { markInteraction, noteBanner, noteBehaviour, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
+import { blockedDomains, markInteraction, noteBanner, noteBehaviour, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
   startPage } from './core/page.js';
 import { commonOperators, compareWithBaseline, findSite, journeyEntry, summarizePage } from './core/report.js';
 import { cookiesByService } from './core/activity.js';
@@ -49,11 +49,11 @@ function checkCloaked(tabId, host) {
     if (!m || !p || !p.firstParty.includes(registrableDomain(ctx.trie, host))) return;
     noteCloaked(p, host, m);
     touch(tabId);
-    if (cleanBlocking === 'extended' && dnr && dnr.updateSessionRules) {
+    if (extendedOn() && dnr && dnr.updateSessionRules) {
       dnr.getSessionRules().then((rules) => {
         if (rules.some((r) => r.condition.requestDomains && r.condition.requestDomains.includes(host))) return;
         const id = Math.max(0, ...rules.map((r) => r.id)) + 1;
-        return dnr.updateSessionRules({ addRules: [{ id, priority: 1, action: { type: 'block' },
+        return dnr.updateSessionRules({ addRules: [{ id, priority: P_LIST, action: { type: 'block' },
           condition: { requestDomains: [host], excludedResourceTypes: ['main_frame'] } }] });
       }).catch(() => {});
     }
@@ -116,6 +116,7 @@ const ready = (async () => {
   for (const [key, value] of Object.entries(stored)) {
     if (key.startsWith('tab:') && value && value.v === 2) tabs[key.slice(4)] = value;
   }
+  await migratePauses().catch(() => null);
   await cleanState().catch(() => null); // which list clean mode uses, if any
   for (const fn of queue.splice(0)) fn();
 })();
@@ -435,7 +436,7 @@ api.webRequest.onErrorOccurred.addListener((d) => {
   whenReady(() => {
     const page = pageOf(d);
     if (page) {
-      onError(page, { requestId: d.requestId, error: blockedByClean(d) ? 'net::ERR_BLOCKED_BY_CLIENT' : d.error });
+      onError(page, { requestId: d.requestId, error: blockedByClean(d, page) ? 'net::ERR_BLOCKED_BY_CLIENT' : d.error });
       touch(d.tabId);
     }
   });
@@ -483,46 +484,85 @@ api.tabs.onRemoved.addListener((tabId) => {
  * active list, made by another site, was stopped by it.
  */
 let cleanBlocking = null;
+// "siteonly" = the extended lists plus the "site only" rules; both use EasyPrivacy
+const extendedOn = () => cleanBlocking === 'extended' || cleanBlocking === 'siteonly';
 let easyprivacyDomains = null; // loaded only when the extended list is on (Firefox attribution of its blocks)
+let siteonlySafe = null; // domains "site only" lets through everywhere (Firefox attribution of its blocks)
+let siteAllowed = []; // [{ site, domain }] allowed from the panel, mirrored from the browser's rules
 async function loadEasyprivacy() {
   if (easyprivacyDomains) return;
   const rules = await loadJson('rules/easyprivacy.json').catch(() => []);
   easyprivacyDomains = new Set(rules.filter((r) => r.action.type === 'block').flatMap((r) => r.condition.requestDomains));
 }
-const inEasyprivacy = (host) => {
-  if (!easyprivacyDomains) return false;
+async function loadSiteonly() {
+  if (siteonlySafe) return;
+  const rules = await loadJson('rules/siteonly.json').catch(() => []);
+  siteonlySafe = new Set(rules.filter((r) => r.action.type === 'allow' && !r.condition.initiatorDomains)
+    .flatMap((r) => r.condition.requestDomains || []));
+}
+const inSet = (set, host) => {
+  if (!set) return false;
   const labels = host.split('.');
-  for (let i = 0; i < labels.length - 1; i++) if (easyprivacyDomains.has(labels.slice(i).join('.'))) return true;
+  for (let i = 0; i < labels.length - 1; i++) if (set.has(labels.slice(i).join('.'))) return true;
   return false;
 };
-function blockedByClean(d) {
+// Firefox webRequest types that "site only" stops (its declarativeNetRequest types, with beacon for ping)
+const SITEONLY_TYPES = new Set(['script', 'sub_frame', 'xmlhttprequest', 'ping', 'beacon', 'websocket', 'object',
+  'object_subrequest', 'other']);
+function blockedByClean(d, page) {
   if (!cleanBlocking || d.error !== 'NS_ERROR_ABORT') return false;
   const host = hostOf(d.url) || '';
+  const top = hostOf(d.documentUrl || d.originUrl || '') || '';
+  const reg = registrableDomain(ctx.trie, host);
+  if (registrableDomain(ctx.trie, top) === reg) return false;
   const match = lookup(ctx.list, host);
   const listed = match && isTracking(ctx.list, match.category) && (cleanBlocking !== 'verified' || match.verified);
-  if (!listed && !(cleanBlocking === 'extended' && inEasyprivacy(host))) return false;
-  const top = hostOf(d.documentUrl || d.originUrl || '') || '';
-  return registrableDomain(ctx.trie, top) !== registrableDomain(ctx.trie, host);
+  if (listed || (extendedOn() && inSet(easyprivacyDomains, host))) return true;
+  // "site only": a script, frame or connection of another site, unless allowed (approximate: the page may
+  // also have cancelled it itself)
+  return cleanBlocking === 'siteonly' && SITEONLY_TYPES.has(d.type) && !page.firstParty.includes(reg)
+    && !inSet(siteonlySafe, host) && !siteAllowed.some((a) => a.site === page.site && a.domain === reg);
 }
 
 // Clean mode (F14, opt-in): the browser's own rule sets (declarativeNetRequest), shipped disabled. Their state
 // is read from the browser itself, never kept in storage, so deleting Lens's data cannot leave it inconsistent.
+// Dynamic rules: ids PAUSE_BASE.. pause a site; ids ALLOW_BASE.. allow one domain on one site in "site only"
+// mode (two rules each: its requests, and everything a frame of it loads). Priorities as in tools/rules.py.
 const dnr = api.declarativeNetRequest;
 const PAUSE_BASE = 1000;
+const ALLOW_BASE = 100000;
+const P_ALLOW = 2;
+const P_LIST = 3;
+const P_PAUSE = 10;
+const DOMAIN_RE = /^[a-z0-9.-]+\.[a-z0-9-]+$/;
+const isPause = (r) => r.id >= PAUSE_BASE && r.id < ALLOW_BASE;
+const isAllow = (r) => r.id >= ALLOW_BASE && r.action.type === 'allow';
 
 async function cleanState() {
-  if (!dnr) return { available: false, blocking: null, params: false, paused: [] };
+  if (!dnr) return { available: false, blocking: null, params: false, paused: [], allowed: [] };
   const enabled = await dnr.getEnabledRulesets();
   const dynamic = await dnr.getDynamicRules();
-  cleanBlocking = enabled.includes('easyprivacy') ? 'extended' : enabled.includes('full') ? 'full'
-    : enabled.includes('verified') ? 'verified' : null;
-  if (cleanBlocking === 'extended') loadEasyprivacy();
+  cleanBlocking = enabled.includes('siteonly') ? 'siteonly' : enabled.includes('easyprivacy') ? 'extended'
+    : enabled.includes('full') ? 'full' : enabled.includes('verified') ? 'verified' : null;
+  if (extendedOn()) loadEasyprivacy();
+  if (cleanBlocking === 'siteonly') loadSiteonly();
+  siteAllowed = dynamic.filter(isAllow).map((r) => ({ site: r.condition.initiatorDomains[0], domain: r.condition.requestDomains[0] }))
+    .sort((a, b) => (a.site + ' ' + a.domain < b.site + ' ' + b.domain ? -1 : 1));
   return {
     available: true,
     blocking: cleanBlocking,
     params: enabled.includes('params'),
-    paused: dynamic.filter((r) => r.id >= PAUSE_BASE).map((r) => r.condition.requestDomains[0]).sort(),
+    paused: dynamic.filter(isPause).map((r) => r.condition.requestDomains[0]).sort(),
+    allowed: siteAllowed,
   };
+}
+
+/** Pauses saved before "site only" existed had priority 2: raise them above every list (once, on start). */
+async function migratePauses() {
+  if (!dnr) return;
+  const old = (await dnr.getDynamicRules()).filter((r) => isPause(r) && r.priority !== P_PAUSE);
+  if (!old.length) return;
+  await dnr.updateDynamicRules({ removeRuleIds: old.map((r) => r.id), addRules: old.map((r) => ({ ...r, priority: P_PAUSE })) });
 }
 
 async function cleanMessage(msg) {
@@ -531,23 +571,41 @@ async function cleanMessage(msg) {
     const enable = [];
     const disable = [];
     if (msg.blocking !== undefined) {
-      // "extended" = our full list plus the domain rules of EasyPrivacy
-      const want = msg.blocking === 'extended' ? ['full', 'easyprivacy'] : (msg.blocking === 'verified' || msg.blocking === 'full') ? [msg.blocking] : [];
+      // "extended" = our full list plus the domain rules of EasyPrivacy; "siteonly" = extended plus the
+      // "site only" rules (third-party scripts, frames and connections)
+      const want = { verified: ['verified'], full: ['full'], extended: ['full', 'easyprivacy'],
+        siteonly: ['full', 'easyprivacy', 'siteonly'] }[msg.blocking] || [];
       enable.push(...want);
-      for (const id of ['verified', 'full', 'easyprivacy']) if (!want.includes(id)) disable.push(id);
+      for (const id of ['verified', 'full', 'easyprivacy', 'siteonly']) if (!want.includes(id)) disable.push(id);
     }
     if (typeof msg.params === 'boolean') (msg.params ? enable : disable).push('params');
     await dnr.updateEnabledRulesets({ enableRulesetIds: enable, disableRulesetIds: disable });
-  } else if (msg.type === 'clean:pause' && typeof msg.site === 'string' && /^[a-z0-9.-]+\.[a-z0-9-]+$/.test(msg.site)) {
+  } else if (msg.type === 'clean:pause' && typeof msg.site === 'string' && DOMAIN_RE.test(msg.site)) {
     // pausing a site: everything that page loads is allowed, as if clean mode were off there
     const rules = await dnr.getDynamicRules();
-    const existing = rules.find((r) => r.id >= PAUSE_BASE && r.condition.requestDomains[0] === msg.site);
+    const existing = rules.find((r) => isPause(r) && r.condition.requestDomains[0] === msg.site);
     if (msg.paused && !existing) {
-      const id = Math.max(PAUSE_BASE - 1, ...rules.map((r) => r.id)) + 1;
-      await dnr.updateDynamicRules({ addRules: [{ id, priority: 2, action: { type: 'allowAllRequests' },
+      const id = Math.max(PAUSE_BASE - 1, ...rules.filter(isPause).map((r) => r.id)) + 1;
+      await dnr.updateDynamicRules({ addRules: [{ id, priority: P_PAUSE, action: { type: 'allowAllRequests' },
         condition: { requestDomains: [msg.site], resourceTypes: ['main_frame', 'sub_frame'] } }] });
     } else if (!msg.paused && existing) {
       await dnr.updateDynamicRules({ removeRuleIds: [existing.id] });
+    }
+  } else if (msg.type === 'clean:allow' && typeof msg.site === 'string' && DOMAIN_RE.test(msg.site)
+      && typeof msg.domain === 'string' && DOMAIN_RE.test(msg.domain) && msg.site !== msg.domain) {
+    // "site only": let one other domain work on one site (the tracker lists still apply to it)
+    const rules = await dnr.getDynamicRules();
+    const mine = rules.filter((r) => r.id >= ALLOW_BASE && r.condition.initiatorDomains?.[0] === msg.site
+      && r.condition.requestDomains?.[0] === msg.domain);
+    if (msg.allowed && !mine.length) {
+      const id = Math.max(ALLOW_BASE - 1, ...rules.filter((r) => r.id >= ALLOW_BASE).map((r) => r.id)) + 1;
+      const cond = { initiatorDomains: [msg.site], requestDomains: [msg.domain] };
+      await dnr.updateDynamicRules({ addRules: [
+        { id, priority: P_ALLOW, action: { type: 'allow' }, condition: cond },
+        { id: id + 1, priority: P_ALLOW, action: { type: 'allowAllRequests' }, condition: { ...cond, resourceTypes: ['sub_frame'] } },
+      ] });
+    } else if (!msg.allowed && mine.length) {
+      await dnr.updateDynamicRules({ removeRuleIds: mine.map((r) => r.id) });
     }
   }
   return cleanState();
@@ -636,7 +694,15 @@ async function report(tabId, url) {
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
     journey: journeyView(page, summary),
-    clean: await cleanState().then((c) => ({ ...c, pausedHere: c.paused.includes(page.site) })).catch(() => null),
+    clean: await cleanState().then((c) => {
+      const out = { ...c, pausedHere: c.paused.includes(page.site) };
+      if (c.blocking === 'siteonly') {
+        // what "site only" stopped here, and what was allowed on this site from the panel
+        const here = c.allowed.filter((a) => a.site === page.site).map((a) => a.domain);
+        out.siteonly = { blocked: blockedDomains(page).filter((b) => !here.includes(b.domain)), allowedHere: here };
+      }
+      return out;
+    }).catch(() => null),
     mytests: { settings: myStore.settings, site: page.site, view: siteView(myStore, page.site),
       running: page.myTest ? { choice: page.myTest.choice, continued: Boolean(page.myTestContinued) } : null },
     reasons: differenceReasons(summary, page, baseline, { browser: ENV_BROWSER, nowMs: Date.now() }),
@@ -726,6 +792,10 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
   if (TEST_HOOKS && msg && msg.type === 'test:clean') {
     cleanMessage({ type: 'clean:set', blocking: msg.blocking, params: msg.params }).then(sendResponse);
+    return true;
+  }
+  if (TEST_HOOKS && msg && msg.type === 'test:allow') {
+    cleanMessage({ type: 'clean:allow', site: msg.site, domain: msg.domain, allowed: true }).then(sendResponse);
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:summary-on') {

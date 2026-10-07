@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { buildSuffixTrie } from '../src/core/psl.js';
 import { createTrackerList } from '../src/core/classify.js';
 import { errorReason, hostOf, kindOf } from '../src/core/requests.js';
-import { LIMITS, markInteraction, onCompleted, onError, onRequest, onSent, redirectPage, startPage } from '../src/core/page.js';
+import { LIMITS, blockedDomains, markInteraction, onCompleted, onError, onRequest, onSent, redirectPage, startPage } from '../src/core/page.js';
 import { compareWithBaseline, findSite, summarizePage } from '../src/core/report.js';
 import { cookiesByService } from '../src/core/activity.js';
 
@@ -97,6 +97,21 @@ test('Chromium: a request blocked by another extension is stopped, not contacted
   assert.equal(s.stopped.client, 1);
   assert.deepEqual(s.stoppedServices, ['adnxs.com']);
   assert.equal(s.thirdPartyDomains, 0);
+});
+
+test('"site only" mode: blocked domains that are not tracking services of the list, most requests first', () => {
+  const page = newPage();
+  const blocked = { chain: 'blocked', error: 'net::ERR_BLOCKED_BY_CLIENT' };
+  request(page, 'https://ib.adnxs.com/ut', 'script', blocked); // a tracking service: the list stopped it
+  request(page, 'https://cdn.widgets.com/a.js', 'script', blocked);
+  request(page, 'https://api.widgets.com/v1', 'xmlhttprequest', blocked);
+  request(page, 'https://www.googletagmanager.com/gtm.js', 'script', blocked); // listed, but not tracking
+  request(page, 'https://cdn.other.org/x.js', 'script', { chain: 'blocked', error: 'NS_ERROR_TRACKING_URI' });
+  request(page, 'https://excdn.com/img.png', 'image', blocked); // the site's own domain: not third party
+  assert.deepEqual(blockedDomains(page), [
+    { domain: 'widgets.com', requests: 2, via: null },
+    { domain: 'googletagmanager.com', requests: 1, via: null },
+  ]);
 });
 
 test('Firefox: own protection is named; a generic abort before sending is "cancelled"', () => {
