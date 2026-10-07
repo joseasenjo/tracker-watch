@@ -123,9 +123,14 @@ def test_last_scan_time_and_measurement_details_are_shown(built):
     assert "Last scan: <b>2026-10-04 10:00 UTC</b>" in (out / "method.html").read_text(encoding="utf-8")
 
 
+def without_credit(html: str) -> str:
+    """The page without the author's credit block, which is always published (the user's decision, 2026-10-07)."""
+    return re.sub(r'<div class="credit">.*?</div>', "", html, flags=re.S)
+
+
 def test_no_personal_contact_is_published_unless_given(built):
     _, out, _ = built
-    footer = (out / "method.html").read_text(encoding="utf-8").split("<footer>")[1]
+    footer = without_credit((out / "method.html").read_text(encoding="utf-8")).split("<footer>")[1]
     assert "mailto:" not in footer and "linkedin" not in footer.lower() and "Corrections, notes" not in footer
 
 
@@ -184,8 +189,18 @@ def test_linkedin_only_is_enough_to_show_a_contact_card(tmp_path):
     write(tmp_path, "2026-10-04", {"a": ok_report()})
     out = tmp_path / "site"
     build_site(tmp_path / "runs", out, linkedin_url="https://www.linkedin.com/in/someone")
-    page = (out / "contact.html").read_text(encoding="utf-8")
+    page = without_credit((out / "contact.html").read_text(encoding="utf-8"))
     assert "linkedin.com/in/someone" in page and "mailto:" not in page
+
+
+def test_every_page_ends_with_the_author_credit(built):
+    _, out, _ = built
+    pages = list(out.glob("*.html")) + list((out / "sites").glob("*.html"))
+    assert len(pages) > 15
+    for page in pages:
+        footer = page.read_text(encoding="utf-8").split("<footer>")[1]
+        credit = footer.split('<div class="credit">')[1]
+        assert "Designed by jlasenjo" in credit and 'href="mailto:asenjo.jose@hotmail.com"' in credit, page.name
 
 
 def test_issue_forms_live_in_the_repository_not_in_the_generated_site(built):

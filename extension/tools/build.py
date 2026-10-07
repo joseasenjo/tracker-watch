@@ -68,7 +68,9 @@ GUIDE_PAGE = """<!doctype html>
 <link rel="stylesheet" href="popup.css"><link rel="stylesheet" href="options.css">
 <title>How to browse with less tracking</title></head>
 <body><main class="privacy">
-{{BODY}}</main></body></html>
+{{BODY}}</main>
+<footer class="credit"><p>Designed by jlasenjo</p>
+<p><a href="mailto:asenjo.jose@hotmail.com">asenjo.jose@hotmail.com</a></p></footer></body></html>
 """
 
 TESTHOOK = """// Test builds only: hand every tab report to the local test page.
