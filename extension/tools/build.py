@@ -16,6 +16,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from mdpage import markdown_page  # noqa: E402
+
 EXT = Path(__file__).resolve().parents[1]
 DIST = EXT / "dist"
 VERSION = json.loads((EXT / "package.json").read_text(encoding="utf-8"))["version"]
@@ -39,6 +42,7 @@ def manifest(browser: str, test: bool) -> dict:
                              "run_at": "document_start", "all_frames": True},
                             {"matches": ["<all_urls>"], "js": ["content-main.js"], "run_at": "document_start",
                              "all_frames": True, "world": "MAIN"}],
+        "options_ui": {"page": "options.html", "open_in_tab": True},
         "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"},
     }
     if browser == "chrome":
@@ -58,6 +62,7 @@ def manifest(browser: str, test: bool) -> dict:
 TESTHOOK = """// Test builds only: hand every tab report to the local test page.
 const api = globalThis.browser ?? globalThis.chrome;
 const first = location.search.includes('mytests=on') ? api.runtime.sendMessage({ type: 'test:mytests-on' }) : null;
+if (location.search.includes('summary=on')) api.runtime.sendMessage({ type: 'test:summary-on' });
 Promise.resolve(first).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
   const pre = document.createElement('pre');
   pre.id = 'lens-reports';
@@ -86,7 +91,7 @@ def build(browser: str, test: bool) -> Path:
     shutil.copytree(src / "core", out / "core")
     for name in ("content.js", "content-main.js"):
         shutil.copy2(src / name, out / name)
-    for name in ("popup.html", "popup.css", "popup.js"):
+    for name in ("popup.html", "popup.css", "popup.js", "options.html", "options.css", "options.js"):
         shutil.copy2(src / "ui" / name, out / name)
     background = (src / "background.js").read_text(encoding="utf-8")
     if test:
@@ -102,6 +107,9 @@ def build(browser: str, test: bool) -> Path:
                                              encoding="utf-8", newline="\n")
     shutil.copytree(EXT / "icons", out / "icons")
     shutil.copy2(EXT / "THIRD_PARTY.md", out / "THIRD_PARTY.md")
+    shutil.copy2(EXT / "PRIVACY.md", out / "PRIVACY.md")
+    (out / "privacy.html").write_text(markdown_page((EXT / "PRIVACY.md").read_text(encoding="utf-8")),
+                                      encoding="utf-8", newline="\n")
     shutil.copy2(EXT.parent / "LICENSE", out / "LICENSE")
     (out / "manifest.json").write_text(json.dumps(manifest(browser, test), indent=2, ensure_ascii=False) + "\n",
                                        encoding="utf-8", newline="\n")

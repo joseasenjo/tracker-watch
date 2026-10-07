@@ -315,7 +315,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append(f"manifest warnings: {warnings}")
     time.sleep(1.5)
     page = ctx.pages[0] if ctx.pages else ctx.new_page()
-    page.goto(U("control.test", "/?mytests=on"), wait_until="load")  # turn on "Your own banner test"
+    page.goto(U("control.test", "/?mytests=on&summary=on"), wait_until="load")  # turn on "Your own banner test"
     page.wait_for_selector("#lens-reports", state="attached", timeout=10000)
     page.goto(U("site.test", "/"), wait_until="load")
     page.wait_for_timeout(1200)
@@ -385,7 +385,19 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         popup.goto(f"chrome-extension://{ext_id}/popup.html?tabId={tab_id}&url=" + U("site.test", "/"))
         popup.wait_for_timeout(800)
         popup.screenshot(path=screenshot, full_page=True)
+        options = ctx.new_page()
+        options.set_viewport_size({"width": 800, "height": 900})
+        options.goto(f"chrome-extension://{ext_id}/options.html")
+        options.wait_for_timeout(800)
+        options.screenshot(path=screenshot.replace(".png", "-options.png"), full_page=True)
         print("screenshot:", screenshot)
+    page.goto(U("control.test", "/"), wait_until="load")  # a page is counted in "your week" when it is left
+    page.wait_for_timeout(1500)
+    week = read_reports(control).get("_summary") or {}
+    if week.get("pages", 0) < 2 or "Google" not in [o["name"] for o in week.get("operators", [])]:
+        errors.append(f"your week not counted: {week}")
+    elif "site.test" in json.dumps(week):
+        errors.append("a site name leaked into your week")
     ctx.close()
     return errors
 

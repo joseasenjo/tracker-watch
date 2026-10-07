@@ -14,6 +14,7 @@ import { differenceReasons } from './core/differ.js';
 import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams } from './core/search.js';
 import { DAY_OPTIONS, STORE_KEY, carryTest, currentRun, exportStore, normalizeStore, purge, saveRun, siteView,
   startTest } from './core/mytests.js';
+import { SUMMARY_KEY, addPage, normalizeSummary, periodView, purgeSummary } from './core/summary.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const TEST_HOOKS = false; // set to true only by tools/build.py --test
@@ -49,6 +50,9 @@ const PING_WINDOW_MS = 5000;
 const RELOAD_AFTER_ANSWER_MS = 30000;
 // "Your own banner test" (opt-in): kept in storage.local, written at most every MYTEST_DELAY_MS per tab.
 let myStore = normalizeStore(null);
+// F8 "Your week" (opt-in): daily aggregates by company, written a moment after a page is left.
+let summaryStore = normalizeSummary(null);
+let summaryTimer = null;
 const myDirty = new Set();
 let myTimer = null;
 const MYTEST_DELAY_MS = 1500;
@@ -62,7 +66,9 @@ const ready = (async () => {
     loadJson('data/sites.json'), loadJson('data/index.json'), loadJson('data/search_engines.json'),
     api.storage.session.get(null),
   ]);
-  myStore = purge(normalizeStore((await api.storage.local.get(STORE_KEY))[STORE_KEY]), Date.now());
+  const local = await api.storage.local.get([STORE_KEY, SUMMARY_KEY]);
+  myStore = purge(normalizeStore(local[STORE_KEY]), Date.now());
+  summaryStore = purgeSummary(normalizeSummary(local[SUMMARY_KEY]), Date.now());
   profiles = engineProfiles;
   engines = compileEngines(engineProfiles);
   consentNames = new Set(g.consent_tools.map((c) => c.name));
@@ -124,6 +130,20 @@ async function saveMyTests() {
   }
   purge(myStore, Date.now());
   await api.storage.local.set({ [STORE_KEY]: myStore });
+}
+
+/** F8: a page is counted once, when it is left or its tab is closed (only the companies, never the page). */
+function countForSummary(page) {
+  if (!summaryStore.enabled || !page || !page.host || page.engineRedirect || page.summarized) return;
+  page.summarized = true;
+  addPage(summaryStore, journeyEntry(summarizePage(page, glossary)).operators, Date.now());
+  if (!summaryTimer) {
+    summaryTimer = setTimeout(() => {
+      summaryTimer = null;
+      purgeSummary(summaryStore, Date.now());
+      api.storage.local.set({ [SUMMARY_KEY]: summaryStore });
+    }, 1000);
+  }
 }
 
 /** Lens cleared this site's data a moment ago (the test then starts from a first visit). */
@@ -254,6 +274,7 @@ function arrivalFrom(from, d) {
 const MAX_JOURNEY = 8;
 /** F5: the page being left becomes the last row of the new page's journey (session memory, this tab only). */
 function carryJourney(next, prev) {
+  countForSummary(prev);
   if (!prev || !prev.host || prev.engineRedirect) {
     if (prev && prev.journey) next.journey = prev.journey;
     return next;
@@ -404,10 +425,34 @@ api.webNavigation.onCommitted.addListener((d) => {
 });
 
 api.tabs.onRemoved.addListener((tabId) => {
+  whenReady(() => countForSummary(own(String(tabId))));
   delete prerendered[String(tabId)];
   delete tabs[String(tabId)];
   api.storage.session.remove('tab:' + tabId);
 });
+
+/** Settings page: "Your week" and "Delete all my data". */
+async function dataMessage(msg) {
+  const now = Date.now();
+  if (msg.type === 'summary:get') {
+    const sites = Object.keys(myStore.sites).length;
+    return { summary: { enabled: summaryStore.enabled, week: periodView(summaryStore, now, 7),
+      month: periodView(summaryStore, now, 30) }, mytests: { settings: myStore.settings, sites } };
+  }
+  if (msg.type === 'summary:settings' && typeof msg.enabled === 'boolean') {
+    summaryStore.enabled = msg.enabled;
+  } else if (msg.type === 'summary:delete') {
+    summaryStore.days = {};
+  } else if (msg.type === 'data:deleteAll') {
+    // everything Lens keeps beyond the open tabs' reports (those live in session memory and end with the browser)
+    await api.storage.local.clear();
+    myStore = normalizeStore(null);
+    summaryStore = normalizeSummary(null);
+    return true;
+  }
+  await api.storage.local.set({ [SUMMARY_KEY]: summaryStore });
+  return true;
+}
 
 async function myTestsMessage(msg) {
   if (msg.type === 'mytests:settings') {
@@ -539,12 +584,21 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     });
     return true;
   }
+  if (msg && typeof msg.type === 'string' && (msg.type.startsWith('summary:') || msg.type.startsWith('data:'))
+      && !fromPage) {
+    ready.then(() => dataMessage(msg)).then(sendResponse);
+    return true;
+  }
   if (msg && typeof msg.type === 'string' && msg.type.startsWith('mytests:') && !fromPage) {
     ready.then(() => myTestsMessage(msg)).then(sendResponse);
     return true;
   }
   if (msg && msg.type === 'report' && !fromPage) {
     report(msg.tabId, msg.url).then(sendResponse);
+    return true;
+  }
+  if (TEST_HOOKS && msg && msg.type === 'test:summary-on') {
+    ready.then(() => dataMessage({ type: 'summary:settings', enabled: true })).then(sendResponse);
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:mytests-on') {
@@ -555,6 +609,7 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     ready.then(async () => {
       const out = {};
       for (const id of Object.keys(tabs)) out[id] = await report(id, null);
+      out._summary = periodView(summaryStore, Date.now(), 7);
       sendResponse(out);
     });
     return true;

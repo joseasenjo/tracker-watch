@@ -2,6 +2,9 @@
 const api = globalThis.browser ?? globalThis.chrome;
 const t = (key, ...subs) => api.i18n.getMessage(key, subs.map(String)) || key;
 const app = document.getElementById('app');
+const status = document.getElementById('status');
+/** Short announcements (copied, loading done) go to one live region, not the whole panel. */
+const announce = (text) => { if (status.textContent !== text) status.textContent = text; };
 
 /** @param {string} tag @param {string} [text] @param {string} [cls] */
 function el(tag, text, cls) {
@@ -33,6 +36,7 @@ function render(tab, data) {
   const s = data && data.page;
   if (!s || !s.host) {
     add(app, el('p', t('noData'), 'note'));
+    app.appendChild(settingsLink());
     return;
   }
   app.appendChild(el('p', s.host, 'host'));
@@ -43,6 +47,7 @@ function render(tab, data) {
   if (data.loading) {
     add(app, add(el('p', undefined, 'loading'), el('span', undefined, 'spinner'), el('span', t('stillLoading'))));
   }
+  announce(data.loading ? t('stillLoading') : t('headlineStatus', s.trackingBefore));
   renderArrival(data.arrival);
   const c = data.consent || { banners: [], toolsContacted: [], click: null };
   if (c.previous) {
@@ -101,7 +106,13 @@ function render(tab, data) {
   renderMyTests(tab, data.mytests, Boolean(c.payOrAccept));
 
   app.appendChild(el('h2', t('operatorsTitle')));
-  for (const op of s.operators) {
+  const FIRST = 10;
+  let more = null;
+  s.operators.forEach((op, i) => {
+    if (i === FIRST) {
+      more = add(el('details'), el('summary', t('moreCompanies', s.operators.length - FIRST), 'svc'));
+      app.appendChild(more);
+    }
     const box = el('div', undefined, 'op');
     box.appendChild(el('b', op.entity));
     const ul = el('ul');
@@ -114,8 +125,8 @@ function render(tab, data) {
       if (svc.phrases.length) li.appendChild(el('div', svc.phrases.join('; '), 'svc'));
       ul.appendChild(li);
     }
-    add(app, add(box, ul));
-  }
+    add(more || app, add(box, ul));
+  });
 
   if (s.behaviourServices || s.behavioursOther.length) {
     app.appendChild(el('p', t('behaviourNote'), 'note'));
@@ -141,11 +152,24 @@ function render(tab, data) {
   app.appendChild(el('p', t('honesty'), 'note'));
   renderShare(tab, data);
   if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
+  app.appendChild(settingsLink());
   fetch(api.runtime.getURL('data/build.json')).then((r) => r.json())
     .then((b) => app.appendChild(el('p', `build ${b.built}`, 'note')), () => {});
 }
 
 const send = (msg) => api.runtime.sendMessage(msg);
+
+function settingsLink() {
+  const a = el('a', t('settingsLink'));
+  a.href = '#';
+  a.addEventListener('click', (e) => { e.preventDefault(); api.runtime.openOptionsPage(); window.close(); });
+  return add(el('p', undefined, 'note'), a);
+}
+
+/** Firefox lets people withdraw the "all sites" permission; without it Lens sees nothing. */
+async function hostAccess() {
+  try { return await api.permissions.contains({ origins: ['<all_urls>'] }); } catch { return true; }
+}
 function button(label, onClick) {
   const b = el('button', label);
   b.addEventListener('click', async () => { b.disabled = true; await onClick(); load(); });
@@ -297,11 +321,10 @@ function summaryText(data) {
 
 function renderShare(tab, data) {
   app.appendChild(el('h2', t('shareTitle')));
-  const status = el('p', '', 'note');
   const tools = el('div', undefined, 'tools');
   tools.appendChild(button(t('shareCopy'), async () => {
-    try { await navigator.clipboard.writeText(summaryText(data)); status.textContent = t('shareCopied'); }
-    catch { status.textContent = t('shareCopyFailed'); }
+    try { await navigator.clipboard.writeText(summaryText(data)); announce(t('shareCopied')); }
+    catch { announce(t('shareCopyFailed')); }
   }));
   tools.appendChild(button(t('shareExport'), async () => {
     const a = document.createElement('a');
@@ -315,7 +338,7 @@ function renderShare(tab, data) {
   const url = 'https://github.com/joseasenjo/tracker-watch/issues/new?' + new URLSearchParams({
     title: `List correction: ${data.page.site}`, body }).toString();
   tools.appendChild(link(t('shareIssue'), url));
-  add(app, tools, status, el('p', t('shareNote'), 'note'));
+  add(app, tools, el('p', t('shareNote'), 'note'));
 }
 
 /** A folded list: long lists of service names stay closed until opened. */
@@ -411,6 +434,11 @@ function renderTold(told) {
 
 let refresh = null;
 async function load() {
+  if (!(await hostAccess())) {
+    app.replaceChildren(el('h1', t('extName')), el('p', t('noHostAccess')),
+      button(t('grantHostAccess'), () => api.permissions.request({ origins: ['<all_urls>'] })));
+    return;
+  }
   const tab = await currentTab();
   const data = tab ? await api.runtime.sendMessage({ type: 'report', tabId: tab.id, url: tab.url }) : null;
   const scroll = document.scrollingElement.scrollTop;
