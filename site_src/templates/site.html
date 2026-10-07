@@ -10,7 +10,7 @@
     {% if s.status != 'ok' %}
       <div class="note">{{ s.status_text }}</div>
     {% else %}
-      {% if s.group != 'US' %}<div class="note">This site mainly serves readers in {{ 'the UK' if s.group == 'UK' else 'Germany' if s.group == 'DE' else 'another country' }}, but it was measured from {{ vantage }}. Sites often adapt what loads, including consent walls, to the visitor's country, so these figures may differ from what a local reader sees.</div>{% endif %}
+      {% if s.group != 'US' %}<div class="note">This site mainly serves readers in {{ 'the UK' if s.group == 'UK' else 'Germany' if s.group == 'DE' else 'Spain' if s.group == 'ES' else 'another country' }}, but it was measured from {{ vantage }}. Sites often adapt what loads, including consent walls, to the visitor's country, so these figures may differ from what a local reader sees.</div>{% endif %}
       {% if s.confidence != 'high' %}<div class="note">Only {{ s.passes_ok }} of {{ s.passes_total }} passes could be measured. Figures are {{ 'medians of the passes that worked' if s.confidence == 'medium' else 'indicative only' }}.</div>{% endif %}
       <div class="facts">
         <div class="fact"><b>{{ s.tracking }}</b><span>tracking services contacted{% if s.band %} · band {{ s.band }}{% endif %}</span></div>
