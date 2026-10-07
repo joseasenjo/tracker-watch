@@ -78,6 +78,18 @@
     const style = getComputedStyle(el);
     return style.visibility !== 'hidden' && style.display !== 'none' && Number(style.opacity) !== 0;
   }
+  // "Accept or pay": the banner's only way to refuse is a subscription (as on elmundo.es). Only the labels of
+  // the banner's own buttons are read.
+  function payOrAccept(banner) {
+    let pay = false;
+    for (const b of banner.querySelectorAll('button, a, [role="button"], input[type="button"], input[type="submit"]')) {
+      const text = norm(b.innerText || b.value || b.getAttribute('aria-label'));
+      if (!text || text.length > 80) continue;
+      if (paidRe.test(text)) pay = true;
+      else if (rejectTexts.has(text)) return false;
+    }
+    return pay;
+  }
   function scanBanners() {
     for (const tool of data.consent) {
       if (reported.has(tool.name)) continue;
@@ -85,7 +97,7 @@
       try { el = document.querySelector(tool.banner); } catch { el = null; }
       if (el && visible(el)) {
         reported.add(tool.name);
-        send({ type: 'banner', tool: tool.name });
+        send({ type: 'banner', tool: tool.name, payOrAccept: payOrAccept(el) });
       }
     }
   }

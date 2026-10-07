@@ -266,6 +266,8 @@ def custom_banner_and_prerender(ctx, control, browser: str) -> list[str]:
     es = [r for r in reports.values() if r.get("consent") and r["consent"]["banners"] == ["Didomi"]]
     if not es or es[0]["consent"]["click"] != {"tool": "Didomi", "choice": "pay"}:
         errors.append(f"custom 'pay or accept' button not named: {[r.get('consent') for r in reports.values()]}")
+    elif es[0]["consent"].get("payOrAccept") is not True:
+        errors.append(f"'accept or pay' banner not recognised: {es[0]['consent']}")
     unknown = ctx.new_page()
     unknown.goto(U("site.test", "/unknown"), wait_until="load")
     unknown.wait_for_timeout(800)

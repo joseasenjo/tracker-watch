@@ -73,6 +73,17 @@ test('store keeps the latest three runs per answer, ranges and next step', () =>
   assert.equal(Object.keys(store.sites).length, 1);
 });
 
+test('accept or pay: accepting is the whole test', () => {
+  const p = startTest({ operators: [{ entity: 'X', services: [svc('A', 1, 0)] }], stopped: { client: 0 } },
+    { choice: 'accept', tool: 'Didomi' }, { nowMs: 1, payOrAccept: true });
+  const run = currentRun(p, summary([svc('A', 1, 1), svc('B', 0, 3)]), page(), {}, false);
+  assert.equal(run.payOrAccept, true);
+  const store = saveRun(emptyStore(), 'x.es', 'accept', run);
+  const v = siteView(store, 'x.es');
+  assert.equal(v.payOrAccept, true);
+  assert.equal(v.next, 'repeat');
+});
+
 test('retention removes old runs and empty sites; settings are repaired', () => {
   const store = normalizeStore({ v: 1, settings: { enabled: true, days: 7 }, sites: { 'x.es': { reject: [{ id: 'a', at: 0, after: [] }], accept: [] } } });
   purge(store, 8 * DAY);

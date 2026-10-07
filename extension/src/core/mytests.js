@@ -18,12 +18,12 @@ const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 /**
  * @typedef {{ id: string, at: number, date: string, tool: string | null, before: number,
  *   beforeServices: string[], after: string[], newAfter: string[], cookies: Record<string, string[]>,
- *   clean: boolean, reasons: string[], notes: string[], cleared: boolean }} Run
+ *   clean: boolean, reasons: string[], notes: string[], cleared: boolean, payOrAccept?: boolean }} Run
  * @typedef {{ reject: Run[], accept: Run[] }} SiteTests
  * @typedef {{ v: 1, settings: { enabled: boolean, days: number }, sites: Record<string, SiteTests> }} Store
  * @typedef {{ id: string, choice: 'reject' | 'accept', tool: string | null, startedAt: number,
  *   beforeServices: string[], carriedAfter: string[], carriedCookies: Record<string, string[]>,
- *   carriedReasons: string[], cleared: boolean }} Pending   kept on the page while the test runs
+ *   carriedReasons: string[], cleared: boolean, payOrAccept?: boolean }} Pending   kept on the page while the test runs
  */
 
 /** @returns {Store} */
@@ -52,7 +52,8 @@ const trackingContacted = (summary) => summary.operators.flatMap((o) => o.servic
  * Start a test when the first interaction was a click on "reject" or "accept" of a consent banner.
  * @param {ReturnType<import('./report.js').summarizePage>} summary  the page at the moment of the click
  * @param {{ choice: string, tool: string | null } | null} click
- * @param {{ nowMs: number, cleared: boolean }} env  cleared: Lens cleared this site's data just before
+ * @param {{ nowMs: number, cleared: boolean, payOrAccept?: boolean }} env  cleared: Lens cleared this site's data
+ *   just before; payOrAccept: the banner's only refusal was a subscription
  * @returns {Pending | null}
  */
 export function startTest(summary, click, env) {
@@ -60,7 +61,7 @@ export function startTest(summary, click, env) {
   const before = trackingContacted(summary).filter((s) => s.before > 0).map((s) => s.service).sort(byName);
   return { id: `${env.nowMs.toString(36)}-${Math.floor(Math.random() * 1e6).toString(36)}`, choice: click.choice,
     tool: click.tool, startedAt: env.nowMs, beforeServices: before, carriedAfter: [], carriedCookies: {},
-    carriedReasons: [], cleared: Boolean(env.cleared) };
+    carriedReasons: [], cleared: Boolean(env.cleared), payOrAccept: Boolean(env.payOrAccept) };
 }
 
 /**
@@ -100,6 +101,7 @@ export function currentRun(pending, summary, page, cookies, continued) {
     after, newAfter: after.filter((s) => !was.has(s)), cookies: cookieMap,
     clean: reasons.size === 0, reasons: [...reasons].sort(byName),
     notes: Object.keys(page.told.recognised || {}).filter((s) => tracking.has(s)).sort(byName), cleared: pending.cleared,
+    payOrAccept: Boolean(pending.payOrAccept),
   };
 }
 
@@ -159,8 +161,11 @@ export function siteView(store, site) {
   };
   const reject = part(t.reject);
   const accept = part(t.accept);
+  // "accept or pay": there is no free refusal to test, so accepting is the whole test
+  const payOrAccept = [...t.reject, ...t.accept].some((r) => r.payOrAccept);
   let next = 'reject';
-  if (reject.cleanRuns && !accept.cleanRuns) next = 'accept';
+  if (payOrAccept) next = accept.cleanRuns ? 'repeat' : 'accept';
+  else if (reject.cleanRuns && !accept.cleanRuns) next = 'accept';
   else if (reject.cleanRuns && accept.cleanRuns) next = 'repeat';
   // services after rejecting that were also there after accepting, from the latest clean runs
   let comparison = null;
@@ -171,7 +176,7 @@ export function siteView(store, site) {
     comparison = { reject: r.after.length, accept: a.after.length,
       both: r.after.filter((s) => aSet.has(s)).length, onlyAccept: a.after.filter((s) => !r.after.includes(s)).length };
   }
-  return { reject, accept, next, comparison };
+  return { reject, accept, next, comparison, payOrAccept };
 }
 
 /** Everything stored, for "Export my tests" (already only aggregates and names). */

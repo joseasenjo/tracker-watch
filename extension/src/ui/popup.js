@@ -52,6 +52,7 @@ function render(tab, data) {
   }
   if (c.banners.length) app.appendChild(el('p', t('bannerShown', c.banners.join(', ')), 'note'));
   else if (c.toolsContacted.length) app.appendChild(el('p', t('consentContacted', c.toolsContacted.join(', ')), 'note'));
+  if (c.payOrAccept) app.appendChild(el('p', t('payOrAccept'), 'warn'));
   renderSearch(data.search); // on a results page this is the main content
 
   const dl = el('dl');
@@ -95,7 +96,7 @@ function render(tab, data) {
     }
   }
 
-  renderMyTests(tab, data.mytests);
+  renderMyTests(tab, data.mytests, Boolean(c.payOrAccept));
 
   app.appendChild(el('h2', t('operatorsTitle')));
   for (const op of s.operators) {
@@ -149,7 +150,7 @@ function button(label, onClick) {
 }
 
 /** "Your own banner test": opt-in; only counts and service names, kept in this browser. */
-function renderMyTests(tab, m) {
+function renderMyTests(tab, m, payHere) {
   if (!m) return;
   app.appendChild(el('h2', t('myTitle')));
   if (!m.settings.enabled) {
@@ -161,9 +162,11 @@ function renderMyTests(tab, m) {
     app.appendChild(el('p', t(m.running.choice === 'reject' ? 'myRecordingReject' : 'myRecordingAccept')
       + (m.running.continued ? ' ' + t('myContinued') : ''), 'note'));
   }
+  const pay = payHere || v.payOrAccept;
+  if (pay) app.appendChild(el('p', t('myPayOrAccept'), 'note'));
   const steps = el('ol', undefined, 'steps');
   const step = (done, text) => add(steps, el('li', (done ? '\u2713 ' : '') + text, done ? 'done' : ''));
-  step(v.reject.runs.length > 0, t('myStep1'));
+  if (!pay) step(v.reject.runs.length > 0, t('myStep1'));
   const li = el('li', t('myStep2'));
   li.appendChild(el('br'));
   li.appendChild(button(t('myClear'), async () => {
@@ -184,11 +187,12 @@ function renderMyTests(tab, m) {
     if (!part.runs.length) continue;
     const last = part.runs[0];
     const box = el('div', undefined, 'op');
-    box.appendChild(el('b', t(choice === 'reject' ? 'myAfterReject' : 'myAfterAccept', last.after.length, last.date)));
+    box.appendChild(el('b', t(choice === 'reject' ? 'myAfterReject' : 'myAfterAccept', last.date)));
+    box.appendChild(el('div', t('myBefore', last.before, last.after.length, last.newAfter.length)));
     if (!last.clean) box.appendChild(el('div', t('myNotClean'), 'warn'));
     if (last.cleared) box.appendChild(el('div', t('myCleared'), 'svc'));
-    if (last.after.length) box.appendChild(el('div', last.after.join(', '), 'svc'));
-    if (last.newAfter.length) box.appendChild(el('div', t('myNew', last.newAfter.length, last.newAfter.join(', ')), 'svc'));
+    if (last.newAfter.length) box.appendChild(fold(t('myNew', last.newAfter.length), last.newAfter.join(', ')));
+    if (last.after.length) box.appendChild(fold(t('myAll', last.after.length), last.after.join(', ')));
     const withCookies = Object.entries(last.cookies);
     if (withCookies.length) {
       box.appendChild(el('div', t('myCookies', withCookies.length), 'svc'));
@@ -228,6 +232,11 @@ function renderMyTests(tab, m) {
   }));
   tools.appendChild(button(t('myTurnOff'), () => send({ type: 'mytests:settings', enabled: false })));
   app.appendChild(tools);
+}
+
+/** A folded list: long lists of service names stay closed until opened. */
+function fold(summary, text) {
+  return add(el('details'), el('summary', summary, 'svc'), el('div', text, 'svc'));
 }
 
 function renderArrival(a) {

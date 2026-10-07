@@ -445,6 +445,7 @@ async function report(tabId, url) {
   return {
     page: summary, told: page.told, baseline, index, categories: glossary.categories, loading,
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
+      payOrAccept: Boolean(page.consent.payOrAccept),
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
     mytests: { settings: myStore.settings, site: page.site, view: siteView(myStore, page.site),
@@ -473,7 +474,8 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       markInteraction(page, { now: at, kind: msg.kind === 'key' ? 'key' : 'click', on });
       if (first && myStore.settings.enabled && page.consent.click && !page.myTest) {
         wasCleared(page.site).then((cleared) => {
-          page.myTest = startTest(summarizePage(page, glossary), page.consent.click, { nowMs: Date.now(), cleared });
+          page.myTest = startTest(summarizePage(page, glossary), page.consent.click,
+            { nowMs: Date.now(), cleared, payOrAccept: Boolean(page.consent.payOrAccept) });
           touch(sender.tab.id);
         });
       }
@@ -484,7 +486,7 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg && msg.type === 'banner' && fromPage) {
     whenReady(() => {
       const page = own(String(sender.tab.id));
-      if (page && consentNames.has(msg.tool)) { noteBanner(page, msg.tool); touch(sender.tab.id); }
+      if (page && consentNames.has(msg.tool)) { noteBanner(page, msg.tool, msg.payOrAccept === true); touch(sender.tab.id); }
     });
     return false;
   }

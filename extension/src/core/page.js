@@ -323,8 +323,9 @@ export function noteBehaviour(page, { kind, host }, ctx) {
  * @param {PageState} page
  * @param {string} tool  a name from the consent_tools table (validated by the caller)
  */
-export function noteBanner(page, tool) {
+export function noteBanner(page, tool, payOrAccept = false) {
   if (!page.consent.banners.includes(tool) && page.consent.banners.length < 10) page.consent.banners.push(tool);
+  if (payOrAccept === true) page.consent.payOrAccept = true; // the only refusal offered is a subscription
   return page;
 }
 
