@@ -566,6 +566,7 @@ function blockedByClean(d, page) {
 const dnr = api.declarativeNetRequest;
 const PAUSE_BASE = 1000;
 const ALLOW_BASE = 100000;
+const LAST_LEVEL_KEY = 'clean:lastLevel'; // a preference only: which list "Block trackers" turns on
 const P_ALLOW = 2;
 const P_LIST = 3;
 const P_PAUSE = 10;
@@ -609,10 +610,19 @@ async function cleanMessage(msg) {
     const enable = [];
     const disable = [];
     if (msg.blocking !== undefined) {
+      const LEVELS = { verified: ['verified'], full: ['full'], extended: ['full', 'easyprivacy'],
+        siteonly: ['full', 'easyprivacy', 'siteonly'] };
+      let level = msg.blocking;
+      // the panel's "Block trackers" button: the level last chosen in the settings, or "extended"
+      if (level === 'last') {
+        const kept = (await api.storage.local.get(LAST_LEVEL_KEY))[LAST_LEVEL_KEY];
+        level = Object.prototype.hasOwnProperty.call(LEVELS, kept) ? kept : 'extended';
+      } else if (Object.prototype.hasOwnProperty.call(LEVELS, level)) {
+        await api.storage.local.set({ [LAST_LEVEL_KEY]: level });
+      }
       // "extended" = our full list plus the domain rules of EasyPrivacy; "siteonly" = extended plus the
       // "site only" rules (third-party scripts, frames and connections)
-      const want = { verified: ['verified'], full: ['full'], extended: ['full', 'easyprivacy'],
-        siteonly: ['full', 'easyprivacy', 'siteonly'] }[msg.blocking] || [];
+      const want = (Object.prototype.hasOwnProperty.call(LEVELS, level) && LEVELS[level]) || [];
       enable.push(...want);
       for (const id of ['verified', 'full', 'easyprivacy', 'siteonly']) if (!want.includes(id)) disable.push(id);
     }
@@ -703,7 +713,7 @@ function journeyView(page, summary) {
 async function report(tabId, url) {
   await ready;
   const page = own(String(tabId));
-  if (!page) return { page: null, index };
+  if (!page) return { page: null, index, clean: await cleanState().catch(() => null) };
   const cookies = await serviceCookies(page);
   const contacted = new Set(Object.keys(page.services));
   for (const key of Object.keys(cookies)) if (!contacted.has(key)) delete cookies[key];

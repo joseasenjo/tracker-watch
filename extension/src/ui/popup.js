@@ -49,8 +49,14 @@ function section(id, title, fn, openByDefault = false) {
   box.dataset.id = id;
   const remembered = openState()[id];
   box.open = remembered === undefined ? openByDefault : remembered;
-  box.addEventListener('toggle', () => rememberOpen(id, box.open));
-  box.appendChild(add(el('summary'), el('h2', title)));
+  box.addEventListener('toggle', () => { rememberOpen(id, box.open); updateToggleAll(); });
+  const summary = add(el('summary'), el('h2', title));
+  // one section at a time: opening one by hand closes the others (programmatic changes fire no click)
+  summary.addEventListener('click', () => {
+    if (box.open) return;
+    for (const d of root.querySelectorAll('details.sec')) if (d !== box && d.open) d.open = false;
+  });
+  box.appendChild(summary);
   const prev = app;
   app = box;
   fn();
@@ -91,13 +97,15 @@ function render(tab, data) {
   app = root;
   root.replaceChildren();
   add(root, el('h1', t('extName')));
+  if (data && data.page && data.page.host) root.appendChild(el('p', data.page.host, 'host'));
+  if (browserLabel) root.appendChild(el('p', t('browserIs', browserLabel), 'note'));
+  renderQuick(tab, data && data.clean, data && data.page);
   const s = data && data.page;
   if (!s || !s.host) {
     add(root, el('p', t('noData'), 'note'));
     root.appendChild(settingsLink());
     return;
   }
-  root.appendChild(el('p', s.host, 'host'));
   const head = add(el('div', undefined, 'headline'), el('span', String(s.trackingBefore), 'big'), el('span', t('headline')));
   const chips = add(el('div', undefined, 'chips'), el('span', t('oneVisit'), 'chip'));
   if (s.band) chips.appendChild(el('span', t('band', s.band), 'chip'));
@@ -190,6 +198,7 @@ function render(tab, data) {
   });
   section('share', t('shareTitle'), () => renderShare(tab, data));
 
+  updateToggleAll();
   root.appendChild(el('p', t('honesty'), 'note'));
   if (data.index) root.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
   root.appendChild(settingsLink());
@@ -202,10 +211,12 @@ function renderPanelTools() {
   const tools = el('div', undefined, 'tools');
   const sections = () => [...root.querySelectorAll('details.sec')];
   const toggleAll = el('button', t('openAll'));
+  toggleAll.id = 'toggle-all';
   toggleAll.addEventListener('click', () => {
-    const open = !sections().every((d) => d.open);
+    // anything open: close everything; all closed: open everything
+    const open = !sections().some((d) => d.open);
     for (const d of sections()) { d.open = open; rememberOpen(d.dataset.id, open); }
-    toggleAll.textContent = open ? t('closeAll') : t('openAll');
+    updateToggleAll();
   });
   const copy = el('button', t('copyAll'));
   copy.addEventListener('click', async () => {
@@ -318,6 +329,54 @@ function renderSiteOnly(s, so, tab) {
 }
 
 const send = (msg) => api.runtime.sendMessage(msg);
+
+/** "Open all" or "Close all", as the sections are now (the panel is drawn again while a page loads). */
+function updateToggleAll() {
+  const b = document.getElementById('toggle-all');
+  if (b) b.textContent = [...root.querySelectorAll('details.sec')].some((d) => d.open) ? t('closeAll') : t('openAll');
+}
+
+/** The two main switches, on top: they turn on the same settings as the settings page, then reload the tab. */
+function renderQuick(tab, clean, page) {
+  if (!clean || !clean.available) return;
+  const bar = el('div', undefined, 'quick');
+  const sw = (on, labelOn, labelOff, msg) => {
+    const b = el('button', on ? labelOn : labelOff, on ? 'on' : '');
+    b.setAttribute('aria-pressed', String(on));
+    b.title = on ? t('quickTurnOff') : t('quickTurnOn');
+    b.addEventListener('click', async () => {
+      b.disabled = true;
+      await send(msg(!on));
+      if (tab && page && page.host) await api.tabs.reload(tab.id);
+      setTimeout(load, 300);
+    });
+    return b;
+  };
+  bar.appendChild(sw(Boolean(clean.blocking), t('quickTrackersOn', t('quickLevel_' + clean.blocking)), t('quickTrackersOff'),
+    (on) => ({ type: 'clean:set', blocking: on ? 'last' : null })));
+  bar.appendChild(sw(Boolean(clean.ads), t('quickAdsOn'), t('quickAdsOff'), (on) => ({ type: 'clean:set', ads: on })));
+  root.appendChild(bar);
+}
+
+/** Which browser Lens runs in, with its main version (shown on top; reports differ between browsers). */
+let browserLabel = '';
+async function detectBrowser() {
+  try {
+    if (api.runtime.getBrowserInfo) {
+      const i = await api.runtime.getBrowserInfo();
+      return `${i.name} ${String(i.version).split('.')[0]}`;
+    }
+  } catch { /* not Firefox */ }
+  try { if (navigator.brave && await navigator.brave.isBrave()) return 'Brave'; } catch { /* not Brave */ }
+  const brands = (navigator.userAgentData && navigator.userAgentData.brands) || [];
+  for (const name of ['Microsoft Edge', 'Opera', 'Brave', 'Google Chrome', 'Chromium']) {
+    const b = brands.find((x) => x.brand === name);
+    if (b) return `${name === 'Google Chrome' ? 'Chrome' : name} ${b.version}`;
+  }
+  const ua = navigator.userAgent;
+  const m = ua.match(/Edg\/(\d+)/) || ua.match(/OPR\/(\d+)/) || ua.match(/Chrome\/(\d+)/);
+  return m ? `${/Edg\//.test(ua) ? 'Microsoft Edge' : /OPR\//.test(ua) ? 'Opera' : 'Chrome'} ${m[1]}` : '';
+}
 
 function settingsLink() {
   const a = el('a', t('settingsLink'));
@@ -629,4 +688,4 @@ async function load() {
 }
 
 document.documentElement.lang = api.i18n.getUILanguage();
-load();
+detectBrowser().then((b) => { browserLabel = b; }, () => {}).finally(load);
