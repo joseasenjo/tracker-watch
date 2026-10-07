@@ -63,8 +63,12 @@ Two buttons open something only because you press them:
   site's cookies when you press "Clear this site's data and reload" in your own banner test.
 - **storage**: to keep the tab reports and, if you turn them on, your banner tests and your week.
 - **declarativeNetRequestWithHostAccess**: for clean mode, off by default. When you turn it on, your browser
-  itself stops requests to the tracking services of our list and removes known tracking parameters from the
-  address of pages you open; Lens does not read or change those requests.
+  itself stops requests to the tracking services of our list (and, in the extended mode, to the domains of
+  EasyPrivacy, bundled with the extension) and removes known tracking parameters from the address of pages you
+  open; Lens does not read or change those requests.
+- **dns** (Firefox only): to check whether an address that looks like part of the site you are visiting is in fact a
+  tracking company's server in disguise (CNAME cloaking). Firefox looks the name up as it does for the page itself,
+  usually from its own cache; the answer is compared with a bundled list and only the address and the company are kept.
 - **browsingData** (optional, asked the first time you use "Clear this site's data"): to also clear that site's
   other stored data so its cookie banner shows again. Only the site of the tab is cleared.
 

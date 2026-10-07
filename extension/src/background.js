@@ -14,6 +14,7 @@ import { differenceReasons } from './core/differ.js';
 import { classifyEngineUrl, compileEngines, engineCookies, engineForHost, searchParams, signedIn } from './core/search.js';
 import { DAY_OPTIONS, STORE_KEY, carryTest, currentRun, exportStore, normalizeStore, purge, saveRun, siteView,
   startTest } from './core/mytests.js';
+import { cnameMatch, noteCloaked, worthResolving } from './core/cname.js';
 import { SUMMARY_KEY, addPage, normalizeSummary, periodView, purgeSummary } from './core/summary.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
@@ -31,6 +32,41 @@ let index = null;
 let engines = [];
 let profiles = null;
 let consentNames = new Set();
+let cnameTargets = {};
+const resolved = new Map(); // host -> match or null, for this browser session
+const MAX_RESOLVED = 2000;
+
+/**
+ * Firefox only: is this host of the site itself a tracker in disguise? Resolved once per host; with the
+ * extended clean mode on, the host is then blocked for the rest of the session.
+ */
+function checkCloaked(tabId, host) {
+  if (!api.dns || !host) return;
+  const page = own(tabId);
+  if (!page || !worthResolving(page, host, registrableDomain(ctx.trie, host))) return;
+  const apply = (m) => {
+    const p = own(tabId);
+    if (!m || !p || !p.firstParty.includes(registrableDomain(ctx.trie, host))) return;
+    noteCloaked(p, host, m);
+    touch(tabId);
+    if (cleanBlocking === 'extended' && dnr && dnr.updateSessionRules) {
+      dnr.getSessionRules().then((rules) => {
+        if (rules.some((r) => r.condition.requestDomains && r.condition.requestDomains.includes(host))) return;
+        const id = Math.max(0, ...rules.map((r) => r.id)) + 1;
+        return dnr.updateSessionRules({ addRules: [{ id, priority: 1, action: { type: 'block' },
+          condition: { requestDomains: [host], excludedResourceTypes: ['main_frame'] } }] });
+      }).catch(() => {});
+    }
+  };
+  if (resolved.has(host)) { apply(resolved.get(host)); return; }
+  if (resolved.size >= MAX_RESOLVED) return;
+  resolved.set(host, null);
+  api.dns.resolve(host, ['canonical_name']).then((r) => {
+    const m = r && r.canonicalName && r.canonicalName !== host ? cnameMatch(cnameTargets, r.canonicalName) : null;
+    resolved.set(host, m);
+    apply(m);
+  }).catch(() => {});
+}
 const queue = [];
 const ENV_BROWSER = typeof (globalThis.browser ?? {}).runtime?.getBrowserInfo === 'function' ? 'firefox' : 'chromium';
 const CHOICES = new Set(['reject', 'accept', 'pay', 'other']);
@@ -70,6 +106,7 @@ const ready = (async () => {
   myStore = purge(normalizeStore(local[STORE_KEY]), Date.now());
   summaryStore = purgeSummary(normalizeSummary(local[SUMMARY_KEY]), Date.now());
   profiles = engineProfiles;
+  cnameTargets = await loadJson('data/cname_trackers.json').catch(() => ({}));
   engines = compileEngines(engineProfiles);
   consentNames = new Set(g.consent_tools.map((c) => c.name));
   ctx = { trie: buildSuffixTrie(psl.rules), list: createTrackerList(trackers) };
@@ -347,6 +384,7 @@ api.webRequest.onBeforeRequest.addListener((d) => {
     if (!page) return;
     onRequest(page, { requestId: d.requestId, url: d.url, type: d.type, now: d.timeStamp, frameId: d.frameId,
       parentFrameId: d.parentFrameId }, ctx);
+    checkCloaked(id, hostOf(d.url));
     touch(id);
   });
 }, { urls: ['<all_urls>'] });
@@ -445,11 +483,24 @@ api.tabs.onRemoved.addListener((tabId) => {
  * active list, made by another site, was stopped by it.
  */
 let cleanBlocking = null;
+let easyprivacyDomains = null; // loaded only when the extended list is on (Firefox attribution of its blocks)
+async function loadEasyprivacy() {
+  if (easyprivacyDomains) return;
+  const rules = await loadJson('rules/easyprivacy.json').catch(() => []);
+  easyprivacyDomains = new Set(rules.filter((r) => r.action.type === 'block').flatMap((r) => r.condition.requestDomains));
+}
+const inEasyprivacy = (host) => {
+  if (!easyprivacyDomains) return false;
+  const labels = host.split('.');
+  for (let i = 0; i < labels.length - 1; i++) if (easyprivacyDomains.has(labels.slice(i).join('.'))) return true;
+  return false;
+};
 function blockedByClean(d) {
   if (!cleanBlocking || d.error !== 'NS_ERROR_ABORT') return false;
   const host = hostOf(d.url) || '';
   const match = lookup(ctx.list, host);
-  if (!match || !isTracking(ctx.list, match.category) || (cleanBlocking === 'verified' && !match.verified)) return false;
+  const listed = match && isTracking(ctx.list, match.category) && (cleanBlocking !== 'verified' || match.verified);
+  if (!listed && !(cleanBlocking === 'extended' && inEasyprivacy(host))) return false;
   const top = hostOf(d.documentUrl || d.originUrl || '') || '';
   return registrableDomain(ctx.trie, top) !== registrableDomain(ctx.trie, host);
 }
@@ -463,7 +514,9 @@ async function cleanState() {
   if (!dnr) return { available: false, blocking: null, params: false, paused: [] };
   const enabled = await dnr.getEnabledRulesets();
   const dynamic = await dnr.getDynamicRules();
-  cleanBlocking = enabled.includes('full') ? 'full' : enabled.includes('verified') ? 'verified' : null;
+  cleanBlocking = enabled.includes('easyprivacy') ? 'extended' : enabled.includes('full') ? 'full'
+    : enabled.includes('verified') ? 'verified' : null;
+  if (cleanBlocking === 'extended') loadEasyprivacy();
   return {
     available: true,
     blocking: cleanBlocking,
@@ -478,8 +531,10 @@ async function cleanMessage(msg) {
     const enable = [];
     const disable = [];
     if (msg.blocking !== undefined) {
-      if (msg.blocking === 'verified' || msg.blocking === 'full') enable.push(msg.blocking);
-      for (const id of ['verified', 'full']) if (id !== msg.blocking) disable.push(id);
+      // "extended" = our full list plus the domain rules of EasyPrivacy
+      const want = msg.blocking === 'extended' ? ['full', 'easyprivacy'] : (msg.blocking === 'verified' || msg.blocking === 'full') ? [msg.blocking] : [];
+      enable.push(...want);
+      for (const id of ['verified', 'full', 'easyprivacy']) if (!want.includes(id)) disable.push(id);
     }
     if (typeof msg.params === 'boolean') (msg.params ? enable : disable).push('params');
     await dnr.updateEnabledRulesets({ enableRulesetIds: enable, disableRulesetIds: disable });

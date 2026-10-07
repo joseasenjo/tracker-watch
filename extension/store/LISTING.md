@@ -61,6 +61,8 @@ Show the user which tracking services the page they are viewing contacts, and ex
 - **declarativeNetRequestWithHostAccess**: optional clean mode, off by default: rule sets bundled with the
   extension stop third-party requests to the tracking services of our list and remove tracking parameters from
   page addresses. Rules are static files in the package; nothing is downloaded.
+- **dns (Firefox only)**: to check whether an address that looks like part of the visited site is a tracking
+  company's server in disguise (CNAME cloaking), against a bundled list. Nothing is sent to us.
 - **browsingData (optional)**: requested only when the user first presses "Clear this site's data and reload",
   to clear that site's stored data so its cookie banner shows again.
 - **Remote code**: none. All code and data are in the package.

@@ -82,7 +82,13 @@ async function render() {
       catch { return '?'; }
     };
     const [nVerified, nFull] = await Promise.all([count('verified'), count('full')]);
-    for (const [value, label] of [['', t('cleanModeOff')], ['verified', t('cleanModeVerified', nVerified)], ['full', t('cleanModeFull', nFull)]]) {
+    let nExtended = '?';
+    try {
+      const ep = await (await fetch(api.runtime.getURL('rules/easyprivacy.json'))).json();
+      nExtended = ep.filter((r) => r.action.type === 'block').reduce((n, r) => n + r.condition.requestDomains.length, 0).toLocaleString('en');
+    } catch { /* not packaged */ }
+    for (const [value, label] of [['', t('cleanModeOff')], ['verified', t('cleanModeVerified', nVerified)], ['full', t('cleanModeFull', nFull)],
+      ['extended', t('cleanModeExtended', nExtended)]]) {
       const input = el('input');
       input.type = 'radio';
       input.name = name;

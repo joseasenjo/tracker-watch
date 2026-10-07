@@ -77,6 +77,7 @@ function renderGlance(s, data) {
     const n = new Set(s.frames.flatMap((f) => f.services)).size;
     line(t('glanceFrames', n, s.frames.map((f) => f.site).slice(0, 3).join(', ')));
   }
+  if (s.cloaked.length) line(t('glanceCloaked', s.cloaked.length, [...new Set(s.cloaked.map((c) => c.company))].slice(0, 3).join(', ')), 'warn');
   const pr = s.protection;
   if (pr.met) {
     line(pr.stopped ? t('glanceProtected', pr.stopped, pr.met) : t('glanceUnprotected', pr.met), pr.stopped ? '' : 'warn');
@@ -152,6 +153,12 @@ function render(tab, data) {
   if (!data.search) section('mytests', t('myTitle'), () => renderMyTests(tab, data.mytests, Boolean(c.payOrAccept)));
   section('operators', t('operatorsTitle'), () => renderOperators(s));
   section('frames', t('framesTitle'), () => renderFrames(s));
+  section('cloaked', t('cloakedTitle'), () => {
+    if (!s.cloaked.length) return;
+    app.appendChild(add(el('ul'), ...s.cloaked.map((c) => add(el('li'), el('b', c.host),
+      el('span', ' \u2192 ' + t('cloakedRow', c.company, c.target), 'svc')))));
+    app.appendChild(el('p', t('cloakedNote'), 'note'));
+  });
 
   section('traffic', t('trafficTitle'), () => {
     const dl = el('dl');

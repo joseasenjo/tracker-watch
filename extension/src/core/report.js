@@ -97,6 +97,9 @@ export function summarizePage(page, glossary, extra = {}) {
     operators: operatorList,
     unverifiedServices: contacted.filter((s) => !s.verified).length,
     frames,
+    // trackers disguised as part of the site (Firefox resolves names; elsewhere this stays empty)
+    cloaked: Object.entries(page.cloaked || {}).map(([host, c]) => ({ host, ...c }))
+      .sort((a, b) => byName(a.host, b.host)),
     protection: protectionOf(services),
     // tracking services contacted only from inside embedded frames, never by the page itself
     onlyFromFrames: tracking.filter((s) => s.via.length && s.via.reduce((n, v) => n + v.requests, 0) >= sum(s.requests))

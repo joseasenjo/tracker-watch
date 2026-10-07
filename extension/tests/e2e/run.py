@@ -315,6 +315,14 @@ def clean_scenario(ctx, control, browser: str) -> list[str]:
         pr = rep[-1]["page"]["protection"]
         if pr["stopped"] < 2 or rep[-1]["page"]["trackingBefore"] != 0:
             errors.append(f"clean mode did not stop tracking services: {pr} stopped={rep[-1]['page']['stopped']}")
+    control.goto(U("control.test", "/?clean=extended"), wait_until="load")  # our full list + EasyPrivacy
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab.goto(U("site.test", "/"), wait_until="load")
+    tab.wait_for_timeout(1500)
+    ext = [r for r in read_reports(control).values() if isinstance(r, dict) and (r.get("clean") or {}).get("blocking") == "extended"
+           and r.get("page") and r["page"]["host"] == "site.test"]
+    if not ext or ext[-1]["page"]["protection"]["stopped"] < 2:
+        errors.append(f"extended clean mode: {[(r.get('clean'), r['page']['protection']) for r in ext]}")
     control.goto(U("control.test", "/?clean=off"), wait_until="load")
     control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
     tab.close()

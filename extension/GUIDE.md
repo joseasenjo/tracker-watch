@@ -47,7 +47,9 @@ sites. They only do something when a blocker that accepts added lists reads them
 Our list is small: use it on top of the blocker's own lists, not instead of them.
 
 Lens also has an optional **clean mode** (Settings and your data > Clean mode) that stops the services of our
-list without another extension. It is meant for trying the effect, not as your only protection.
+list without another extension. Its **extended** option adds the domain rules of EasyPrivacy (by The EasyList
+authors) and, in Firefox, trackers disguised as the site itself. A dedicated blocker still covers more (it also
+uses path rules and hides empty ad slots).
 
 ## 4. Answer cookie banners with "reject"
 

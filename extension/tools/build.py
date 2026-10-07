@@ -19,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mdpage import markdown_page  # noqa: E402
 from rules import rulesets  # noqa: E402
+from vendor_rules import cname_trackers, easyprivacy_rules  # noqa: E402
 
 EXT = Path(__file__).resolve().parents[1]
 DIST = EXT / "dist"
@@ -46,9 +47,11 @@ def manifest(browser: str, test: bool) -> dict:
         "options_ui": {"page": "options.html", "open_in_tab": True},
         # clean mode (F14): shipped disabled, turned on by the user in the settings page
         "declarative_net_request": {"rule_resources": [
-            {"id": rid, "enabled": False, "path": f"rules/{rid}.json"} for rid in ("verified", "full", "params")]},
+            {"id": rid, "enabled": False, "path": f"rules/{rid}.json"} for rid in ("verified", "full", "params", "easyprivacy")]},
         "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"},
     }
+    if browser == "firefox":
+        m["permissions"].append("dns")  # Firefox only: resolve names to spot trackers disguised as the site itself
     if browser == "chrome":
         m["background"] = {"service_worker": "background.js", "type": "module"}
         m["minimum_chrome_version"] = "121"
@@ -124,7 +127,12 @@ def build(browser: str, test: bool) -> Path:
     shutil.copytree(EXT / "icons", out / "icons")
     shutil.copy2(EXT / "THIRD_PARTY.md", out / "THIRD_PARTY.md")
     shutil.copy2(EXT / "PRIVACY.md", out / "PRIVACY.md")
+    if (EXT / "vendor" / "LICENSE-cname-trackers.txt").exists():
+        shutil.copy2(EXT / "vendor" / "LICENSE-cname-trackers.txt", out / "LICENSE-cname-trackers.txt")
     (out / "rules").mkdir()
+    ep_rules, _ = easyprivacy_rules()
+    (out / "rules" / "easyprivacy.json").write_text(json.dumps(ep_rules) + "\n", encoding="utf-8", newline="\n")
+    (out / "data" / "cname_trackers.json").write_text(json.dumps(cname_trackers(), indent=1) + "\n", encoding="utf-8", newline="\n")
     for rid, rules in rulesets(EXT).items():
         (out / "rules" / f"{rid}.json").write_text(json.dumps(rules, indent=1) + "\n", encoding="utf-8", newline="\n")
     if (EXT / "GUIDE.md").exists():
