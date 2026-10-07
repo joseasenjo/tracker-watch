@@ -67,6 +67,9 @@ Two buttons open something only because you press them:
   EasyPrivacy, bundled with the extension; in the site only mode, to scripts, frames and connections of other
   sites, except the ones you allow on a site, which your browser keeps as its own rules) and removes known
   tracking parameters from the address of pages you open; Lens does not read or change those requests.
+- **scripting**: only for "Block ads", off by default: your browser adds to each page a style sheet that hides
+  empty ad slots (EasyList's element hiding rules, bundled with the extension). Lens does not read or change the
+  page's content.
 - **dns** (Firefox only): to check whether an address that looks like part of the site you are visiting is in fact a
   tracking company's server in disguise (CNAME cloaking). Firefox looks the name up as it does for the page itself,
   usually from its own cache; the answer is compared with a bundled list and only the address and the company are kept.

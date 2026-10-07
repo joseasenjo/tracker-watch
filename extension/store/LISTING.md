@@ -59,8 +59,10 @@ Show the user which tracking services the page they are viewing contacts, and ex
 - **storage**: to keep each tab's report for the session and, if the user enables them, local banner tests and
   a weekly summary.
 - **declarativeNetRequestWithHostAccess**: optional clean mode, off by default: rule sets bundled with the
-  extension stop third-party requests to the tracking services of our list and remove tracking parameters from
-  page addresses. Rules are static files in the package; nothing is downloaded.
+  extension stop third-party requests to the tracking services of our list (and, if the user turns them on, to ads of
+  EasyList and to other sites' scripts in the strict mode) and remove tracking parameters from page addresses. Rules are static files in the package; nothing is downloaded.
+- **scripting**: only for the optional "Block ads" setting, off by default: adds a style sheet that hides empty ad
+  slots (EasyList's element hiding rules, bundled), never reads or changes the page's content.
 - **dns (Firefox only)**: to check whether an address that looks like part of the visited site is a tracking
   company's server in disguise (CNAME cloaking), against a bundled list. Nothing is sent to us.
 - **browsingData (optional)**: requested only when the user first presses "Clear this site's data and reload",

@@ -27,6 +27,16 @@ from other sources:
   **CC BY-SA 3.0** (https://creativecommons.org/licenses/by-sa/3.0/), credit "The EasyList authors". The converted
   file is an adaptation and keeps that licence; the extension's own code remains MIT.
 
+## EasyList (network and element hiding rules) — `rules/easylist.json`, `data/cosmetic.json`
+
+- Source: EasyList by The EasyList authors (https://easylist.to/), fetched unmodified into `vendor/easylist.txt`
+  by `tools/fetch_lists.py` (date and SHA-256 in `vendor/lists.json`).
+- What ships: its network rules converted by our own `tools/easylist.py` into declarativeNetRequest rules (host
+  rules grouped; path rules, party, resource types and `$domain=` kept; regular expressions and options a browser
+  rule cannot express left out), and its element hiding rules (`##`, `#@#`, `$generichide`, `$elemhide`) as data;
+  extended syntax is left out. Used by the optional "Block ads" setting, off by default.
+- Licence: as EasyPrivacy above, used and shared under **CC BY-SA 3.0**, credit "The EasyList authors".
+
 ## AdGuard cname-trackers — `data/cname_trackers.json`
 
 - Source: https://github.com/AdguardTeam/cname-trackers (`combined_original_trackers.txt`), fetched into

@@ -28,7 +28,7 @@ EXT = Path(__file__).resolve().parents[2]
 PORT = 18543
 RDP_PORT = 18602
 HOSTS = ["site.test", "control.test", "www.googletagmanager.com", "stats.g.doubleclick.net", "ib.adnxs.com",
-         "cdn.unknown.test", "connect.facebook.net", "www.google.com", "cdn.cookielaw.org", "www.youtube.com"]
+         "cdn.unknown.test", "connect.facebook.net", "www.google.com", "cdn.cookielaw.org", "www.youtube.com", "popads.net"]
 U = lambda host, path: f"https://{host}:{PORT}{path}"  # noqa: E731
 
 PAGE = f"""<!doctype html><meta charset="utf-8"><title>e2e</title>
@@ -69,6 +69,11 @@ UNKNOWN_BANNER = """<!doctype html><meta charset="utf-8"><title>unknown cmp</tit
 PRERENDERED = f"""<!doctype html><meta charset="utf-8"><title>prerendered</title>
 <img src="{U('ib.adnxs.com', '/pre.gif')}"><img src="{U('stats.g.doubleclick.net', '/pre.gif')}">"""
 
+# "Block ads": an ad network of EasyList (not on our lists) and a slot hidden by one of its generic rules
+ADS_PAGE = f"""<!doctype html><meta charset="utf-8"><title>ads</title>
+<div class="ad--banner" id="slot">advert</div><p id="text">article</p>
+<img src="{U('popads.net', '/ad.gif')}">"""
+
 EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 7, "band": "A"}
 
 
@@ -93,6 +98,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             body, ctype = ES_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/unknown":
             body, ctype = UNKNOWN_BANNER.encode(), "text/html; charset=utf-8"
+        elif host == "site.test" and path == "/ads":
+            body, ctype = ADS_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/prerendered":
             body, ctype = PRERENDERED.encode(), "text/html; charset=utf-8"
         elif host == "site.test":
@@ -378,6 +385,33 @@ def siteonly_scenario(ctx, control, tab, browser: str, screenshot: str | None = 
     return errors
 
 
+def ads_scenario(ctx, control, browser: str) -> list[str]:
+    """"Block ads" on its own: the ad network stopped by the browser, the ad slot hidden, the rest untouched;
+    off again: the slot shows."""
+    errors = []
+    control.goto(U("control.test", "/?clean=off&ads=on"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab = ctx.new_page()
+    tab.goto(U("site.test", "/ads"), wait_until="load")
+    tab.wait_for_timeout(1500)
+    shown = tab.evaluate("[getComputedStyle(document.getElementById('slot')).display, "
+                         "getComputedStyle(document.getElementById('text')).display]")
+    reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
+            and r["page"]["host"] == "site.test" and (r.get("clean") or {}).get("ads")]
+    stopped = reps[-1]["page"]["stopped"]["client"] if reps else None
+    if shown != ["none", "block"] or not stopped:
+        errors.append(f"ads: display={shown} stopped by client={stopped} page={reps and {k: reps[-1]['page'][k] for k in ('stopped', 'thirdPartyDomains')}}")
+    control.goto(U("control.test", "/?clean=off"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab.goto(U("site.test", "/ads"), wait_until="load")
+    tab.wait_for_timeout(800)
+    if tab.evaluate("getComputedStyle(document.getElementById('slot')).display") == "none":
+        errors.append("ads off: the slot is still hidden")
+    tab.close()
+    print(f"{browser}: ads ok={not errors}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -467,6 +501,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append("a query leaked into the journey")
     errors += custom_banner_and_prerender(ctx, control, browser)
     errors += clean_scenario(ctx, control, browser, screenshot)
+    errors += ads_scenario(ctx, control, browser)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
         ext_id = sw.url.split("/")[2]

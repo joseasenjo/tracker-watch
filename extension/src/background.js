@@ -16,6 +16,7 @@ import { DAY_OPTIONS, STORE_KEY, carryTest, currentRun, exportStore, normalizeSt
   startTest } from './core/mytests.js';
 import { cnameMatch, noteCloaked, worthResolving } from './core/cname.js';
 import { SUMMARY_KEY, addPage, normalizeSummary, periodView, purgeSummary } from './core/summary.js';
+import { selectorsFor, styleSheet } from './core/cosmetic.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const TEST_HOOKS = false; // set to true only by tools/build.py --test
@@ -471,6 +472,29 @@ api.webNavigation.onCommitted.addListener((d) => {
   });
 });
 
+/**
+ * "Block ads": hide empty ad slots in each page and frame as it commits, with EasyList's element hiding rules for
+ * that host, as a user style sheet (the page cannot undo it). Not on sites where clean mode is paused.
+ */
+api.webNavigation.onCommitted.addListener((d) => {
+  if (!adsOn || d.tabId < 0 || !/^https?:/.test(d.url) || !api.scripting) return;
+  whenReady(async () => {
+    const host = hostOf(d.url) || '';
+    const top = d.frameId === 0 ? registrableDomain(ctx.trie, host) : own(String(d.tabId))?.site;
+    if (!host || (top && pausedSites.includes(top))) return;
+    if (!cosmeticData) cosmeticData = await loadJson('data/cosmetic.json').catch(() => null);
+    if (!cosmeticData) return;
+    let css = cssCache.get(host);
+    if (css === undefined) {
+      css = styleSheet(selectorsFor(cosmeticData, host));
+      if (cssCache.size > 200) cssCache.clear();
+      cssCache.set(host, css);
+    }
+    if (!css) return;
+    api.scripting.insertCSS({ target: { tabId: d.tabId, frameIds: [d.frameId] }, css, origin: 'USER' }).catch(() => {});
+  });
+});
+
 api.tabs.onRemoved.addListener((tabId) => {
   whenReady(() => countForSummary(own(String(tabId))));
   delete prerendered[String(tabId)];
@@ -489,6 +513,17 @@ const extendedOn = () => cleanBlocking === 'extended' || cleanBlocking === 'site
 let easyprivacyDomains = null; // loaded only when the extended list is on (Firefox attribution of its blocks)
 let siteonlySafe = null; // domains "site only" lets through everywhere (Firefox attribution of its blocks)
 let siteAllowed = []; // [{ site, domain }] allowed from the panel, mirrored from the browser's rules
+let adsOn = false; // "Block ads" (EasyList), mirrored from the browser's enabled rule sets
+let pausedSites = [];
+let easylistDomains = null; // loaded only when ads are blocked (attribution of its blocks)
+let cosmeticData = null;
+const cssCache = new Map(); // host -> style sheet
+async function loadEasylist() {
+  if (easylistDomains) return;
+  const rules = await loadJson('rules/easylist.json').catch(() => []);
+  easylistDomains = new Set(rules.filter((r) => r.action.type === 'block' && !r.condition.initiatorDomains)
+    .flatMap((r) => r.condition.requestDomains || []));
+}
 async function loadEasyprivacy() {
   if (easyprivacyDomains) return;
   const rules = await loadJson('rules/easyprivacy.json').catch(() => []);
@@ -510,14 +545,14 @@ const inSet = (set, host) => {
 const SITEONLY_TYPES = new Set(['script', 'sub_frame', 'xmlhttprequest', 'ping', 'beacon', 'websocket', 'object',
   'object_subrequest', 'other']);
 function blockedByClean(d, page) {
-  if (!cleanBlocking || d.error !== 'NS_ERROR_ABORT') return false;
+  if ((!cleanBlocking && !adsOn) || d.error !== 'NS_ERROR_ABORT') return false;
   const host = hostOf(d.url) || '';
   const top = hostOf(d.documentUrl || d.originUrl || '') || '';
   const reg = registrableDomain(ctx.trie, host);
   if (registrableDomain(ctx.trie, top) === reg) return false;
   const match = lookup(ctx.list, host);
-  const listed = match && isTracking(ctx.list, match.category) && (cleanBlocking !== 'verified' || match.verified);
-  if (listed || (extendedOn() && inSet(easyprivacyDomains, host))) return true;
+  const listed = cleanBlocking && match && isTracking(ctx.list, match.category) && (cleanBlocking !== 'verified' || match.verified);
+  if (listed || (extendedOn() && inSet(easyprivacyDomains, host)) || (adsOn && inSet(easylistDomains, host))) return true;
   // "site only": a script, frame or connection of another site, unless allowed (approximate: the page may
   // also have cancelled it itself)
   return cleanBlocking === 'siteonly' && SITEONLY_TYPES.has(d.type) && !page.firstParty.includes(reg)
@@ -539,20 +574,23 @@ const isPause = (r) => r.id >= PAUSE_BASE && r.id < ALLOW_BASE;
 const isAllow = (r) => r.id >= ALLOW_BASE && r.action.type === 'allow';
 
 async function cleanState() {
-  if (!dnr) return { available: false, blocking: null, params: false, paused: [], allowed: [] };
+  if (!dnr) return { available: false, blocking: null, params: false, ads: false, paused: [], allowed: [] };
   const enabled = await dnr.getEnabledRulesets();
   const dynamic = await dnr.getDynamicRules();
   cleanBlocking = enabled.includes('siteonly') ? 'siteonly' : enabled.includes('easyprivacy') ? 'extended'
     : enabled.includes('full') ? 'full' : enabled.includes('verified') ? 'verified' : null;
   if (extendedOn()) loadEasyprivacy();
   if (cleanBlocking === 'siteonly') loadSiteonly();
+  adsOn = enabled.includes('easylist');
+  if (adsOn) loadEasylist();
   siteAllowed = dynamic.filter(isAllow).map((r) => ({ site: r.condition.initiatorDomains[0], domain: r.condition.requestDomains[0] }))
     .sort((a, b) => (a.site + ' ' + a.domain < b.site + ' ' + b.domain ? -1 : 1));
   return {
     available: true,
     blocking: cleanBlocking,
     params: enabled.includes('params'),
-    paused: dynamic.filter(isPause).map((r) => r.condition.requestDomains[0]).sort(),
+    ads: adsOn,
+    paused: pausedSites = dynamic.filter(isPause).map((r) => r.condition.requestDomains[0]).sort(),
     allowed: siteAllowed,
   };
 }
@@ -579,6 +617,7 @@ async function cleanMessage(msg) {
       for (const id of ['verified', 'full', 'easyprivacy', 'siteonly']) if (!want.includes(id)) disable.push(id);
     }
     if (typeof msg.params === 'boolean') (msg.params ? enable : disable).push('params');
+    if (typeof msg.ads === 'boolean') (msg.ads ? enable : disable).push('easylist');
     await dnr.updateEnabledRulesets({ enableRulesetIds: enable, disableRulesetIds: disable });
   } else if (msg.type === 'clean:pause' && typeof msg.site === 'string' && DOMAIN_RE.test(msg.site)) {
     // pausing a site: everything that page loads is allowed, as if clean mode were off there
@@ -699,7 +738,9 @@ async function report(tabId, url) {
       if (c.blocking === 'siteonly') {
         // what "site only" stopped here, and what was allowed on this site from the panel
         const here = c.allowed.filter((a) => a.site === page.site).map((a) => a.domain);
-        out.siteonly = { blocked: blockedDomains(page).filter((b) => !here.includes(b.domain)), allowedHere: here };
+        // ads stopped by EasyList are not "site only" blocks (allowing them would not help)
+        out.siteonly = { blocked: blockedDomains(page).filter((b) => !here.includes(b.domain) && !(adsOn && inSet(easylistDomains, b.domain))),
+          allowedHere: here };
       }
       return out;
     }).catch(() => null),
@@ -791,7 +832,7 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:clean') {
-    cleanMessage({ type: 'clean:set', blocking: msg.blocking, params: msg.params }).then(sendResponse);
+    cleanMessage({ type: 'clean:set', blocking: msg.blocking, params: msg.params, ads: msg.ads }).then(sendResponse);
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:allow') {

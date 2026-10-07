@@ -269,8 +269,9 @@ function renderProtection(s, clean, tab) {
   }
   app.appendChild(el('p', t('protectionNote'), 'note'));
   if (clean) app.appendChild(el('p', clean.blocking ? t('cleanOn', t('cleanList_' + clean.blocking)) : t('cleanOff'), clean.blocking ? '' : 'note'));
+  if (clean && clean.ads) app.appendChild(el('p', t('adsOn')));
   const tools = el('div', undefined, 'tools');
-  if (clean && clean.blocking) {
+  if (clean && (clean.blocking || clean.ads)) {
     if (clean.pausedHere) app.appendChild(el('p', t('cleanPausedHere', s.site), 'warn'));
     else if (clean.siteonly) renderSiteOnly(s, clean.siteonly, tab);
     tools.appendChild(button(clean.pausedHere ? t('cleanResume') : t('cleanPause'), async () => {

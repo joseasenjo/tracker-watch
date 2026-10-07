@@ -1,6 +1,6 @@
 """Download the third-party lists the extension converts at build time into extension/vendor/.
 
-    python extension/tools/fetch_lists.py
+    python extension/tools/fetch_lists.py [easylist.txt ...]
 
 Run it only when you decide to update them: the build never downloads anything. Each file is stored unmodified,
 next to vendor/lists.json (source, date, SHA-256, licence), and credited in THIRD_PARTY.md.
@@ -19,6 +19,10 @@ LISTS = {
         "url": "https://easylist.to/easylist/easyprivacy.txt",
         "licence": "GPL-3.0-or-later OR CC-BY-SA-3.0 (used under CC BY-SA 3.0); credit: The EasyList authors (https://easylist.to/)",
     },
+    "easylist.txt": {
+        "url": "https://easylist.to/easylist/easylist.txt",
+        "licence": "GPL-3.0-or-later OR CC-BY-SA-3.0 (used under CC BY-SA 3.0); credit: The EasyList authors (https://easylist.to/)",
+    },
     "cname_original_trackers.txt": {
         "url": "https://raw.githubusercontent.com/AdguardTeam/cname-trackers/master/data/combined_original_trackers.txt",
         "licence": "MIT; credit: AdGuard (https://github.com/AdguardTeam/cname-trackers)",
@@ -26,10 +30,15 @@ LISTS = {
 }
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    """With file names, fetch only those (the others keep their copy and their record)."""
+    import sys
+    names = (sys.argv[1:] if argv is None else argv) or list(LISTS)
     VENDOR.mkdir(exist_ok=True)
-    meta = {}
-    for name, info in LISTS.items():
+    meta_path = VENDOR / "lists.json"
+    meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
+    for name in names:
+        info = LISTS[name]
         req = urllib.request.Request(info["url"], headers={"User-Agent": "tracker-watch-lens-build"})
         body = urllib.request.urlopen(req, timeout=60).read()
         (VENDOR / name).write_bytes(body)

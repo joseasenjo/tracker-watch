@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mdpage import markdown_page  # noqa: E402
 from rules import rulesets  # noqa: E402
 from vendor_rules import cname_trackers, easyprivacy_rules  # noqa: E402
+from easylist import easylist  # noqa: E402
 
 EXT = Path(__file__).resolve().parents[1]
 DIST = EXT / "dist"
@@ -34,7 +35,7 @@ def manifest(browser: str, test: bool) -> dict:
         "description": "__MSG_extDescription__",
         "version": VERSION if VERSION != "0.0.0" else "0.1.0",
         "default_locale": "en",
-        "permissions": ["webRequest", "webNavigation", "storage", "cookies", "declarativeNetRequestWithHostAccess"],
+        "permissions": ["webRequest", "webNavigation", "storage", "cookies", "declarativeNetRequestWithHostAccess", "scripting"],
         "host_permissions": ["<all_urls>"],
         "optional_permissions": ["browsingData"],
         "icons": {str(n): f"icons/icon-{n}.png" for n in (16, 32, 48, 128)},
@@ -47,7 +48,7 @@ def manifest(browser: str, test: bool) -> dict:
         "options_ui": {"page": "options.html", "open_in_tab": True},
         # clean mode (F14): shipped disabled, turned on by the user in the settings page
         "declarative_net_request": {"rule_resources": [
-            {"id": rid, "enabled": False, "path": f"rules/{rid}.json"} for rid in ("verified", "full", "params", "easyprivacy", "siteonly")]},
+            {"id": rid, "enabled": False, "path": f"rules/{rid}.json"} for rid in ("verified", "full", "params", "easyprivacy", "siteonly", "easylist")]},
         "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"},
     }
     if browser == "firefox":
@@ -81,7 +82,8 @@ const api = globalThis.browser ?? globalThis.chrome;
 const first = location.search.includes('mytests=on') ? api.runtime.sendMessage({ type: 'test:mytests-on' }) : null;
 if (location.search.includes('summary=on')) api.runtime.sendMessage({ type: 'test:summary-on' });
 const clean = new URLSearchParams(location.search).get('clean');
-const cleaning = clean ? api.runtime.sendMessage({ type: 'test:clean', blocking: clean === 'off' ? null : clean, params: clean !== 'off' }) : null;
+const cleaning = clean ? api.runtime.sendMessage({ type: 'test:clean', blocking: clean === 'off' ? null : clean, params: clean !== 'off',
+  ads: new URLSearchParams(location.search).get('ads') === 'on' }) : null;
 const allow = new URLSearchParams(location.search).get('allow'); // site:domain, for "site only" mode
 const allowing = allow ? api.runtime.sendMessage({ type: 'test:allow', site: allow.split(':')[0], domain: allow.split(':')[1] }) : null;
 Promise.all([first, cleaning, allowing]).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
@@ -134,6 +136,9 @@ def build(browser: str, test: bool) -> Path:
     (out / "rules").mkdir()
     ep_rules, _ = easyprivacy_rules()
     (out / "rules" / "easyprivacy.json").write_text(json.dumps(ep_rules) + "\n", encoding="utf-8", newline="\n")
+    el_rules, el_cosmetic, _ = easylist()  # ads: network rules and element hiding
+    (out / "rules" / "easylist.json").write_text(json.dumps(el_rules) + "\n", encoding="utf-8", newline="\n")
+    (out / "data" / "cosmetic.json").write_text(json.dumps(el_cosmetic) + "\n", encoding="utf-8", newline="\n")
     (out / "data" / "cname_trackers.json").write_text(json.dumps(cname_trackers(), indent=1) + "\n", encoding="utf-8", newline="\n")
     for rid, rules in rulesets(EXT).items():
         (out / "rules" / f"{rid}.json").write_text(json.dumps(rules, indent=1) + "\n", encoding="utf-8", newline="\n")

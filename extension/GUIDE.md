@@ -59,6 +59,10 @@ and YouTube or Vimeo videos are allowed from the start. When something is missin
 site: it lists the other sites that were stopped, each with an "Allow on this site" button (the tracker lists
 still apply to what you allow), or pause clean mode there.
 
+Separately, **Block ads** (off by default) uses EasyList (by The EasyList authors) to stop ad requests and hide the
+empty space ads leave. It works with or without the options above. Some sites ask you to turn off ad blocking;
+pausing clean mode on a site from the panel also pauses this there.
+
 ## 4. Answer cookie banners with "reject"
 
 Where a banner offers a free refusal, rejecting usually means fewer services. The difference can be large: in one test
