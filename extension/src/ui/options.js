@@ -76,7 +76,13 @@ async function render() {
     app.appendChild(el('h2', t('cleanTitle')));
     app.appendChild(el('p', t('cleanExplain'), 'note'));
     const name = 'blocking';
-    for (const [value, label] of [['', t('cleanModeOff')], ['verified', t('cleanModeVerified')], ['full', t('cleanModeFull')]]) {
+    // how many services each rule set stops, read from the packaged rules (never written by hand)
+    const count = async (id) => {
+      try { return (await (await fetch(api.runtime.getURL(`rules/${id}.json`))).json())[0].condition.requestDomains.length; }
+      catch { return '?'; }
+    };
+    const [nVerified, nFull] = await Promise.all([count('verified'), count('full')]);
+    for (const [value, label] of [['', t('cleanModeOff')], ['verified', t('cleanModeVerified', nVerified)], ['full', t('cleanModeFull', nFull)]]) {
       const input = el('input');
       input.type = 'radio';
       input.name = name;
