@@ -14,7 +14,9 @@ const byName = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
  * @param {import('./page.js').PageState} page
  * @param {{ bands: import('./bands.js').Band[] } & import('./activity.js').Glossary} glossary
  * @param {{ cookies?: Record<string, import('./activity.js').CookieInfo[]>,
- *           behaviours?: Record<string, string[]> }} [extra]  cookies and script behaviours per service
+ *           behaviours?: Record<string, string[]>, behavioursOther?: Record<string, string[]>,
+ *           liveCookies?: boolean }} [extra]  cookies and script behaviours per service; liveCookies: the
+ *   cookies were read from the user's own browser (worded "holds ... set on this visit or earlier")
  */
 export function summarizePage(page, glossary, extra = {}) {
   const cookies = extra.cookies ?? {};
@@ -27,7 +29,7 @@ export function summarizePage(page, glossary, extra = {}) {
     return {
       service, entity: s.entity, category: s.category, tracking: s.tracking, verified: s.verified,
       contacted: before + after > 0, before, after, newAfterInteraction: before === 0 && after > 0,
-      stopped: s.stopped, bytes: s.bytes || null, requests, phrases: phrases(activity, glossary),
+      stopped: s.stopped, bytes: s.bytes || null, requests, phrases: phrases(activity, glossary, { live: Boolean(extra.liveCookies) }),
     };
   });
   const contacted = services.filter((s) => s.contacted);

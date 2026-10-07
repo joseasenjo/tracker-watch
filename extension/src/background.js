@@ -488,7 +488,7 @@ async function report(tabId, url) {
   const cookies = await serviceCookies(page);
   const contacted = new Set(Object.keys(page.services));
   for (const key of Object.keys(cookies)) if (!contacted.has(key)) delete cookies[key];
-  const summary = summarizePage(page, glossary, { cookies, behaviours: page.behaviours ?? {},
+  const summary = summarizePage(page, glossary, { cookies, liveCookies: true, behaviours: page.behaviours ?? {},
     behavioursOther: page.behavioursOther ?? {} });
   const site = url ? findSite(sites, url, ctx.trie) : null;
   const baseline = compareWithBaseline(summary, site);

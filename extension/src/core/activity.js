@@ -17,9 +17,11 @@ import { registrableDomain } from './psl.js';
  * (tests/parity.test.js).
  * @param {Activity} activity
  * @param {Glossary} glossary
+ * @param {{ live?: boolean }} [opts]  live: the cookies are those now in a real browser, which may have been set
+ *   on an earlier visit to any site (the engine starts each pass with an empty browser, so it can say "set")
  * @returns {string[]}
  */
-export function phrases(activity, glossary) {
+export function phrases(activity, glossary, opts = {}) {
   const out = [];
   for (const kind of KINDS) {
     const n = activity.requests[kind] || 0;
@@ -31,7 +33,9 @@ export function phrases(activity, glossary) {
   const cookies = activity.cookies;
   if (cookies.length) {
     const persistent = cookies.filter((c) => c.persistent);
-    let text = `set ${cookies.length} cookie${cookies.length !== 1 ? 's' : ''}`;
+    let text = opts.live
+      ? `holds ${cookies.length} cookie${cookies.length !== 1 ? 's' : ''} in your browser, set on this visit or earlier`
+      : `set ${cookies.length} cookie${cookies.length !== 1 ? 's' : ''}`;
     if (persistent.length) {
       const days = persistent.map((c) => c.days).filter((d) => d);
       const longest = days.length ? `, the longest lasting about ${Math.max(...days)} days` : '';

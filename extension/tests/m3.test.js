@@ -53,3 +53,11 @@ test('journey rows keep only the site, the count and the operators; common opera
   onSent(late, { requestId: 'z', headers: [] }, ctx);
   assert.deepEqual(journeyEntry(summarizePage(late, glossary)).operators, ['Google']); // adnxs came after
 });
+
+test('cookies read from a real browser are "held", not "set" (they may come from earlier visits)', async () => {
+  const { phrases } = await import('../src/core/activity.js');
+  const activity = { requests: {}, cookies: [{ name: 'IDE', persistent: true, days: 180 }], behaviours: [] };
+  assert.equal(phrases(activity, glossary)[0].startsWith('set 1 cookie'), true); // engine wording (parity)
+  assert.equal(phrases(activity, glossary, { live: true })[0],
+    'holds 1 cookie in your browser, set on this visit or earlier (1 that stays after you close the browser, the longest lasting about 180 days)');
+});
