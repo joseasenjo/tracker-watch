@@ -42,6 +42,18 @@ from .origins import compare as compare_origins, load_extra, paired_bars
 from .spark import sparkline
 
 SRC = Path(__file__).resolve().parent.parent / "site_src"
+GUIDE = Path(__file__).resolve().parent.parent / "extension" / "GUIDE.md"
+
+
+def guide_html() -> Markup:
+    """The protection guide, from the same Markdown the extension ships (extension/tools/mdpage.py escapes it)."""
+    if not GUIDE.exists():
+        return Markup("")
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("mdpage", GUIDE.parent / "tools" / "mdpage.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return Markup(mod.markdown_page(GUIDE.read_text(encoding="utf-8")))
 SITE_NAME = "Tracker Watch"
 VANTAGE_LABELS = {"github-actions-us": "GitHub servers in the US", "local-windows-spain": "a PC in Spain"}
 VANTAGE_LABELS_ES = {"github-actions-us": "servidores de GitHub en EEUU", "local-windows-spain": "un PC en España"}
@@ -496,6 +508,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("companies.html", out / "companies.html", page="companies")
     render("glossary.html", out / "glossary.html", page="glossary")
     render("filters.html", out / "filters.html", page="filters")
+    render("protect.html", out / "protect.html", page="protect", guide_html=guide_html())
     render("request.html", out / "request.html", page="request")
     render("consent.html", out / "consent.html", page="consent")
     render("protection.html", out / "protection.html", page="protection")

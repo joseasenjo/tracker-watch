@@ -111,3 +111,14 @@ def test_site_publishes_the_files_the_page_and_the_card(tmp_path):
     assert "data/trackerwatch-full.txt" in index["files"].values()
     assert {f["file"] for f in ctx["filters"]} == {"trackerwatch-verified.txt", "trackerwatch-full.txt"}
     assert "trackerwatch-full.txt" in (out / "method.html").read_text(encoding="utf-8")
+
+
+def test_site_publishes_the_protection_guide_from_the_extension_text(tmp_path):
+    write_runs(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", vantage="github-actions-us")})
+    build_site(tmp_path / "runs", tmp_path / "site", base_url="https://o.github.io/r/", repo_url="https://github.com/o/r")
+    page = (tmp_path / "site" / "protect.html").read_text(encoding="utf-8")
+    for expected in ("How to browse with less tracking", "Enhanced Tracking Protection", "uBlock Origin Lite",
+                     "Global Privacy Control", "What none of this stops", 'href="https://privacybadger.org/"'):
+        assert expected in page
+    assert "<script" not in page.split('<div class="wrap narrow guide">')[1].split("</section>")[0]
+    assert 'href="protect.html"' in (tmp_path / "site" / "index.html").read_text(encoding="utf-8")

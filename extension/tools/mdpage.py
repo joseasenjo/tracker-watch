@@ -12,6 +12,9 @@ SEPARATOR = re.compile(r"\|[-| :]+\|")
 def inline(s: str) -> str:
     s = html.escape(s)
     s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+    # bare https links (text already escaped) become links that open outside the page
+    s = re.sub(r"(https://[^\s<]+?)([.,;)]?)(?=\s|$)",
+               r'<a href="\1" target="_blank" rel="noreferrer noopener">\1</a>\2', s)
     return re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", s)
 
 
