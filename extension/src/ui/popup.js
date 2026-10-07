@@ -96,6 +96,8 @@ function render(tab, data) {
     }
   }
 
+  renderBlocking(s.blocking);
+  renderJourney(data.journey);
   renderMyTests(tab, data.mytests, Boolean(c.payOrAccept));
 
   app.appendChild(el('h2', t('operatorsTitle')));
@@ -137,6 +139,7 @@ function render(tab, data) {
   app.appendChild(el('h2', t('whyTitle')));
   app.appendChild(add(el('ul'), ...(data.reasons || []).map((r) => el('li', t(r.id, ...r.args)))));
   app.appendChild(el('p', t('honesty'), 'note'));
+  renderShare(tab, data);
   if (data.index) app.appendChild(el('p', t('dataVersion', data.index.data_version, data.index.list_entries), 'note'));
   fetch(api.runtime.getURL('data/build.json')).then((r) => r.json())
     .then((b) => app.appendChild(el('p', `build ${b.built}`, 'note')), () => {});
@@ -234,6 +237,87 @@ function renderMyTests(tab, m, payHere) {
   app.appendChild(tools);
 }
 
+const pct = (part, whole) => (whole ? Math.round((100 * part) / whole) : 0);
+
+/** F6: simulation with our own filter lists; nothing is blocked. */
+function renderBlocking(b) {
+  if (!b || !b.full.services) return;
+  app.appendChild(el('h2', t('blockTitle')));
+  const dl = el('dl');
+  const row = (label, x) => add(dl, el('dt', label), el('dd', t('blockRow', x.requests, pct(x.requests, b.thirdRequests),
+    x.bytes ? formatBytes(x.bytes) : '-')));
+  row(t('blockVerified', b.verified.services), b.verified);
+  row(t('blockFull', b.full.services), b.full);
+  add(app, el('p', t('blockIntro', b.thirdRequests), 'note'), dl, el('p', t('blockNote'), 'note'));
+}
+
+/** F5: the pages opened in this tab (domain and count only, forgotten when the tab closes). */
+function renderJourney(j) {
+  if (!j) return;
+  app.appendChild(el('h2', t('journeyTitle')));
+  const ol = el('ol', undefined, 'steps');
+  for (const r of j.rows) ol.appendChild(el('li', `${r.site} \u00b7 ${t('journeyCount', r.tracking)}`, r.current ? '' : 'done'));
+  app.appendChild(ol);
+  app.appendChild(el('p', j.common.length ? t('journeyCommon', j.previous, j.common.length, j.common.join(', '))
+    : t('journeyNone', j.previous)));
+  app.appendChild(el('p', t('journeyNote'), 'note'));
+}
+
+/** F9: copy a text summary, export the report as JSON, open a pre-filled list correction (never sent by Lens). */
+function exportable(data) {
+  const s = data.page;
+  return {
+    format: 'tracker-watch-lens/page-report', version: 1, exported: new Date().toISOString(),
+    data: data.index ? { list: data.index.data_version, entries: data.index.list_entries } : null,
+    site: s.site, host: s.host, trackingBefore: s.trackingBefore, band: s.band, trackingNewAfter: s.trackingNewAfter,
+    thirdPartyDomains: s.thirdPartyDomains, thirdPartyRequests: s.thirdPartyRequests, bytes: s.bytes, stopped: s.stopped,
+    operators: s.operators.map((o) => ({ entity: o.entity, services: o.services.map((x) => ({ service: x.service,
+      category: x.category, tracking: x.tracking, verified: x.verified, before: x.before, after: x.after,
+      did: x.phrases })) })),
+    behavioursOther: s.behavioursOther, blocking: s.blocking,
+    consent: data.consent, baseline: data.baseline && { weekly: data.baseline.weekly, date: data.baseline.date,
+      vantage: data.baseline.vantage, onlyHere: data.baseline.onlyHere, onlyWeekly: data.baseline.onlyWeekly },
+    // the user agent and language describe this browser: left out unless the user edits the file
+    told: data.told && { thirdWithCookies: data.told.thirdWithCookies, thirdWithReferer: data.told.thirdWithReferer,
+      cookieServices: data.told.cookieServices, params: data.told.params },
+    reasons: (data.reasons || []).map((r) => r.id),
+  };
+}
+
+function summaryText(data) {
+  const s = data.page;
+  const lines = [t('shareLine1', s.host, s.trackingBefore, s.band || '-'),
+    t('shareLine2', s.thirdPartyDomains, s.thirdPartyRequests)];
+  if (s.trackingNewAfter.length) lines.push(t('shareLine3', s.trackingNewAfter.length));
+  lines.push(t('shareLine4', s.operators.filter((o) => o.trackingServices).map((o) => o.entity).slice(0, 12).join(', ')));
+  lines.push(t('honesty'));
+  lines.push('Tracker Watch Lens');
+  return lines.join('\n');
+}
+
+function renderShare(tab, data) {
+  app.appendChild(el('h2', t('shareTitle')));
+  const status = el('p', '', 'note');
+  const tools = el('div', undefined, 'tools');
+  tools.appendChild(button(t('shareCopy'), async () => {
+    try { await navigator.clipboard.writeText(summaryText(data)); status.textContent = t('shareCopied'); }
+    catch { status.textContent = t('shareCopyFailed'); }
+  }));
+  tools.appendChild(button(t('shareExport'), async () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(exportable(data), null, 2)], { type: 'application/json' }));
+    a.download = `lens-${data.page.site}-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+  }));
+  const services = data.page.operators.flatMap((o) => o.services.map((x) => `- ${x.service} (${o.entity}, ${x.category}${x.verified ? '' : ', not verified'})`));
+  const body = [`Site: ${data.page.site}`, `List: ${data.index ? data.index.data_version : '?'}`, '',
+    'What is wrong (which entry, and why):', '', '', 'Services Lens listed on this page:', ...services.slice(0, 60)].join('\n');
+  const url = 'https://github.com/joseasenjo/tracker-watch/issues/new?' + new URLSearchParams({
+    title: `List correction: ${data.page.site}`, body }).toString();
+  tools.appendChild(link(t('shareIssue'), url));
+  add(app, tools, status, el('p', t('shareNote'), 'note'));
+}
+
 /** A folded list: long lists of service names stay closed until opened. */
 function fold(summary, text) {
   return add(el('details'), el('summary', summary, 'svc'), el('div', text, 'svc'));
@@ -300,6 +384,8 @@ function renderTold(told) {
     const hints = Object.values(me.hints || {});
     if (hints.length) row(t('toldHints'), hints.join(' · '));
     row(t('toldGpc'), me.gpc ? t('sent') : t('notSent'));
+    row(t('toldDnt'), me.dnt ? t('sent') : t('notSent'));
+    if (typeof me.cookies === 'number') row(t('toldSelfCookies'), String(me.cookies));
     if (me.cameFrom) row(t('toldCameFrom'), me.cameFrom);
     app.appendChild(dl);
   } else {
@@ -313,6 +399,13 @@ function renderTold(told) {
   const params = Object.entries(told.params || {}).map(([n, c]) => `${n} ×${c}`);
   if (params.length) row(t('toldParams'), params.join(', '));
   app.appendChild(dl);
+  const withCookies = Object.entries(told.cookieServices || {}).sort((a, b) => b[1] - a[1]);
+  if (withCookies.length) {
+    app.appendChild(fold(t('toldCookieList', withCookies.length),
+      withCookies.map(([svc, n]) => `${svc}: ${t('toldCookieNames', n)}`).join(' \u00b7 ')));
+  }
+  const withAddress = Object.keys(told.refererServices || {}).sort();
+  if (withAddress.length) app.appendChild(fold(t('toldRefererList', withAddress.length), withAddress.join(', ')));
   app.appendChild(el('p', t('toldNote'), 'note'));
 }
 

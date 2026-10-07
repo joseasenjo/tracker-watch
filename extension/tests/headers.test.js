@@ -26,9 +26,10 @@ test('self description from the page request', () => {
     { name: 'User-Agent', value: 'Mozilla/5.0 Test' }, { name: 'Accept-Language', value: 'es-ES,es;q=0.9' },
     { name: 'sec-ch-ua-platform', value: '"Windows"' }, { name: 'Sec-GPC', value: '1' },
     { name: 'Referer', value: 'https://www.google.co.uk/search?q=private' },
+    { name: 'Cookie', value: 'a=SECRET; b=2' },
   ], trie);
   assert.deepEqual(self, { userAgent: 'Mozilla/5.0 Test', language: 'es-ES,es;q=0.9',
-    hints: { 'sec-ch-ua-platform': '"Windows"' }, gpc: true, dnt: false, cameFrom: 'google.co.uk' });
+    hints: { 'sec-ch-ua-platform': '"Windows"' }, gpc: true, dnt: false, cameFrom: 'google.co.uk', cookies: 2 });
 });
 
 test('third-party requests: cookies and page address counted, values never stored', () => {

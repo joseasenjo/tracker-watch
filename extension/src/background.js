@@ -7,7 +7,7 @@ import { buildSuffixTrie, registrableDomain } from './core/psl.js';
 import { createTrackerList } from './core/classify.js';
 import { markInteraction, noteBanner, noteBehaviour, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
   startPage } from './core/page.js';
-import { compareWithBaseline, findSite, summarizePage } from './core/report.js';
+import { commonOperators, compareWithBaseline, findSite, journeyEntry, summarizePage } from './core/report.js';
 import { cookiesByService } from './core/activity.js';
 import { hostOf } from './core/requests.js';
 import { differenceReasons } from './core/differ.js';
@@ -194,7 +194,7 @@ function navigate(id, d) {
       engine: page.engineRedirect ?? page.arrival?.engine ?? null, fromSite: page.arrival?.fromSite ?? page.site,
       redirect: Boolean(page.engineRedirect) || Boolean(page.arrival?.redirect), ping: Boolean(page.arrival?.ping),
     };
-    tabs[id] = begin(d, arrival);
+    tabs[id] = carryJourney(begin(d, arrival), page);
     return;
   }
   delete prerendered[id]; // a normal navigation: pages prerendered so far were not used
@@ -214,7 +214,7 @@ function navigate(id, d) {
     noteSerp(next, { engine: target.engine.id, params: searchParams(target.engine, d.url),
       links: { total: 0, ping: 0, redirect: 0, mousedown: 0 } });
   }
-  tabs[id] = next;
+  tabs[id] = carryJourney(next, page);
 }
 
 /** Start a prerendered page's own report, or map a frame inside it to its outermost frame. */
@@ -249,6 +249,17 @@ function arrivalFrom(from, d) {
   if (reg && reg === from.site) return null; // another page of the search engine itself
   return { engine: from.search.engine, fromSite: from.site, redirect: false,
     ping: from.search.lastPingAt !== null && Math.abs(d.timeStamp - from.search.lastPingAt) < PING_WINDOW_MS };
+}
+
+const MAX_JOURNEY = 8;
+/** F5: the page being left becomes the last row of the new page's journey (session memory, this tab only). */
+function carryJourney(next, prev) {
+  if (!prev || !prev.host || prev.engineRedirect) {
+    if (prev && prev.journey) next.journey = prev.journey;
+    return next;
+  }
+  next.journey = [...(prev.journey || []), journeyEntry(summarizePage(prev, glossary))].slice(-MAX_JOURNEY);
+  return next;
 }
 
 function begin(d, arrival) {
@@ -386,7 +397,7 @@ api.webNavigation.onCommitted.addListener((d) => {
     if (page.arrival && from && from.search && from.search.lastPingAt !== null
         && Math.abs(d.timeStamp - from.search.lastPingAt) < PING_WINDOW_MS) page.arrival.ping = true;
     page.mainRequestId = null;
-    tabs[tab] = page;
+    tabs[tab] = carryJourney(page, from);
     delete prerendered[tab];
     touch(tab);
   });
@@ -413,6 +424,15 @@ async function myTestsMessage(msg) {
   purge(myStore, Date.now());
   await api.storage.local.set({ [STORE_KEY]: myStore });
   return true;
+}
+
+function journeyView(page, summary) {
+  const rows = page.journey || [];
+  if (!rows.length) return null;
+  const here = journeyEntry(summary);
+  const previous = rows[rows.length - 1];
+  return { rows: [...rows, { ...here, current: true }], previous: previous.site,
+    common: commonOperators(previous, here) };
 }
 
 /** Everything the panel shows for one tab. */
@@ -448,6 +468,7 @@ async function report(tabId, url) {
       payOrAccept: Boolean(page.consent.payOrAccept),
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
+    journey: journeyView(page, summary),
     mytests: { settings: myStore.settings, site: page.site, view: siteView(myStore, page.site),
       running: page.myTest ? { choice: page.myTest.choice, continued: Boolean(page.myTestContinued) } : null },
     reasons: differenceReasons(summary, page, baseline, { browser: ENV_BROWSER, nowMs: Date.now() }),

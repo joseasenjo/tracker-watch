@@ -36,9 +36,10 @@ export function trackingParams(url) {
 
 /**
  * @typedef {{ userAgent: string | null, language: string | null, hints: Record<string, string>,
- *   gpc: boolean, dnt: boolean, cameFrom: string | null }} SelfDescription
+ *   gpc: boolean, dnt: boolean, cameFrom: string | null, cookies: number }} SelfDescription
+ *   cookies: how many cookie names the browser sent to the site itself (names are not kept)
  * @typedef {{ self: SelfDescription | null, thirdWithCookies: number, thirdWithReferer: number,
- *   cookieServices: Record<string, number>, params: Record<string, number>,
+ *   cookieServices: Record<string, number>, refererServices: Record<string, 1>, params: Record<string, number>,
  *   seen: Record<string, 1>, recognised: Record<string, 1> }} Told
  *   recognised: tracking services whose FIRST request on this page already carried cookies, so the cookies
  *   were in the browser before the visit (a cookie set during the visit cannot be on the first request).
@@ -46,7 +47,8 @@ export function trackingParams(url) {
 
 /** @returns {Told} */
 export function emptyTold() {
-  return { self: null, thirdWithCookies: 0, thirdWithReferer: 0, cookieServices: {}, params: {}, seen: {}, recognised: {} };
+  return { self: null, thirdWithCookies: 0, thirdWithReferer: 0, cookieServices: {}, refererServices: {}, params: {},
+    seen: {}, recognised: {} };
 }
 
 const MAX_VALUE = 300;
@@ -86,6 +88,7 @@ export function describeSelf(headers, trie) {
   return {
     userAgent: clip(h['user-agent']), language: clip(h['accept-language']), hints,
     gpc: h['sec-gpc'] === '1', dnt: h.dnt === '1', cameFrom,
+    cookies: h.cookie ? h.cookie.split(';').map((c) => c.split('=')[0].trim()).filter(Boolean).length : 0,
   };
 }
 
@@ -110,7 +113,11 @@ export function countThirdParty(told, headers, service) {
       Object.defineProperty(told.cookieServices, service, { value: Math.max(prev, names), enumerable: true, writable: true, configurable: true });
     }
   }
-  if (h.referer) told.thirdWithReferer += 1;
+  if (h.referer) {
+    told.thirdWithReferer += 1;
+    told.refererServices ??= {}; // reports saved before this field existed
+    if (service) define(told.refererServices, service, 1);
+  }
 }
 
 /**

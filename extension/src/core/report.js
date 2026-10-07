@@ -44,6 +44,13 @@ export function summarizePage(page, glossary, extra = {}) {
   })).sort((a, b) => b.trackingServices - a.trackingServices || byName(a.entity, b.entity));
 
   const sized = page.bytes.exact + page.bytes.approx;
+  // F6: what our own filter lists (trackerwatch-verified.txt / -full.txt: one `||domain^$third-party` rule per
+  // tracking service of the list) would have stopped directly. Simulated: nothing is blocked.
+  const simulate = (list) => ({
+    services: list.length,
+    requests: list.reduce((n, s) => n + sum(s.requests), 0),
+    bytes: list.reduce((n, s) => n + (s.bytes || 0), 0),
+  });
   return {
     site: page.site, host: page.host,
     interaction: page.interactionAt === null ? null : { kind: page.interaction, at: page.interactionAt },
@@ -72,7 +79,29 @@ export function summarizePage(page, glossary, extra = {}) {
     behavioursOther: Object.entries(extra.behavioursOther ?? {}).map(([domain, kinds]) => ({ domain, kinds }))
       .sort((a, b) => byName(a.domain, b.domain)),
     truncated: page.truncated,
+    blocking: {
+      verified: simulate(tracking.filter((s) => s.verified)), full: simulate(tracking),
+      thirdRequests: page.totals.third, thirdBytes: sized ? page.bytes.sum : 0,
+    },
   };
+}
+
+/**
+ * F5: one row of the tab's journey, kept in session memory only: the registrable domain, its count and the
+ * operators (companies) of the tracking services it contacted. No address, no query.
+ * @param {ReturnType<typeof summarizePage>} summary
+ */
+export function journeyEntry(summary) {
+  return {
+    site: summary.site, tracking: summary.trackingBefore,
+    operators: summary.operators.filter((o) => o.trackingServices > 0).map((o) => o.entity).sort(byName),
+  };
+}
+
+/** Operators present both on the previous page of the journey and on this one. */
+export function commonOperators(previous, current) {
+  const here = new Set(current.operators);
+  return previous.operators.filter((o) => here.has(o));
 }
 
 /**

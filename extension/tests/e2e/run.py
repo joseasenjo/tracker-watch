@@ -368,6 +368,14 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
         errors.append(f"unlisted script behaviour: {s.get('behavioursOther')}")
     print(f"{browser}: {json.dumps(got)} size={s['bytes']}")
     errors += search_scenario(ctx, control, browser, screenshot)
+    b = s.get("blocking") or {}
+    if (b.get("full") or {}).get("services") != 3 or (b.get("verified") or {}).get("requests", 0) < 1:
+        errors.append(f"blocking simulation: {b}")
+    journeys = [r["journey"] for r in read_reports(control).values() if r.get("journey")]
+    if not any(j["previous"] == "google.com" and j["rows"][-1].get("current") for j in journeys):
+        errors.append(f"no journey from google.com: {journeys}")
+    elif "SECRET" in json.dumps(journeys) or "private" in json.dumps(journeys):
+        errors.append("a query leaked into the journey")
     errors += custom_banner_and_prerender(ctx, control, browser)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
