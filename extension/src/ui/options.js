@@ -85,7 +85,8 @@ async function render() {
     let nExtended = '?';
     try {
       const ep = await (await fetch(api.runtime.getURL('rules/easyprivacy.json'))).json();
-      nExtended = ep.filter((r) => r.action.type === 'block').reduce((n, r) => n + r.condition.requestDomains.length, 0).toLocaleString('en');
+      // a domain can sit in two rules with different options: count it once
+      nExtended = new Set(ep.filter((r) => r.action.type === 'block').flatMap((r) => r.condition.requestDomains)).size.toLocaleString('en');
     } catch { /* not packaged */ }
     for (const [value, label] of [['', t('cleanModeOff')], ['verified', t('cleanModeVerified', nVerified)], ['full', t('cleanModeFull', nFull)],
       ['extended', t('cleanModeExtended', nExtended)]]) {
