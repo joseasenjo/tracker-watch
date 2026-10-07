@@ -215,7 +215,9 @@ function renderPanelTools() {
     sections().forEach((d, i) => { d.open = was[i]; });
     try { await navigator.clipboard.writeText(text); notice(t('copiedAll')); } catch { notice(t('shareCopyFailed')); }
   });
-  root.appendChild(add(tools, toggleAll, copy));
+  const settings = el('button', t('settingsButton'));
+  settings.addEventListener('click', () => { api.runtime.openOptionsPage(); window.close(); });
+  root.appendChild(add(tools, toggleAll, copy, settings));
 }
 
 /** Companies and their services, with what each did. */
