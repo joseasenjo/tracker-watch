@@ -18,6 +18,9 @@ const byName = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
  *           liveCookies?: boolean }} [extra]  cookies and script behaviours per service; liveCookies: the
  *   cookies were read from the user's own browser (worded "holds ... set on this visit or earlier")
  */
+/** Is a frame's site the service's own (same domain, or the service is a subdomain of it)? */
+const ownFrame = (service, site) => service === site || service.endsWith('.' + site);
+
 export function summarizePage(page, glossary, extra = {}) {
   const cookies = extra.cookies ?? {};
   const behaviours = extra.behaviours ?? {};
@@ -31,7 +34,9 @@ export function summarizePage(page, glossary, extra = {}) {
       contacted: before + after > 0, before, after, newAfterInteraction: before === 0 && after > 0,
       stopped: s.stopped, bytes: s.bytes || null, requests,
       // requests made from inside embedded third-party frames, by the frame's site (the rest: the page itself)
-      via: Object.entries(s.via || {}).map(([site, n]) => ({ site, requests: n })).sort((a, b) => b.requests - a.requests),
+      // (a service's own frame is not "from inside" anything: those requests count as its own)
+      via: Object.entries(s.via || {}).filter(([site]) => !ownFrame(service, site))
+        .map(([site, n]) => ({ site, requests: n })).sort((a, b) => b.requests - a.requests),
       phrases: phrases(activity, glossary, { live: Boolean(extra.liveCookies) }),
     };
   });

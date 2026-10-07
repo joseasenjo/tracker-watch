@@ -93,3 +93,18 @@ test('protection: services stopped entirely, partly, and those that got through'
   ]);
   assert.deepEqual(p, { met: 4, stopped: 2, partly: 1, through: 2, requestsStopped: 6, stoppedServices: ['a', 'd'] });
 });
+
+test("a service's own frame is not reported as 'from inside' itself", () => {
+  const page = startPage({ url: 'https://www.news.es/', now: 0, requestId: 'nav', declared: [], arrival: null }, ctx);
+  const req = (id, url, type, frameId, parentFrameId) => {
+    onRequest(page, { requestId: id, url, type, now: 1, frameId, parentFrameId }, ctx);
+    onSent(page, { requestId: id, headers: [] }, ctx);
+  };
+  req('1', 'https://ib.adnxs.com/frame', 'sub_frame', 4, 0);
+  req('2', 'https://ib.adnxs.com/px', 'image', 4, 0);
+  req('3', 'https://ad.doubleclick.net/px', 'image', 4, 0);
+  const s = summarizePage(page, glossary);
+  const svc = (n) => s.operators.flatMap((o) => o.services).find((x) => x.service === n);
+  assert.deepEqual(svc('adnxs.com').via, []);
+  assert.deepEqual(svc('doubleclick.net').via, [{ site: 'adnxs.com', requests: 1 }]);
+});
