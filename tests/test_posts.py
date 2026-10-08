@@ -2,7 +2,8 @@ import json
 
 import pytest
 
-from traceguard.posts import LIMITS, alt_text, build_thread, load_latest_reports, main, ranking
+from traceguard.posts import (LIMITS, alt_text, build_thread, group_medians, load_groups, load_latest_reports,
+                              load_spain, main, ranking)
 
 DIFF_NOTABLE = {"site": "News A", "comparable": True, "notable": True,
                 "added_tracking_services": [{"service": "ads.example"}],
@@ -89,3 +90,49 @@ def test_load_latest_reports_picks_newest_folder(tmp_path):
         (tmp_path / day / "a.json").write_text(json.dumps(report(day, 1)), encoding="utf-8")
     date, reports = load_latest_reports(tmp_path)
     assert date == "2026-10-11" and reports[0]["site"]["name"] == "2026-10-11"
+
+
+GROUPS = {"https://newsa.example": "US", "https://newsb.example": "US", "https://newsc.example": "UK",
+          "https://newsd.example": "UK"}
+
+
+def test_country_line_gives_the_median_and_the_sites_measured_per_group():
+    assert group_medians(REPORTS, GROUPS) == [("UK", 4, 2), ("US", 8, 2)]  # (7 + 0) / 2 rounds to 4
+    posts = build_thread("d", REPORTS, [], platform="bluesky", report_url="u", groups=GROUPS)
+    assert len(posts) == 4 and posts[1].startswith("By country") and "US 8 (2)" in posts[1]
+    one_group = {k: "US" for k in GROUPS}  # a single group: no comparison line
+    assert len(build_thread("d", REPORTS, [], platform="bluesky", report_url="u", groups=one_group)) == 3
+
+
+def test_spain_block_is_its_own_post_with_its_own_origin_and_fits_the_limit():
+    es = [report(f"Diario Largo Numero {i}", 60 - i, vantage="local-windows-spain") for i in range(12)]
+    es.append(report("Blocked Daily", 0, status="blocked", vantage="local-windows-spain"))
+    for platform in ("bluesky", "mastodon"):
+        posts = build_thread("2026-10-11", REPORTS, [], platform=platform, report_url="u",
+                             groups=GROUPS, spain=("2026-10-10", es))
+        spanish = [p for p in posts if p.startswith("Spanish outlets")]
+        assert len(spanish) == 1 and "measured from a PC in Spain (2026-10-10)" in spanish[0]
+        assert "12 of 13 sites measured" in spanish[0] and "Diario Largo Numero 0 60" in spanish[0]
+        assert all(len(p) <= LIMITS[platform] for p in posts) and not any("@" in p for p in posts)
+    assert len(build_thread("d", REPORTS, [], platform="bluesky", report_url="u", spain=("d", []))) == 3
+
+
+def test_load_spain_keeps_only_spanish_sites_and_ignores_old_or_missing_folders(tmp_path):
+    groups = {"https://es1.example": "ES", "https://us1.example": "US"}
+    day = tmp_path / "2026-10-09"
+    day.mkdir()
+    for name, url in (("es1", "https://es1.example/"), ("us1", "https://us1.example/")):
+        rep = report(name, 5, vantage="local-windows-spain")
+        rep["site"]["url"] = url
+        (day / f"{name}.json").write_text(json.dumps(rep), encoding="utf-8")
+    date, reports = load_spain(tmp_path, groups, "2026-10-11")
+    assert date == "2026-10-09" and [r["site"]["name"] for r in reports] == ["es1"]
+    assert load_spain(tmp_path, groups, "2026-10-30") is None  # too old
+    assert load_spain(tmp_path / "missing", groups, "2026-10-11") is None
+
+
+def test_load_groups_reads_the_site_list(tmp_path):
+    f = tmp_path / "sites.json"
+    f.write_text(json.dumps({"sites": [{"url": "https://a.example/", "group": "ES"}, {"url": "https://b.example"}]}),
+                 encoding="utf-8")
+    assert load_groups(f) == {"https://a.example": "ES"} and load_groups(tmp_path / "none.json") == {}

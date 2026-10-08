@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import datetime, timezone
+import statistics
+from datetime import date as _date, datetime, timezone
 from pathlib import Path
 
 from .diff import compare_directories
@@ -17,6 +18,8 @@ from .diff import compare_directories
 LIMITS = {"bluesky": 300, "mastodon": 500}
 VANTAGE_LABELS = {"github-actions-us": "GitHub servers in the US", "local-windows-spain": "a PC in Spain"}
 USABLE_CONFIDENCE = ("high", "medium")
+SPAIN_GROUP = "ES"
+SPAIN_MAX_AGE_DAYS = 7  # a Spain measurement older than this (against the main one) is left out of the thread
 
 
 class PostTooLong(ValueError):
@@ -83,6 +86,41 @@ def _changes(diffs: list[dict], limit: int) -> str:
     return f"Changes since last week: {len(notable)} sites changed. See the report."
 
 
+def group_medians(reports: list[dict], groups: dict[str, str]) -> list[tuple[str, int, int]]:
+    """(group, median tracking services, sites measured) for each group with at least one usable site."""
+    by_group: dict[str, list[int]] = {}
+    for r in eligible(reports):
+        group = groups.get(r["site"]["url"].rstrip("/"))
+        if group:
+            by_group.setdefault(group, []).append(r["summary"]["metrics"]["tracking_services"])
+    return [(g, round(statistics.median(v)), len(v)) for g, v in sorted(by_group.items())]
+
+
+def _countries(reports: list[dict], groups: dict[str, str]) -> str | None:
+    rows = group_medians(reports, groups)
+    if len(rows) < 2:
+        return None
+    listing = ", ".join(f"{g} {m} ({n})" for g, m, n in rows)
+    return ("By country, the median number of tracking services contacted before any click, with the sites "
+            f"measured in brackets: {listing}.")
+
+
+def _spain(date: str, reports: list[dict], limit: int) -> str | None:
+    """The Spanish outlets measured from Spain, where consent banners appear as a Spanish visitor sees them."""
+    usable = eligible(reports)
+    if not usable:
+        return None
+    rows = sorted(({"name": r["site"]["name"], "n": r["summary"]["metrics"]["tracking_services"]} for r in usable),
+                  key=lambda x: (-x["n"], x["name"]))
+    for top in (3, 2, 1):
+        leaders = ", ".join(f"{r['name']} {r['n']}" for r in rows[:top])
+        text = (f"Spanish outlets, measured from a PC in Spain ({date}): {len(usable)} of {len(reports)} sites "
+                f"measured. Most tracking services contacted before any click: {leaders}.")
+        if len(text) <= limit:
+            return text
+    return None
+
+
 def _method(reports: list[dict], report_url: str) -> str:
     m = reports[0]["measurement"] if reports else {}
     failed = len(reports) - len(eligible(reports))
@@ -92,7 +130,11 @@ def _method(reports: list[dict], report_url: str) -> str:
             f"Method and data: {report_url}")
 
 
-def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform: str, report_url: str) -> list[str]:
+def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform: str, report_url: str,
+                 groups: dict[str, str] | None = None,
+                 spain: tuple[str, list[dict]] | None = None) -> list[str]:
+    """groups: site URL -> country group (adds a by-country line); spain: (date, reports) of the Spanish group
+    measured from Spain (adds a post of its own). Without them the thread is the three basic posts."""
     limit = LIMITS[platform]
     headline = None
     for top in (3, 2, 1, 0):
@@ -100,7 +142,14 @@ def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform:
         if len(candidate) <= limit:
             headline = candidate
             break
-    posts = [headline or _headline(date, reports, 0), _changes(diffs, limit), _method(reports, report_url)]
+    posts = [headline or _headline(date, reports, 0)]
+    countries = _countries(reports, groups) if groups else None
+    if countries:
+        posts.append(countries)
+    spanish = _spain(spain[0], spain[1], limit) if spain and spain[1] else None
+    if spanish:
+        posts.append(spanish)
+    posts += [_changes(diffs, limit), _method(reports, report_url)]
     for index, post in enumerate(posts, 1):
         if len(post) > limit:
             raise PostTooLong(f"post {index} has {len(post)} characters (limit {limit})")
@@ -124,18 +173,54 @@ def render_markdown(date: str, platform: str, posts: list[str], alt: str) -> str
     return "\n".join(lines)
 
 
+def load_groups(sites_file: Path | str) -> dict[str, str]:
+    """site URL (without a trailing slash) -> group; empty when the file is missing."""
+    path = Path(sites_file)
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {s["url"].rstrip("/"): s["group"] for s in data.get("sites", []) if s.get("group")}
+
+
+def load_spain(spain_dir: Path | str, groups: dict[str, str], main_date: str) -> tuple[str, list[dict]] | None:
+    """The newest folder of reports measured from Spain, only its Spanish-group sites, and only when it is not
+    more than SPAIN_MAX_AGE_DAYS older than the main measurement."""
+    path = Path(spain_dir)
+    if not path.is_dir():
+        return None
+    dates = sorted(p for p in path.iterdir() if p.is_dir())
+    if not dates:
+        return None
+    latest = dates[-1]
+    try:
+        age = (_date.fromisoformat(main_date) - _date.fromisoformat(latest.name)).days
+    except ValueError:
+        return None
+    if age > SPAIN_MAX_AGE_DAYS:
+        return None
+    reports = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(latest.glob("*.json"))]
+    reports = [r for r in reports if groups.get(r["site"]["url"].rstrip("/")) == SPAIN_GROUP]
+    return (latest.name, reports) if reports else None
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="traceguard.posts", description=__doc__)
     parser.add_argument("runs_dir", nargs="?", default="data/runs")
     parser.add_argument("--platform", choices=sorted(LIMITS), default="bluesky")
     parser.add_argument("--report-url", default="https://example.org/report", help="link to the full report")
+    parser.add_argument("--sites-file", default="data/sites.json", help="list of sites (gives each its country group)")
+    parser.add_argument("--spain-dir", default="data/extra/local-windows-spain",
+                        help="reports of the Spanish group measured from Spain (left out if missing or too old)")
     parser.add_argument("--out", default="data/drafts", help="where draft files are written")
     parser.add_argument("--dry-run", action="store_true", help="print the draft and write nothing")
     args = parser.parse_args(argv)
 
     date, reports = load_latest_reports(args.runs_dir)
     diffs = compare_directories(args.runs_dir)
-    posts = build_thread(date, reports, diffs, platform=args.platform, report_url=args.report_url)
+    groups = load_groups(args.sites_file)
+    spain = load_spain(args.spain_dir, groups, date)
+    posts = build_thread(date, reports, diffs, platform=args.platform, report_url=args.report_url,
+                         groups=groups, spain=spain)
     markdown = render_markdown(date, args.platform, posts, alt_text(reports))
     print(markdown)
     if not args.dry_run:
