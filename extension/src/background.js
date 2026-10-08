@@ -153,7 +153,17 @@ async function save() {
 }
 
 /** Cookies per contacted service, as now in the browser (names and lifetimes, never values). */
+const cookieCache = new Map(); // page -> { at, value }: the panel refreshes every second while a page loads
 async function serviceCookies(page) {
+  const hit = cookieCache.get(page);
+  if (hit && Date.now() - hit.at < 5000) return structuredClone(hit.value);
+  const value = await readServiceCookies(page);
+  if (cookieCache.size > 20) cookieCache.clear();
+  cookieCache.set(page, { at: Date.now(), value });
+  return structuredClone(value);
+}
+
+async function readServiceCookies(page) {
   try {
     return cookiesByService(await api.cookies.getAll({ partitionKey: {} }), ctx, page, Date.now());
   } catch {
@@ -232,13 +242,30 @@ async function clearSite(tabId) {
 }
 
 
+/** Is the count of this page still settling? (requests in flight or just made, in its first COUNTING_MS) */
+function isCounting(page) {
+  const inFlight = Object.values(page.pending).some((p) => !p.c);
+  const loading = inFlight || (typeof page.lastAt === 'number' && Date.now() - page.lastAt < 2000);
+  return { loading, counting: loading && Date.now() - Math.max(page.startedAt, page.shownAt || 0) < COUNTING_MS };
+}
+
+const badgeTimers = new Map();
+/**
+ * The number on the toolbar icon. While the page is still counting: "15…" on amber, so it does not look final;
+ * then the plain number on grey. Looked at again shortly after, since a page can go quiet without any event.
+ */
 function updateBadge(tabId) {
   const page = tabs[tabId];
   if (!page) return;
   const n = summarizePage(page, glossary).trackingBefore;
   const id = Number(tabId);
-  api.action.setBadgeText({ tabId: id, text: page.host ? String(n) : '' }).catch(() => {});
-  api.action.setBadgeBackgroundColor({ tabId: id, color: '#3a3f4b' }).catch(() => {});
+  const { counting } = isCounting(page);
+  api.action.setBadgeText({ tabId: id, text: page.host ? String(n) + (counting ? '…' : '') : '' }).catch(() => {});
+  api.action.setBadgeBackgroundColor({ tabId: id, color: counting ? '#a35a00' : '#3a3f4b' }).catch(() => {});
+  api.action.setTitle({ tabId: id, title: counting ? api.i18n.getMessage('badgeCounting') : api.i18n.getMessage('extName') }).catch(() => {});
+  clearTimeout(badgeTimers.get(tabId));
+  if (counting) badgeTimers.set(tabId, setTimeout(() => updateBadge(tabId), 2500));
+  else badgeTimers.delete(tabId);
 }
 
 /**
@@ -844,11 +871,9 @@ async function report(tabId, url) {
   }
   const consentTools = [...new Set(summary.operators.flatMap((o) => o.services)
     .filter((x) => x.category === 'consent_management').map((x) => x.entity))];
-  const inFlight = Object.values(page.pending).filter((p) => !p.c).length;
-  const loading = inFlight > 0 || (typeof page.lastAt === 'number' && Date.now() - page.lastAt < 2000);
   // the first seconds of a page: the count is still settling (news pages never stop loading ads, so after
   // COUNTING_MS the number is shown as it is, with a note that it can still grow)
-  const counting = loading && Date.now() - Math.max(page.startedAt, page.shownAt || 0) < COUNTING_MS;
+  const { loading, counting } = isCounting(page);
   return {
     page: summary, told: page.told, baseline, index, categories: glossary.categories, loading, counting,
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
