@@ -133,6 +133,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             body, ctype = b"/* slow */", "application/javascript"
         elif host == "site.test" and path == "/adwall":
             body, ctype = ADWALL_PAGE.encode(), "text/html; charset=utf-8"
+        elif host == "site.test" and path == "/pricedpay":
+            body, ctype = OWN_PAY_BANNER.replace("Rechazo y me suscribo", "Rechazar cookies desde 1 €").encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/ownpay":
             body, ctype = OWN_PAY_BANNER.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/onetrust2":
@@ -589,6 +591,12 @@ def autoreject_scenario(ctx, control, browser: str, screenshot: str | None = Non
     own = [r for r in read_reports(control).values() if isinstance(r, dict) and (r.get("consent") or {}).get("auto") == {"tool": None, "outcome": "payOrAccept"}]
     if not own:
         errors.append("an own banner whose refusal is a subscription was not reported as accept or pay")
+    tab.goto(U("site.test", "/pricedpay"), wait_until="load")
+    tab.wait_for_timeout(3500)
+    priced = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page") and r["page"]["host"] == "site.test"
+              and (r.get("consent") or {}).get("auto") == {"tool": None, "outcome": "payOrAccept"}]
+    if not priced:
+        errors.append("a refusal that carries a price was not reported as accept or pay")
     tab.goto(U("site.test", "/es"), wait_until="load")
     tab.wait_for_timeout(8000)  # the last look is at 7 s
     reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")

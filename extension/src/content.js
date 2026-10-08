@@ -15,7 +15,10 @@
   const data = globalThis.__lensData || { consent: [], engines: [], buttons: { reject: [], accept: [], paid: '$^' } };
   const rejectTexts = new Set(data.buttons.reject);
   const acceptTexts = new Set(data.buttons.accept);
-  const paidRe = new RegExp(data.buttons.paid, 'i');
+  // a button that names a subscription, or carries a price ("Rechazar cookies desde 1 EUR"), is a paid option
+  const paidWords = new RegExp(data.buttons.paid, 'i');
+  const priceRe = /(?:\d+(?:[.,]\d+)?\s?(?:€|eur\b|euros?\b|£|\$|usd\b|gbp\b)|[€£$]\s?\d)/i;
+  const paidRe = { test: (text) => paidWords.test(text) || priceRe.test(text) };
   const contextRe = new RegExp(data.buttons.context || '$^', 'i');
   const norm = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim().replace(/[.!\u2026]+$/, '');
   const send = (msg) => { try { api.runtime.sendMessage(msg); } catch { /* extension reloaded */ } };
