@@ -1,7 +1,9 @@
 // Blocker step 4 (opt-in): learn trackers that are on no list from what they do, in the spirit of Privacy Badger
 // (no code of it is used). A third party "behaves like a tracker" on a site when it receives a cookie that looks
 // like an identifier, or when one of its scripts reads a canvas (a fingerprinting technique). Seen doing so on
-// THRESHOLD different sites, it is learned; with "Block trackers" on, the browser then blocks it like the lists.
+// THRESHOLD different sites, it is learned. With "Block trackers" on, the browser then blocks a learned domain
+// that read a canvas, and only removes the cookies of one learned from cookies alone (as Privacy Badger's
+// "cookie block"): a group's shared login or image domain then keeps working on its sister sites.
 //
 // Privacy: sites are never stored by name. Each one becomes a short salted hash (the salt is random, made once and
 // kept in this browser), at most THRESHOLD per domain, dropped once the domain is learned. Only third-party domain
@@ -83,7 +85,8 @@ export function idLikeCookie(header) {
 }
 
 /**
- * One signal of a third-party domain on a site. Returns true when this makes the domain newly learned.
+ * One signal of a third-party domain on a site. Returns true when this makes the domain newly learned, or changes
+ * what is done with a learned one.
  * @param {LearnStore} store @param {string} domain registrable domain of the third party
  * @param {string} site registrable domain of the page @param {string} kind one of SIGNALS @param {number} now
  */
@@ -97,7 +100,8 @@ export function noteSignal(store, domain, site, kind, now) {
   }
   e.last = now;
   e.signals[kind] = (e.signals[kind] || 0) + 1;
-  if (e.learned) return false;
+  // already learned: only a first canvas read changes what happens to it (cookies removed -> blocked)
+  if (e.learned) return kind === 'canvas' && e.signals.canvas === 1;
   const h = siteHash(store.salt, site);
   if (!e.sites.includes(h)) e.sites.push(h);
   if (e.sites.length < THRESHOLD) return false;
@@ -112,6 +116,14 @@ function dropOldest(store) {
   if (victim) delete store.domains[victim[0]];
 }
 
+/** What the browser does with each learned domain: block it (it read a canvas) or remove its cookies. */
+export function learnedActions(store) {
+  const block = [];
+  const strip = [];
+  for (const [d, e] of Object.entries(store.domains)) if (e.learned) (e.signals.canvas ? block : strip).push(d);
+  return { block: block.sort(), strip: strip.sort() };
+}
+
 /** @param {LearnStore} store @returns {string[]} */
 export function learnedDomains(store) {
   return Object.entries(store.domains).filter(([, e]) => e.learned).map(([d]) => d).sort();
@@ -120,7 +132,7 @@ export function learnedDomains(store) {
 /** For the settings page: learned domains and how many are still being watched (fewer than THRESHOLD sites). */
 export function learnView(store) {
   const learned = Object.entries(store.domains).filter(([, e]) => e.learned)
-    .map(([domain, e]) => ({ domain, signals: e.signals, first: e.first, last: e.last }))
+    .map(([domain, e]) => ({ domain, signals: e.signals, first: e.first, last: e.last, action: e.signals.canvas ? 'block' : 'strip' }))
     .sort((a, b) => b.last - a.last);
   const watching = Object.values(store.domains).filter((e) => !e.learned).length;
   return { enabled: store.enabled, threshold: THRESHOLD, learned, watching };

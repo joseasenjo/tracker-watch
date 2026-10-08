@@ -108,14 +108,18 @@ function render(tab, data) {
     root.appendChild(settingsLink());
     return;
   }
-  const head = add(el('div', undefined, 'headline'), el('span', String(s.trackingBefore), 'big'), el('span', t('headline')));
+  const head = add(el('div', undefined, 'headline'), el('span', String(s.trackingBefore), data.counting ? 'big counting' : 'big'),
+    el('span', t('headline')));
   const chips = add(el('div', undefined, 'chips'), el('span', t('oneVisit'), 'chip'));
   if (s.band) chips.appendChild(el('span', t('band', s.band), 'chip'));
   add(root, head, chips);
-  if (data.loading) {
-    add(root, add(el('p', undefined, 'loading'), el('span', undefined, 'spinner'), el('span', t('stillLoading'))));
+  if (data.counting) {
+    // the first seconds: the number is still being counted
+    add(root, add(el('p', undefined, 'loading counting-line'), el('span', undefined, 'spinner'), el('span', t('counting'))));
+  } else if (data.loading) {
+    add(root, el('p', t('stillLoading'), 'note'));
   }
-  announce(data.loading ? t('stillLoading') : t('headlineStatus', s.trackingBefore));
+  announce(data.counting ? t('counting') : t('headlineStatus', s.trackingBefore));
   renderArrival(data.arrival);
   renderGlance(s, data);
   renderPanelTools();
@@ -282,9 +286,11 @@ function renderProtection(s, clean, tab) {
   if (clean && clean.ads) app.appendChild(el('p', t('adsOn')));
   if (clean && clean.learn && clean.learn.here.length) {
     // step 4: trackers Lens learned from their behaviour (on no list), met on this page
-    const names = clean.learn.here.map((d) => d.domain).join(', ');
-    app.appendChild(el('p', clean.blocking && !clean.pausedHere ? t('learnHereBlocked', clean.learn.here.length, names)
-      : t('learnHereOpen', clean.learn.here.length, names)));
+    const active = clean.blocking && !clean.pausedHere;
+    for (const [action, key] of [['block', 'learnHereBlocked'], ['strip', 'learnHereStripped']]) {
+      const names = clean.learn.here.filter((d) => d.action === action).map((d) => d.domain);
+      if (names.length) app.appendChild(el('p', active ? t(key, names.length, names.join(', ')) : t('learnHereOpen', names.length, names.join(', '))));
+    }
   }
   const tools = el('div', undefined, 'tools');
   if (clean && (clean.blocking || clean.ads)) {
@@ -726,7 +732,7 @@ async function load() {
   document.scrollingElement.scrollTop = scroll;
   // while the page is still loading, numbers can grow: refresh every second until it settles
   clearTimeout(refresh);
-  if (data && data.loading) refresh = setTimeout(load, 1000);
+  if (data && data.loading) refresh = setTimeout(load, data.counting ? 1000 : 3000); // slower once the count settles
 }
 
 document.documentElement.lang = api.i18n.getUILanguage();

@@ -140,7 +140,7 @@ async function render() {
         const ul = el('ul');
         for (const d of learn.learned) {
           const how = Object.entries(d.signals).map(([k, n]) => t('learnSignal_' + k, n)).join(', ');
-          ul.appendChild(add(el('li'), el('b', d.domain), el('span', ` · ${how} `, 'svc'),
+          ul.appendChild(add(el('li'), el('b', d.domain), el('span', ` · ${how} · ${t('learnAction_' + d.action)} `, 'svc'),
             button(t('learnForget'), () => send({ type: 'learn:forget', domain: d.domain }))));
         }
         app.appendChild(ul);

@@ -138,17 +138,37 @@
   // "Reject banners" (opt-in). A known tool's documented reject button, or, inside its banner, a button whose
   // label is exactly a refusal; a banner of an unknown tool only when the button's label is a refusal and the
   // block around it talks about cookies. Never "accept", never a refusal that is a subscription.
-  let autoOn = null;
   const answered = new Set();
   const buttonsIn = (root) => root.querySelectorAll('button, a, [role="button"], input[type="button"], input[type="submit"]');
   const labelOf = (b) => norm(b.innerText || b.value || b.getAttribute('aria-label'));
   const isRefusal = (b) => { const t = labelOf(b); return Boolean(t) && t.length <= 80 && rejectTexts.has(t) && !paidRe.test(t); };
-  const press = (button, tool) => {
+  // a documented reject selector can also match a "more options" button (Quantcast's secondary button is either):
+  // press it only when its label is a refusal, or at least not an acceptance, a payment or a way into settings
+  const OPTIONS_RE = /option|setting|preferen|config|personali|manage|more|m\u00e1s|mehr|plus|einstell|gestion|ajust|detail|purpose|partner|vendor|socio/i;
+  const safeToPress = (b) => {
+    const t = labelOf(b);
+    return isRefusal(b) || (!paidRe.test(t) && !acceptTexts.has(t) && !OPTIONS_RE.test(t));
+  };
+  // the setting is asked once, and only when there is something to answer (not from every ad frame)
+  let allowed = null;
+  const mayAnswer = () => (allowed ??= api.runtime.sendMessage({ type: 'autoreject:check' }).then(Boolean, () => false));
+  const press = async (button, tool) => {
+    if (!(await mayAnswer())) return;
     answered.add(tool || '?');
     button.click();
     send({ type: 'autoreject:result', tool, outcome: 'rejected' });
   };
-  function autoReject(last) {
+  const tell = async (tool, outcome) => {
+    if (!(await mayAnswer())) return;
+    answered.add(tool);
+    send({ type: 'autoreject:result', tool, outcome });
+  };
+  // Tools whose first layer has no refusal but whose settings layer has a "Reject all" (documented ids/classes)
+  const TWO_STEP = { OneTrust: { open: '#onetrust-pc-btn-handler', reject: '.ot-pc-refuse-all-handler' } };
+  const opened = new Set();
+  const firstVisible = (selector) => { try { return [...document.querySelectorAll(selector)].find(visible) || null; } catch { return null; } };
+  async function autoReject(last) {
+    if (allowed !== null && !(await allowed)) return; // the setting is off (or paused here): nothing to look for
     for (const tool of data.consent) {
       if (answered.has(tool.name)) continue;
       let documented = null;
@@ -156,17 +176,35 @@
       try { documented = [...document.querySelectorAll(tool.reject)].find(visible) || null; } catch { documented = null; }
       try { banner = document.querySelector(tool.banner); } catch { banner = null; }
       if (banner && !visible(banner)) banner = null;
-      if (documented && !paidRe.test(labelOf(documented))) { press(documented, tool.name); continue; }
+      // a tool that draws its buttons in a frame of its own (Sourcepoint): inside that frame there is no banner
+      // container, but its accept button is there; the frame's page is then the banner
+      if (!banner && window !== window.top) {
+        let acceptButton = null;
+        try { acceptButton = [...document.querySelectorAll(tool.accept)].find(visible) || null; } catch { acceptButton = null; }
+        if (acceptButton && document.body) banner = document.body;
+      }
+      if (documented && safeToPress(documented)) { await press(documented, tool.name); continue; }
+      // the tool's own reject button is a subscription ("Reject all and subscribe"): accept or pay, also when it
+      // sits in a frame of its own without the banner container (Sourcepoint)
+      if (documented && paidRe.test(labelOf(documented))) { await tell(tool.name, 'payOrAccept'); continue; }
+      const step = TWO_STEP[tool.name];
+      const second = step && opened.has(tool.name) ? firstVisible(step.reject) : null;
+      if (second && safeToPress(second)) { await press(second, tool.name); continue; }
       if (!banner) continue;
-      const custom = [...buttonsIn(banner)].find((b) => visible(b) && isRefusal(b));
-      if (custom) { press(custom, tool.name); continue; }
-      if (payOrAccept(banner)) { answered.add(tool.name); send({ type: 'autoreject:result', tool: tool.name, outcome: 'payOrAccept' }); continue; }
-      if (last) { answered.add(tool.name); send({ type: 'autoreject:result', tool: tool.name, outcome: 'noReject' }); }
+      const custom = [...buttonsIn(banner)].find((b) => isRefusal(b) && visible(b));
+      if (custom) { await press(custom, tool.name); continue; }
+      if (payOrAccept(banner)) { await tell(tool.name, 'payOrAccept'); continue; }
+      const open = step && !opened.has(tool.name) ? firstVisible(step.open) : null;
+      if (open && (await mayAnswer())) { opened.add(tool.name); open.click(); setTimeout(scan, 900); continue; }
+      // the buttons may live in a frame inside the banner (Sourcepoint): that frame answers for itself
+      if (last && !banner.querySelector('iframe')) await tell(tool.name, 'noReject');
     }
     if (answered.size) return;
-    // a banner of an unknown tool
+    // a banner of an unknown tool: only pages that mention cookies or consent at all, labels checked first
+    if (!contextRe.test((document.body && document.body.textContent || '').slice(0, 300000))) return;
     for (const b of buttonsIn(document)) {
-      if (visible(b) && isRefusal(b) && aroundTalksAboutConsent(b)) { press(b, null); return; }
+      if (!rejectTexts.has(norm(b.textContent || b.value))) continue;
+      if (visible(b) && isRefusal(b) && aroundTalksAboutConsent(b)) { await press(b, null); return; }
     }
   }
 
@@ -207,12 +245,9 @@
 
   let scans = 0;
   const scan = async () => {
-    scans += 1;
+    if (!document.prerendering) scans += 1;
     scanBanners();
-    if (autoOn === null && !document.prerendering) { // a page loaded in the background is answered when shown
-      try { autoOn = Boolean(await api.runtime.sendMessage({ type: 'autoreject:check' })); } catch { autoOn = false; }
-    }
-    if (autoOn && !document.prerendering) autoReject(scans >= 4);
+    if (!document.prerendering) await autoReject(scans >= 4); // a page loaded in the background is answered when shown
     if (engine) scanResults();
   };
   const schedule = () => { for (const ms of [300, 1500, 4000, 7000]) setTimeout(scan, ms); };

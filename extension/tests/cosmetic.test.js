@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { selectorsFor, styleSheet } from '../src/core/cosmetic.js';
+import { hostPlan, selectorsFor, styleSheet } from '../src/core/cosmetic.js';
 
 const data = {
   generic: ['.ad-banner', '#sponsored'],
@@ -21,6 +21,13 @@ test('exceptions, $generichide and $elemhide', () => {
   assert.deepEqual(selectorsFor(data, 'shop.example.com'), ['#sponsored']);
   assert.deepEqual(selectorsFor(data, 'www.quiet.org'), []);
   assert.deepEqual(selectorsFor(data, 'clean.net'), []);
+});
+
+test('plan: the shared generic sheet plus the own selectors, or everything for hosts with exceptions', () => {
+  assert.deepEqual(hostPlan(data, 'news.example.com'), { generic: true, own: ['.news-ad', '.promo-slot'] });
+  assert.deepEqual(hostPlan(data, 'other.com'), { generic: true, own: [] });
+  assert.deepEqual(hostPlan(data, 'shop.example.com'), { generic: false, own: ['#sponsored'] });
+  assert.deepEqual(hostPlan(data, 'clean.net'), { generic: false, own: [] });
 });
 
 test('style sheet: forgiving :is() groups that hide', () => {

@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { THRESHOLD, idLikeCookie, learnView, learnedDomains, normalizeLearn, noteSignal, siteHash } from '../src/core/learn.js';
+import { THRESHOLD, idLikeCookie, learnView, learnedActions, learnedDomains, normalizeLearn, noteSignal, siteHash } from '../src/core/learn.js';
 
 const fresh = (enabled = true) => normalizeLearn({ enabled }, () => '0123456789abcdef0123456789abcdef');
 
@@ -30,6 +30,15 @@ test('learned after the same behaviour on three different sites, never by name',
   assert.equal(THRESHOLD, 3);
 });
 
+test('a domain learned from a canvas read is blocked; one learned from cookies only loses its cookies', () => {
+  const s = fresh();
+  for (const site of ['a.com', 'b.com', 'c.com']) {
+    noteSignal(s, 'canvasy.io', site, 'canvas', 1);
+    noteSignal(s, 'cookies.io', site, 'cookie', 1);
+  }
+  assert.deepEqual(learnedActions(s), { block: ['canvasy.io'], strip: ['cookies.io'] });
+});
+
 test('off, its own site and needed services are never learned', () => {
   const off = fresh(false);
   for (const site of ['a.com', 'b.com', 'c.com']) noteSignal(off, 'tracky.io', site, 'cookie', 1);
@@ -51,6 +60,6 @@ test('stored data is repaired; the view counts learned and watched', () => {
   assert.deepEqual(Object.keys(s.domains).sort(), ['ok.io', 'watch.io']);
   assert.deepEqual(s.domains['watch.io'].sites, ['0000abcd']);
   const v = learnView(s);
-  assert.deepEqual(v.learned, [{ domain: 'ok.io', signals: { cookie: 4 }, first: 1, last: 9 }]);
+  assert.deepEqual(v.learned, [{ domain: 'ok.io', signals: { cookie: 4 }, first: 1, last: 9, action: 'strip' }]);
   assert.equal(v.watching, 1);
 });

@@ -79,6 +79,15 @@ LEARN_PAGE = f"""<!doctype html><meta charset="utf-8"><title>learn</title>
 <img src="{U('px.watcher.test', '/p1.gif')}">
 <script>setTimeout(() => {{ new Image().src = "{U('px.watcher.test', '/p2.gif')}"; }}, 400);</script>"""
 
+# OneTrust with no refusal on its first layer: "Reject all" is in its settings layer
+ONETRUST_TWO_STEP = """<!doctype html><meta charset="utf-8"><title>two step</title>
+<div id="onetrust-banner-sdk" style="position:fixed;bottom:0;left:0;right:0;background:#eee;padding:10px">
+  We use cookies. <button id="onetrust-accept-btn-handler">Accept</button>
+  <button id="onetrust-pc-btn-handler" onclick="document.getElementById('onetrust-pc-sdk').style.display='block'">Show purposes</button></div>
+<div id="onetrust-pc-sdk" style="display:none"><button class="ot-pc-refuse-all-handler"
+  onclick="document.title='refused'">Reject all</button></div>"""
+WATCHER_COOKIES: list[str] = []  # Cookie headers the step-4 third party received, in order
+
 EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 7, "band": "A"}
 
 
@@ -110,6 +119,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         elif host == "cdn.unknown.test" and path == "/slow":
             time.sleep(9)
             body, ctype = b"/* slow */", "application/javascript"
+        elif host == "site.test" and path == "/onetrust2":
+            body, ctype = ONETRUST_TWO_STEP.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/ads":
             body, ctype = ADS_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/prerendered":
@@ -140,6 +151,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if host == "www.google.com" and path == "/search":
             self.send_header("Set-Cookie", "NID=SECRETVALUE; Domain=google.com; Path=/; Max-Age=15552000; Secure; SameSite=None")
         if host == "px.watcher.test":
+            WATCHER_COOKIES.append(self.headers.get("Cookie") or "")
             self.send_header("Set-Cookie", "wid=8f3a9c2e1b7d4a60; Max-Age=3600; Path=/; Secure; SameSite=None")
         if host == "ib.adnxs.com" and path == "/ut.js":
             self.send_header("Set-Cookie", "uuid2=SECRETVALUE; Max-Age=3600; Path=/; Secure; SameSite=None")
@@ -432,7 +444,7 @@ def ads_scenario(ctx, control, browser: str) -> list[str]:
 
 def learn_scenario(ctx, control, browser: str) -> list[str]:
     """Step 4: learning on and trackers blocked; a third party on no list gets an identifier cookie on three
-    sites, is learned, and is blocked on the next visit."""
+    sites, is learned from its cookies alone, and on the next visit still loads but without its cookies."""
     errors = []
     control.goto(U("control.test", "/?learn=on&clean=full"), wait_until="load")
     control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
@@ -440,13 +452,14 @@ def learn_scenario(ctx, control, browser: str) -> list[str]:
     for host in ("site.test", "a.test", "b.test"):
         tab.goto(U(host, "/learn"), wait_until="load")
         tab.wait_for_timeout(1500)
+    WATCHER_COOKIES.clear()
     tab.goto(U("site.test", "/learn"), wait_until="load")
     tab.wait_for_timeout(1500)
     reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
             and r["page"]["host"] == "site.test" and ((r.get("clean") or {}).get("learn") or {}).get("here")]
     here = reps[-1]["clean"]["learn"]["here"] if reps else []
-    if not here or here[0]["domain"] != "px.watcher.test" or not here[0]["stopped"]:
-        errors.append(f"learn: here={here}")
+    if not here or here[0]["domain"] != "px.watcher.test" or here[0]["action"] != "strip" or here[0]["stopped"]             or not WATCHER_COOKIES or any("wid=" in c for c in WATCHER_COOKIES):
+        errors.append(f"learn: here={here} cookies sent after learning={WATCHER_COOKIES}")
     control.goto(U("control.test", "/?clean=off"), wait_until="load")
     control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
     tab.close()
@@ -551,6 +564,10 @@ def autoreject_scenario(ctx, control, browser: str, screenshot: str | None = Non
     auto = reps[-1]["consent"]["auto"] if reps else None
     if auto != {"tool": "OneTrust", "outcome": "rejected"} or not notice or reps[-1]["page"]["interaction"] is not None             or "facebook.net" not in reps[-1]["page"]["trackingNewAfter"] + [x["service"] for o in reps[-1]["page"]["operators"] for x in o["services"]]:
         errors.append(f"auto reject: auto={auto} notice={notice} interaction={reps and reps[-1]['page']['interaction']}")
+    tab.goto(U("site.test", "/onetrust2"), wait_until="load")
+    tab.wait_for_timeout(3500)
+    if tab.title() != "refused":
+        errors.append(f"OneTrust two steps: settings layer not refused (title={tab.title()!r})")
     tab.goto(U("site.test", "/es"), wait_until="load")
     tab.wait_for_timeout(8000)  # the last look is at 7 s
     reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")

@@ -36,6 +36,20 @@ export function selectorsFor(data, host) {
 }
 
 /**
+ * What to insert on a host: whether the shared generic sheet applies as it is, and the host's own selectors.
+ * Hosts with exceptions or $generichide / $elemhide (a few hundred) get every selector they need in `own`
+ * instead, so the generic sheet is built once and shared (it is large) rather than copied for every host.
+ * @param {CosmeticData} data @param {string} host
+ * @returns {{ generic: boolean, own: string[] }}
+ */
+export function hostPlan(data, host) {
+  const names = suffixes(host);
+  const special = names.some((n) => has(data.exceptions, n) || data.generichide.includes(n) || data.elemhide.includes(n));
+  if (special) return { generic: false, own: selectorsFor(data, host) };
+  return { generic: true, own: [...new Set(names.flatMap((n) => (has(data.sites, n) ? data.sites[n] : [])))] };
+}
+
+/**
  * A style sheet hiding those selectors. Grouped in :is() lists, which skip a selector the browser does not
  * understand instead of dropping the whole group.
  * @param {string[]} selectors

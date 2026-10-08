@@ -16,8 +16,8 @@ import { DAY_OPTIONS, STORE_KEY, carryTest, currentRun, exportStore, normalizeSt
   startTest } from './core/mytests.js';
 import { cnameMatch, noteCloaked, worthResolving } from './core/cname.js';
 import { SUMMARY_KEY, addPage, normalizeSummary, periodView, purgeSummary } from './core/summary.js';
-import { selectorsFor, styleSheet } from './core/cosmetic.js';
-import { LEARN_KEY, idLikeCookie, learnView, learnedDomains, normalizeLearn, noteSignal } from './core/learn.js';
+import { hostPlan, styleSheet } from './core/cosmetic.js';
+import { LEARN_KEY, idLikeCookie, learnView, learnedActions, normalizeLearn, noteSignal } from './core/learn.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const TEST_HOOKS = false; // set to true only by tools/build.py --test
@@ -86,6 +86,7 @@ const prerenderDocs = {};
 const MAX_PRERENDERS = 4;
 const PING_WINDOW_MS = 5000;
 const RELOAD_AFTER_ANSWER_MS = 30000;
+const COUNTING_MS = 20000;
 // "Your own banner test" (opt-in): kept in storage.local, written at most every MYTEST_DELAY_MS per tab.
 let myStore = normalizeStore(null);
 // F8 "Your week" (opt-in): daily aggregates by company, written a moment after a page is left.
@@ -106,7 +107,7 @@ const ready = (async () => {
   ]);
   const local = await api.storage.local.get([STORE_KEY, SUMMARY_KEY, LEARN_KEY]);
   learnStore = normalizeLearn(local[LEARN_KEY]);
-  learnedSet = new Set(learnedDomains(learnStore));
+  learnedSet = new Set(learnedActions(learnStore).block); // blocked ones (Firefox attribution, site-only list)
   myStore = purge(normalizeStore(local[STORE_KEY]), Date.now());
   summaryStore = purgeSummary(normalizeSummary(local[SUMMARY_KEY]), Date.now());
   profiles = engineProfiles;
@@ -478,6 +479,7 @@ api.webNavigation.onCommitted.addListener((d) => {
     if (page.arrival && from && from.search && from.search.lastPingAt !== null
         && Math.abs(d.timeStamp - from.search.lastPingAt) < PING_WINDOW_MS) page.arrival.ping = true;
     page.mainRequestId = null;
+    page.shownAt = d.timeStamp; // the visitor sees it only now (for the "Counting" state)
     tabs[tab] = carryJourney(page, from);
     delete prerendered[tab];
     touch(tab);
@@ -496,14 +498,18 @@ api.webNavigation.onCommitted.addListener((d) => {
     if (!host || (top && pausedSites.includes(top))) return;
     if (!cosmeticData) cosmeticData = await loadJson('data/cosmetic.json').catch(() => null);
     if (!cosmeticData) return;
-    let css = cssCache.get(host);
-    if (css === undefined) {
-      css = styleSheet(selectorsFor(cosmeticData, host));
-      if (cssCache.size > 200) cssCache.clear();
-      cssCache.set(host, css);
+    genericCss ??= styleSheet(cosmeticData.generic); // built once: the large part, the same for nearly every host
+    let plan = cssCache.get(host);
+    if (plan === undefined) {
+      const p = hostPlan(cosmeticData, host);
+      plan = { generic: p.generic, css: styleSheet(p.own) };
+      if (cssCache.size > 500) cssCache.clear();
+      cssCache.set(host, plan);
     }
-    if (!css) return;
-    api.scripting.insertCSS({ target: { tabId: d.tabId, frameIds: [d.frameId] }, css, origin: 'USER' }).catch(() => {});
+    const target = { tabId: d.tabId, frameIds: [d.frameId] };
+    for (const css of [plan.generic ? genericCss : '', plan.css]) {
+      if (css) api.scripting.insertCSS({ target, css, origin: 'USER' }).catch(() => {});
+    }
   });
 });
 
@@ -532,7 +538,8 @@ let adsOn = false; // "Block ads" (EasyList), mirrored from the browser's enable
 let pausedSites = [];
 let easylistDomains = null; // loaded only when ads are blocked (attribution of its blocks)
 let cosmeticData = null;
-const cssCache = new Map(); // host -> style sheet
+const cssCache = new Map(); // host -> { generic: whether the shared sheet applies, css: the host's own sheet }
+let genericCss = null;
 async function loadEasylist() {
   if (easylistDomains) return;
   const rules = await loadJson('rules/easylist.json').catch(() => []);
@@ -593,6 +600,14 @@ const DOMAIN_RE = /^[a-z0-9.-]+\.[a-z0-9-]+$/;
 const isPause = (r) => r.id >= PAUSE_BASE && r.id < ALLOW_BASE;
 const isAllow = (r) => r.id >= ALLOW_BASE && r.action.type === 'allow';
 
+// The panel refreshes every 1-3 s while a page loads: reuse the last state for a moment instead of asking the
+// browser again each time; any change of a setting goes through cleanMessage / learnMessage, which refresh it.
+let cleanCache = null;
+async function cleanStateCached() {
+  if (cleanCache && Date.now() - cleanCache.at < 5000) return cleanCache.state;
+  return cleanState();
+}
+
 async function cleanState() {
   if (!dnr) return { available: false, blocking: null, params: false, ads: false, paused: [], allowed: [] };
   const enabled = await dnr.getEnabledRulesets();
@@ -605,7 +620,7 @@ async function cleanState() {
   if (adsOn) loadEasylist();
   siteAllowed = dynamic.filter(isAllow).map((r) => ({ site: r.condition.initiatorDomains[0], domain: r.condition.requestDomains[0] }))
     .sort((a, b) => (a.site + ' ' + a.domain < b.site + ' ' + b.domain ? -1 : 1));
-  return {
+  const state = {
     available: true,
     blocking: cleanBlocking,
     params: enabled.includes('params'),
@@ -615,6 +630,8 @@ async function cleanState() {
     paused: pausedSites = dynamic.filter(isPause).map((r) => r.condition.requestDomains[0]).sort(),
     allowed: siteAllowed,
   };
+  cleanCache = { at: Date.now(), state };
+  return state;
 }
 
 /** Pauses saved before "site only" existed had priority 2: raise them above every list (once, on start). */
@@ -626,17 +643,30 @@ async function migratePauses() {
 }
 
 /**
- * Step 4: learned trackers are blocked with one dynamic rule, like the lists (priority 3, above the "site only"
- * allows, below a pause), only while "Block trackers" is on and learning is on.
+ * Step 4, only while "Block trackers" and learning are on: learned domains that read a canvas are blocked (rule
+ * LEARN_RULE_ID); those learned from cookies alone lose their cookies, both ways (rule LEARN_RULE_ID + 1). Same
+ * priority as the lists: above the "site only" allows, below a pause. Calls are chained: two at once would both
+ * try to add the same rule ids.
  */
-async function syncLearnRule() {
-  if (!dnr) return;
-  const domains = learnStore.enabled && cleanBlocking ? learnedDomains(learnStore) : [];
-  const existing = (await dnr.getDynamicRules()).some((r) => r.id === LEARN_RULE_ID);
-  const addRules = domains.length ? [{ id: LEARN_RULE_ID, priority: P_LIST, action: { type: 'block' },
-    condition: { requestDomains: domains, domainType: 'thirdParty', excludedResourceTypes: ['main_frame'] } }] : [];
-  if (!existing && !addRules.length) return;
-  await dnr.updateDynamicRules({ removeRuleIds: existing ? [LEARN_RULE_ID] : [], addRules });
+let learnSync = Promise.resolve();
+function syncLearnRule() {
+  learnSync = learnSync.catch(() => {}).then(async () => {
+    if (!dnr) return;
+    const { block, strip } = learnStore.enabled && cleanBlocking ? learnedActions(learnStore) : { block: [], strip: [] };
+    const ids = [LEARN_RULE_ID, LEARN_RULE_ID + 1];
+    const existing = (await dnr.getDynamicRules()).filter((r) => ids.includes(r.id)).map((r) => r.id);
+    const cond = (domains) => ({ requestDomains: domains, domainType: 'thirdParty', excludedResourceTypes: ['main_frame'] });
+    const addRules = [];
+    if (block.length) addRules.push({ id: ids[0], priority: P_LIST, action: { type: 'block' }, condition: cond(block) });
+    if (strip.length) {
+      addRules.push({ id: ids[1], priority: P_LIST, condition: cond(strip), action: { type: 'modifyHeaders',
+        requestHeaders: [{ header: 'cookie', operation: 'remove' }],
+        responseHeaders: [{ header: 'set-cookie', operation: 'remove' }] } });
+    }
+    if (!existing.length && !addRules.length) return;
+    await dnr.updateDynamicRules({ removeRuleIds: existing, addRules });
+  });
+  return learnSync;
 }
 
 function saveLearn() {
@@ -646,7 +676,7 @@ function saveLearn() {
 
 function learnSignal(domain, site, kind) {
   if (noteSignal(learnStore, domain, site, kind, Date.now())) {
-    learnedSet = new Set(learnedDomains(learnStore));
+    learnedSet = new Set(learnedActions(learnStore).block);
     syncLearnRule().catch(() => {});
   }
   saveLearn();
@@ -660,7 +690,7 @@ async function learnMessage(msg) {
     else learnStore.domains = {};
   }
   if (msg.type !== 'learn:get') {
-    learnedSet = new Set(learnedDomains(learnStore));
+    learnedSet = new Set(learnedActions(learnStore).block);
     await api.storage.local.set({ [LEARN_KEY]: learnStore });
     await cleanState().catch(() => null);
     await syncLearnRule().catch(() => null);
@@ -745,6 +775,7 @@ async function dataMessage(msg) {
     learnStore = normalizeLearn(null);
     learnedSet = new Set();
     await syncLearnRule().catch(() => null);
+    cleanCache = null;
     return true;
   }
   await api.storage.local.set({ [SUMMARY_KEY]: summaryStore });
@@ -815,14 +846,17 @@ async function report(tabId, url) {
     .filter((x) => x.category === 'consent_management').map((x) => x.entity))];
   const inFlight = Object.values(page.pending).filter((p) => !p.c).length;
   const loading = inFlight > 0 || (typeof page.lastAt === 'number' && Date.now() - page.lastAt < 2000);
+  // the first seconds of a page: the count is still settling (news pages never stop loading ads, so after
+  // COUNTING_MS the number is shown as it is, with a note that it can still grow)
+  const counting = loading && Date.now() - Math.max(page.startedAt, page.shownAt || 0) < COUNTING_MS;
   return {
-    page: summary, told: page.told, baseline, index, categories: glossary.categories, loading,
+    page: summary, told: page.told, baseline, index, categories: glossary.categories, loading, counting,
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
       payOrAccept: Boolean(page.consent.payOrAccept), auto: page.consent.auto ?? null,
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : referrerArrival(page),
     journey: journeyView(page, summary),
-    clean: await cleanState().then((c) => {
+    clean: await cleanStateCached().then((c) => {
       const out = { ...c, pausedHere: c.paused.includes(page.site) };
       if (c.blocking === 'siteonly') {
         // what "site only" stopped here, and what was allowed on this site from the panel
@@ -833,8 +867,10 @@ async function report(tabId, url) {
           allowedHere: here };
       }
       if (learnStore.enabled) {
-        out.learn = { enabled: true, here: Object.keys(page.domains).filter((d) => learnedSet.has(d)).sort()
-          .map((d) => ({ domain: d, stopped: page.domains[d].stopped > 0, contacted: page.domains[d].requests > 0 })) };
+        const { block, strip } = learnedActions(learnStore);
+        const action = (d) => (block.includes(d) ? 'block' : strip.includes(d) ? 'strip' : null);
+        out.learn = { enabled: true, here: Object.keys(page.domains).filter((d) => action(d)).sort()
+          .map((d) => ({ domain: d, action: action(d), stopped: page.domains[d].stopped > 0, contacted: page.domains[d].requests > 0 })) };
       }
       return out;
     }).catch(() => null),
@@ -895,11 +931,11 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return false;
   }
   if (msg && msg.type === 'autoreject:set' && !fromPage && typeof msg.enabled === 'boolean') {
-    api.storage.local.set({ [AUTOREJECT_KEY]: msg.enabled }).then(() => sendResponse(true));
+    api.storage.local.set({ [AUTOREJECT_KEY]: msg.enabled }).then(() => { cleanCache = null; sendResponse(true); });
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:autoreject') {
-    api.storage.local.set({ [AUTOREJECT_KEY]: msg.enabled === true }).then(() => sendResponse(true));
+    api.storage.local.set({ [AUTOREJECT_KEY]: msg.enabled === true }).then(() => { cleanCache = null; sendResponse(true); });
     return true;
   }
   if (msg && msg.type === 'banner' && fromPage) {
@@ -988,6 +1024,7 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       const out = {};
       for (const id of Object.keys(tabs)) out[id] = await report(id, null);
       out._summary = periodView(summaryStore, Date.now(), 7);
+      out._learn = learnView(learnStore);
       sendResponse(out);
     });
     return true;
