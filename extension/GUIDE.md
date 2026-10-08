@@ -63,6 +63,11 @@ Separately, **Block ads** (off by default) uses EasyList (by The EasyList author
 empty space ads leave. It works with or without the options above. Some sites ask you to turn off ad blocking;
 pausing blocking on a site from the panel also pauses this there.
 
+Lists only know the trackers someone has already found. With **Learn trackers from their behaviour** on (off by
+default), Lens also notes third parties that are on no list but act like trackers: they receive a cookie that
+looks like an identifier, or read a canvas to fingerprint your browser. One seen doing so on three different sites
+is learned and blocked with the rest. Lens keeps no site names for this, and you can forget any of them.
+
 ## 4. Answer cookie banners with "reject"
 
 Where a banner offers a free refusal, rejecting usually means fewer services. The difference can be large: in one test

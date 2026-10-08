@@ -278,6 +278,12 @@ function renderProtection(s, clean, tab) {
   app.appendChild(el('p', t('protectionNote'), 'note'));
   if (clean) app.appendChild(el('p', clean.blocking ? t('cleanOn', t('cleanList_' + clean.blocking)) : t('cleanOff'), clean.blocking ? '' : 'note'));
   if (clean && clean.ads) app.appendChild(el('p', t('adsOn')));
+  if (clean && clean.learn && clean.learn.here.length) {
+    // step 4: trackers Lens learned from their behaviour (on no list), met on this page
+    const names = clean.learn.here.map((d) => d.domain).join(', ');
+    app.appendChild(el('p', clean.blocking && !clean.pausedHere ? t('learnHereBlocked', clean.learn.here.length, names)
+      : t('learnHereOpen', clean.learn.here.length, names)));
+  }
   const tools = el('div', undefined, 'tools');
   if (clean && (clean.blocking || clean.ads)) {
     if (clean.pausedHere) app.appendChild(el('p', t('cleanPausedHere', s.site), 'warn'));

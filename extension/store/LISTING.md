@@ -38,6 +38,8 @@ Stop (optional, off until you press a button):
   of EasyPrivacy. A strict "site only" level also stops other sites' scripts, frames and connections, with an
   "Allow on this site" button for what a page needs.
 - Block ads: your browser stops the ad requests of EasyList and hides the empty space they leave.
+- Learn trackers that are on no list from what they do (an identifier cookie or a canvas read on three different
+  sites) and block them too; off by default, and no site names are kept.
 - Remove tracking parameters (gclid, fbclid, utm_...) from the addresses you open.
 - Pause it all on a site with one click, if something breaks.
 

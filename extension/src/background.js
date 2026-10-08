@@ -17,6 +17,7 @@ import { DAY_OPTIONS, STORE_KEY, carryTest, currentRun, exportStore, normalizeSt
 import { cnameMatch, noteCloaked, worthResolving } from './core/cname.js';
 import { SUMMARY_KEY, addPage, normalizeSummary, periodView, purgeSummary } from './core/summary.js';
 import { selectorsFor, styleSheet } from './core/cosmetic.js';
+import { LEARN_KEY, idLikeCookie, learnView, learnedDomains, normalizeLearn, noteSignal } from './core/learn.js';
 
 const api = globalThis.browser ?? globalThis.chrome;
 const TEST_HOOKS = false; // set to true only by tools/build.py --test
@@ -103,7 +104,9 @@ const ready = (async () => {
     loadJson('data/sites.json'), loadJson('data/index.json'), loadJson('data/search_engines.json'),
     api.storage.session.get(null),
   ]);
-  const local = await api.storage.local.get([STORE_KEY, SUMMARY_KEY]);
+  const local = await api.storage.local.get([STORE_KEY, SUMMARY_KEY, LEARN_KEY]);
+  learnStore = normalizeLearn(local[LEARN_KEY]);
+  learnedSet = new Set(learnedDomains(learnStore));
   myStore = purge(normalizeStore(local[STORE_KEY]), Date.now());
   summaryStore = purgeSummary(normalizeSummary(local[SUMMARY_KEY]), Date.now());
   profiles = engineProfiles;
@@ -119,6 +122,7 @@ const ready = (async () => {
   }
   await migratePauses().catch(() => null);
   await cleanState().catch(() => null); // which list clean mode uses, if any
+  await syncLearnRule().catch(() => null);
   for (const fn of queue.splice(0)) fn();
 })();
 
@@ -401,6 +405,14 @@ const sentListener = (d) => {
       touch(d.tabId);
       return;
     }
+    if (learnStore.enabled && !isPrerender(d)) {
+      // step 4: an identifier-like cookie sent to a third party that is on no list (the value is read here only)
+      const p = Object.prototype.hasOwnProperty.call(page.pending, d.requestId) ? page.pending[d.requestId] : null;
+      if (p && p.t && p.d && !p.s) {
+        const cookie = (d.requestHeaders || []).find((h) => h.name.toLowerCase() === 'cookie');
+        if (cookie && idLikeCookie(cookie.value)) learnSignal(p.d, page.site, 'cookie');
+      }
+    }
     onSent(page, { requestId: d.requestId, headers: d.requestHeaders }, ctx); touch(d.tabId);
   });
 };
@@ -513,6 +525,9 @@ const extendedOn = () => cleanBlocking === 'extended' || cleanBlocking === 'site
 let easyprivacyDomains = null; // loaded only when the extended list is on (Firefox attribution of its blocks)
 let siteonlySafe = null; // domains "site only" lets through everywhere (Firefox attribution of its blocks)
 let siteAllowed = []; // [{ site, domain }] allowed from the panel, mirrored from the browser's rules
+let learnStore = normalizeLearn(null); // step 4 (opt-in), kept in storage.local
+let learnedSet = new Set();
+let learnTimer = null;
 let adsOn = false; // "Block ads" (EasyList), mirrored from the browser's enabled rule sets
 let pausedSites = [];
 let easylistDomains = null; // loaded only when ads are blocked (attribution of its blocks)
@@ -553,6 +568,7 @@ function blockedByClean(d, page) {
   const match = lookup(ctx.list, host);
   const listed = cleanBlocking && match && isTracking(ctx.list, match.category) && (cleanBlocking !== 'verified' || match.verified);
   if (listed || (extendedOn() && inSet(easyprivacyDomains, host)) || (adsOn && inSet(easylistDomains, host))) return true;
+  if (cleanBlocking && learnedSet.has(reg)) return true; // learned by Lens (step 4)
   // "site only": a script, frame or connection of another site, unless allowed (approximate: the page may
   // also have cancelled it itself)
   return cleanBlocking === 'siteonly' && SITEONLY_TYPES.has(d.type) && !page.firstParty.includes(reg)
@@ -566,6 +582,7 @@ function blockedByClean(d, page) {
 const dnr = api.declarativeNetRequest;
 const PAUSE_BASE = 1000;
 const ALLOW_BASE = 100000;
+const LEARN_RULE_ID = 900; // step 4: below the pause ids
 const LAST_LEVEL_KEY = 'clean:lastLevel'; // a preference only: which list "Block trackers" turns on
 const P_ALLOW = 2;
 const P_LIST = 3;
@@ -604,6 +621,49 @@ async function migratePauses() {
   await dnr.updateDynamicRules({ removeRuleIds: old.map((r) => r.id), addRules: old.map((r) => ({ ...r, priority: P_PAUSE })) });
 }
 
+/**
+ * Step 4: learned trackers are blocked with one dynamic rule, like the lists (priority 3, above the "site only"
+ * allows, below a pause), only while "Block trackers" is on and learning is on.
+ */
+async function syncLearnRule() {
+  if (!dnr) return;
+  const domains = learnStore.enabled && cleanBlocking ? learnedDomains(learnStore) : [];
+  const existing = (await dnr.getDynamicRules()).some((r) => r.id === LEARN_RULE_ID);
+  const addRules = domains.length ? [{ id: LEARN_RULE_ID, priority: P_LIST, action: { type: 'block' },
+    condition: { requestDomains: domains, domainType: 'thirdParty', excludedResourceTypes: ['main_frame'] } }] : [];
+  if (!existing && !addRules.length) return;
+  await dnr.updateDynamicRules({ removeRuleIds: existing ? [LEARN_RULE_ID] : [], addRules });
+}
+
+function saveLearn() {
+  if (learnTimer) return;
+  learnTimer = setTimeout(() => { learnTimer = null; api.storage.local.set({ [LEARN_KEY]: learnStore }); }, 2000);
+}
+
+function learnSignal(domain, site, kind) {
+  if (noteSignal(learnStore, domain, site, kind, Date.now())) {
+    learnedSet = new Set(learnedDomains(learnStore));
+    syncLearnRule().catch(() => {});
+  }
+  saveLearn();
+}
+
+async function learnMessage(msg) {
+  if (msg.type === 'learn:settings' && typeof msg.enabled === 'boolean') {
+    learnStore.enabled = msg.enabled;
+  } else if (msg.type === 'learn:forget') {
+    if (typeof msg.domain === 'string') delete learnStore.domains[msg.domain];
+    else learnStore.domains = {};
+  }
+  if (msg.type !== 'learn:get') {
+    learnedSet = new Set(learnedDomains(learnStore));
+    await api.storage.local.set({ [LEARN_KEY]: learnStore });
+    await cleanState().catch(() => null);
+    await syncLearnRule().catch(() => null);
+  }
+  return learnView(learnStore);
+}
+
 async function cleanMessage(msg) {
   if (!dnr) return cleanState();
   if (msg.type === 'clean:set') {
@@ -629,6 +689,7 @@ async function cleanMessage(msg) {
     if (typeof msg.params === 'boolean') (msg.params ? enable : disable).push('params');
     if (typeof msg.ads === 'boolean') (msg.ads ? enable : disable).push('easylist');
     await dnr.updateEnabledRulesets({ enableRulesetIds: enable, disableRulesetIds: disable });
+    if (msg.blocking !== undefined) { await cleanState(); await syncLearnRule(); }
   } else if (msg.type === 'clean:pause' && typeof msg.site === 'string' && DOMAIN_RE.test(msg.site)) {
     // pausing a site: everything that page loads is allowed, as if clean mode were off there
     const rules = await dnr.getDynamicRules();
@@ -677,6 +738,9 @@ async function dataMessage(msg) {
     await api.storage.local.clear();
     myStore = normalizeStore(null);
     summaryStore = normalizeSummary(null);
+    learnStore = normalizeLearn(null);
+    learnedSet = new Set();
+    await syncLearnRule().catch(() => null);
     return true;
   }
   await api.storage.local.set({ [SUMMARY_KEY]: summaryStore });
@@ -749,8 +813,13 @@ async function report(tabId, url) {
         // what "site only" stopped here, and what was allowed on this site from the panel
         const here = c.allowed.filter((a) => a.site === page.site).map((a) => a.domain);
         // ads stopped by EasyList are not "site only" blocks (allowing them would not help)
-        out.siteonly = { blocked: blockedDomains(page).filter((b) => !here.includes(b.domain) && !(adsOn && inSet(easylistDomains, b.domain))),
+        out.siteonly = { blocked: blockedDomains(page).filter((b) => !here.includes(b.domain) && !(adsOn && inSet(easylistDomains, b.domain))
+          && !learnedSet.has(b.domain)),
           allowedHere: here };
+      }
+      if (learnStore.enabled) {
+        out.learn = { enabled: true, here: Object.keys(page.domains).filter((d) => learnedSet.has(d)).sort()
+          .map((d) => ({ domain: d, stopped: page.domains[d].stopped > 0, contacted: page.domains[d].requests > 0 })) };
       }
       return out;
     }).catch(() => null),
@@ -801,6 +870,11 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       const page = own(String(sender.tab.id));
       if (page && typeof msg.kind === 'string' && typeof msg.host === 'string') {
         noteBehaviour(page, { kind: msg.kind, host: msg.host }, ctx);
+        // step 4: a script of a third party on no list read a canvas (fingerprinting)
+        if (msg.kind === 'canvas_read' && /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(msg.host) && !lookup(ctx.list, msg.host)) {
+          const reg = registrableDomain(ctx.trie, msg.host);
+          if (reg && !page.firstParty.includes(reg)) learnSignal(reg, page.site, 'canvas');
+        }
         touch(sender.tab.id);
       }
     });
@@ -827,6 +901,14 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg && typeof msg.type === 'string' && (msg.type.startsWith('summary:') || msg.type.startsWith('data:'))
       && !fromPage) {
     ready.then(() => dataMessage(msg)).then(sendResponse);
+    return true;
+  }
+  if (msg && typeof msg.type === 'string' && msg.type.startsWith('learn:') && !fromPage) {
+    ready.then(() => learnMessage(msg)).then(sendResponse);
+    return true;
+  }
+  if (TEST_HOOKS && msg && msg.type === 'test:learn-on') {
+    ready.then(() => learnMessage({ type: 'learn:settings', enabled: true })).then(sendResponse);
     return true;
   }
   if (msg && typeof msg.type === 'string' && msg.type.startsWith('clean:') && !fromPage) {

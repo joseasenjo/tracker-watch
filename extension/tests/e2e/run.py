@@ -28,7 +28,7 @@ EXT = Path(__file__).resolve().parents[2]
 PORT = 18543
 RDP_PORT = 18602
 HOSTS = ["site.test", "control.test", "www.googletagmanager.com", "stats.g.doubleclick.net", "ib.adnxs.com",
-         "cdn.unknown.test", "connect.facebook.net", "www.google.com", "cdn.cookielaw.org", "www.youtube.com", "popads.net"]
+         "cdn.unknown.test", "connect.facebook.net", "www.google.com", "cdn.cookielaw.org", "www.youtube.com", "popads.net", "a.test", "b.test", "px.watcher.test"]
 U = lambda host, path: f"https://{host}:{PORT}{path}"  # noqa: E731
 
 PAGE = f"""<!doctype html><meta charset="utf-8"><title>e2e</title>
@@ -74,6 +74,11 @@ ADS_PAGE = f"""<!doctype html><meta charset="utf-8"><title>ads</title>
 <div class="ad--banner" id="slot">advert</div><p id="text">article</p>
 <img src="{U('popads.net', '/ad.gif')}">"""
 
+# Step 4: a third party on no list that gets an identifier cookie on every site that embeds it
+LEARN_PAGE = f"""<!doctype html><meta charset="utf-8"><title>learn</title>
+<img src="{U('px.watcher.test', '/p1.gif')}">
+<script>setTimeout(() => {{ new Image().src = "{U('px.watcher.test', '/p2.gif')}"; }}, 400);</script>"""
+
 EXPECTED = {"trackingBefore": 2, "trackingNewAfter": ["facebook.net"], "thirdPartyDomains": 7, "band": "A"}
 
 
@@ -98,6 +103,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             body, ctype = ES_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/unknown":
             body, ctype = UNKNOWN_BANNER.encode(), "text/html; charset=utf-8"
+        elif host in ("site.test", "a.test", "b.test") and path == "/learn":
+            body, ctype = LEARN_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/ads":
             body, ctype = ADS_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/prerendered":
@@ -127,6 +134,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         if host == "www.google.com" and path == "/search":
             self.send_header("Set-Cookie", "NID=SECRETVALUE; Domain=google.com; Path=/; Max-Age=15552000; Secure; SameSite=None")
+        if host == "px.watcher.test":
+            self.send_header("Set-Cookie", "wid=8f3a9c2e1b7d4a60; Max-Age=3600; Path=/; Secure; SameSite=None")
         if host == "ib.adnxs.com" and path == "/ut.js":
             self.send_header("Set-Cookie", "uuid2=SECRETVALUE; Max-Age=3600; Path=/; Secure; SameSite=None")
         self.send_header("Content-Type", ctype)
@@ -412,6 +421,30 @@ def ads_scenario(ctx, control, browser: str) -> list[str]:
     return errors
 
 
+def learn_scenario(ctx, control, browser: str) -> list[str]:
+    """Step 4: learning on and trackers blocked; a third party on no list gets an identifier cookie on three
+    sites, is learned, and is blocked on the next visit."""
+    errors = []
+    control.goto(U("control.test", "/?learn=on&clean=full"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab = ctx.new_page()
+    for host in ("site.test", "a.test", "b.test"):
+        tab.goto(U(host, "/learn"), wait_until="load")
+        tab.wait_for_timeout(1500)
+    tab.goto(U("site.test", "/learn"), wait_until="load")
+    tab.wait_for_timeout(1500)
+    reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
+            and r["page"]["host"] == "site.test" and ((r.get("clean") or {}).get("learn") or {}).get("here")]
+    here = reps[-1]["clean"]["learn"]["here"] if reps else []
+    if not here or here[0]["domain"] != "px.watcher.test" or not here[0]["stopped"]:
+        errors.append(f"learn: here={here}")
+    control.goto(U("control.test", "/?clean=off"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab.close()
+    print(f"{browser}: learn ok={not errors}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -502,6 +535,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     errors += custom_banner_and_prerender(ctx, control, browser)
     errors += clean_scenario(ctx, control, browser, screenshot)
     errors += ads_scenario(ctx, control, browser)
+    errors += learn_scenario(ctx, control, browser)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
         ext_id = sw.url.split("/")[2]

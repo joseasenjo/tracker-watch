@@ -126,6 +126,30 @@ async function render() {
     app.appendChild(add(el('p'), guide));
   }
 
+  // step 4: learn trackers that are on no list from what they do (opt-in)
+  const learn = await send({ type: 'learn:get' });
+  if (learn) {
+    app.appendChild(el('h2', t('learnTitle')));
+    app.appendChild(el('p', t('learnExplain', learn.threshold), 'note'));
+    app.appendChild(toggle(t('learnToggle'), learn.enabled, (on) => send({ type: 'learn:settings', enabled: on })));
+    if (learn.enabled) {
+      app.appendChild(el('p', t('learnCounts', learn.learned.length, learn.watching)));
+      if (learn.learned.length) {
+        const ul = el('ul');
+        for (const d of learn.learned) {
+          const how = Object.entries(d.signals).map(([k, n]) => t('learnSignal_' + k, n)).join(', ');
+          ul.appendChild(add(el('li'), el('b', d.domain), el('span', ` · ${how} `, 'svc'),
+            button(t('learnForget'), () => send({ type: 'learn:forget', domain: d.domain }))));
+        }
+        app.appendChild(ul);
+      }
+      if (learn.learned.length || learn.watching) {
+        app.appendChild(add(el('div', undefined, 'tools'), button(t('learnForgetAll'), () => send({ type: 'learn:forget' }))));
+      }
+      app.appendChild(el('p', t('learnNote'), 'note'));
+    }
+  }
+
   const m = data.mytests;
   app.appendChild(el('h2', t('myTitle')));
   app.appendChild(toggle(t('myToggle'), m.settings.enabled, (on) => send({ type: 'mytests:settings', enabled: on })));
