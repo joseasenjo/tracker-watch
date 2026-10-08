@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import statistics
+import sys
 from datetime import date as _date, datetime, timezone
 from pathlib import Path
 
@@ -20,6 +21,9 @@ VANTAGE_LABELS = {"github-actions-us": "GitHub servers in the US", "local-window
 USABLE_CONFIDENCE = ("high", "medium")
 SPAIN_GROUP = "ES"
 SPAIN_MAX_AGE_DAYS = 7  # a Spain measurement older than this (against the main one) is left out of the thread
+CHART_FILE = "chart.png"
+MAX_IMAGE_BYTES = 950_000  # Bluesky refuses images over about 1 MB
+MAX_ALT_CHARS = 1500  # Mastodon's default limit for an image description
 
 
 class PostTooLong(ValueError):
@@ -164,12 +168,33 @@ def alt_text(reports: list[dict]) -> str:
     return f"Bar chart of the number of third-party tracking services contacted before any interaction. {listing}."
 
 
-def render_markdown(date: str, platform: str, posts: list[str], alt: str) -> str:
+def render_chart(runs_dir, sites_file, path):
+    """Draw the ranking card (the same 1200x630 chart the website shares) and return its alt text, or None when it
+    cannot be made (no Chromium, or the file is too large for Bluesky). Nothing is published here."""
+    from .cards import alt_text as card_alt, ranking_card_html, render_png
+    from .site import build_context
+    sites = str(sites_file) if sites_file and Path(sites_file).exists() else None
+    ctx = build_context(runs_dir, sites)
+    if not render_png(ranking_card_html(ctx), path):
+        print("warning: the chart could not be drawn (Playwright and Chromium are needed)", file=sys.stderr)
+        return None
+    if path.stat().st_size > MAX_IMAGE_BYTES:
+        print(f"warning: the chart is {path.stat().st_size} bytes, over the limit; left out", file=sys.stderr)
+        path.unlink()
+        return None
+    return card_alt(ctx)[:MAX_ALT_CHARS]
+
+
+def render_markdown(date: str, platform: str, posts: list[str], alt: str, image: str | None = None) -> str:
     limit = LIMITS[platform]
     lines = [f"# DRAFT thread for {platform} ({date}): NOT PUBLISHED, needs human approval", ""]
     for index, post in enumerate(posts, 1):
-        lines += [f"## Post {index} ({len(post)}/{limit})", "", post, ""]
-    lines += ["## Image alt text (chart not generated yet)", "", alt, ""]
+        lines += [f"## Post {index} ({len(post)}/{limit})", ""]
+        if index == 1 and image:
+            lines += [f"[Image attached to this post: {image}]", ""]
+        lines += [post, ""]
+    where = "attached to post 1" if image else "no image was drawn"
+    lines += [f"## Image alt text ({where})", "", alt, ""]
     return "\n".join(lines)
 
 
@@ -212,7 +237,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--spain-dir", default="data/extra/local-windows-spain",
                         help="reports of the Spanish group measured from Spain (left out if missing or too old)")
     parser.add_argument("--out", default="data/drafts", help="where draft files are written")
-    parser.add_argument("--dry-run", action="store_true", help="print the draft and write nothing")
+    parser.add_argument("--no-image", action="store_true", help="do not draw the chart image")
+    parser.add_argument("--dry-run", action="store_true", help="print the draft and write nothing (no image either)")
     args = parser.parse_args(argv)
 
     date, reports = load_latest_reports(args.runs_dir)
@@ -221,15 +247,21 @@ def main(argv: list[str] | None = None) -> int:
     spain = load_spain(args.spain_dir, groups, date)
     posts = build_thread(date, reports, diffs, platform=args.platform, report_url=args.report_url,
                          groups=groups, spain=spain)
-    markdown = render_markdown(date, args.platform, posts, alt_text(reports))
+    out_dir = Path(args.out) / date
+    image, alt = None, alt_text(reports)
+    if not args.dry_run and not args.no_image:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        chart_alt = render_chart(args.runs_dir, args.sites_file, out_dir / CHART_FILE)
+        if chart_alt:
+            image, alt = CHART_FILE, chart_alt
+    markdown = render_markdown(date, args.platform, posts, alt, image)
     print(markdown)
     if not args.dry_run:
-        out_dir = Path(args.out) / date
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / f"{args.platform}.md").write_text(markdown, encoding="utf-8")
         (out_dir / f"{args.platform}.json").write_text(json.dumps({
             "date": date, "platform": args.platform, "generated_at": datetime.now(timezone.utc).isoformat(),
-            "status": "draft", "posts": posts, "alt_text": alt_text(reports)}, indent=2, ensure_ascii=False),
+            "status": "draft", "posts": posts, "image": image, "alt_text": alt}, indent=2, ensure_ascii=False),
             encoding="utf-8")
     return 0
 

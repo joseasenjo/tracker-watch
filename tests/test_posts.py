@@ -2,8 +2,9 @@ import json
 
 import pytest
 
+from traceguard import posts as posts_module
 from traceguard.posts import (LIMITS, alt_text, build_thread, group_medians, load_groups, load_latest_reports,
-                              load_spain, main, ranking)
+                              load_spain, main, ranking, render_markdown)
 
 DIFF_NOTABLE = {"site": "News A", "comparable": True, "notable": True,
                 "added_tracking_services": [{"service": "ads.example"}],
@@ -76,11 +77,13 @@ def test_cli_dry_run_writes_nothing_and_normal_run_writes_a_draft(tmp_path, caps
     for r in REPORTS:
         (folder / f"{r['site']['name'].replace(' ', '-')}.json").write_text(json.dumps(r), encoding="utf-8")
     drafts = tmp_path / "drafts"
-    assert main([str(tmp_path / "runs"), "--out", str(drafts), "--dry-run"]) == 0
+    isolated = ["--sites-file", str(tmp_path / "none.json"), "--spain-dir", str(tmp_path / "none")]  # not the real data
+    assert main([str(tmp_path / "runs"), "--out", str(drafts), "--dry-run", *isolated]) == 0
     assert not drafts.exists()
-    assert main([str(tmp_path / "runs"), "--out", str(drafts)]) == 0
+    assert main([str(tmp_path / "runs"), "--out", str(drafts), "--no-image", *isolated]) == 0
     saved = json.loads((drafts / "2026-10-11" / "bluesky.json").read_text(encoding="utf-8"))
-    assert saved["status"] == "draft" and len(saved["posts"]) == 3
+    assert saved["status"] == "draft" and len(saved["posts"]) == 3 and saved["image"] is None
+    assert not (drafts / "2026-10-11" / "chart.png").exists()
     assert "NOT PUBLISHED" in capsys.readouterr().out
 
 
@@ -136,3 +139,31 @@ def test_load_groups_reads_the_site_list(tmp_path):
     f.write_text(json.dumps({"sites": [{"url": "https://a.example/", "group": "ES"}, {"url": "https://b.example"}]}),
                  encoding="utf-8")
     assert load_groups(f) == {"https://a.example": "ES"} and load_groups(tmp_path / "none.json") == {}
+
+
+def test_the_chart_is_attached_to_post_one_with_its_alt_text(tmp_path, monkeypatch):
+    folder = tmp_path / "runs" / "2026-10-11"
+    folder.mkdir(parents=True)
+    for r in REPORTS:
+        (folder / f"{r['site']['name'].replace(' ', '-')}.json").write_text(json.dumps(r), encoding="utf-8")
+
+    def fake_chart(runs_dir, sites_file, path):  # the real one draws a PNG with Chromium
+        path.write_bytes(b"png")
+        return "Bar chart. News A: 9."
+    monkeypatch.setattr(posts_module, "render_chart", fake_chart)
+    drafts = tmp_path / "drafts"
+    isolated = ["--sites-file", str(tmp_path / "none.json"), "--spain-dir", str(tmp_path / "none")]
+    assert main([str(tmp_path / "runs"), "--out", str(drafts), *isolated]) == 0
+    day = drafts / "2026-10-11"
+    saved = json.loads((day / "bluesky.json").read_text(encoding="utf-8"))
+    assert saved["image"] == "chart.png" and saved["alt_text"] == "Bar chart. News A: 9." and (day / "chart.png").exists()
+    text = (day / "bluesky.md").read_text(encoding="utf-8")
+    assert text.index("[Image attached to this post: chart.png]") < text.index("## Post 2")
+    assert "attached to post 1" in text
+    assert main([str(tmp_path / "runs"), "--out", str(tmp_path / "d2"), "--dry-run", *isolated]) == 0
+    assert not (tmp_path / "d2").exists()  # a dry run draws nothing
+
+
+def test_markdown_says_when_no_image_was_drawn():
+    text = render_markdown("d", "bluesky", ["one", "two"], "alt")
+    assert "no image was drawn" in text and "Image attached" not in text
