@@ -61,7 +61,9 @@ still apply to what you allow), or pause blocking there.
 
 Separately, **Block ads** (off by default) uses EasyList (by The EasyList authors) to stop ad requests and hide the
 empty space ads leave. It works with or without the options above. Some sites ask you to turn off ad blocking;
-pausing blocking on a site from the panel also pauses this there.
+pausing blocking on a site from the panel also pauses this there. Some sites hide their content until you turn
+off ad blocking; when Lens sees such a message it says so in a small notice with a button to pause blocking on
+that site (you can resume it from the panel).
 
 Lists only know the trackers someone has already found. With **Learn trackers from their behaviour** on (off by
 default), Lens also notes third parties that are on no list but act like trackers: they receive a cookie that

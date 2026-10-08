@@ -43,7 +43,8 @@ Stop (optional, off until you press a button):
 - Reject cookie banners for you: Lens presses the reject button of known banners and tells you so in a small
   notice; it never accepts and never chooses a paid option.
 - Remove tracking parameters (gclid, fbclid, utm_...) from the addresses you open.
-- Pause it all on a site with one click, if something breaks.
+- Pause it all on a site with one click, if something breaks; when a site asks you to turn off your ad blocker,
+  Lens says so and offers that pause in a notice.
 
 What it does not do:
 - It sends nothing: no analytics, no account, no server. Its lists and weekly figures are bundled with it.

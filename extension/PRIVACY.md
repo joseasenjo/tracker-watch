@@ -65,6 +65,9 @@ Two buttons open something only because you press them:
 - **webNavigation**: to tell when a page was loaded in the background before you opened it (prerendering).
 - **cookies**: to read the names and lifetimes of the cookies of the services a page contacted, and to delete a
   site's cookies when you press "Clear this site's data and reload" in your own banner test.
+- **On pages with blocking on, the extension looks for a block of text that asks you to turn off your ad blocker**
+  (a short block that names ad blocking and asks for an action). It only checks whether such a text exists; nothing
+  of it is kept or sent. When it exists, Lens shows a notice with a button to pause blocking on that site.
 - **storage**: to keep the tab reports and, if you turn them on, your banner tests and your week.
 - **declarativeNetRequestWithHostAccess**: for blocking ("Block trackers" and "Block ads"), off by default. When you turn it on, your browser
   itself stops requests to the tracking services of our list (and, in the extended mode, to the domains of

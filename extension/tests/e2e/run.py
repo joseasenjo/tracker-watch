@@ -84,6 +84,13 @@ OWN_PAY_BANNER = """<!doctype html><meta charset="utf-8"><title>own banner</titl
 <div style="position:fixed;bottom:0;left:0;right:0;background:#fff;padding:10px">
   <p>Con tu consentimiento usamos cookies propias y de terceros para publicidad personalizada.</p>
   <button>Acepto y continuo gratis</button> <button>Rechazo y me suscribo</button></div>"""
+# A wall that asks to turn off the ad blocker (as on abc.es), over a page with an ad slot
+ADWALL_PAGE = """<!doctype html><meta charset="utf-8"><title>wall</title>
+<p>Noticias de portada.</p>
+<div style="position:fixed;top:80px;left:200px;width:600px;background:#fff;padding:20px;border:1px solid #888">
+<h2>Estas utilizando un bloqueador de anuncios</h2>
+<p>La publicidad permite que podamos ofrecerte informacion de calidad. Para seguir navegando necesitaras desactivar
+tu bloqueador de anuncios o, si lo prefieres, suscribirte a nuestro servicio Premium.</p></div>"""
 # OneTrust with no refusal on its first layer: "Reject all" is in its settings layer
 ONETRUST_TWO_STEP = """<!doctype html><meta charset="utf-8"><title>two step</title>
 <div id="onetrust-banner-sdk" style="position:fixed;bottom:0;left:0;right:0;background:#eee;padding:10px">
@@ -124,6 +131,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         elif host == "cdn.unknown.test" and path == "/slow":
             time.sleep(9)
             body, ctype = b"/* slow */", "application/javascript"
+        elif host == "site.test" and path == "/adwall":
+            body, ctype = ADWALL_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/ownpay":
             body, ctype = OWN_PAY_BANNER.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/onetrust2":
@@ -594,6 +603,70 @@ def autoreject_scenario(ctx, control, browser: str, screenshot: str | None = Non
     return errors
 
 
+def find_button(node, action):
+    """The button with data-action=action in a DevTools DOM tree, through shadow roots and frames."""
+    attrs = node.get("attributes") or []
+    if node.get("nodeName") == "BUTTON" and "data-action" in attrs and attrs[attrs.index("data-action") + 1] == action:
+        return node
+    kids = list(node.get("children") or []) + list(node.get("shadowRoots") or [])
+    if node.get("contentDocument"):
+        kids.append(node["contentDocument"])
+    for kid in kids:
+        found = find_button(kid, action)
+        if found:
+            return found
+    return None
+
+
+def adwall_scenario(ctx, control, browser: str, screenshot: str | None = None) -> list[str]:
+    """A wall that asks to turn off the ad blocker: no notice without blocking; with blocking, Lens explains and its
+    button pauses blocking on that site (and the notice does not come back)."""
+    errors = []
+    tab = ctx.new_page()
+
+    def notice():
+        tab.goto(U("site.test", "/adwall"), wait_until="load")
+        tab.wait_for_timeout(2500)
+        return tab.evaluate("Boolean(document.getElementById('trackerwatch-lens-notice'))")
+
+    control.goto(U("control.test", "/?clean=off&ads=off"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    if notice():
+        errors.append("wall notice shown although nothing is blocked")
+    control.goto(U("control.test", "/?clean=full"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    if not notice():
+        errors.append("no wall notice with blocking on")
+    elif screenshot and browser == "chromium":
+        tab.screenshot(path=screenshot.replace(".png", "-adwall.png"))
+    reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
+            and r["page"]["host"] == "site.test" and (r.get("consent") or {}).get("adWall")]
+    if not reps:
+        errors.append("the panel report does not say the site asks to turn off ad blocking")
+    if browser == "chromium" and not errors:
+        cdp = ctx.new_cdp_session(tab)
+        button = find_button(cdp.send("DOM.getDocument", {"depth": -1, "pierce": True})["root"], "pause")
+        if not button:
+            errors.append("the pause button was not found in the notice")
+        else:
+            quad = cdp.send("DOM.getBoxModel", {"nodeId": button["nodeId"]})["model"]["content"]
+            tab.mouse.click(sum(quad[0::2]) / 4, sum(quad[1::2]) / 4)
+            tab.wait_for_timeout(2500)
+            paused = [r for r in read_reports(control).values() if isinstance(r, dict)
+                      and "site.test" in ((r.get("clean") or {}).get("paused") or [])]
+            if not paused:
+                errors.append("the notice's button did not pause blocking on the site")
+            tab.goto(U("site.test", "/adwall"), wait_until="load")
+            tab.wait_for_timeout(2500)
+            if tab.evaluate("Boolean(document.getElementById('trackerwatch-lens-notice'))"):
+                errors.append("the wall notice came back on a paused site")
+    control.goto(U("control.test", "/?clean=off&unpause=site.test"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab.close()
+    print(f"{browser}: ad blocker wall ok={not errors}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -687,6 +760,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     errors += learn_scenario(ctx, control, browser)
     errors += referrer_scenario(ctx, control, browser)
     errors += autoreject_scenario(ctx, control, browser, screenshot)
+    errors += adwall_scenario(ctx, control, browser, screenshot)
     if browser == "chromium":
         errors += panel_scenario(ctx, control, tab_id)
     if screenshot and browser == "chromium":

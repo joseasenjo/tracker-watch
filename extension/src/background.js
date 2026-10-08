@@ -877,7 +877,7 @@ async function report(tabId, url) {
   return {
     page: summary, told: page.told, baseline, index, categories: glossary.categories, loading, counting,
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
-      payOrAccept: Boolean(page.consent.payOrAccept), auto: page.consent.auto ?? null,
+      payOrAccept: Boolean(page.consent.payOrAccept), auto: page.consent.auto ?? null, adWall: Boolean(page.adWall),
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : referrerArrival(page),
     journey: journeyView(page, summary),
@@ -963,6 +963,34 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     api.storage.local.set({ [AUTOREJECT_KEY]: msg.enabled === true }).then(() => { cleanCache = null; sendResponse(true); });
     return true;
   }
+  // "Turn off your ad blocker" wall: is anything blocked on this tab's site? (nothing else is read from the page)
+  if (msg && msg.type === 'adwall:check' && fromPage) {
+    whenReady(async () => {
+      await cleanStateCached().catch(() => null); // refreshes cleanBlocking, adsOn and pausedSites
+      const page = own(String(sender.tab.id));
+      const site = page ? page.site : registrableDomain(ctx.trie, hostOf(sender.url || '') || '');
+      sendResponse(Boolean((cleanBlocking || adsOn) && !pausedSites.includes(site)));
+    });
+    return true;
+  }
+  if (msg && msg.type === 'adwall:seen' && fromPage) {
+    whenReady(() => {
+      const page = own(String(sender.tab.id));
+      if (page) { page.adWall = true; touch(sender.tab.id); }
+    });
+    return false;
+  }
+  // the notice's button: pause blocking on the site of this tab (taken from our own report, never from the message)
+  if (msg && msg.type === 'adwall:pause' && fromPage) {
+    whenReady(async () => {
+      const page = own(String(sender.tab.id));
+      if (!page || !page.site) return;
+      await cleanMessage({ type: 'clean:pause', site: page.site, paused: true });
+      cleanCache = null;
+      await api.tabs.reload(sender.tab.id);
+    });
+    return false;
+  }
   if (msg && msg.type === 'banner' && fromPage) {
     whenReady(() => {
       const page = own(String(sender.tab.id));
@@ -1030,6 +1058,10 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
   if (TEST_HOOKS && msg && msg.type === 'test:clean') {
     cleanMessage({ type: 'clean:set', blocking: msg.blocking, params: msg.params, ads: msg.ads }).then(sendResponse);
+    return true;
+  }
+  if (TEST_HOOKS && msg && msg.type === 'test:unpause') {
+    cleanMessage({ type: 'clean:pause', site: msg.site, paused: false }).then(() => { cleanCache = null; sendResponse(true); });
     return true;
   }
   if (TEST_HOOKS && msg && msg.type === 'test:allow') {

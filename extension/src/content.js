@@ -1,6 +1,7 @@
 // Runs in every frame, in the extension's isolated world. It never clicks and never changes the page, except with
 // "Reject banners" on (off by default): then it presses the reject button of a cookie banner and shows a small
-// notice of its own. The only page text it reads is the label of buttons when a consent banner is involved.
+// notice of its own. The only page text it reads is the label of buttons when a consent banner is involved, and,
+// with blocking on, a short block that asks the visitor to turn off the ad blocker (nothing of it is kept).
 // It reports:
 // - the time of the first real interaction (trusted click or key press; scrolling does not count) and, if
 //   the click landed on a known consent banner, which tool and which button (reject / accept / pay / other).
@@ -216,9 +217,15 @@
 
   // The notice Lens shows in the page (top frame only): its own small card, in a closed shadow root so the page
   // cannot style or read it. Texts come from the extension's own messages.
-  const NOTICE = { rejected: 'noticeRejected', payOrAccept: 'noticePayOrAccept', noReject: 'noticeNoReject' };
+  const NOTICE = { rejected: 'noticeRejected', payOrAccept: 'noticePayOrAccept', noReject: 'noticeNoReject',
+    adwall: 'noticeAdWall' };
   function showNotice(tool, outcome) {
-    if (window !== window.top || !NOTICE[outcome] || document.getElementById('trackerwatch-lens-notice')) return;
+    if (window !== window.top || !NOTICE[outcome]) return;
+    const old = document.getElementById('trackerwatch-lens-notice');
+    if (old) {
+      if (outcome !== 'adwall') return; // the wall notice is the one the visitor must see: it replaces any other
+      old.remove();
+    }
     const host = document.createElement('div');
     host.id = 'trackerwatch-lens-notice';
     const root = host.attachShadow({ mode: 'closed' });
@@ -226,7 +233,8 @@
     style.textContent = `.card{position:fixed;right:16px;bottom:16px;z-index:2147483647;max-width:340px;font:14px/1.4 system-ui,sans-serif;
       background:#1d2129;color:#fff;border-radius:10px;padding:12px 36px 12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.3)}
       b{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.02em;color:#8fb8e6}
-      button{position:absolute;top:6px;right:8px;background:none;border:0;color:#fff;font-size:18px;cursor:pointer}`;
+      button.x{position:absolute;top:6px;right:8px;background:none;border:0;color:#fff;font-size:18px;cursor:pointer}
+      button.act{margin-top:10px;background:#8fb8e6;color:#10243d;border:0;border-radius:6px;padding:7px 12px;font:600 14px system-ui,sans-serif;cursor:pointer}`;
     const card = document.createElement('div');
     card.className = 'card';
     card.setAttribute('role', 'status');
@@ -235,10 +243,21 @@
     const text = document.createElement('div');
     text.textContent = api.i18n.getMessage(NOTICE[outcome], [tool || api.i18n.getMessage('noticeUnknownTool')]);
     const close = document.createElement('button');
+    close.className = 'x';
     close.textContent = '\u00d7';
     close.setAttribute('aria-label', api.i18n.getMessage('noticeClose'));
     close.addEventListener('click', () => host.remove());
     card.append(title, text, close);
+    if (outcome === 'adwall') {
+      // the one action: pause blocking on this site (a trusted click only; the page cannot reach this button)
+      const pause = document.createElement('button');
+      pause.className = 'act';
+      pause.dataset.action = 'pause';
+      pause.textContent = api.i18n.getMessage('noticeAdWallPause');
+      pause.addEventListener('click', (e) => { if (e.isTrusted) send({ type: 'adwall:pause' }); });
+      card.append(pause);
+      card.setAttribute('role', 'alert');
+    }
     root.append(style, card);
     (document.body || document.documentElement).appendChild(host);
     if (outcome === 'rejected') setTimeout(() => host.remove(), 8000);
@@ -249,14 +268,41 @@
     });
   } catch { /* no runtime */ }
 
+  // "Turn off your ad blocker" walls (only with blocking on). A cheap look first: does the page mention ad blocking at
+  // all? Only then are short blocks of text examined, for one that names ad blocking and asks for an action.
+  const wall = data.adwall && { phrase: new RegExp(data.adwall.phrase, 'i'), action: new RegExp(data.adwall.action, 'i') };
+  let wallDone = false;
+  const wordsOf = (el) => (el.textContent || '').replace(/\s+/g, ' ').trim();
+  function findWall() {
+    if (!wall || !document.body || !wall.phrase.test((document.body.textContent || '').slice(0, 600000))) return false;
+    const { min_chars: min, max_chars: max } = data.adwall;
+    for (const el of document.body.querySelectorAll('div, section, aside, dialog, p, form, [role="dialog"], [role="alert"]')) {
+      const len = (el.textContent || '').length;
+      if (len < min || len > max * 3) continue;
+      const text = wordsOf(el);
+      if (text.length >= min && text.length <= max && wall.phrase.test(text) && wall.action.test(text) && visible(el)) return true;
+    }
+    return false;
+  }
+  async function checkWall() {
+    if (wallDone || window !== window.top || document.prerendering || !findWall()) return;
+    let blocking = false;
+    try { blocking = Boolean(await api.runtime.sendMessage({ type: 'adwall:check' })); } catch { blocking = false; }
+    if (!blocking) return; // nothing is blocked here (or it is paused): the wall is not ours to explain
+    wallDone = true;
+    send({ type: 'adwall:seen' });
+    showNotice(null, 'adwall');
+  }
+
   let scans = 0;
   const scan = async () => {
     if (!document.prerendering) scans += 1;
     scanBanners();
     if (!document.prerendering) await autoReject(scans >= 4); // a page loaded in the background is answered when shown
+    await checkWall();
     if (engine) scanResults();
   };
-  const schedule = () => { for (const ms of [300, 1500, 4000, 7000]) setTimeout(scan, ms); };
+  const schedule = () => { for (const ms of [300, 1500, 4000, 7000, 12000]) setTimeout(scan, ms); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule, { once: true });
   else schedule();
   // Chromium may load a page in the background (prerendering) and show it later: look again when it is shown

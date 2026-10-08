@@ -70,6 +70,7 @@ function renderGlance(s, data) {
   const line = (text, cls) => ul.appendChild(el('li', text, cls));
   const c = data.consent || {};
   if (c.payOrAccept) line(t('payOrAccept'), 'warn');
+  if (c.adWall) line(t('glanceAdWall'), 'warn');
   if (c.auto && c.auto.outcome === 'rejected') line(t('glanceAutoRejected', c.auto.tool || t('noticeUnknownTool')));
   if (c.auto && c.auto.outcome === 'noReject') line(t('glanceAutoNoReject', c.auto.tool || t('noticeUnknownTool')), 'warn');
   if (!s.interaction) {
