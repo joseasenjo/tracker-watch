@@ -160,7 +160,7 @@
   };
   const tell = async (tool, outcome) => {
     if (!(await mayAnswer())) return;
-    answered.add(tool);
+    answered.add(tool || '?');
     send({ type: 'autoreject:result', tool, outcome });
   };
   // Tools whose first layer has no refusal but whose settings layer has a "Reject all" (documented ids/classes)
@@ -202,9 +202,15 @@
     if (answered.size) return;
     // a banner of an unknown tool: only pages that mention cookies or consent at all, labels checked first
     if (!contextRe.test((document.body && document.body.textContent || '').slice(0, 300000))) return;
+    if (answered.has('?')) return;
     for (const b of buttonsIn(document)) {
       if (!rejectTexts.has(norm(b.textContent || b.value))) continue;
       if (visible(b) && isRefusal(b) && aroundTalksAboutConsent(b)) { await press(b, null); return; }
+    }
+    // "Reject and subscribe" in a banner of its own (as on marca.com): the only refusal is paid, so say so
+    for (const b of buttonsIn(document)) {
+      const text = labelOf(b);
+      if (text && text.length <= 80 && paidRe.test(text) && visible(b) && aroundTalksAboutConsent(b)) { await tell(null, 'payOrAccept'); return; }
     }
   }
 

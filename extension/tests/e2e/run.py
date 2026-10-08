@@ -79,6 +79,11 @@ LEARN_PAGE = f"""<!doctype html><meta charset="utf-8"><title>learn</title>
 <img src="{U('px.watcher.test', '/p1.gif')}">
 <script>setTimeout(() => {{ new Image().src = "{U('px.watcher.test', '/p2.gif')}"; }}, 400);</script>"""
 
+# A banner of the site's own (as on marca.com): "Accept" or "Reject and subscribe"
+OWN_PAY_BANNER = """<!doctype html><meta charset="utf-8"><title>own banner</title>
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;padding:10px">
+  <p>Con tu consentimiento usamos cookies propias y de terceros para publicidad personalizada.</p>
+  <button>Acepto y continuo gratis</button> <button>Rechazo y me suscribo</button></div>"""
 # OneTrust with no refusal on its first layer: "Reject all" is in its settings layer
 ONETRUST_TWO_STEP = """<!doctype html><meta charset="utf-8"><title>two step</title>
 <div id="onetrust-banner-sdk" style="position:fixed;bottom:0;left:0;right:0;background:#eee;padding:10px">
@@ -119,6 +124,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         elif host == "cdn.unknown.test" and path == "/slow":
             time.sleep(9)
             body, ctype = b"/* slow */", "application/javascript"
+        elif host == "site.test" and path == "/ownpay":
+            body, ctype = OWN_PAY_BANNER.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/onetrust2":
             body, ctype = ONETRUST_TWO_STEP.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/ads":
@@ -568,6 +575,11 @@ def autoreject_scenario(ctx, control, browser: str, screenshot: str | None = Non
     tab.wait_for_timeout(3500)
     if tab.title() != "refused":
         errors.append(f"OneTrust two steps: settings layer not refused (title={tab.title()!r})")
+    tab.goto(U("site.test", "/ownpay"), wait_until="load")
+    tab.wait_for_timeout(3500)
+    own = [r for r in read_reports(control).values() if isinstance(r, dict) and (r.get("consent") or {}).get("auto") == {"tool": None, "outcome": "payOrAccept"}]
+    if not own:
+        errors.append("an own banner whose refusal is a subscription was not reported as accept or pay")
     tab.goto(U("site.test", "/es"), wait_until="load")
     tab.wait_for_timeout(8000)  # the last look is at 7 s
     reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
