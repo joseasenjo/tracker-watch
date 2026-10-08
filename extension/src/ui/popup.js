@@ -368,14 +368,14 @@ function updateToggleAll() {
 function renderQuick(tab, clean, page) {
   if (!clean || !clean.available) return;
   const bar = el('div', undefined, 'quick');
-  const sw = (on, labelOn, labelOff, msg) => {
+  const sw = (on, labelOn, labelOff, msg, reload = true) => {
     const b = el('button', on ? labelOn : labelOff, on ? 'on' : '');
     b.setAttribute('aria-pressed', String(on));
-    b.title = on ? t('quickTurnOff') : t('quickTurnOn');
+    b.title = reload ? (on ? t('quickTurnOff') : t('quickTurnOn')) : (on ? t('quickLearnTitleOn') : t('quickLearnTitleOff'));
     b.addEventListener('click', async () => {
       b.disabled = true;
       await send(msg(!on));
-      if (tab && page && page.host) await api.tabs.reload(tab.id);
+      if (reload && tab && page && page.host) await api.tabs.reload(tab.id);
       setTimeout(load, 300);
     });
     return b;
@@ -383,6 +383,7 @@ function renderQuick(tab, clean, page) {
   bar.appendChild(sw(Boolean(clean.blocking), t('quickTrackersOn', t('quickLevel_' + clean.blocking)), t('quickTrackersOff'),
     (on) => ({ type: 'clean:set', blocking: on ? 'last' : null })));
   bar.appendChild(sw(Boolean(clean.ads), t('quickAdsOn'), t('quickAdsOff'), (on) => ({ type: 'clean:set', ads: on })));
+  bar.appendChild(sw(Boolean(clean.learnOn), t('quickLearnOn'), t('quickLearnOff'), (on) => ({ type: 'learn:settings', enabled: on }), false));
   root.appendChild(bar);
 }
 
@@ -604,9 +605,9 @@ function fold(summary, text) {
 
 function renderArrival(a) {
   if (!a || !a.engineName) return;
-  const lines = [a.redirect ? t('arrivedRedirect', a.engineName) : t('arrivedVia', a.engineName)];
-  if (a.ping) lines.push(t('arrivedPing', a.engineName));
-  for (const line of lines) app.appendChild(el('p', line, 'note'));
+  app.appendChild(el('p', a.referrer ? t('arrivedReferrer', a.engineName) : t('arrivedVia', a.engineName), 'arrival'));
+  if (a.redirect) app.appendChild(el('p', t('arrivedRedirect', a.engineName), 'note'));
+  if (a.ping) app.appendChild(el('p', t('arrivedPing', a.engineName), 'note'));
 }
 
 /** A link from the extension's own profile file (never from the page). */
@@ -708,7 +709,16 @@ async function load() {
   const tab = await currentTab();
   const data = tab ? await api.runtime.sendMessage({ type: 'report', tabId: tab.id, url: tab.url }) : null;
   const scroll = document.scrollingElement.scrollTop;
+  // the panel is drawn again every second while the page loads: keep what is open or closed on screen now
+  // (sections and the folds inside them), so a redraw never undoes a click
+  const keyOf = (d) => d.dataset.id || 'fold:' + (d.querySelector('summary')?.textContent || '').replace(/\d+/g, '#');
+  const shown = new Map([...root.querySelectorAll('details')].map((d) => [keyOf(d), d.open]));
   render(tab, data);
+  for (const d of root.querySelectorAll('details')) {
+    const k = keyOf(d);
+    if (shown.has(k) && d.open !== shown.get(k)) d.open = shown.get(k);
+  }
+  updateToggleAll();
   document.scrollingElement.scrollTop = scroll;
   // while the page is still loading, numbers can grow: refresh every second until it settles
   clearTimeout(refresh);

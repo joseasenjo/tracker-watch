@@ -608,6 +608,7 @@ async function cleanState() {
     blocking: cleanBlocking,
     params: enabled.includes('params'),
     ads: adsOn,
+    learnOn: learnStore.enabled,
     paused: pausedSites = dynamic.filter(isPause).map((r) => r.condition.requestDomains[0]).sort(),
     allowed: siteAllowed,
   };
@@ -773,6 +774,17 @@ function journeyView(page, summary) {
     common: commonOperators(previous, here) };
 }
 
+/**
+ * When the results page was not seen in this tab (a result opened in a new tab, a search made before Lens loaded),
+ * the address the browser itself sent to the site (Referer) still says which search engine the visitor came from.
+ */
+function referrerArrival(page) {
+  const from = page.told && page.told.self ? page.told.self.cameFrom : null;
+  if (!from) return null;
+  const engine = engineForHost(engines, from) || engineForHost(engines, 'www.' + from);
+  return engine ? { engine: engine.id, engineName: engine.name, fromSite: from, redirect: false, ping: false, referrer: true } : null;
+}
+
 /** Everything the panel shows for one tab. */
 async function report(tabId, url) {
   await ready;
@@ -805,7 +817,7 @@ async function report(tabId, url) {
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
       payOrAccept: Boolean(page.consent.payOrAccept),
       toolsContacted: consentTools },
-    search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : null,
+    search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : referrerArrival(page),
     journey: journeyView(page, summary),
     clean: await cleanState().then((c) => {
       const out = { ...c, pausedHere: c.paused.includes(page.site) };

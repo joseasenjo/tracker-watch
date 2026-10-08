@@ -105,6 +105,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
             body, ctype = UNKNOWN_BANNER.encode(), "text/html; charset=utf-8"
         elif host in ("site.test", "a.test", "b.test") and path == "/learn":
             body, ctype = LEARN_PAGE.encode(), "text/html; charset=utf-8"
+        elif host == "site.test" and path == "/loading":  # a page that keeps loading (the panel redraws itself)
+            body, ctype = f'<!doctype html><title>loading</title><img src="{U("cdn.unknown.test", "/slow")}">'.encode(), "text/html"
+        elif host == "cdn.unknown.test" and path == "/slow":
+            time.sleep(9)
+            body, ctype = b"/* slow */", "application/javascript"
         elif host == "site.test" and path == "/ads":
             body, ctype = ADS_PAGE.encode(), "text/html; charset=utf-8"
         elif host == "site.test" and path == "/prerendered":
@@ -142,7 +147,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
-        self.wfile.write(body)
+        try:
+            self.wfile.write(body)
+        except OSError:  # the tab was closed before a slow answer arrived
+            pass
 
 
 def start_server(tmp: Path):
@@ -445,6 +453,86 @@ def learn_scenario(ctx, control, browser: str) -> list[str]:
     return errors
 
 
+def referrer_scenario(ctx, control, browser: str) -> list[str]:
+    """A result opened in a new tab: the results page was not seen, the Referer still names the engine."""
+    tab = ctx.new_page()
+    tab.goto(U("site.test", "/from-search"), wait_until="load", referer="https://www.google.com/")
+    tab.wait_for_timeout(1000)
+    arr = [r.get("arrival") for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
+           and r["page"]["host"] == "site.test" and (r.get("arrival") or {}).get("referrer")]
+    tab.close()
+    ok = bool(arr) and arr[-1]["engineName"] == "Google"
+    print(f"{browser}: arrival from the Referer ok={ok}")
+    return [] if ok else [f"arrival from the Referer: {arr}"]
+
+
+def panel_scenario(ctx, control, tab_id: str) -> list[str]:
+    """Chromium only (Playwright cannot open moz-extension pages): the panel's sections open one at a time, and
+    Open all / Close all follows the real state and survives reopening the panel."""
+    errors = []
+    sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
+    url = f"chrome-extension://{sw.url.split('/')[2]}/popup.html?tabId={tab_id}&url=" + U("site.test", "/")
+    pop = ctx.new_page()
+    pop.goto(url)
+    pop.wait_for_timeout(800)
+    state = lambda: pop.evaluate("[...document.querySelectorAll('details.sec')].map(d => d.open)")  # noqa: E731
+    label = lambda: pop.text_content("#toggle-all")  # noqa: E731
+    pop.click("#toggle-all") if any(state()) else None  # start from everything closed
+    pop.wait_for_timeout(100)
+    if any(state()) or label() != "Open all":
+        errors.append(f"close all: {state()} {label()}")
+    summaries = pop.query_selector_all("details.sec > summary")
+    summaries[0].click()
+    pop.wait_for_timeout(100)
+    summaries[2].click()
+    pop.wait_for_timeout(100)
+    st = state()
+    if st[0] or not st[2] or sum(st) != 1 or label() != "Close all":
+        errors.append(f"one section at a time: {st} {label()}")
+    pop.click("#toggle-all")
+    pop.wait_for_timeout(100)
+    if any(state()) or label() != "Open all":
+        errors.append(f"close all after one open: {state()} {label()}")
+    pop.click("#toggle-all")
+    pop.wait_for_timeout(100)
+    if not all(state()) or label() != "Close all":
+        errors.append(f"open all: {state()} {label()}")
+    summaries = pop.query_selector_all("details.sec > summary")
+    summaries[1].click()  # a click on an open section closes only that one
+    pop.wait_for_timeout(100)
+    st = state()
+    if st[1] or sum(st) != len(st) - 1:
+        errors.append(f"closing one of all open: {st}")
+    pop.reload()
+    pop.wait_for_timeout(800)
+    if state() != st:
+        errors.append(f"not remembered after reopening: {state()} != {st}")
+    pop.close()
+    # while a page is still loading the panel redraws itself every second: clicks must survive the redraws
+    slow = ctx.new_page()
+    slow.goto(U("site.test", "/loading"), wait_until="domcontentloaded")
+    slow.wait_for_timeout(1200)
+    reports = read_reports(control)
+    loading = [tid for tid, r in reports.items() if isinstance(r, dict) and r.get("loading")]
+    if not loading:
+        errors.append("no loading page to test the redraws")
+    else:
+        pop = ctx.new_page()
+        pop.goto(f"chrome-extension://{sw.url.split('/')[2]}/popup.html?tabId={loading[0]}&url=" + U("site.test", "/loading"))
+        pop.wait_for_timeout(600)
+        if any(state()):
+            pop.click("#toggle-all")
+        pop.query_selector_all("details.sec > summary")[1].click()
+        pop.wait_for_timeout(2500)  # two redraws
+        st = state()
+        if not st[1] or sum(st) != 1 or label() != "Close all":
+            errors.append(f"a click undone by the redraw: {st} {label()}")
+        pop.close()
+    slow.close()
+    print(f"chromium: panel sections ok={not errors}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -536,6 +624,9 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     errors += clean_scenario(ctx, control, browser, screenshot)
     errors += ads_scenario(ctx, control, browser)
     errors += learn_scenario(ctx, control, browser)
+    errors += referrer_scenario(ctx, control, browser)
+    if browser == "chromium":
+        errors += panel_scenario(ctx, control, tab_id)
     if screenshot and browser == "chromium":
         sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
         ext_id = sw.url.split("/")[2]
