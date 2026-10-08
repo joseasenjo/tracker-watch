@@ -1,4 +1,4 @@
-# Store listing — Tracker Watch Lens (draft, 7 October 2026)
+# Store listing — Tracker Watch Lens (draft, 8 October 2026: see and block)
 
 Texts to paste into the Chrome Web Store, Microsoft Edge Add-ons and Firefox Add-ons (AMO) forms.
 Form fields and limits change: check each one against the live form when submitting (step M6).
@@ -12,31 +12,46 @@ Tracker Watch Lens
 - Price: free (see the note in PENDIENTES.md about paid listings)
 
 ## Short description (Chrome: at most 132 characters; AMO summary: at most 250)
-See which tracking services the page you are reading contacts, before and after you answer its cookie banner. Nothing is sent anywhere.
+See which trackers a page contacts and what each one did. Block trackers and ads with one click. Lens itself sends nothing.
+(123 characters; the same text is the extension's own description in the manifest.)
 
 ## Detailed description
-Tracker Watch Lens counts, on the page you are viewing and in your own browser, which third-party tracking
-services the page contacts, explains in plain words what each one did, and compares the result with the weekly
-Tracker Watch measurement of news sites.
+Tracker Watch Lens shows you who tracks you on the page you are reading, and lets you stop it.
 
-What it shows:
+Open the panel on any page and you see, counted in your own browser, which third-party tracking services the page
+contacted, which companies run them and what each one did, in plain words. Two buttons at the top of the panel
+block trackers and ads; the page reloads and the panel shows what was stopped.
+
+See:
 - How many tracking services were contacted before your first click, and which companies run them.
 - What changed after you answered the cookie banner: new services, and the cookies they left (names only).
+  Your own banner test compares "reject" and "accept" on the same site.
+- Services contacted from inside embedded frames (an ad slot, a video), and trackers disguised as part of the
+  site itself (Firefox).
 - What your browser told the site: how it describes itself, its language, the cookies and page address sent
   to third parties, and known tracking parameters (names only, never values).
-- On a search results page: how your click on a result is recorded, and whether it was announced with a ping.
-- How much of the page's third-party traffic our filter lists would stop (a simulation: nothing is blocked).
-- Optional: your own before/after banner tests, and a weekly summary of the companies that reached you.
+- On a search results page: how your click on a result is recorded.
+- How the page compares with the weekly Tracker Watch measurement of news sites.
+
+Stop (optional, off until you press a button):
+- Block trackers: your browser stops the tracking services of our list, and, in the extended level, the domains
+  of EasyPrivacy. A strict "site only" level also stops other sites' scripts, frames and connections, with an
+  "Allow on this site" button for what a page needs.
+- Block ads: your browser stops the ad requests of EasyList and hides the empty space they leave.
+- Remove tracking parameters (gclid, fbclid, utm_...) from the addresses you open.
+- Pause it all on a site with one click, if something breaks.
 
 What it does not do:
-- By default it does not block, change or click anything. An optional clean mode stops the tracking services of
-  our small list; it is not complete protection, and the panel says so.
 - It sends nothing: no analytics, no account, no server. Its lists and weekly figures are bundled with it.
 - It keeps no browsing history: tab reports end with the tab; the optional features keep only counts,
   company and service names, and, for banner tests, the names of the sites you tested.
+- It is not complete protection: a dedicated blocker such as uBlock Origin covers more. Lens's strength is
+  showing you what happens.
 
 Counts, not verdicts: a request to a tracking service shows that it was contacted, not what was sent or what the
 company does with it. The list is limited and some entries are not verified one by one; the panel says which.
+
+Credits: EasyList and EasyPrivacy by The EasyList authors (CC BY-SA 3.0); AdGuard cname-trackers (MIT).
 
 Open source (MIT): https://github.com/joseasenjo/tracker-watch/tree/main/extension
 Privacy policy: [URL of the published PRIVACY page — to fill in at M6]
@@ -45,7 +60,9 @@ Privacy policy: [URL of the published PRIVACY page — to fill in at M6]
 Chrome: Privacy & Security (or "Tools"). AMO: Privacy & Security. Edge: Productivity / Privacy.
 
 ## Single purpose (Chrome form)
-Show the user which tracking services the page they are viewing contacts, and explain what each did, locally.
+Let the user see and control the third-party tracking on the pages they visit: the panel shows which tracking
+services a page contacts and what each did, and its optional blocking (trackers, ads, tracking parameters) stops
+them. Everything happens locally in the browser.
 
 ## Permission justifications (Chrome form; same text for Edge)
 - **Host permissions (`<all_urls>`)**: the extension's only function is to describe the third-party requests of
@@ -58,9 +75,11 @@ Show the user which tracking services the page they are viewing contacts, and ex
   one site's cookies when the user presses "Clear this site's data and reload".
 - **storage**: to keep each tab's report for the session and, if the user enables them, local banner tests and
   a weekly summary.
-- **declarativeNetRequestWithHostAccess**: optional clean mode, off by default: rule sets bundled with the
-  extension stop third-party requests to the tracking services of our list (and, if the user turns them on, to ads of
-  EasyList and to other sites' scripts in the strict mode) and remove tracking parameters from page addresses. Rules are static files in the package; nothing is downloaded.
+- **declarativeNetRequestWithHostAccess**: the optional "Block trackers" and "Block ads" buttons, off by default:
+  rule sets bundled with the extension stop third-party requests to the tracking services of our list (and, at the
+  levels the user chooses, to the domains of EasyPrivacy, to the ads of EasyList and, in the strict mode, to other
+  sites' scripts), and remove tracking parameters from page addresses. Rules are static files in the package;
+  nothing is downloaded.
 - **scripting**: only for the optional "Block ads" setting, off by default: adds a style sheet that hides empty ad
   slots (EasyList's element hiding rules, bundled), never reads or changes the page's content.
 - **dns (Firefox only)**: to check whether an address that looks like part of the visited site is a tracking

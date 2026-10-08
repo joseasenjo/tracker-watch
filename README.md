@@ -8,6 +8,24 @@ Passive, reproducible measurement of third-party tracking on news websites. Ever
 - **Data** (`data/`): CC BY 4.0 (`DATA_LICENSE.md`). Please credit "Tracker Watch".
 - **Corrections and suggestions:** open an issue.
 
+## Tracker Watch Lens (browser extension)
+
+`extension/` holds **Tracker Watch Lens**, a browser extension for Chrome, Edge and Firefox (MIT) that brings the
+same measurement to the page you are reading, and lets you act on it:
+
+- **See:** which tracking services the page contacted before your first click, which companies run them and what
+  each one did; what changed after you answered the cookie banner (with your own reject / accept test); what your
+  browser told the site; how the page compares with the weekly measurement.
+- **Block (optional, off by default):** two buttons at the top of the panel. *Block trackers* stops the services
+  of our list (and, at higher levels, the domains of EasyPrivacy, or every script, frame and connection of other
+  sites, with an "Allow on this site" button). *Block ads* stops the ads of EasyList and hides the empty slots.
+  Blocking can be paused on any site.
+- **Local:** Lens sends nothing anywhere; its lists and weekly figures are bundled with it.
+
+It is not complete protection: a dedicated blocker such as uBlock Origin covers more. Build and test:
+`python extension/tools/build.py`, `cd extension && npm test`, `python extension/tests/e2e/run.py`. Details:
+`extension/PRIVACY.md`, `extension/GUIDE.md`, `extension/THIRD_PARTY.md`.
+
 ## Install and run
 
 ```bash

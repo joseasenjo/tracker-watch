@@ -46,10 +46,10 @@ Our files `trackerwatch-verified.txt` and `trackerwatch-full.txt` list the track
 sites. They only do something when a blocker that accepts added lists reads them (for example uBlock Origin).
 Our list is small: use it on top of the blocker's own lists, not instead of them.
 
-Lens also has an optional **clean mode** (Settings and your data > Clean mode) that stops the services of our
-list without another extension. Its **extended** option adds the domain rules of EasyPrivacy (by The EasyList
-authors) and, in Firefox, trackers disguised as the site itself. A dedicated blocker still covers more (it also
-uses path rules and hides empty ad slots).
+Lens can also **block**, with the buttons at the top of its panel or in Settings and your data > Blocking: it
+stops the services of our list without another extension. Its **extended** option adds the domain rules of
+EasyPrivacy (by The EasyList authors) and, in Firefox, trackers disguised as the site itself. A dedicated blocker
+still covers more (it also uses all the path rules of its lists and scripts that neutralise trackers and ads).
 
 The strictest option, **site only**, also stops every script, frame and connection from other sites on the page
 you visit (their images, styles and fonts still load). It catches trackers that no list knows yet, but it breaks
@@ -57,11 +57,11 @@ parts of many sites: comments, maps, chats, videos from players other than YouTu
 page. Cookie banners, subscription walls, sign-in with Google or Apple, Stripe and PayPal payments, captchas
 and YouTube or Vimeo videos are allowed from the start. When something is missing, open Lens's panel on that
 site: it lists the other sites that were stopped, each with an "Allow on this site" button (the tracker lists
-still apply to what you allow), or pause clean mode there.
+still apply to what you allow), or pause blocking there.
 
 Separately, **Block ads** (off by default) uses EasyList (by The EasyList authors) to stop ad requests and hide the
 empty space ads leave. It works with or without the options above. Some sites ask you to turn off ad blocking;
-pausing clean mode on a site from the panel also pauses this there.
+pausing blocking on a site from the panel also pauses this there.
 
 ## 4. Answer cookie banners with "reject"
 
