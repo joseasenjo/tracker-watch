@@ -5,7 +5,7 @@
 
 import { buildSuffixTrie, registrableDomain } from './core/psl.js';
 import { createTrackerList, isTracking, lookup } from './core/classify.js';
-import { blockedDomains, markInteraction, noteBanner, noteBehaviour, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
+import { blockedDomains, markInteraction, noteAutoReject, noteBanner, noteBehaviour, notePing, noteSerp, onCompleted, onError, onRequest, onSent, redirectPage,
   startPage } from './core/page.js';
 import { commonOperators, compareWithBaseline, findSite, journeyEntry, summarizePage } from './core/report.js';
 import { cookiesByService } from './core/activity.js';
@@ -584,6 +584,8 @@ const PAUSE_BASE = 1000;
 const ALLOW_BASE = 100000;
 const LEARN_RULE_ID = 900; // step 4: below the pause ids
 const LAST_LEVEL_KEY = 'clean:lastLevel'; // a preference only: which list "Block trackers" turns on
+const AUTOREJECT_KEY = 'autoreject:on'; // "Reject banners", off by default
+const OUTCOMES = new Set(['rejected', 'payOrAccept', 'noReject']);
 const P_ALLOW = 2;
 const P_LIST = 3;
 const P_PAUSE = 10;
@@ -608,6 +610,7 @@ async function cleanState() {
     blocking: cleanBlocking,
     params: enabled.includes('params'),
     ads: adsOn,
+    autoReject: Boolean((await api.storage.local.get(AUTOREJECT_KEY))[AUTOREJECT_KEY]),
     learnOn: learnStore.enabled,
     paused: pausedSites = dynamic.filter(isPause).map((r) => r.condition.requestDomains[0]).sort(),
     allowed: siteAllowed,
@@ -815,7 +818,7 @@ async function report(tabId, url) {
   return {
     page: summary, told: page.told, baseline, index, categories: glossary.categories, loading,
     consent: { banners: page.consent.banners, click: page.consent.click, previous: page.consent.previous ?? null,
-      payOrAccept: Boolean(page.consent.payOrAccept),
+      payOrAccept: Boolean(page.consent.payOrAccept), auto: page.consent.auto ?? null,
       toolsContacted: consentTools },
     search, arrival: page.arrival ? { ...page.arrival, engineName: name(page.arrival.engine) } : referrerArrival(page),
     journey: journeyView(page, summary),
@@ -869,6 +872,35 @@ api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       touch(sender.tab.id);
     });
     return false;
+  }
+  // "Reject banners": may this frame answer the banner (setting on, blocking not paused on the tab's site)?
+  if (msg && msg.type === 'autoreject:check' && fromPage) {
+    whenReady(async () => {
+      const on = Boolean((await api.storage.local.get(AUTOREJECT_KEY))[AUTOREJECT_KEY]);
+      const page = own(String(sender.tab.id));
+      const site = page ? page.site : registrableDomain(ctx.trie, hostOf(sender.url || '') || '');
+      sendResponse(on && !pausedSites.includes(site));
+    });
+    return true;
+  }
+  if (msg && msg.type === 'autoreject:result' && fromPage) {
+    whenReady(() => {
+      if (!OUTCOMES.has(msg.outcome)) return;
+      const tool = consentNames.has(msg.tool) ? msg.tool : null;
+      const page = own(String(sender.tab.id));
+      if (page) { noteAutoReject(page, { tool, outcome: msg.outcome }); touch(sender.tab.id); }
+      // the notice is drawn by the page's top frame, also when the banner was in a frame
+      api.tabs.sendMessage(sender.tab.id, { type: 'lens:notice', tool, outcome: msg.outcome }, { frameId: 0 }).catch(() => {});
+    });
+    return false;
+  }
+  if (msg && msg.type === 'autoreject:set' && !fromPage && typeof msg.enabled === 'boolean') {
+    api.storage.local.set({ [AUTOREJECT_KEY]: msg.enabled }).then(() => sendResponse(true));
+    return true;
+  }
+  if (TEST_HOOKS && msg && msg.type === 'test:autoreject') {
+    api.storage.local.set({ [AUTOREJECT_KEY]: msg.enabled === true }).then(() => sendResponse(true));
+    return true;
   }
   if (msg && msg.type === 'banner' && fromPage) {
     whenReady(() => {

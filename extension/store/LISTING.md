@@ -40,6 +40,8 @@ Stop (optional, off until you press a button):
 - Block ads: your browser stops the ad requests of EasyList and hides the empty space they leave.
 - Learn trackers that are on no list from what they do (an identifier cookie or a canvas read on three different
   sites) and block them too; off by default, and no site names are kept.
+- Reject cookie banners for you: Lens presses the reject button of known banners and tells you so in a small
+  notice; it never accepts and never chooses a paid option.
 - Remove tracking parameters (gclid, fbclid, utm_...) from the addresses you open.
 - Pause it all on a site with one click, if something breaks.
 

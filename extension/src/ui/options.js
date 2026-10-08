@@ -100,6 +100,8 @@ async function render() {
     }
     app.appendChild(toggle(t('cleanParams'), clean.params, (on) => send({ type: 'clean:set', params: on })));
     app.appendChild(toggle(t('cleanAds'), clean.ads, (on) => send({ type: 'clean:set', ads: on })));
+    app.appendChild(toggle(t('autoRejectToggle'), clean.autoReject, (on) => send({ type: 'autoreject:set', enabled: on })));
+    app.appendChild(el('p', t('autoRejectNote'), 'note'));
     app.appendChild(el('p', t('cleanAdsNote'), 'note'));
     app.appendChild(el('p', t('cleanWarn'), 'warn'));
     if (clean.blocking === 'siteonly') app.appendChild(el('p', t('cleanSiteOnlyWarn'), 'warn'));

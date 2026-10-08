@@ -70,6 +70,10 @@ is learned and blocked with the rest. Lens keeps no site names for this, and you
 
 ## 4. Answer cookie banners with "reject"
 
+Lens can do it for you: turn on **Reject banners** (panel or settings, off by default). It presses the reject
+button of known banners and shows a short notice. Where the only refusal is paying, it does not answer: with Block
+trackers on, accepting then lets far fewer trackers through.
+
 Where a banner offers a free refusal, rejecting usually means fewer services. The difference can be large: in one test
 with Lens in a real browser, on a Spanish news site, accepting took the page from 8 to 68 tracking services. Some sites only
 offer "accept or pay"; there, accepting is what opens the door to most of the tracking. Lens's **Your own banner

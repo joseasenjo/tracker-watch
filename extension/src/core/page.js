@@ -385,6 +385,20 @@ export function noteBehaviour(page, { kind, host }, ctx) {
  * @param {PageState} page
  * @param {string} tool  a name from the consent_tools table (validated by the caller)
  */
+/**
+ * "Reject banners" (opt-in): what Lens did with this page's banner. outcome: 'rejected' (Lens pressed its reject
+ * button), 'payOrAccept' (the only refusal is a subscription: Lens did not answer), 'noReject' (no reject button
+ * found: the visitor answers). The first outcome of a page is kept.
+ * @param {PageState} page
+ * @param {{ tool: string | null, outcome: string }} ev  validated by the caller
+ */
+export function noteAutoReject(page, { tool, outcome }) {
+  if (!page.consent.auto || (page.consent.auto.outcome !== 'rejected' && outcome === 'rejected')) {
+    page.consent.auto = { tool, outcome };
+  }
+  return page;
+}
+
 export function noteBanner(page, tool, payOrAccept = false) {
   if (!page.consent.banners.includes(tool) && page.consent.banners.length < 10) page.consent.banners.push(tool);
   if (payOrAccept === true) page.consent.payOrAccept = true; // the only refusal offered is a subscription

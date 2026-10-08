@@ -1,5 +1,7 @@
-// Runs in every frame, in the extension's isolated world. It never clicks and never changes the page; the only
-// page text it reads is the label of a clicked button when a consent banner is involved. It reports:
+// Runs in every frame, in the extension's isolated world. It never clicks and never changes the page, except with
+// "Reject banners" on (off by default): then it presses the reject button of a cookie banner and shows a small
+// notice of its own. The only page text it reads is the label of buttons when a consent banner is involved.
+// It reports:
 // - the time of the first real interaction (trusted click or key press; scrolling does not count) and, if
 //   the click landed on a known consent banner, which tool and which button (reject / accept / pay / other).
 //   Custom buttons are named by their own text, matched exactly against the engine's phrase lists (only the
@@ -133,11 +135,87 @@
     send({ type: 'serp', links });
   }
 
-  const scan = () => {
+  // "Reject banners" (opt-in). A known tool's documented reject button, or, inside its banner, a button whose
+  // label is exactly a refusal; a banner of an unknown tool only when the button's label is a refusal and the
+  // block around it talks about cookies. Never "accept", never a refusal that is a subscription.
+  let autoOn = null;
+  const answered = new Set();
+  const buttonsIn = (root) => root.querySelectorAll('button, a, [role="button"], input[type="button"], input[type="submit"]');
+  const labelOf = (b) => norm(b.innerText || b.value || b.getAttribute('aria-label'));
+  const isRefusal = (b) => { const t = labelOf(b); return Boolean(t) && t.length <= 80 && rejectTexts.has(t) && !paidRe.test(t); };
+  const press = (button, tool) => {
+    answered.add(tool || '?');
+    button.click();
+    send({ type: 'autoreject:result', tool, outcome: 'rejected' });
+  };
+  function autoReject(last) {
+    for (const tool of data.consent) {
+      if (answered.has(tool.name)) continue;
+      let documented = null;
+      let banner = null;
+      try { documented = [...document.querySelectorAll(tool.reject)].find(visible) || null; } catch { documented = null; }
+      try { banner = document.querySelector(tool.banner); } catch { banner = null; }
+      if (banner && !visible(banner)) banner = null;
+      if (documented && !paidRe.test(labelOf(documented))) { press(documented, tool.name); continue; }
+      if (!banner) continue;
+      const custom = [...buttonsIn(banner)].find((b) => visible(b) && isRefusal(b));
+      if (custom) { press(custom, tool.name); continue; }
+      if (payOrAccept(banner)) { answered.add(tool.name); send({ type: 'autoreject:result', tool: tool.name, outcome: 'payOrAccept' }); continue; }
+      if (last) { answered.add(tool.name); send({ type: 'autoreject:result', tool: tool.name, outcome: 'noReject' }); }
+    }
+    if (answered.size) return;
+    // a banner of an unknown tool
+    for (const b of buttonsIn(document)) {
+      if (visible(b) && isRefusal(b) && aroundTalksAboutConsent(b)) { press(b, null); return; }
+    }
+  }
+
+  // The notice Lens shows in the page (top frame only): its own small card, in a closed shadow root so the page
+  // cannot style or read it. Texts come from the extension's own messages.
+  const NOTICE = { rejected: 'noticeRejected', payOrAccept: 'noticePayOrAccept', noReject: 'noticeNoReject' };
+  function showNotice(tool, outcome) {
+    if (window !== window.top || !NOTICE[outcome] || document.getElementById('trackerwatch-lens-notice')) return;
+    const host = document.createElement('div');
+    host.id = 'trackerwatch-lens-notice';
+    const root = host.attachShadow({ mode: 'closed' });
+    const style = document.createElement('style');
+    style.textContent = `.card{position:fixed;right:16px;bottom:16px;z-index:2147483647;max-width:340px;font:14px/1.4 system-ui,sans-serif;
+      background:#1d2129;color:#fff;border-radius:10px;padding:12px 36px 12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+      b{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.02em;color:#8fb8e6}
+      button{position:absolute;top:6px;right:8px;background:none;border:0;color:#fff;font-size:18px;cursor:pointer}`;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('role', 'status');
+    const title = document.createElement('b');
+    title.textContent = api.i18n.getMessage('extName');
+    const text = document.createElement('div');
+    text.textContent = api.i18n.getMessage(NOTICE[outcome], [tool || api.i18n.getMessage('noticeUnknownTool')]);
+    const close = document.createElement('button');
+    close.textContent = '\u00d7';
+    close.setAttribute('aria-label', api.i18n.getMessage('noticeClose'));
+    close.addEventListener('click', () => host.remove());
+    card.append(title, text, close);
+    root.append(style, card);
+    (document.body || document.documentElement).appendChild(host);
+    if (outcome === 'rejected') setTimeout(() => host.remove(), 8000);
+  }
+  try {
+    api.runtime.onMessage.addListener((msg) => {
+      if (msg && msg.type === 'lens:notice') showNotice(typeof msg.tool === 'string' ? msg.tool : null, msg.outcome);
+    });
+  } catch { /* no runtime */ }
+
+  let scans = 0;
+  const scan = async () => {
+    scans += 1;
     scanBanners();
+    if (autoOn === null && !document.prerendering) { // a page loaded in the background is answered when shown
+      try { autoOn = Boolean(await api.runtime.sendMessage({ type: 'autoreject:check' })); } catch { autoOn = false; }
+    }
+    if (autoOn && !document.prerendering) autoReject(scans >= 4);
     if (engine) scanResults();
   };
-  const schedule = () => { for (const ms of [300, 1500, 4000]) setTimeout(scan, ms); };
+  const schedule = () => { for (const ms of [300, 1500, 4000, 7000]) setTimeout(scan, ms); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule, { once: true });
   else schedule();
   // Chromium may load a page in the background (prerendering) and show it later: look again when it is shown

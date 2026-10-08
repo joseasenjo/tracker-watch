@@ -173,6 +173,7 @@ def start_server(tmp: Path):
     (tmp / "cert.pem").write_bytes(cert.public_bytes(serialization.Encoding.PEM))
     http.server.ThreadingHTTPServer.request_queue_size = 256
     srv = http.server.ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    srv.handle_error = lambda *a: None  # a tab closed mid-request: not a test failure
     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ctx.load_cert_chain(tmp / "cert.pem", tmp / "key.pem")
     srv.socket = ctx.wrap_socket(srv.socket, server_side=True)
@@ -533,6 +534,37 @@ def panel_scenario(ctx, control, tab_id: str) -> list[str]:
     return errors
 
 
+def autoreject_scenario(ctx, control, browser: str, screenshot: str | None = None) -> list[str]:
+    """"Reject banners" on: the OneTrust banner is rejected for the visitor (its reject handler runs), Lens shows its
+    notice and the click is not counted as the visitor's; an "accept or pay" banner is left unanswered."""
+    errors = []
+    control.goto(U("control.test", "/?autoreject=on"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab = ctx.new_page()
+    tab.goto(U("site.test", "/?auto=1"), wait_until="load")
+    tab.wait_for_timeout(2500)
+    notice = tab.evaluate("Boolean(document.getElementById('trackerwatch-lens-notice'))")
+    if screenshot and browser == "chromium":
+        tab.screenshot(path=screenshot.replace(".png", "-notice.png"))
+    reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
+            and r["page"]["host"] == "site.test" and (r.get("consent") or {}).get("auto")]
+    auto = reps[-1]["consent"]["auto"] if reps else None
+    if auto != {"tool": "OneTrust", "outcome": "rejected"} or not notice or reps[-1]["page"]["interaction"] is not None             or "facebook.net" not in reps[-1]["page"]["trackingNewAfter"] + [x["service"] for o in reps[-1]["page"]["operators"] for x in o["services"]]:
+        errors.append(f"auto reject: auto={auto} notice={notice} interaction={reps and reps[-1]['page']['interaction']}")
+    tab.goto(U("site.test", "/es"), wait_until="load")
+    tab.wait_for_timeout(8000)  # the last look is at 7 s
+    reps = [r for r in read_reports(control).values() if isinstance(r, dict) and r.get("page")
+            and r["page"]["host"] == "site.test" and (r.get("consent") or {}).get("banners") == ["Didomi"]]
+    auto = reps[-1]["consent"].get("auto") if reps else None
+    if auto != {"tool": "Didomi", "outcome": "payOrAccept"}:
+        errors.append(f"accept or pay must stay unanswered: {auto}")
+    control.goto(U("control.test", "/?autoreject=off"), wait_until="load")
+    control.wait_for_selector("#lens-reports", state="attached", timeout=10000)
+    tab.close()
+    print(f"{browser}: reject banners ok={not errors}")
+    return errors
+
+
 def launch(p, browser: str, udd: Path):
     if browser == "chromium":
         ext = EXT / "dist" / "chrome-test"
@@ -625,6 +657,7 @@ def run(p, browser: str, screenshot: str | None) -> list[str]:
     errors += ads_scenario(ctx, control, browser)
     errors += learn_scenario(ctx, control, browser)
     errors += referrer_scenario(ctx, control, browser)
+    errors += autoreject_scenario(ctx, control, browser, screenshot)
     if browser == "chromium":
         errors += panel_scenario(ctx, control, tab_id)
     if screenshot and browser == "chromium":

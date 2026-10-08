@@ -25,7 +25,10 @@ no analytics, no accounts, no servers of ours, no third parties.
   - on a search results page, how result links record a click (counted, never the links themselves);
   - whether a script reads a canvas, asks for your location or opens a WebRTC connection, with the host name
     of that script (these calls are not changed or blocked).
-  The extension never clicks, types, changes or removes anything on a page.
+  The extension never clicks, types, changes or removes anything on a page, with one exception you turn on
+  yourself: **Reject cookie banners** (off by default) presses a banner's reject button for you and shows a small
+  notice of its own in the page. It never accepts and never chooses a paid option. What it did is kept only in that
+  tab's report.
 
 ## What is kept, where, and for how long
 

@@ -87,7 +87,9 @@ const cleaning = clean ? api.runtime.sendMessage({ type: 'test:clean', blocking:
 const allow = new URLSearchParams(location.search).get('allow'); // site:domain, for "site only" mode
 const allowing = allow ? api.runtime.sendMessage({ type: 'test:allow', site: allow.split(':')[0], domain: allow.split(':')[1] }) : null;
 const learning = location.search.includes('learn=on') ? api.runtime.sendMessage({ type: 'test:learn-on' }) : null;
-Promise.all([first, cleaning, allowing, learning]).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
+const autoParam = new URLSearchParams(location.search).get('autoreject');
+const autoSet = autoParam ? api.runtime.sendMessage({ type: 'test:autoreject', enabled: autoParam === 'on' }) : null;
+Promise.all([first, cleaning, allowing, learning, autoSet]).then(() => api.runtime.sendMessage({ type: 'test:reports' })).then((all) => {
   const pre = document.createElement('pre');
   pre.id = 'lens-reports';
   pre.textContent = JSON.stringify(all);

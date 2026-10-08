@@ -70,6 +70,8 @@ function renderGlance(s, data) {
   const line = (text, cls) => ul.appendChild(el('li', text, cls));
   const c = data.consent || {};
   if (c.payOrAccept) line(t('payOrAccept'), 'warn');
+  if (c.auto && c.auto.outcome === 'rejected') line(t('glanceAutoRejected', c.auto.tool || t('noticeUnknownTool')));
+  if (c.auto && c.auto.outcome === 'noReject') line(t('glanceAutoNoReject', c.auto.tool || t('noticeUnknownTool')), 'warn');
   if (!s.interaction) {
     line(c.banners && c.banners.length ? t('glanceBannerWaiting', c.banners.join(', ')) : t('glanceNoClick'));
   } else {
@@ -383,6 +385,8 @@ function renderQuick(tab, clean, page) {
   bar.appendChild(sw(Boolean(clean.blocking), t('quickTrackersOn', t('quickLevel_' + clean.blocking)), t('quickTrackersOff'),
     (on) => ({ type: 'clean:set', blocking: on ? 'last' : null })));
   bar.appendChild(sw(Boolean(clean.ads), t('quickAdsOn'), t('quickAdsOff'), (on) => ({ type: 'clean:set', ads: on })));
+  bar.appendChild(sw(Boolean(clean.autoReject), t('quickRejectOn'), t('quickRejectOff'),
+    (on) => ({ type: 'autoreject:set', enabled: on })));
   bar.appendChild(sw(Boolean(clean.learnOn), t('quickLearnOn'), t('quickLearnOff'), (on) => ({ type: 'learn:settings', enabled: on }), false));
   root.appendChild(bar);
 }
