@@ -1,0 +1,3489 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-08T17:53:30+00:00",
+  "site": {
+    "name": "20minutos",
+    "url": "https://www.20minutos.es",
+    "first_party_domains": [
+      "20m.es",
+      "20minutos.es"
+    ]
+  },
+  "measurement": {
+    "vantage": "local-windows-spain",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 3,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.20minutos.es/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": false,
+      "content_security_policy": "absent"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 53,
+      "third_party_domains": 10,
+      "tracking_requests": 27,
+      "total_bytes": 3006805,
+      "third_party_bytes": 1341678,
+      "tracking_bytes": 886444,
+      "tracking_services": 6,
+      "third_party_cookies": 0,
+      "cookies_total": 1,
+      "storage_items": 6
+    },
+    "third_party_domains": [
+      {
+        "domain": "amazon-adsystem.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "cloudfront.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "doubleclick.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "mrf.io",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "newsroom.bi",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "permutive.app",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "privacy-center.org",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "run.app",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "scorecardresearch.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "sensic.net",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "amazon-adsystem.com",
+        "entity": "Amazon",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "doubleclick.net",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "mrf.io",
+        "entity": "Marfeel",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "newsroom.bi",
+        "entity": "Marfeel",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "permutive.app",
+        "entity": "Permutive",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "scorecardresearch.com",
+        "entity": "Comscore",
+        "category": "audience_measurement",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "20minutos.es",
+        "party": "first",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "mrf.io",
+        "party": "third",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 3
+  },
+  "findings": [
+    {
+      "code": "INTERNAL_REQUESTS_BLOCKED",
+      "severity": "notable",
+      "text": "The page attempted 3 request(s) to private or loopback addresses. TraceGuard blocked them.",
+      "evidence": {
+        "count": 3
+      }
+    },
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 53 requests to 10 third-party domains (median of 3 passes).",
+      "evidence": {
+        "requests": 53,
+        "domains": 10
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 3.0 MB transferred in that window (compressed responses that finished loading), 1.3 MB (45%) came from third-party domains, 886 kB of it from services classified as tracking (27 requests).",
+      "evidence": {
+        "total_bytes": 3006805,
+        "third_party_bytes": 1341678,
+        "tracking_bytes": 886444,
+        "tracking_requests": 27
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "6 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: amazon-adsystem.com (Amazon, advertising), doubleclick.net (Google, advertising), mrf.io (Marfeel, analytics), newsroom.bi (Marfeel, analytics), permutive.app (Permutive, advertising), scorecardresearch.com (Comscore, audience measurement).",
+      "evidence": {
+        "services": [
+          {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "permutive.app",
+            "entity": "Permutive",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
+      }
+    },
+    {
+      "code": "NO_HSTS",
+      "severity": "info",
+      "text": "The main document response did not include a Strict-Transport-Security header.",
+      "evidence": {}
+    },
+    {
+      "code": "NO_CSP",
+      "severity": "info",
+      "text": "The main document response did not include a Content-Security-Policy header or meta tag.",
+      "evidence": {}
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.20minutos.es/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 231,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.20minutos.es/",
+          "host": "www.20minutos.es",
+          "bytes": 94261,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 379,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://es-config.sensic.net/s2s-web.js",
+          "host": "es-config.sensic.net",
+          "bytes": 32575,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 393,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.20minutos.es/assets/Source-Serif-VF.woff2",
+          "host": "www.20minutos.es",
+          "bytes": 48520,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 398,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.20minutos.es/assets/Roboto-VF.woff2",
+          "host": "www.20minutos.es",
+          "bytes": 38874,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 404,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.20minutos.es/assets/20minutos/home-css.9cb2e30480a9eeaa3988.css",
+          "host": "www.20minutos.es",
+          "bytes": 17505,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 441,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/palabraoculta.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3569,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 464,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/crucigrama.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2280,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 510,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/ochodiferencias.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 4794,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 515,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sopadeletras.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3159,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 529,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/memory.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5805,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 535,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.20minutos.es/assets/global.bundle.js",
+          "host": "www.20minutos.es",
+          "bytes": 18537,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 551,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.20minutos.es/assets/home.bundle.js",
+          "host": "www.20minutos.es",
+          "bytes": 602,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 564,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/puzle.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 4767,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 588,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/minicrucigrama.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2165,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 596,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/parejas.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5575,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 875,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokufacil.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3426,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 881,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudoku.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2626,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 884,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokumedio.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2917,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 894,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokudesafio.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2814,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 949,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/uploads/imagenes/2025/09/09/68bfdbbb0233d.svg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 1253,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 962,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/6e7011c3-735d-4a5c-b4d8-c8b97a71fd01/loader.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 47406,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 989,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://hb.20m.es/stable/config/xk.20minutos.es/desktop-mobile.min.js",
+          "host": "hb.20m.es",
+          "bytes": 30323,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 993,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/prometeov2.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 81136,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1027,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.mrf.io/statics/marfeel-sdk.js",
+          "host": "sdk.mrf.io",
+          "bytes": 75585,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1034,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.20minutos.es/images/henneo-icons.svg",
+          "host": "www.20minutos.es",
+          "bytes": 15866,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1051,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.20minutos.es/images/horoscope/horoscope-icons.svg",
+          "host": "www.20minutos.es",
+          "bytes": 2993,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1081,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/20437307f8e1783ec0b2.svg",
+          "host": "www.20minutos.es",
+          "bytes": 556,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1105,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/0bb0a40525fdaf341198.svg",
+          "host": "www.20minutos.es",
+          "bytes": 5666,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1112,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/9b49d24f10d26740a77c.svg",
+          "host": "www.20minutos.es",
+          "bytes": 29286,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1126,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/85f815d196ed54595a0a.svg",
+          "host": "www.20minutos.es",
+          "bytes": 692,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1148,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/afbe9076b1810aff9cd4.svg",
+          "host": "www.20minutos.es",
+          "bytes": 1535,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1183,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2026/10/08/6ac77a0d943ec8-08117747.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 43914,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1189,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7cad7458091-57620308.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 4959,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1201,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac77e134dd0f9-83579686.png",
+          "host": "imagenes.20minutos.es",
+          "bytes": 21933,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1221,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2025/06/18/exalcaldesa-ada-colau.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 15649,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1227,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/uploads/imagenes/2026/10/08/6ac77d6f5c24c3-28497707.gif",
+          "host": "imagenes.20minutos.es",
+          "bytes": 838952,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1258,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7c82ddb96f2-39832355.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 22225,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1271,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/01/06/695d6eff053c82-09513700.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 33854,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1299,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/09/19/6aae41300da096-29992355.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 25786,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1317,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2024/04/26/ospina2.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 15425,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1326,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7a0cf880180-42724838.png",
+          "host": "imagenes.20minutos.es",
+          "bytes": 21943,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1343,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2026/10/01/6abe0237115833-35466180.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 42605,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1360,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7a92728c5e3-98065164.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 17868,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1363,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7ba1ec1ec60-91671392.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 44487,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1382,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2020/10/16/anne-carson-galardonada-con-el-premio-princesa-de-asturias-de-las-letras.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 9327,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1489,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://1791481964644250c71b2df7d1ae72060e3b8c974f0b268a18814263.trk.sensic.net/tp.gif",
+          "host": "1791481964644250c71b2df7d1ae72060e3b8c974f0b268a18814263.trk.sensic.net",
+          "bytes": 431,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1494,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://es-config.sensic.net/3pc.html",
+          "host": "es-config.sensic.net",
+          "bytes": 31540,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1516,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://es1-s2s.sensic.net/",
+          "host": "es1-s2s.sensic.net",
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1561,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/sdk/adc1dc47e998a3687e87da3b1295672301e0faf9/modern/sdk.adc1dc47e998a3687e87da3b1295672301e0faf9.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 137537,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1606,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 39696,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1644,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://c.amazon-adsystem.com/aax2/apstag.js",
+          "host": "c.amazon-adsystem.com",
+          "bytes": 95485,
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1659,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://hb.20m.es/prebid/11.12.0-20m-v2.js",
+          "host": "hb.20m.es",
+          "bytes": 136700,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1707,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://hipatia-services-api-pro-esvehatdmq-ew.a.run.app/api/features/002",
+          "host": "hipatia-services-api-pro-esvehatdmq-ew.a.run.app",
+          "bytes": 575,
+          "domain": "run.app",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1932,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/sdk/adc1dc47e998a3687e87da3b1295672301e0faf9/modern/ui-web-es-web.adc1dc47e998a3687e87da3b1295672301e0faf9.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 55580,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1991,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202610050101/pubads_impl.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 218929,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2020,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://c.amazon-adsystem.com/bao-csm/aps-comm/aps_csm.js",
+          "host": "c.amazon-adsystem.com",
+          "bytes": 3153,
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2058,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://trigger-version-wibdbssi3q-ew.a.run.app/version/002",
+          "host": "trigger-version-wibdbssi3q-ew.a.run.app",
+          "bytes": 389,
+          "domain": "run.app",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2077,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sb.scorecardresearch.com/cs/8189131/beacon.js",
+          "host": "sb.scorecardresearch.com",
+          "bytes": 0,
+          "domain": "scorecardresearch.com",
+          "party": "third",
+          "tracker": {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 2082,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610060101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 23227,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2343,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://experiences.mrf.io/statics/inline-experiences/esnext/standalone.js",
+          "host": "experiences.mrf.io",
+          "bytes": 26950,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2371,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bd0d60c1-6781-4938-a4fb-cfcf9f6d255d.edge.permutive.app/327b424d-bd9f-4f77-ba6a-d0996e8679a9-web.js",
+          "host": "bd0d60c1-6781-4938-a4fb-cfcf9f6d255d.edge.permutive.app",
+          "bytes": 125588,
+          "domain": "permutive.app",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.app",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2374,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/identification.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5977,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2378,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/trigger.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 8643,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2382,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/push.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 9252,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2457,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://flowcards.mrf.io/transformer/marfeelpassexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 14672,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2497,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://marfeelexperimentsexperienceengine.mrf.io/experimentsexperience/render",
+          "host": "marfeelexperimentsexperienceengine.mrf.io",
+          "bytes": 2552,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2707,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://experiences.mrf.io/statics/assets/2278/layout/658e6a115bc21b544d73725d.png",
+          "host": "experiences.mrf.io",
+          "bytes": 4395,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 7351,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/ingest.php",
+          "host": "events.newsroom.bi",
+          "bytes": 585,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 7728,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/ingest.php",
+          "host": "events.newsroom.bi",
+          "bytes": 472,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12529,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://experiences.newsroom.bi/json/experiences",
+          "host": "experiences.newsroom.bi",
+          "bytes": 2564,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12534,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12544,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12577,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://es1-s2s.sensic.net/id",
+          "host": "es1-s2s.sensic.net",
+          "bytes": 294,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 12730,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://flowcards.mrf.io/transformer/marfeelwidgetexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 2909,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12734,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://flowcards.mrf.io/transformer/marfeelrecommenderexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 4271,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12891,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://experiences.mrf.io/statics/assets/2278/layout/691de73b2fedcb26d1c3007e.png",
+          "host": "experiences.mrf.io",
+          "bytes": 175928,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12918,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.20m.es/edicionimpresa/madrid/26/10/PORTADA_MADR_08_10_26.jpg",
+          "host": "cdn.20m.es",
+          "bytes": 61964,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12985,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/01/6abe183654c352-33491698.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15442,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12990,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/06/6ac4b29fc61548-08660209.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 12994,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12997,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2024/08/08/virus-del-mpox-antigua-viruela-del-mono.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15340,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 13003,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/07/6ac61f362ac820-83830903.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15069,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 13009,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2025/10/28/6900c92201bc8.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 8744,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        }
+      ],
+      "internal_requests_blocked": [
+        {
+          "host": "localhost.sensic.net",
+          "port": 54325,
+          "t_ms": 1948
+        }
+      ],
+      "cookies": [
+        {
+          "name": "didomi_token",
+          "domain": "20minutos.es",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 366
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 3
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "20minutos.es",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "mrf.io",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.20minutos.es/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 122,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.20minutos.es/",
+          "host": "www.20minutos.es",
+          "bytes": 94262,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 225,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://es-config.sensic.net/s2s-web.js",
+          "host": "es-config.sensic.net",
+          "bytes": 32573,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 230,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.20minutos.es/assets/Source-Serif-VF.woff2",
+          "host": "www.20minutos.es",
+          "bytes": 48521,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 235,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.20minutos.es/assets/Roboto-VF.woff2",
+          "host": "www.20minutos.es",
+          "bytes": 38874,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 239,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.20minutos.es/assets/20minutos/home-css.9cb2e30480a9eeaa3988.css",
+          "host": "www.20minutos.es",
+          "bytes": 17506,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 243,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/palabraoculta.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3569,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 247,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/crucigrama.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2280,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 312,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.mrf.io/statics/marfeel-sdk.js",
+          "host": "sdk.mrf.io",
+          "bytes": 75586,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 319,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/ochodiferencias.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 4795,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 323,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sopadeletras.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3160,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 329,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/memory.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5806,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 333,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.20minutos.es/assets/global.bundle.js",
+          "host": "www.20minutos.es",
+          "bytes": 18532,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 338,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.20minutos.es/assets/home.bundle.js",
+          "host": "www.20minutos.es",
+          "bytes": 603,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 341,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/puzle.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 4769,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 346,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/minicrucigrama.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2165,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 351,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/parejas.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5575,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 358,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokufacil.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3427,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 367,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudoku.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2624,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 370,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokumedio.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2916,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 375,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokudesafio.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2812,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 381,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/uploads/imagenes/2025/09/09/68bfdbbb0233d.svg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 1252,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 393,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/6e7011c3-735d-4a5c-b4d8-c8b97a71fd01/loader.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 47414,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 410,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://hb.20m.es/stable/config/xk.20minutos.es/desktop-mobile.min.js",
+          "host": "hb.20m.es",
+          "bytes": 30324,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 426,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/prometeov2.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 81136,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 454,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.20minutos.es/images/henneo-icons.svg",
+          "host": "www.20minutos.es",
+          "bytes": 15867,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 474,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.20minutos.es/images/horoscope/horoscope-icons.svg",
+          "host": "www.20minutos.es",
+          "bytes": 2995,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 609,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/20437307f8e1783ec0b2.svg",
+          "host": "www.20minutos.es",
+          "bytes": 557,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 614,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/0bb0a40525fdaf341198.svg",
+          "host": "www.20minutos.es",
+          "bytes": 5666,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 618,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/9b49d24f10d26740a77c.svg",
+          "host": "www.20minutos.es",
+          "bytes": 29286,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 622,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/85f815d196ed54595a0a.svg",
+          "host": "www.20minutos.es",
+          "bytes": 691,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 625,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/afbe9076b1810aff9cd4.svg",
+          "host": "www.20minutos.es",
+          "bytes": 1536,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 765,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2026/10/08/6ac77a0d943ec8-08117747.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 43912,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 770,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7cad7458091-57620308.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 4960,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 775,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac77e134dd0f9-83579686.png",
+          "host": "imagenes.20minutos.es",
+          "bytes": 21933,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 779,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2025/06/18/exalcaldesa-ada-colau.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 15705,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 784,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/uploads/imagenes/2026/10/08/6ac77d6f5c24c3-28497707.gif",
+          "host": "imagenes.20minutos.es",
+          "bytes": 838953,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 788,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7c82ddb96f2-39832355.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 22229,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 792,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/01/06/695d6eff053c82-09513700.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 33854,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 796,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/09/19/6aae41300da096-29992355.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 25785,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 799,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2024/04/26/ospina2.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 15425,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 805,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7a0cf880180-42724838.png",
+          "host": "imagenes.20minutos.es",
+          "bytes": 21942,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 810,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2026/10/01/6abe0237115833-35466180.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 42605,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 816,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7a92728c5e3-98065164.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 17868,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 824,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7ba1ec1ec60-91671392.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 44485,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 829,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2020/10/16/anne-carson-galardonada-con-el-premio-princesa-de-asturias-de-las-letras.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 9329,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1041,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://1791481981796a3f3f56d67ba3cbe3028fb5063947ac8266a1a94edd.trk.sensic.net/tp.gif",
+          "host": "1791481981796a3f3f56d67ba3cbe3028fb5063947ac8266a1a94edd.trk.sensic.net",
+          "bytes": 431,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1050,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://es-config.sensic.net/3pc.html",
+          "host": "es-config.sensic.net",
+          "bytes": 31540,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1056,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://es1-s2s.sensic.net/",
+          "host": "es1-s2s.sensic.net",
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1124,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.mrf.io/statics/chunks/2ba8b972f1ba87ebe962.js",
+          "host": "sdk.mrf.io",
+          "bytes": 3925,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1137,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 39696,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1142,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://c.amazon-adsystem.com/aax2/apstag.js",
+          "host": "c.amazon-adsystem.com",
+          "bytes": 95475,
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1152,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://hb.20m.es/prebid/11.12.0-20m-v2.js",
+          "host": "hb.20m.es",
+          "bytes": 136700,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1166,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://hipatia-services-api-pro-esvehatdmq-ew.a.run.app/api/features/002",
+          "host": "hipatia-services-api-pro-esvehatdmq-ew.a.run.app",
+          "bytes": 575,
+          "domain": "run.app",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1184,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/sdk/adc1dc47e998a3687e87da3b1295672301e0faf9/modern/sdk.adc1dc47e998a3687e87da3b1295672301e0faf9.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 137536,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1409,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://c.amazon-adsystem.com/bao-csm/aps-comm/aps_csm.js",
+          "host": "c.amazon-adsystem.com",
+          "bytes": 3153,
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1419,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://trigger-version-wibdbssi3q-ew.a.run.app/version/002",
+          "host": "trigger-version-wibdbssi3q-ew.a.run.app",
+          "bytes": 389,
+          "domain": "run.app",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1549,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/sdk/adc1dc47e998a3687e87da3b1295672301e0faf9/modern/ui-web-es-web.adc1dc47e998a3687e87da3b1295672301e0faf9.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 55578,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1660,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202610060101/pubads_impl.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 218900,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1669,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bd0d60c1-6781-4938-a4fb-cfcf9f6d255d.edge.permutive.app/327b424d-bd9f-4f77-ba6a-d0996e8679a9-web.js",
+          "host": "bd0d60c1-6781-4938-a4fb-cfcf9f6d255d.edge.permutive.app",
+          "bytes": 125588,
+          "domain": "permutive.app",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.app",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1673,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/identification.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5976,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1676,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/trigger.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 8644,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1681,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/push.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 9253,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1689,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sb.scorecardresearch.com/cs/8189131/beacon.js",
+          "host": "sb.scorecardresearch.com",
+          "bytes": 0,
+          "domain": "scorecardresearch.com",
+          "party": "third",
+          "tracker": {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1716,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610060101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 23432,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2051,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://experiences.mrf.io/statics/inline-experiences/esnext/standalone.js",
+          "host": "experiences.mrf.io",
+          "bytes": 26949,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2167,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://flowcards.mrf.io/transformer/marfeelpassexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 14671,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2171,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://marfeelexperimentsexperienceengine.mrf.io/experimentsexperience/render",
+          "host": "marfeelexperimentsexperienceengine.mrf.io",
+          "bytes": 2552,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2378,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://experiences.mrf.io/statics/assets/2278/layout/658e6a115bc21b544d73725d.png",
+          "host": "experiences.mrf.io",
+          "bytes": 4395,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 7053,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/ingest.php",
+          "host": "events.newsroom.bi",
+          "bytes": 585,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 7403,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/ingest.php",
+          "host": "events.newsroom.bi",
+          "bytes": 472,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12161,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://es1-s2s.sensic.net/id",
+          "host": "es1-s2s.sensic.net",
+          "bytes": 295,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 12208,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://experiences.newsroom.bi/json/experiences",
+          "host": "experiences.newsroom.bi",
+          "bytes": 2564,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12222,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12228,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12234,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12395,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://flowcards.mrf.io/transformer/marfeelwidgetexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 2909,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12400,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://flowcards.mrf.io/transformer/marfeelrecommenderexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 4239,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12570,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://experiences.mrf.io/statics/assets/2278/layout/691de73b2fedcb26d1c3007e.png",
+          "host": "experiences.mrf.io",
+          "bytes": 175919,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12586,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.20m.es/edicionimpresa/madrid/26/10/PORTADA_MADR_08_10_26.jpg",
+          "host": "cdn.20m.es",
+          "bytes": 61971,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12634,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/01/6abe183654c352-33491698.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15442,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12637,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/06/6ac4b29fc61548-08660209.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 12877,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12651,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2024/08/08/virus-del-mpox-antigua-viruela-del-mono.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15566,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12658,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/07/6ac61f362ac820-83830903.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15069,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12662,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2025/10/28/6900c92201bc8.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 8589,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        }
+      ],
+      "internal_requests_blocked": [
+        {
+          "host": "localhost.sensic.net",
+          "port": 54325,
+          "t_ms": 1323
+        }
+      ],
+      "cookies": [
+        {
+          "name": "didomi_token",
+          "domain": "20minutos.es",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 366
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 3
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "20minutos.es",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "mrf.io",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 3,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.20minutos.es/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 161,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.20minutos.es/",
+          "host": "www.20minutos.es",
+          "bytes": 94254,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 277,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://es-config.sensic.net/s2s-web.js",
+          "host": "es-config.sensic.net",
+          "bytes": 32572,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 283,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.20minutos.es/assets/Source-Serif-VF.woff2",
+          "host": "www.20minutos.es",
+          "bytes": 48521,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 287,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.20minutos.es/assets/Roboto-VF.woff2",
+          "host": "www.20minutos.es",
+          "bytes": 38876,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 291,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.20minutos.es/assets/20minutos/home-css.9cb2e30480a9eeaa3988.css",
+          "host": "www.20minutos.es",
+          "bytes": 17505,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 295,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/palabraoculta.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3571,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 301,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/crucigrama.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2280,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 377,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/ochodiferencias.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 4795,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 386,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.mrf.io/statics/marfeel-sdk.js",
+          "host": "sdk.mrf.io",
+          "bytes": 75586,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 394,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sopadeletras.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3158,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 401,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/memory.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5805,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 405,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.20minutos.es/assets/global.bundle.js",
+          "host": "www.20minutos.es",
+          "bytes": 18532,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 408,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.20minutos.es/assets/home.bundle.js",
+          "host": "www.20minutos.es",
+          "bytes": 601,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 411,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/puzle.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 4766,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 420,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/minicrucigrama.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2163,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 424,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/parejas.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5574,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 428,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokufacil.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 3425,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 435,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudoku.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2625,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 438,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokumedio.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2918,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 441,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dkumiip2e9ary.cloudfront.net/widgets/hipatia/20minutos/60330/sudokudesafio.png",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 2813,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 448,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/uploads/imagenes/2025/09/09/68bfdbbb0233d.svg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 1252,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 460,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/6e7011c3-735d-4a5c-b4d8-c8b97a71fd01/loader.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 47408,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 475,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://hb.20m.es/stable/config/xk.20minutos.es/desktop-mobile.min.js",
+          "host": "hb.20m.es",
+          "bytes": 30324,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 491,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/prometeov2.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 81136,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 505,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.20minutos.es/images/henneo-icons.svg",
+          "host": "www.20minutos.es",
+          "bytes": 15864,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 693,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/20437307f8e1783ec0b2.svg",
+          "host": "www.20minutos.es",
+          "bytes": 556,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 701,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/0bb0a40525fdaf341198.svg",
+          "host": "www.20minutos.es",
+          "bytes": 5666,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 705,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/9b49d24f10d26740a77c.svg",
+          "host": "www.20minutos.es",
+          "bytes": 29283,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 708,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/85f815d196ed54595a0a.svg",
+          "host": "www.20minutos.es",
+          "bytes": 689,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 712,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.20minutos.es/assets/afbe9076b1810aff9cd4.svg",
+          "host": "www.20minutos.es",
+          "bytes": 1534,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 719,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2026/10/08/6ac77a0d943ec8-08117747.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 43911,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 723,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7cad7458091-57620308.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 4959,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 726,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac77e134dd0f9-83579686.png",
+          "host": "imagenes.20minutos.es",
+          "bytes": 21931,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 729,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2025/06/18/exalcaldesa-ada-colau.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 15705,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 737,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/uploads/imagenes/2026/10/08/6ac77d6f5c24c3-28497707.gif",
+          "host": "imagenes.20minutos.es",
+          "bytes": 839916,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 741,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7c82ddb96f2-39832355.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 22292,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 828,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/01/06/695d6eff053c82-09513700.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 33858,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 839,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/09/19/6aae41300da096-29992355.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 25786,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 844,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2024/04/26/ospina2.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 15426,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 853,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7a0cf880180-42724838.png",
+          "host": "imagenes.20minutos.es",
+          "bytes": 21942,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 859,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2026/10/01/6abe0237115833-35466180.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 42604,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 887,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7a92728c5e3-98065164.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 17868,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 893,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_640_360/uploads/imagenes/2026/10/08/6ac7ba1ec1ec60-91671392.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 44487,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 929,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://imagenes.20minutos.es/files/image_990_556/uploads/imagenes/2020/10/16/anne-carson-galardonada-con-el-premio-princesa-de-asturias-de-las-letras.jpeg",
+          "host": "imagenes.20minutos.es",
+          "bytes": 9329,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 949,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.20minutos.es/images/horoscope/horoscope-icons.svg",
+          "host": "www.20minutos.es",
+          "bytes": 2993,
+          "domain": "20minutos.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1222,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://17914819980793b20f08a7b132cb138d9c1ebacc5a98712ebafbdc6f.trk.sensic.net/tp.gif",
+          "host": "17914819980793b20f08a7b132cb138d9c1ebacc5a98712ebafbdc6f.trk.sensic.net",
+          "bytes": 432,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1225,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://es-config.sensic.net/3pc.html",
+          "host": "es-config.sensic.net",
+          "bytes": 31541,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1229,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://es1-s2s.sensic.net/",
+          "host": "es1-s2s.sensic.net",
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1305,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://hipatia-services-api-pro-esvehatdmq-ew.a.run.app/api/features/002",
+          "host": "hipatia-services-api-pro-esvehatdmq-ew.a.run.app",
+          "bytes": 575,
+          "domain": "run.app",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1308,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 39700,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1315,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://c.amazon-adsystem.com/aax2/apstag.js",
+          "host": "c.amazon-adsystem.com",
+          "bytes": 95476,
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1322,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://hb.20m.es/prebid/11.12.0-20m-v2.js",
+          "host": "hb.20m.es",
+          "bytes": 136701,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1326,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/sdk/adc1dc47e998a3687e87da3b1295672301e0faf9/modern/sdk.adc1dc47e998a3687e87da3b1295672301e0faf9.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 137537,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1641,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sdk.privacy-center.org/sdk/adc1dc47e998a3687e87da3b1295672301e0faf9/modern/ui-web-es-web.adc1dc47e998a3687e87da3b1295672301e0faf9.js",
+          "host": "sdk.privacy-center.org",
+          "bytes": 55580,
+          "domain": "privacy-center.org",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1723,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://trigger-version-wibdbssi3q-ew.a.run.app/version/002",
+          "host": "trigger-version-wibdbssi3q-ew.a.run.app",
+          "bytes": 389,
+          "domain": "run.app",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1806,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://c.amazon-adsystem.com/bao-csm/aps-comm/aps_csm.js",
+          "host": "c.amazon-adsystem.com",
+          "bytes": 3154,
+          "domain": "amazon-adsystem.com",
+          "party": "third",
+          "tracker": {
+            "service": "amazon-adsystem.com",
+            "entity": "Amazon",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1859,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202610050101/pubads_impl.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 218930,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1872,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bd0d60c1-6781-4938-a4fb-cfcf9f6d255d.edge.permutive.app/327b424d-bd9f-4f77-ba6a-d0996e8679a9-web.js",
+          "host": "bd0d60c1-6781-4938-a4fb-cfcf9f6d255d.edge.permutive.app",
+          "bytes": 125588,
+          "domain": "permutive.app",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.app",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1876,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/identification.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 5977,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1882,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/trigger.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 8644,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1887,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dkumiip2e9ary.cloudfront.net/js/prometeo-media/pro/push.js",
+          "host": "dkumiip2e9ary.cloudfront.net",
+          "bytes": 9254,
+          "domain": "cloudfront.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1909,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sb.scorecardresearch.com/cs/8189131/beacon.js",
+          "host": "sb.scorecardresearch.com",
+          "bytes": 0,
+          "domain": "scorecardresearch.com",
+          "party": "third",
+          "tracker": {
+            "service": "scorecardresearch.com",
+            "entity": "Comscore",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 1959,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610060101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 23227,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2240,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://experiences.mrf.io/statics/inline-experiences/esnext/standalone.js",
+          "host": "experiences.mrf.io",
+          "bytes": 26950,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2354,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://flowcards.mrf.io/transformer/marfeelpassexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 14671,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2357,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://marfeelexperimentsexperienceengine.mrf.io/experimentsexperience/render",
+          "host": "marfeelexperimentsexperienceengine.mrf.io",
+          "bytes": 2551,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2611,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://experiences.mrf.io/statics/assets/2278/layout/658e6a115bc21b544d73725d.png",
+          "host": "experiences.mrf.io",
+          "bytes": 4395,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 7249,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/ingest.php",
+          "host": "events.newsroom.bi",
+          "bytes": 585,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 7644,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/ingest.php",
+          "host": "events.newsroom.bi",
+          "bytes": 472,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12309,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://es1-s2s.sensic.net/id",
+          "host": "es1-s2s.sensic.net",
+          "bytes": 296,
+          "domain": "sensic.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 12439,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12443,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://experiences.newsroom.bi/json/experiences",
+          "host": "experiences.newsroom.bi",
+          "bytes": 2562,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12449,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12453,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12457,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://events.newsroom.bi/recirculation/recirculation.php",
+          "host": "events.newsroom.bi",
+          "bytes": 483,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12597,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://flowcards.mrf.io/transformer/marfeelwidgetexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 2908,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12600,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://flowcards.mrf.io/transformer/marfeelrecommenderexperienceengine.mrf.io",
+          "host": "flowcards.mrf.io",
+          "bytes": 4289,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12739,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://experiences.mrf.io/statics/assets/2278/layout/691de73b2fedcb26d1c3007e.png",
+          "host": "experiences.mrf.io",
+          "bytes": 175930,
+          "domain": "mrf.io",
+          "party": "third",
+          "tracker": {
+            "service": "mrf.io",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12743,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.20m.es/edicionimpresa/madrid/26/10/PORTADA_MADR_08_10_26.jpg",
+          "host": "cdn.20m.es",
+          "bytes": 61962,
+          "domain": "20m.es",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 12837,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/01/6abe183654c352-33491698.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15441,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12841,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/06/6ac4b29fc61548-08660209.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 12993,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12847,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2024/08/08/virus-del-mpox-antigua-viruela-del-mono.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15338,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12852,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2026/10/07/6ac61f362ac820-83830903.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 15023,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 12855,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://miopia.newsroom.bi/statics/i/ps/imagenes.20minutos.es/files/image_1920_1080/uploads/imagenes/2025/10/28/6900c92201bc8.jpeg",
+          "host": "miopia.newsroom.bi",
+          "bytes": 8743,
+          "domain": "newsroom.bi",
+          "party": "third",
+          "tracker": {
+            "service": "newsroom.bi",
+            "entity": "Marfeel",
+            "category": "analytics"
+          }
+        }
+      ],
+      "internal_requests_blocked": [
+        {
+          "host": "localhost.sensic.net",
+          "port": 54325,
+          "t_ms": 1541
+        }
+      ],
+      "cookies": [
+        {
+          "name": "didomi_token",
+          "domain": "20minutos.es",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 366
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 3
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "20minutos.es",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "mrf.io",
+          "party": "third"
+        }
+      ]
+    }
+  ]
+}
