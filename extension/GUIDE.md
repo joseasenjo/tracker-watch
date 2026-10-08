@@ -66,7 +66,8 @@ pausing blocking on a site from the panel also pauses this there.
 Lists only know the trackers someone has already found. With **Learn trackers from their behaviour** on (off by
 default), Lens also notes third parties that are on no list but act like trackers: they receive a cookie that
 looks like an identifier, or read a canvas to fingerprint your browser. One seen doing so on three different sites
-is learned and blocked with the rest. Lens keeps no site names for this, and you can forget any of them.
+is learned: with Block trackers on, one that read a canvas is blocked, and one learned from its cookies loses
+its cookies but keeps loading (so a shared login or image server does not break). Lens keeps no site names for this, and you can forget any of them.
 
 ## 4. Answer cookie banners with "reject"
 
