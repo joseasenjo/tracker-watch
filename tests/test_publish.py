@@ -257,7 +257,7 @@ def test_only_label_marks_the_profile_without_a_draft_and_publishes_nothing(caps
     assert main(["--only-label"], env=BSKY_ENV, http=lambda *a, **k: (_ for _ in ()).throw(AssertionError("no network"))) == 0
     assert "DRY RUN" in capsys.readouterr().out
     assert main(["--only-label", "--send"], env=BSKY_ENV, http=server) == 0
-    assert [c[1].rsplit("/", 1)[-1] for c in server.calls] == ["com.atproto.server.createSession", "com.atproto.repo.getRecord",
+    assert [c[1].rsplit("/", 1)[-1].split("?")[0] for c in server.calls] == ["com.atproto.server.createSession", "com.atproto.repo.getRecord",
                                                               "com.atproto.repo.putRecord"]
     assert not any(c[1].endswith("createRecord") for c in server.calls) and server.posted == 0
     assert main(["--only-label", "--send"], env={}, http=server) == 1
