@@ -35,6 +35,7 @@ import run as e2e  # noqa: E402  (local control page and test build)
 SITES = [
     "https://elpais.com/", "https://www.20minutos.es/", "https://www.elmundo.es/", "https://www.marca.com/",
     "https://www.abc.es/", "https://www.lavanguardia.com/", "https://www.eldiario.es/", "https://as.com/",
+    "https://www.elconfidencial.com/", "https://www.mundodeportivo.com/", "https://www.sport.es/", "https://www.relevo.com/",
     "https://www.bbc.co.uk/news", "https://www.theguardian.com/uk", "https://www.spiegel.de/",
     "https://www.lemonde.fr/", "https://edition.cnn.com/",
 ]
@@ -53,10 +54,11 @@ METRICS = """(() => { const n = performance.getEntriesByType('navigation')[0] ||
     requests: performance.getEntriesByType('resource').length, notice: Boolean(document.getElementById('trackerwatch-lens-notice')) }; })()"""
 
 
-def launch(p, udd: Path):
+def launch(p, udd: Path, locale: str = "en-US", timezone: str = "UTC"):
     ext = e2e.EXT / "dist" / "chrome-test"
     return p.chromium.launch_persistent_context(
         str(udd), channel="chromium", headless=True, ignore_https_errors=True, viewport={"width": 1280, "height": 800},
+        locale=locale, timezone_id=timezone,
         args=[f"--disable-extensions-except={ext}", f"--load-extension={ext}",
               "--host-resolver-rules=MAP control.test 127.0.0.1", "--ignore-certificate-errors"])
 
@@ -65,9 +67,10 @@ def host_of(url: str) -> str:
     return url.split("//", 1)[1].split("/", 1)[0]
 
 
-def run_phase(p, phase: str, sites: list[str], wait: float, shots: Path | None = None) -> dict:
+def run_phase(p, phase: str, sites: list[str], wait: float, shots: Path | None = None, locale: str = "en-US",
+              timezone: str = "UTC") -> dict:
     udd = Path(tempfile.mkdtemp(prefix=f"lens-real-{phase}-"))
-    ctx = launch(p, udd)
+    ctx = launch(p, udd, locale, timezone)
     out = {"sites": {}}
     try:
         time.sleep(1.5)
@@ -135,6 +138,8 @@ def main() -> int:
     ap.add_argument("--wait", type=float, default=8.0)
     ap.add_argument("--only", help="comma-separated parts of site addresses to keep (e.g. guardian,spiegel)")
     ap.add_argument("--phases", default=",".join(PHASES), help="comma-separated phases to run")
+    ap.add_argument("--locale", default="en-US", help="browser language, e.g. es-ES")
+    ap.add_argument("--timezone", default="UTC", help="browser time zone, e.g. Europe/Madrid")
     ap.add_argument("--shots", help="folder for a screenshot of each site in the 'all' phase")
     args = ap.parse_args()
     import subprocess
@@ -150,13 +155,15 @@ def main() -> int:
                 shots = Path(args.shots) if args.shots else None
                 if shots:
                     shots.mkdir(parents=True, exist_ok=True)
-                results[phase] = run_phase(p, phase, sites, args.wait, shots)
+                results[phase] = run_phase(p, phase, sites, args.wait, shots, args.locale, args.timezone)
     finally:
         srv.shutdown()
     report = {"date": datetime.datetime.now().isoformat(timespec="seconds"), "wait_s": args.wait,
+              "locale": args.locale, "timezone": args.timezone,
               "note": "one visit per site and phase in a fresh profile; an indication, not a benchmark",
               "summary": summary(results), "phases": results}
-    path = HERE / (f"results-{datetime.date.today().isoformat()}" + (f"-{args.only.replace(',', '-')}" if args.only else "") + ".json")
+    path = HERE / (f"results-{datetime.date.today().isoformat()}" + (f"-{args.only.replace(',', '-')}" if args.only else "")
+                   + (f"-{args.locale}" if args.locale != "en-US" else "") + ".json")
     path.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps(report["summary"], indent=1))
     print("written", path)

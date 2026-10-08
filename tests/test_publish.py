@@ -250,3 +250,15 @@ def test_missing_credentials_or_a_stale_draft_publish_nothing(tmp_path, capsys):
     assert main([str(tmp_path / "d"), "--platform", "bluesky", "--send"], env=BSKY_ENV, http=server,
                 today=date(2026, 12, 1)) == 1
     assert "stale" in capsys.readouterr().err and not server.calls
+
+
+def test_only_label_marks_the_profile_without_a_draft_and_publishes_nothing(capsys):
+    server = FakeServer()
+    assert main(["--only-label"], env=BSKY_ENV, http=lambda *a, **k: (_ for _ in ()).throw(AssertionError("no network"))) == 0
+    assert "DRY RUN" in capsys.readouterr().out
+    assert main(["--only-label", "--send"], env=BSKY_ENV, http=server) == 0
+    assert [c[1].rsplit("/", 1)[-1] for c in server.calls] == ["com.atproto.server.createSession", "com.atproto.repo.getRecord",
+                                                              "com.atproto.repo.putRecord"]
+    assert not any(c[1].endswith("createRecord") for c in server.calls) and server.posted == 0
+    assert main(["--only-label", "--send"], env={}, http=server) == 1
+    assert "NOT LABELLED" in capsys.readouterr().err

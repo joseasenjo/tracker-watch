@@ -353,13 +353,29 @@ def make_client(platform: str, env, http):
 def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _date | None = None) -> int:
     parser = argparse.ArgumentParser(prog="traceguard.publish", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("draft_dir", help="a dated folder of drafts, e.g. data/drafts/2026-10-04")
+    parser.add_argument("draft_dir", nargs="?", help="a dated folder of drafts, e.g. data/drafts/2026-10-04")
     parser.add_argument("--platform", choices=[*PLATFORMS, "both"], default="both")
     parser.add_argument("--send", action="store_true", help="really publish (without it: dry run, no connection)")
-    parser.add_argument("--label-bot", action="store_true", help="put the 'bot' self-label on the Bluesky profile")
+    parser.add_argument("--label-bot", action="store_true", help="also put the 'bot' self-label on the Bluesky profile")
+    parser.add_argument("--only-label", action="store_true",
+                        help="only put the 'bot' self-label on the Bluesky profile; no draft needed, nothing is published")
     parser.add_argument("--max-age-days", type=int, default=MAX_AGE_DAYS)
     args = parser.parse_args(argv)
     env = os.environ if env is None else env
+    if args.only_label:
+        if not args.send:
+            print("[bluesky] DRY RUN: --send would add the 'bot' self-label to the profile; nothing is published.\n"
+                  "  credentials in the environment: " + ", ".join(f"{n} {'set' if env.get(n) else 'MISSING'}" for n in CREDENTIALS["bluesky"]))
+            return 0
+        try:
+            make_client("bluesky", env, http).label_bot()
+        except PublishError as exc:
+            print(f"[bluesky] NOT LABELLED: {exc}", file=sys.stderr)
+            return 1
+        print("[bluesky] the 'bot' self-label is on the profile.")
+        return 0
+    if not args.draft_dir:
+        parser.error("a draft folder is needed (or use --only-label)")
     folder = Path(args.draft_dir)
     platforms = PLATFORMS if args.platform == "both" else (args.platform,)
     failed = False
