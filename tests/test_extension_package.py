@@ -63,7 +63,7 @@ def test_the_site_offers_the_release_files_install_steps_and_the_extension_priva
     page = (tmp_path / "site" / "extension.html").read_text(encoding="utf-8")
     assert "https://github.com/o/r/releases/latest/download/tracker-watch-lens-chrome.zip" in page
     assert "https://github.com/o/r/releases/latest/download/tracker-watch-lens-firefox.zip" in page
-    assert "Load unpacked" in page and "Load Temporary Add-on" in page and "Not in the browser stores yet" in page
+    assert "Load unpacked" in page and "Load Temporary Add-on" in page and "Not in the browser stores yet" in page and "Chrome Web Store version will be available shortly" in page
     assert "extension-privacy.html" in page and "SHA-256" in page and "Not complete protection" in page
     policy = (tmp_path / "site" / "extension-privacy.html").read_text(encoding="utf-8")
     assert "sends nothing anywhere" in policy and "<script" not in policy.split("</nav>")[1].split("<footer")[0]

@@ -59,7 +59,7 @@ company does with it. The list is limited and some entries are not verified one 
 Credits: EasyList and EasyPrivacy by The EasyList authors (CC BY-SA 3.0); AdGuard cname-trackers (MIT).
 
 Open source (MIT): https://github.com/joseasenjo/tracker-watch/tree/main/extension
-Privacy policy: [URL of the published PRIVACY page — to fill in at M6]
+Privacy policy: https://joseasenjo.github.io/tracker-watch/extension-privacy.html
 
 ## Category
 Chrome: Privacy & Security (or "Tools"). AMO: Privacy & Security. Edge: Productivity / Privacy.
@@ -104,8 +104,17 @@ so explicitly in the justification: "processed locally, never transmitted".
 - Source code: AMO may ask for it because the package is built by `tools/build.py`; the files are copied, not
   minified or bundled, so the package is readable as is.
 
-## Images still needed (M4/M6)
-- Icon 128x128: `icons/icon-128.png` (exists).
-- Screenshots: Chrome 1280x800 or 640x400 (1 to 5); AMO and Edge accept similar sizes. Take them on real sites in
-  the user's browser (panel open on a news site, the banner test, the settings page). Not from the test fixtures.
-- Chrome small promotional tile 440x280 (optional but recommended).
+## Images (made 9 October 2026)
+- Icon 128x128: `icons/icon-128.png`.
+- Screenshots, 1280x800, in `extension/store/screenshots/`: `01-panel.png` (panel on a news page, counting),
+  `02-blocking.png` (blocking on, what was stopped), `03-settings.png` (settings). Made by `make_screenshots.py` with the
+  real extension on a real page (the panel is composed beside the page because a toolbar popup cannot be photographed
+  from outside the browser). Re-make them whenever the interface changes.
+- Chrome small promotional tile 440x280: not made; only needed for the Chrome Web Store.
+
+## Where it is listed (decision of 9 October 2026, to avoid costs for now)
+- **Microsoft Edge Add-ons** and **Firefox Add-ons (AMO)**: free; to submit first. The package for each is the release
+  zip (`tracker-watch-lens-chrome.zip` for Edge, `tracker-watch-lens-firefox.zip` for AMO); `web-ext lint` on the
+  Firefox build: 0 errors, 0 warnings (web-ext 8, 9 October 2026).
+- **Chrome Web Store**: "coming soon" on the website; it has a one-time registration fee, so it waits.
+- Until the stores approve it, people install it by hand from the GitHub Release (page "Get the extension").
