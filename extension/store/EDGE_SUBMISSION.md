@@ -12,7 +12,7 @@ https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-exte
 Visibility: Public. Markets: all markets (default).
 
 ## 2. Properties
-- Category: the one about privacy and security (pick it from the list).
+- Category: Productivity (Edge has no privacy category).
 - Website: https://joseasenjo.github.io/tracker-watch/extension.html
 - Support contact detail: asenjo.jose@hotmail.com
 - Mature content: not checked.
@@ -43,7 +43,6 @@ them. Everything happens locally in the browser.
   nothing is downloaded.
 - **scripting**: only for the optional "Block ads" setting, off by default: adds a style sheet that hides empty ad
   slots (EasyList's element hiding rules, bundled), never reads or changes the page's content.
-  company's server in disguise (CNAME cloaking), against a bundled list. Nothing is sent to us.
 - **browsingData (optional)**: requested only when the user first presses "Clear this site's data and reload",
   to clear that site's stored data so its cookie banner shows again.
 - **Remote code**: none. All code and data are in the package.
