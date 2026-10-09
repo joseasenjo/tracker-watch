@@ -58,7 +58,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/runs
+          python extension/tools/build_data.py   # the extension's data embeds the weekly numbers; a stale copy fails the tests
+          git add data/runs extension/data extension/tests/fixtures/parity.json
           git diff --cached --quiet || git commit -m "scan: $(date -u +%F)"
           git pull --rebase --autostash   # the link workflow may have pushed meanwhile
           git push

@@ -106,7 +106,8 @@ def _countries(reports: list[dict], groups: dict[str, str]) -> str | None:
         return None
     listing = ", ".join(f"{g} {m} ({n})" for g, m, n in rows)
     return ("By country, the median number of tracking services contacted before any click, with the sites "
-            f"measured in brackets: {listing}.")
+            f"measured in brackets: {listing}. All measured from {_vantage(reports)}: sites that show their "
+            "consent banner only to European visitors look worse here.")
 
 
 def _spain(date: str, reports: list[dict], limit: int) -> str | None:

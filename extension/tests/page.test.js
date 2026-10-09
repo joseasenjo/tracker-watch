@@ -248,13 +248,16 @@ test('weekly baseline: find the site by domain and path, compare service sets', 
   assert.equal(bbc.id, 'www-bbc-co-uk-news');
   assert.equal(findSite(sites, 'https://nothing-measured.example/', trie), null);
   const page = startPage({ url: 'https://www.bbc.co.uk/news', now: 0, declared: bbc.first_party_domains }, ctx);
+  // a fixed baseline: the real weekly service list of the site changes every week
+  const base = { ...bbc, services: ['adnxs.com', 'doubleclick.net'], tracking_services: 2 };
   request(page, 'https://ib.adnxs.com/x', 'script');
   request(page, 'https://connect.facebook.net/x', 'script');
-  const cmp = compareWithBaseline(summarizePage(page, glossary), bbc);
-  assert.equal(cmp.weekly, bbc.tracking_services);
+  const cmp = compareWithBaseline(summarizePage(page, glossary), base);
+  assert.equal(cmp.weekly, 2);
   assert.equal(cmp.here, 2);
-  assert.ok(cmp.inBoth >= 1);
-  assert.equal(cmp.inBoth + cmp.onlyWeekly.length, bbc.services.length);
+  assert.equal(cmp.inBoth, 1);
+  assert.deepEqual(cmp.onlyWeekly, ['doubleclick.net']);
+  assert.equal(cmp.inBoth + cmp.onlyWeekly.length, base.services.length);
 });
 
 test('cookies: grouped by service, partitioned ones kept for this site, first party skipped', () => {

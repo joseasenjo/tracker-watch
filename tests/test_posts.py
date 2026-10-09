@@ -115,6 +115,7 @@ def test_country_line_gives_the_median_and_the_sites_measured_per_group():
     assert group_medians(REPORTS, GROUPS) == [("UK", 4, 2), ("US", 8, 2)]  # (7 + 0) / 2 rounds to 4
     posts = build_thread("d", REPORTS, [], platform="bluesky", report_url="u", groups=GROUPS)
     assert len(posts) == 4 and posts[1].startswith("By country") and "US 8 (2)" in posts[1]
+    assert "consent banner only to European visitors" in posts[1] and "GitHub servers in the US" in posts[1]
     one_group = {k: "US" for k in GROUPS}  # a single group: no comparison line
     assert len(build_thread("d", REPORTS, [], platform="bluesky", report_url="u", groups=one_group)) == 3
 
