@@ -44,6 +44,11 @@ def eligible(reports: list[dict]) -> list[dict]:
             if r["summary"]["status"] == "ok" and r["summary"].get("confidence", "high") in USABLE_CONFIDENCE]
 
 
+def measured(reports: list[dict]) -> list[dict]:
+    """Sites that could be measured at all (the website's "sites measured"), whatever the confidence."""
+    return [r for r in reports if r["summary"]["status"] == "ok"]
+
+
 def ranking(reports: list[dict]) -> list[dict]:
     """Sites that contacted tracking services, most first. Ties broken by third-party requests, then name."""
     rows = [{"name": r["site"]["name"], "tracking_services": r["summary"]["metrics"]["tracking_services"],
@@ -61,7 +66,7 @@ def _headline(date: str, reports: list[dict], top: int) -> str:
     rows = ranking(reports)[:top]
     leaders = ", ".join(f"{r['name']} {r['tracking_services']}" for r in rows) or "none contacted any"
     return (f"Weekly check ({date}): news sites and the third-party tracking services they contact before "
-            f"you click anything. {len(eligible(reports))} of {len(reports)} sites measured, from "
+            f"you click anything. {len(measured(reports))} of {len(reports)} sites measured, from "
             f"{_vantage(reports)}. Most: {leaders}. Thread below.")
 
 
@@ -119,7 +124,7 @@ def _spain(date: str, reports: list[dict], limit: int) -> str | None:
                   key=lambda x: (-x["n"], x["name"]))
     for top in (3, 2, 1):
         leaders = ", ".join(f"{r['name']} {r['n']}" for r in rows[:top])
-        text = (f"Spanish outlets, measured from a PC in Spain ({date}): {len(usable)} of {len(reports)} sites "
+        text = (f"Spanish outlets, measured from a PC in Spain ({date}): {len(measured(reports))} of {len(reports)} sites "
                 f"measured. Most tracking services contacted before any click: {leaders}.")
         if len(text) <= limit:
             return text
@@ -128,10 +133,12 @@ def _spain(date: str, reports: list[dict], limit: int) -> str | None:
 
 def _method(reports: list[dict], report_url: str) -> str:
     m = reports[0]["measurement"] if reports else {}
-    failed = len(reports) - len(eligible(reports))
+    failed = len(reports) - len(measured(reports))
+    unranked = len(measured(reports)) - len(eligible(reports))
+    note = f"; {unranked} low-confidence not ranked" if unranked else ""
     return (f"How: pages load with no clicks for {m.get('observe_seconds', 12):g}s, {m.get('passes', 3)} passes, "
-            f"median. Third party = other registered domain, checked against a limited hand-built list "
-            f"(may be incomplete). {failed} sites blocked/unmeasured. Counts, not legal verdicts. "
+            f"median. Third party = other registered domain, matched to a limited list "
+            f"(may be incomplete). {failed} sites blocked/unmeasured{note}. Counts, not legal verdicts. "
             f"Method and data: {report_url}")
 
 
@@ -181,7 +188,7 @@ def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: 
     for top in (3, 2, 1):
         listing = "; ".join(f"{c} {n} of {usable}" for c, n in reach[:top])
         text = (f"Midweek: companies whose tracking services were contacted before any click on the most of the "
-                f"{usable} news sites measured ({date}). {listing}. Counts of sites, not verdicts. Data: {report_url}")
+                f"{usable} news sites measured with enough confidence ({date}). {listing}. Counts of sites, not verdicts. Data: {report_url}")
         if len(text) <= limit:
             return [text]
     raise PostTooLong("the midweek post does not fit the limit")

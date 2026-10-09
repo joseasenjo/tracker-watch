@@ -38,7 +38,7 @@ def test_threads_fit_the_platform_limit_without_mentions(platform):
 
 def test_headline_counts_measured_sites_and_names_the_vantage():
     headline = build_thread("2026-10-11", REPORTS, [], platform="bluesky", report_url="u")[0]
-    assert "4 of 6 sites measured" in headline and "GitHub servers in the US" in headline
+    assert "5 of 6 sites measured" in headline and "GitHub servers in the US" in headline
     assert "News A 9" in headline
 
 
