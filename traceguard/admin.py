@@ -114,7 +114,20 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(404, {"error": "not found"})
         return super().do_GET()
 
+    def _read_body(self) -> bytes:
+        """Read the request body first, whatever happens next: answering and closing before the client has finished
+        sending makes Windows cut the connection, and the client then sees a reset instead of the refusal."""
+        try:
+            size = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            size = 0
+        if 0 < size <= MAX_BODY:
+            return self.rfile.read(size)
+        self.close_connection = True  # nothing read: too big or empty, refused below
+        return b""
+
     def do_POST(self):
+        self._raw = self._read_body()
         if not self._allowed_host():
             return self._json(403, {"error": "forbidden host"})
         if self.path not in ("/api/limits", *OPS_POST):
@@ -126,10 +139,9 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path in OPS_POST:
             return self._ops_post()
         try:
-            size = int(self.headers.get("Content-Length") or 0)
-            if not 0 < size <= MAX_BODY:
+            if not self._raw:
                 return self._json(413, {"error": "bad size"})
-            saved = save_limits(json.loads(self.rfile.read(size).decode("utf-8")), self.limits_path)
+            saved = save_limits(json.loads(self._raw.decode("utf-8")), self.limits_path)
         except (ValueError, LimitsError) as exc:
             return self._json(400, {"error": str(exc)})
         return self._json(200, {"limits": saved, "saved_to": str(self.limits_path)})
@@ -138,10 +150,9 @@ class Handler(SimpleHTTPRequestHandler):
     def _ops_post(self):
         """The few write actions of the developer dashboard; each one is checked again in traceguard.ops."""
         try:
-            size = int(self.headers.get("Content-Length") or 0)
-            if not 0 < size <= MAX_BODY:
+            if not self._raw:
                 return self._json(413, {"error": "bad size"})
-            body = json.loads(self.rfile.read(size).decode("utf-8"))
+            body = json.loads(self._raw.decode("utf-8"))
             if not isinstance(body, dict):
                 raise ops.OpsError("se esperaba un objeto JSON")
             if self.path == "/api/ops/switch":
