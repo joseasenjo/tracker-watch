@@ -469,7 +469,7 @@ def create_link(url: str, code: str = "", note: str = "", *, links_path: Path | 
         L.add_link(links_path, code, url, note=note, check=check, blocklist=blocklist, resolver=resolver)
     except L.LinkError as exc:
         raise OpsError(str(exc)) from exc
-    return {"created": True, "code": code, "url": SITE_URL + f"go/{code}/", "message": "Enlace creado (aún no publicado)."}
+    return {"created": True, "code": code, "url": SITE_URL + f"go/{code}/", "message": "Enlace creado, pero TODAVÍA NO ESTÁ EN LA WEB: pulsa «Publicar enlaces» para que funcione."}
 
 
 def remove_link(code: str, links_path: Path | str = LINKS_FILE) -> None:
