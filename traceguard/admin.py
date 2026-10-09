@@ -31,7 +31,7 @@ DEFAULT_REPO = "joseasenjo/tracker-watch"
 LABELS = {"scan": "scan-request", "links": "link-request"}
 MAX_BODY = 20_000
 OPS_PAGE = Path(__file__).with_name("ops_page.html")
-OPS_POST = ("/api/ops/switch", "/api/ops/run", "/api/ops/approve", "/api/ops/pull")
+OPS_POST = ("/api/ops/switch", "/api/ops/run", "/api/ops/approve", "/api/ops/pull", "/api/ops/note")
 
 
 def recent_requests(repo: str, runner: Callable = subprocess.run, now: datetime | None = None) -> dict:
@@ -141,6 +141,10 @@ class Handler(SimpleHTTPRequestHandler):
             if self.path == "/api/ops/run":
                 ops.run_workflow(str(body.get("workflow", "")), self.repo, self.runner)
                 return self._json(200, {"ok": True})
+            if self.path == "/api/ops/note":
+                notes = ops.change_note(str(body.get("action", "")), note_id=str(body.get("id", "")),
+                                        text=str(body.get("text", "")))
+                return self._json(200, {"ok": True, "notes": notes})
             if self.path == "/api/ops/approve":
                 ops.approve_draft(str(body.get("folder", "")), self.repo, self.runner)
                 return self._json(200, {"ok": True})

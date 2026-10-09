@@ -8,7 +8,9 @@ function so it can be tested without a network.
 from __future__ import annotations
 
 import json
+import os
 import re
+import uuid
 import statistics
 import subprocess
 import urllib.error
@@ -32,6 +34,9 @@ SWING = 30            # a change of this many tracking services between two scan
 MIN_SHARE = 0.6       # below this share of measured sites the weekly thread is not drafted
 STALE_DAYS = 9        # a weekly scan older than this means the schedule did not run
 USABLE = ("high", "medium")
+NOTES_FILE = Path("notas_desarrollador/pizarra.json")  # private: the folder is in .gitignore
+MAX_NOTE = 4000
+MAX_NOTES = 500
 
 
 class OpsError(ValueError):
@@ -279,10 +284,66 @@ def get_status(repo: str = DEFAULT_REPO, *, runner: Callable = subprocess.run, h
     http_get = http_get or urllib_get  # looked up at call time
     state = {"github": github_state(repo, runner), "scan": scan_summary(runs_dir, sites_file, spain_dir),
              "drafts": pending_drafts(drafts_dir), "bot": bot_state(http_get), "site": site_state(http_get),
-             "git": git_state(runner), "switches": SWITCHES, "workflows": WORKFLOWS, "secrets_needed": list(SECRETS),
+             "git": git_state(runner), "notes": load_notes(), "switches": SWITCHES, "workflows": WORKFLOWS, "secrets_needed": list(SECRETS),
              "schedule": "Escaneo e hilo: lunes 07:00 UTC · Post corto: miércoles 08:00 UTC"}
     state["alerts"] = build_alerts(state, now)
     return state
+
+
+# --- the whiteboard -------------------------------------------------------------------------------------------------
+
+def load_notes(path: Path | str = NOTES_FILE) -> list[dict]:
+    """Notes newest first. Nothing is ever deleted: 'archived' notes are only hidden and can be restored."""
+    path = Path(path)
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise OpsError(f"la pizarra ({path}) no se puede leer; no la toco: {exc}") from exc
+    return data.get("notes", []) if isinstance(data, dict) else []
+
+
+def _save_notes(notes: list[dict], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():  # one copy of the previous state, in case of a mistake
+        path.with_suffix(".bak.json").write_bytes(path.read_bytes())
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps({"notes": notes}, ensure_ascii=False, indent=2), encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def change_note(action: str, *, note_id: str = "", text: str = "", path: Path | str = NOTES_FILE,
+                now: datetime | None = None) -> list[dict]:
+    """action: add | edit | toggle (done / not done) | archive | restore."""
+    path, stamp = Path(path), (now or datetime.now(timezone.utc)).strftime("%Y-%m-%d %H:%M")
+    notes = load_notes(path)
+    if action == "add":
+        text = text.strip()
+        if not text:
+            raise OpsError("la nota está vacía")
+        if len(text) > MAX_NOTE:
+            raise OpsError(f"la nota supera {MAX_NOTE} caracteres")
+        if len(notes) >= MAX_NOTES:
+            raise OpsError("demasiadas notas: archiva las antiguas")
+        notes.insert(0, {"id": uuid.uuid4().hex[:10], "text": text, "created": stamp, "done": False, "archived": False})
+    else:
+        note = next((n for n in notes if n.get("id") == note_id), None)
+        if note is None:
+            raise OpsError("esa nota no existe")
+        if action == "edit":
+            text = text.strip()
+            if not text or len(text) > MAX_NOTE:
+                raise OpsError("texto no válido")
+            note["text"], note["edited"] = text, stamp
+        elif action == "toggle":
+            note["done"] = not note.get("done", False)
+        elif action in ("archive", "restore"):
+            note["archived"] = action == "archive"
+        else:
+            raise OpsError("acción desconocida")
+    _save_notes(notes, path)
+    return notes
 
 
 # --- the allowed actions ------------------------------------------------------------------------------------------------

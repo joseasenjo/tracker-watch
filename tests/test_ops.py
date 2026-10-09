@@ -183,3 +183,36 @@ def test_ops_page_and_status_are_served_and_writes_need_the_token(admin):
     assert admin.calls[-1] == ["gh", "variable", "set", "POST_ENABLED", "-b", "false", "-R", "o/r"]
     assert call(admin.base + "/api/ops/run", {"workflow": "evil.yml"}, good)[0] == 400
     assert call(admin.base + "/api/ops/approve", {"folder": "data/drafts/../x"}, good)[0] == 400
+
+
+def test_whiteboard_keeps_everything_archives_instead_of_deleting_and_keeps_a_backup(tmp_path):
+    path = tmp_path / "board" / "pizarra.json"
+    assert ops.load_notes(path) == []
+    ops.change_note("add", text="  llamar a Lanbide  ", path=path)
+    notes = ops.change_note("add", text="segunda", path=path)
+    assert [n["text"] for n in notes] == ["segunda", "llamar a Lanbide"]  # newest first
+    first = notes[1]["id"]
+    assert ops.change_note("toggle", note_id=first, path=path)[1]["done"] is True
+    assert ops.change_note("edit", note_id=first, text="carta al DPD", path=path)[1]["text"] == "carta al DPD"
+    archived = ops.change_note("archive", note_id=first, path=path)
+    assert archived[1]["archived"] is True and len(archived) == 2  # still there
+    assert ops.change_note("restore", note_id=first, path=path)[1]["archived"] is False
+    assert path.with_suffix(".bak.json").exists()
+    for bad in (dict(action="add", text="   "), dict(action="add", text="x" * 4001), dict(action="toggle", note_id="nope"),
+                dict(action="fly", note_id=first), dict(action="edit", note_id=first, text="")):
+        with pytest.raises(ops.OpsError):
+            ops.change_note(path=path, **bad)
+    assert len(ops.load_notes(path)) == 2
+
+
+def test_a_damaged_whiteboard_is_never_overwritten(tmp_path):
+    path = tmp_path / "pizarra.json"
+    path.write_text("{ not json", encoding="utf-8")
+    with pytest.raises(ops.OpsError):
+        ops.change_note("add", text="nueva", path=path)
+    assert path.read_text(encoding="utf-8") == "{ not json"
+
+
+def test_notes_route_needs_the_token(admin):
+    json_header = {"Content-Type": "application/json"}
+    assert call(admin.base + "/api/ops/note", {"action": "add", "text": "x"}, json_header)[0] == 403

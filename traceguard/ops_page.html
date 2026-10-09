@@ -23,7 +23,7 @@
   .muted { color:var(--muted); font-size:13px; }
   .counters { display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); }
   .counter { border:1px solid var(--line); border-radius:8px; padding:10px; } .counter b { display:block; font-size:22px; }
-  .pill { display:inline-block; padding:1px 8px; border-radius:99px; font-size:12px; font-weight:600; }
+  .pill { display:inline-block; white-space:nowrap; flex:none; padding:1px 8px; border-radius:99px; font-size:12px; font-weight:600; }
   .alta { background:var(--hi-bg); color:var(--hi); } .media { background:var(--mid-bg); color:var(--mid); }
   .info { background:var(--info-bg); color:var(--info); } .on { background:var(--ok-bg); color:var(--ok); }
   .off { background:var(--line); color:var(--off); }
@@ -49,6 +49,12 @@
 </header>
 <main>
   <section class="card"><h2>Qué necesita atención</h2><ul class="plain" id="alerts"><li class="muted">Cargando…</li></ul></section>
+
+  <section class="card"><h2>Pizarra</h2>
+    <p class="muted">Tus notas. Se guardan en <code>notas_desarrollador/pizarra.json</code> (solo en tu ordenador, fuera de git) y no se borran: «Archivar» solo las oculta.</p>
+    <textarea id="note-text" rows="3" maxlength="4000" placeholder="Escribe una nota…" style="width:100%;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)"></textarea>
+    <p><button class="primary" id="note-add">Añadir nota</button> <label class="muted"><input type="checkbox" id="note-archived"> ver archivadas</label></p>
+    <div id="notes"></div></section>
 
   <div class="grid">
     <section class="card"><h2>Interruptores</h2><div id="switches"></div>
@@ -100,7 +106,46 @@
   }
   function note(text) { return el('p', { class: 'muted', text: text }); }
 
+  var notesState = [];
+  function renderNotes() {
+    var showArchived = document.getElementById('note-archived').checked;
+    var list = notesState.filter(function (n) { return showArchived ? n.archived : !n.archived; });
+    fill('notes', list.length ? list.map(function (n) {
+      var body = el('div', { style: 'flex:1;white-space:pre-wrap;overflow-wrap:anywhere;' + (n.done ? 'text-decoration:line-through;opacity:.6' : ''), text: n.text });
+      var box = el('input', { type: 'checkbox', 'aria-label': 'hecha' });
+      box.checked = !!n.done;
+      box.addEventListener('change', function () { noteAction({ action: 'toggle', id: n.id }); });
+      var actions = [];
+      if (!n.archived) actions.push(el('button', { text: 'Editar', onclick: function () {
+        var area = el('textarea', { rows: '3', style: 'width:100%;font:inherit' });
+        area.value = n.text;
+        body.textContent = ''; body.appendChild(area);
+        var save = el('button', { class: 'primary', text: 'Guardar', onclick: function () { noteAction({ action: 'edit', id: n.id, text: area.value }); } });
+        body.appendChild(save);
+      } }));
+      actions.push(el('button', { text: n.archived ? 'Recuperar' : 'Archivar', onclick: function () { noteAction({ action: n.archived ? 'restore' : 'archive', id: n.id }); } }));
+      return el('div', { class: 'row', style: 'align-items:flex-start' }, [box, el('div', { style: 'flex:1;min-width:0' }, [
+        body, el('div', { class: 'muted', text: n.created + (n.edited ? ' · editada ' + n.edited : '') })]), el('div', { style: 'display:flex;gap:6px;flex-wrap:wrap' }, actions)]);
+    }) : [note(showArchived ? 'No hay notas archivadas.' : 'Sin notas todavía.')]);
+  }
+  function noteAction(body) {
+    return post('/api/ops/note', body).then(function (d) { notesState = d.notes; renderNotes(); return d; });
+  }
+  function initNotes() {
+    var area = document.getElementById('note-text');
+    try { area.value = localStorage.getItem('tw-note-draft') || ''; } catch (e) { /* storage unavailable */ }
+    area.addEventListener('input', function () { try { localStorage.setItem('tw-note-draft', area.value); } catch (e) { /* ignore */ } });
+    document.getElementById('note-archived').addEventListener('change', renderNotes);
+    document.getElementById('note-add').addEventListener('click', function (e) {
+      if (!area.value.trim()) { toast('Escribe algo primero'); return; }
+      post('/api/ops/note', { action: 'add', text: area.value }, e.target).then(function (d) {
+        notesState = d.notes; area.value = ''; try { localStorage.removeItem('tw-note-draft'); } catch (x) { /* ignore */ } renderNotes(); toast('Nota guardada');
+      });
+    });
+  }
+
   function render(s) {
+    notesState = s.notes || []; renderNotes();
     document.getElementById('when').textContent = 'Actualizado ' + new Date().toLocaleTimeString();
     document.getElementById('schedule').textContent = s.schedule;
     var vars = (s.github && s.github.variables) || {};
@@ -189,6 +234,7 @@
       function () { btn.disabled = false; toast('No se pudo cargar el estado'); });
   }
   document.getElementById('refresh').onclick = load;
+  initNotes();
   fetch('/api/token').then(function (r) { return r.json(); }).then(function (t) { token = t.token; load(); });
 })();
 </script>
