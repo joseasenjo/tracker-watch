@@ -294,7 +294,8 @@ def get_status(repo: str = DEFAULT_REPO, *, runner: Callable = subprocess.run, h
 # --- the whiteboard -------------------------------------------------------------------------------------------------
 
 def load_notes(path: Path | str = NOTES_FILE) -> list[dict]:
-    """Notes newest first. Nothing is ever deleted: 'archived' notes are only hidden and can be restored."""
+    """Notes newest first. 'archived' notes are only hidden and can be restored; 'delete' removes one for good (the
+    previous state is kept once, in pizarra.bak.json)."""
     path = Path(path)
     if not path.exists():
         return []
@@ -316,7 +317,7 @@ def _save_notes(notes: list[dict], path: Path) -> None:
 
 def change_note(action: str, *, note_id: str = "", text: str = "", path: Path | str = NOTES_FILE,
                 now: datetime | None = None) -> list[dict]:
-    """action: add | edit | toggle (done / not done) | archive | restore."""
+    """action: add | edit | toggle (done / not done) | archive | restore | delete (removed for good)."""
     path, stamp = Path(path), (now or datetime.now(timezone.utc)).strftime("%Y-%m-%d %H:%M")
     notes = load_notes(path)
     if action == "add":
@@ -341,6 +342,8 @@ def change_note(action: str, *, note_id: str = "", text: str = "", path: Path | 
             note["done"] = not note.get("done", False)
         elif action in ("archive", "restore"):
             note["archived"] = action == "archive"
+        elif action == "delete":
+            notes = [n for n in notes if n.get("id") != note_id]
         else:
             raise OpsError("acción desconocida")
     _save_notes(notes, path)

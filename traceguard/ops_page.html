@@ -51,7 +51,7 @@
   <section class="card"><h2>Qué necesita atención</h2><ul class="plain" id="alerts"><li class="muted">Cargando…</li></ul></section>
 
   <section class="card"><h2>Pizarra</h2>
-    <p class="muted">Tus notas. Se guardan en <code>notas_desarrollador/pizarra.json</code> (solo en tu ordenador, fuera de git) y no se borran: «Archivar» solo las oculta.</p>
+    <p class="muted">Tus notas. Se guardan en <code>notas_desarrollador/pizarra.json</code> (solo en tu ordenador, fuera de git) y «Archivar» solo las oculta; «Borrar» las elimina de verdad (queda una copia de seguridad del estado anterior en <code>pizarra.bak.json</code>).</p>
     <textarea id="note-text" rows="3" maxlength="4000" placeholder="Escribe una nota…" style="width:100%;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)"></textarea>
     <p><button class="primary" id="note-add">Añadir nota</button> <label class="muted"><input type="checkbox" id="note-archived"> ver archivadas</label></p>
     <div id="notes"></div></section>
@@ -151,6 +151,10 @@
         body.appendChild(save);
       } }));
       actions.push(el('button', { text: n.archived ? 'Recuperar' : 'Archivar', onclick: function () { noteAction({ action: n.archived ? 'restore' : 'archive', id: n.id }); } }));
+      actions.push(el('button', { text: 'Borrar', onclick: function () {
+        if (!confirm('Borrar esta nota para siempre?  «' + n.text.slice(0, 100) + '»')) return;
+        noteAction({ action: 'delete', id: n.id });
+      } }));
       return el('div', { class: 'row', style: 'align-items:flex-start' }, [box, el('div', { style: 'flex:1;min-width:0' }, [
         body, el('div', { class: 'muted', text: n.created + (n.edited ? ' · editada ' + n.edited : '') })]), el('div', { style: 'display:flex;gap:6px;flex-wrap:wrap' }, actions)]);
     }) : [note(showArchived ? 'No hay notas archivadas.' : 'Sin notas todavía.')]);

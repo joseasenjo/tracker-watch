@@ -205,6 +205,21 @@ def test_whiteboard_keeps_everything_archives_instead_of_deleting_and_keeps_a_ba
     assert len(ops.load_notes(path)) == 2
 
 
+def test_whiteboard_delete_removes_one_note_for_good_and_keeps_the_previous_state_once(tmp_path):
+    path = tmp_path / "pizarra.json"
+    ops.change_note("add", text="uno", path=path)
+    notes = ops.change_note("add", text="dos", path=path)
+    gone = notes[0]["id"]  # "dos", the newest
+    left = ops.change_note("delete", note_id=gone, path=path)
+    assert [n["text"] for n in left] == ["uno"] and [n["text"] for n in ops.load_notes(path)] == ["uno"]
+    backup = __import__("json").loads(path.with_suffix(".bak.json").read_text(encoding="utf-8"))
+    assert [n["text"] for n in backup["notes"]] == ["dos", "uno"]  # the state before the deletion
+    with pytest.raises(ops.OpsError):
+        ops.change_note("delete", note_id=gone, path=path)  # already gone
+    archived = ops.change_note("archive", note_id=left[0]["id"], path=path)
+    assert ops.change_note("delete", note_id=archived[0]["id"], path=path) == []  # archived notes can be deleted too
+
+
 def test_a_damaged_whiteboard_is_never_overwritten(tmp_path):
     path = tmp_path / "pizarra.json"
     path.write_text("{ not json", encoding="utf-8")
