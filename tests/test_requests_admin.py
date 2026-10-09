@@ -399,5 +399,5 @@ def test_the_try_it_page_tells_people_to_contact_the_developer_for_a_custom_shor
                                           encoding="utf-8")
     build_site(tmp_path / "runs", tmp_path / "site", repo_url="https://github.com/o/r", contact_email="dev@example.org")
     page = (tmp_path / "site" / "request.html").read_text(encoding="utf-8")
-    assert "1 per GitHub account every 7 days; 4 per day for the whole site, whoever asks" in page
+    assert "1 per GitHub account every 7 days; 4 new links per day for the whole site, whoever asks; the account must be at least 7 days old" in page
     assert "Want a custom short link" in page and 'href="mailto:dev@example.org"' in page

@@ -5,7 +5,7 @@
 <section>
   <div class="wrap">
     <h1>Try it on your own address</h1>
-    <p class="sub">Two free tools, no approval and no account on this site. They run automatically through a public GitHub issue, so you need a GitHub account{% if limits.scan.min_account_age_days %} at least {{ limits.scan.min_account_age_days }} days old{% endif %}.</p>
+    <p class="sub">Two free tools, no approval and no account on this site. They run automatically through a public GitHub issue, so you need a GitHub account.</p>
 
     <div class="cards">
       <div class="card">
@@ -19,7 +19,7 @@
           </div>
           <p class="note" role="status" hidden></p>
         </form>
-        <p class="small">Limit: {{ limits.scan.per_account }} per GitHub account every {{ limits.scan.window_hours|span }}; {{ limits.scan.global_per_day }} per day for the whole site.{% if contact_email %} Need more, or a project of your own? <a href="mailto:{{ contact_email }}">Contact the developer</a>.{% endif %}</p>
+        <p class="small">Limit: {{ limits.scan.per_account }} per GitHub account every {{ limits.scan.window_hours|span }}; {{ limits.scan.global_per_day }} per day for the whole site; the account must be at least {{ limits.scan.min_account_age_days }} days old.{% if contact_email %} Need more, or a project of your own? <a href="mailto:{{ contact_email }}">Contact the developer</a>.{% endif %}</p>
         {% else %}
         <p class="note">Analyses are switched off for now.</p>
         {% endif %}
@@ -36,7 +36,7 @@
           </div>
           <p class="note" role="status" hidden></p>
         </form>
-        <p class="small">Limit: {{ limits.links.per_account }} per GitHub account every {{ limits.links.window_hours|span }}; {{ limits.links.global_per_day }} per day for the whole site, whoever asks. <a href="{{ root }}shortlinks.html">Rules and existing links</a>.</p>
+        <p class="small">Limit: {{ limits.links.per_account }} per GitHub account every {{ limits.links.window_hours|span }}; {{ limits.links.global_per_day }} new links per day for the whole site, whoever asks; the account must be at least {{ limits.links.min_account_age_days }} days old. <a href="{{ root }}shortlinks.html">Rules and existing links</a>.</p>
         {% if contact_email %}<p class="small">Want a custom short link, such as your own code or more links than this allows? <a href="mailto:{{ contact_email }}">Contact the developer</a>.</p>{% endif %}
         {% else %}
         <p class="note">Short links are switched off for now.</p>
