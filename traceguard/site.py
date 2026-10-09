@@ -46,15 +46,32 @@ SRC = Path(__file__).resolve().parent.parent / "site_src"
 GUIDE = Path(__file__).resolve().parent.parent / "extension" / "GUIDE.md"
 
 
-def guide_html() -> Markup:
-    """The protection guide, from the same Markdown the extension ships (extension/tools/mdpage.py escapes it)."""
-    if not GUIDE.exists():
+POLICY = GUIDE.parent / "PRIVACY.md"
+
+
+def md_html(path: Path) -> Markup:
+    """A Markdown file the extension ships, as HTML (extension/tools/mdpage.py escapes every text)."""
+    if not path.exists():
         return Markup("")
     import importlib.util
     spec = importlib.util.spec_from_file_location("mdpage", GUIDE.parent / "tools" / "mdpage.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    return Markup(mod.markdown_page(GUIDE.read_text(encoding="utf-8")))
+    return Markup(mod.markdown_page(path.read_text(encoding="utf-8")))
+
+
+def guide_html() -> Markup:
+    """The protection guide, from the same Markdown the extension ships."""
+    return md_html(GUIDE)
+
+
+def extension_version() -> str:
+    """The version of the extension: package.json when it carries one, else the build's default (see tools/build.py)."""
+    try:
+        version = json.loads((GUIDE.parent / "package.json").read_text(encoding="utf-8")).get("version", "")
+    except (OSError, ValueError):
+        version = ""
+    return version if version and version != "0.0.0" else "0.1.0"
 SITE_NAME = "Tracker Watch"
 VANTAGE_LABELS = {"github-actions-us": "GitHub servers in the US", "local-windows-spain": "a PC in Spain"}
 VANTAGE_LABELS_ES = {"github-actions-us": "servidores de GitHub en EEUU", "local-windows-spain": "un PC en España"}
@@ -511,6 +528,8 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("glossary.html", out / "glossary.html", page="glossary")
     render("filters.html", out / "filters.html", page="filters")
     render("protect.html", out / "protect.html", page="protect", guide_html=guide_html())
+    render("extension.html", out / "extension.html", page="extension", extension_version=extension_version())
+    render("extension_privacy.html", out / "extension-privacy.html", page="extension", policy_html=md_html(POLICY))
     render("request.html", out / "request.html", page="request")
     render("consent.html", out / "consent.html", page="consent")
     render("protection.html", out / "protection.html", page="protection")

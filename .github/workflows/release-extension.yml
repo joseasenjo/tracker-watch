@@ -1,0 +1,79 @@
+# Builds Tracker Watch Lens from the source in this repository and publishes it as a GitHub Release:
+# one zip for Chrome/Edge (and other Chromium browsers), one for Firefox, and SHA-256 sums. Started by hand.
+# The file names carry no version, so https://github.com/<owner>/<repo>/releases/latest/download/<name> always works.
+# Not a store listing: people install it by hand (see the "Get the extension" page of the site).
+name: release-extension
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, for example lens-v0.1.0"
+        required: true
+        default: "lens-v0.1.0"
+      notes:
+        description: "What changed (one or two sentences, shown on the release)"
+        required: false
+        default: "First public build."
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check the tag name
+        env:
+          TAG: ${{ github.event.inputs.tag }}
+        run: |
+          echo "$TAG" | grep -Eq '^lens-v[0-9]+\.[0-9]+\.[0-9]+$' || { echo "the tag must look like lens-v0.1.0"; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Extension tests
+        run: |
+          cd extension
+          npm test
+
+      - name: Build for every browser and package
+        run: |
+          python extension/tools/build.py --browser all
+          python extension/tools/package.py --out release
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.inputs.tag }}
+          NOTES: ${{ github.event.inputs.notes }}
+        run: |
+          VERSION=$(python -c "import json;print(json.load(open('extension/dist/chrome/manifest.json'))['version'])")
+          {
+            echo "Tracker Watch Lens $VERSION. $NOTES"
+            echo
+            echo "Not on the stores yet: install it by hand. Step by step: https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/extension.html"
+            echo
+            echo "- tracker-watch-lens-chrome.zip: Chrome, Edge and other Chromium browsers (version 121 or later)."
+            echo "- tracker-watch-lens-firefox.zip: Firefox 128 or later (loads as a temporary add-on until it is on addons.mozilla.org)."
+            echo
+            echo "It sends nothing anywhere. Built from this repository by the release-extension workflow (run ${GITHUB_RUN_ID}). SHA-256:"
+            echo
+            echo '```'
+            cat release/SHA256SUMS.txt
+            echo '```'
+          } > notes.md
+          gh release create "$TAG" release/tracker-watch-lens-chrome.zip release/tracker-watch-lens-firefox.zip release/SHA256SUMS.txt \
+            --title "Tracker Watch Lens $VERSION" --notes-file notes.md --latest --target "$GITHUB_SHA"

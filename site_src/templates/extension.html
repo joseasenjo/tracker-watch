@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Get the extension{% endblock %}
+{% block description %}Tracker Watch Lens: a free, open-source browser extension that shows which trackers a page contacts and lets you block them. It sends nothing anywhere.{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Get Tracker Watch Lens</h1>
+    <p class="sub">See which third-party trackers the page you are reading contacts, who runs them and what each one did, and stop them with one click. Free and open source (MIT). It sends nothing anywhere: no account, no analytics, no server of ours.</p>
+
+    {% if repo_url %}
+    <div class="cards">
+      <div class="card">
+        <h3>Chrome, Edge and other Chromium browsers</h3>
+        <p class="small">Version {{ extension_version }}. Chrome 121 or later.</p>
+        <p><a class="btn" href="{{ repo_url }}/releases/latest/download/tracker-watch-lens-chrome.zip" rel="noopener">Download for Chrome / Edge</a></p>
+      </div>
+      <div class="card">
+        <h3>Firefox</h3>
+        <p class="small">Version {{ extension_version }}. Firefox 128 or later.</p>
+        <p><a class="btn" href="{{ repo_url }}/releases/latest/download/tracker-watch-lens-firefox.zip" rel="noopener">Download for Firefox</a></p>
+      </div>
+    </div>
+    <p class="note"><b>Not in the browser stores yet.</b> We have not published it on the Chrome Web Store, Edge Add-ons or Firefox Add-ons (that is planned), so for now you install it by hand with the steps below. It takes about a minute. The downloads come from <a href="{{ repo_url }}/releases/latest" rel="noopener">the latest release</a>, which also lists SHA-256 sums to check the files.</p>
+    {% else %}
+    <p class="note">Downloads will appear here once the project is published on GitHub.</p>
+    {% endif %}
+
+    <h2>Install in Chrome or Edge</h2>
+    <ol>
+      <li>Download the zip and <b>unzip it into a folder you will keep</b>. The browser reads the extension from that folder, so do not delete it afterwards.</li>
+      <li>Open the extensions page: type <code>chrome://extensions</code> in the address bar (<code>edge://extensions</code> in Edge). Browsers do not allow links to these pages, so type or paste it.</li>
+      <li>Turn on <b>Developer mode</b> (a switch at the top right).</li>
+      <li>Click <b>Load unpacked</b> and choose the unzipped folder, the one that contains <code>manifest.json</code>.</li>
+      <li>Pin the icon (the puzzle piece, then the pin) so the button is always in view. Open any news page and click it.</li>
+    </ol>
+    <p class="small">To update: download the new zip, put its files over the same folder and press the reload arrow of the extension on the extensions page. Chrome may show a reminder about developer-mode extensions when it starts; that is normal for a hand install.</p>
+
+    <h2>Install in Firefox</h2>
+    <ol>
+      <li>Download the zip and unzip it into a folder.</li>
+      <li>Type <code>about:debugging#/runtime/this-firefox</code> in the address bar.</li>
+      <li>Click <b>Load Temporary Add-on…</b> and choose the file <code>manifest.json</code> inside the unzipped folder.</li>
+    </ol>
+    <p class="small">Firefox only keeps an add-on that is not on addons.mozilla.org until you close it, so you repeat step 3 after each restart. A permanent install needs the store listing, which is in preparation.</p>
+
+    <h2>What it does</h2>
+    <ul>
+      <li><b>Shows</b>, counted in your own browser, which third-party tracking services the page contacted before your first click, which companies run them, what changed after you answered the cookie banner, and how the page compares with our <a href="{{ root }}index.html">weekly measurement</a> of news sites.</li>
+      <li><b>Blocks</b>, only when you press the buttons at the top of the panel: <i>Block trackers</i> and <i>Block ads</i>. A stricter "site only" level and a one-click pause per site are included.</li>
+      <li><b>Optional, off by default:</b> learn trackers that are on no list from what they do, and reject cookie banners for you. It never accepts a banner and never chooses a paid option.</li>
+    </ul>
+    <h2>What it is not</h2>
+    <ul>
+      <li><b>Not complete protection.</b> A dedicated blocker such as uBlock Origin covers more. Lens's strength is showing you what happens.</li>
+      <li><b>Counts, not verdicts.</b> A request to a tracking service shows that it was contacted, not what was sent or what the company does with it. Our list is limited and some entries are not verified one by one; the panel says which.</li>
+    </ul>
+
+    <h2>Why it asks for access to all websites</h2>
+    <p>To count what a page loads, the extension has to see the requests of every page you open. It reads cookie names and lifetimes but never their values, keeps no browsing history, and sends nothing out. The full text, checked against the code before every release, is the <a href="{{ root }}extension-privacy.html">privacy policy</a>. Our <a href="{{ root }}protect.html">guide to browsing with less tracking</a> explains the rest of what you can do.</p>
+
+    {% if repo_url %}
+    <h2>Check what you installed</h2>
+    <p>The files are built from the <a href="{{ repo_url }}/tree/main/extension" rel="noopener">public source code</a> by <a href="{{ repo_url }}/actions/workflows/release-extension.yml" rel="noopener">a GitHub workflow</a>, not on a personal computer. Compare the SHA-256 of your download with the sums on the release page: on Windows, <code>certutil -hashfile tracker-watch-lens-chrome.zip SHA256</code>; on macOS and Linux, <code>shasum -a 256 tracker-watch-lens-chrome.zip</code>.</p>
+    <h2>Problems and ideas</h2>
+    <p>Open an issue on <a href="{{ repo_url }}/issues" rel="noopener">GitHub</a>{% if contact_email %} or write to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>{% endif %}. Tell us the browser, its version and the page where it happened.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
