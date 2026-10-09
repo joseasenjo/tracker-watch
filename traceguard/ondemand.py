@@ -22,7 +22,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from .limits import DEFAULTS, LimitsError, check_account, load_limits
+from .limits import DEFAULTS, LimitsError, check_account, contact_where, load_limits
 from .safety import UnsafeURL, check_target
 
 PER_ACCOUNT = DEFAULTS["scan"]["per_account"]  # kept for callers that use the defaults
@@ -116,8 +116,7 @@ def decode_result_block(comment: str) -> dict | None:
 
 def contact_line(env=None) -> str:
     """Shown when a request is refused for the limit: where to turn for more, or for a project."""
-    env = os.environ if env is None else env
-    where = (env.get("CONTACT_EMAIL") or "").strip() or ((env.get("SITE_URL") or "").strip() + "contact.html" if env.get("SITE_URL") else "")
+    where = contact_where(env)
     if not where:
         return ""
     return ("\n\nNeed more analyses, or a project of your own, such as regular scans of your sites or a custom "

@@ -32,6 +32,7 @@ from .bands import band_for, describe as describe_bands
 from .behaviour import phrases as activity_phrases, service_activity, totals as activity_totals
 from .categories import describe as describe_categories, label as category_label
 from .diff import compare_reports
+from .limits import span
 from .cards import (alt_text as ranking_alt_text, origins_alt_text, origins_card_html, ranking_card_html,
                     render_png)
 from .findings import SCRIPT_BEHAVIOURS, format_bytes
@@ -74,6 +75,7 @@ def _env() -> Environment:
     env = Environment(loader=FileSystemLoader(SRC / "templates"),
                       autoescape=select_autoescape(["html", "xml"]), trim_blocks=True, lstrip_blocks=True)
     env.filters["size"] = format_bytes
+    env.filters["span"] = span
 
     @pass_context
     def catlink(context, category: str) -> Markup:

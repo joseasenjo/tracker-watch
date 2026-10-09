@@ -19,7 +19,7 @@
           </div>
           <p class="note" role="status" hidden></p>
         </form>
-        <p class="small">Limit: {{ limits.scan.per_account }} per GitHub account every {{ limits.scan.window_hours }} hours; {{ limits.scan.global_per_day }} per day for the whole site.{% if contact_email %} Need more, or a project of your own? <a href="mailto:{{ contact_email }}">Contact the developer</a>.{% endif %}</p>
+        <p class="small">Limit: {{ limits.scan.per_account }} per GitHub account every {{ limits.scan.window_hours|span }}; {{ limits.scan.global_per_day }} per day for the whole site.{% if contact_email %} Need more, or a project of your own? <a href="mailto:{{ contact_email }}">Contact the developer</a>.{% endif %}</p>
         {% else %}
         <p class="note">Analyses are switched off for now.</p>
         {% endif %}
@@ -36,7 +36,8 @@
           </div>
           <p class="note" role="status" hidden></p>
         </form>
-        <p class="small">Limit: {{ limits.links.per_account }} per GitHub account every {{ limits.links.window_hours }} hours; {{ limits.links.global_per_day }} per day for the whole site. <a href="{{ root }}shortlinks.html">Rules and existing links</a>.</p>
+        <p class="small">Limit: {{ limits.links.per_account }} per GitHub account every {{ limits.links.window_hours|span }}; {{ limits.links.global_per_day }} per day for the whole site, whoever asks. <a href="{{ root }}shortlinks.html">Rules and existing links</a>.</p>
+        {% if contact_email %}<p class="small">Want a custom short link, such as your own code or more links than this allows? <a href="mailto:{{ contact_email }}">Contact the developer</a>.</p>{% endif %}
         {% else %}
         <p class="note">Short links are switched off for now.</p>
         {% endif %}

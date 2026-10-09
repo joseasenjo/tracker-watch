@@ -29,7 +29,7 @@ from typing import Callable
 from urllib.parse import urlsplit
 
 from .classify import registrable_domain
-from .limits import LimitsError, check_account, load_limits
+from .limits import LimitsError, check_account, contact_where, load_limits
 from .safety import Resolver, UnsafeURL, check_target, system_resolver
 
 DEFAULT_LINKS = Path("data/links.json")
@@ -146,8 +146,15 @@ def _scan_target(url: str) -> dict | None:
         return None
 
 
+def contact_line(env=None) -> str:
+    """For anyone who wants a custom short link, or more than the limits allow."""
+    where = contact_where(env)
+    return (f"\n\nWant a custom short link, such as your own code or more links than this allows? "
+            f"Contact the developer: {where}") if where else ""
+
+
 def process_request(body: str, author: str, account_created: str, history: list[dict], limits: dict,
-                    links_path: Path | str, site_url: str, *, now: datetime | None = None,
+                    links_path: Path | str, site_url: str, *, now: datetime | None = None, env=None,
                     blocklist: set[str] | None = None, resolver: Resolver = system_resolver,
                     scan: Callable[[str], dict | None] | None = _scan_target) -> dict:
     """Handle one short-link request end to end. There is no manual approval: the limits and the checks decide.
@@ -163,7 +170,8 @@ def process_request(body: str, author: str, account_created: str, history: list[
     allowed, why = check_account(limits["links"], limits["blocked_accounts"], author, account_created, history, now,
                                  "a short link")
     if not allowed:
-        return refuse("limit", why)
+        capacity = why.startswith(("Limit reached", "The daily capacity"))
+        return refuse("limit", why + (contact_line(env) if capacity else ""))
     found = re.search(r"https?://[^\s<>\"'`)\]]+", _field(body, "Target address"))
     if not found:
         return refuse("no-url", "No web address was found in the request.")
@@ -176,7 +184,8 @@ def process_request(body: str, author: str, account_created: str, history: list[
         return refuse("invalid", f"That request cannot be accepted: {exc}.")
     links = load_links(links_path)
     if len(links) >= limits["links"]["max_total"]:
-        return refuse("full", "The site has reached its maximum number of short links. Please try again later.")
+        return refuse("full", "The site has reached its maximum number of short links. Please try again later."
+                      + contact_line(env))
     same = next((l for l in links if l["url"] == url), None)
     if same and not code:
         return {"created": False, "reason": "exists", "code": same["code"], "comment": (

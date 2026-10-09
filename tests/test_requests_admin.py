@@ -353,3 +353,45 @@ def test_the_try_it_page_shows_results_on_its_own_page_with_a_privacy_note_and_a
     js = (out / "assets" / "result.js").read_text(encoding="utf-8")
     assert "github-actions[bot]" in js and "tw-result" in js and "Download JSON" in js and "Download CSV" in js
     assert "innerHTML" not in js  # everything from GitHub is shown as text, never as HTML
+
+
+SHORTLINK_LIMITS = {**DEFAULTS, "links": {**DEFAULTS["links"], "per_account": 1, "window_hours": 168, "global_per_day": 4}}
+
+
+def test_shortlink_limits_one_per_account_per_week_and_four_a_day_for_everyone(tmp_path):
+    first = request(tmp_path, limits=SHORTLINK_LIMITS, history=[hist("ana", 1)])
+    assert first["created"]
+    second = request(tmp_path, BODY.format(code="other"), limits=SHORTLINK_LIMITS, history=[hist("ana", 30), hist("ana", 1)])
+    assert not second["created"] and second["reason"] == "limit"
+    assert "at most 1 requests per account every 7 days" in second["comment"]
+    other_user = request(tmp_path, BODY.format(code="third"), author="ben", limits=SHORTLINK_LIMITS,
+                         history=[hist("ana", 30), hist("ben", 1)])
+    assert other_user["created"]  # a different account is not held back by ana's request
+    crowded = request(tmp_path, BODY.format(code="fifth"), author="eva", limits=SHORTLINK_LIMITS,
+                      history=[hist(name, i + 1) for i, name in enumerate(("a1", "a2", "a3", "a4", "eva"))])
+    assert not crowded["created"] and "daily capacity" in crowded["comment"]
+
+
+def test_shortlink_refusals_for_limits_point_to_the_developer_for_custom_links(tmp_path):
+    from traceguard import links as links_module
+    from traceguard.limits import span
+    assert (span(24), span(48), span(168), span(5)) == ("24 hours", "2 days", "7 days", "5 hours")
+    refused = process_request(BODY.format(code="x"), "ana", OLD, [hist("ana", 1), hist("ana", 2)], SHORTLINK_LIMITS,
+                              tmp_path / "links.json", "https://o.github.io/tw", now=NOW, blocklist=BLOCK, resolver=PUBLIC,
+                              scan=None, env={"CONTACT_EMAIL": "dev@example.org"})
+    assert "Want a custom short link" in refused["comment"] and "Contact the developer: dev@example.org" in refused["comment"]
+    blocked = process_request(BODY.format(code="x"), "ana", OLD, [hist("ana", 1)], {**SHORTLINK_LIMITS, "blocked_accounts": ["ana"]},
+                              tmp_path / "links.json", "https://o.github.io/tw", now=NOW, blocklist=BLOCK, resolver=PUBLIC,
+                              scan=None, env={"CONTACT_EMAIL": "dev@example.org"})
+    assert "Contact the developer" not in blocked["comment"]  # a blocked account is not invited to ask for more
+    assert links_module.contact_line({}) == ""
+
+
+def test_the_try_it_page_tells_people_to_contact_the_developer_for_a_custom_short_link(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", vantage="github-actions-us")})
+    (tmp_path / "limits.json").write_text(json.dumps({"links": {"per_account": 1, "window_hours": 168, "global_per_day": 4}}),
+                                          encoding="utf-8")
+    build_site(tmp_path / "runs", tmp_path / "site", repo_url="https://github.com/o/r", contact_email="dev@example.org")
+    page = (tmp_path / "site" / "request.html").read_text(encoding="utf-8")
+    assert "1 per GitHub account every 7 days; 4 per day for the whole site, whoever asks" in page
+    assert "Want a custom short link" in page and 'href="mailto:dev@example.org"' in page

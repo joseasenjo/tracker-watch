@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import os
 import re
 import sys
 from datetime import datetime, timedelta, timezone
@@ -37,6 +38,21 @@ MAX_BLOCKED = 200
 
 class LimitsError(ValueError):
     pass
+
+
+def span(hours: int) -> str:
+    """'24 hours', '7 days': whole days read better once the window is longer than one day."""
+    return f"{hours // 24} days" if hours > 24 and hours % 24 == 0 else f"{hours} hours"
+
+
+def contact_where(env=None) -> str:
+    """Where to send someone who needs more than the limits allow: the contact email, or the site's contact page."""
+    env = os.environ if env is None else env
+    email = (env.get("CONTACT_EMAIL") or "").strip()
+    if email:
+        return email
+    site = (env.get("SITE_URL") or "").strip()
+    return site + "contact.html" if site else ""
 
 
 def validate(data: dict) -> dict:
@@ -109,7 +125,7 @@ def check_account(section: dict, blocked: list[str], author: str, account_create
     own = [h for h in history if h["author"].lower() == author.lower() and now - _parse(h["created_at"]) < window]
     if len(own) > section["per_account"]:
         return False, (f"Limit reached: at most {section['per_account']} requests per account every "
-                       f"{section['window_hours']} hours. Please try again later.")
+                       f"{span(section['window_hours'])}. Please try again later.")
     today = [h for h in history if now - _parse(h["created_at"]) < timedelta(hours=24)]
     if len(today) > section["global_per_day"]:
         return False, "The daily capacity for this feature has been reached. Please try again tomorrow."
