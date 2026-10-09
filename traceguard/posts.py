@@ -160,6 +160,32 @@ def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform:
     return posts
 
 
+def company_reach(reports: list[dict]) -> list[tuple[str, int]]:
+    """(company, sites where one of its tracking services was contacted in every stable pass), widest first."""
+    counts: dict[str, int] = {}
+    for r in eligible(reports):
+        companies = {s.get("entity") for s in r["summary"].get("services", []) if s.get("tracking") and s.get("stable")}
+        for company in companies - {None, ""}:
+            counts[company] = counts.get(company, 0) + 1
+    return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+
+
+def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: str) -> list[str]:
+    """One mid-week post from the same measurement: which companies' tracking services reach the most sites.
+    Names companies, never outlets; counts, not verdicts."""
+    limit, usable = LIMITS[platform], len(eligible(reports))
+    reach = company_reach(reports)
+    if not reach:
+        raise ValueError("no company contacted on any measured site: nothing to post")
+    for top in (3, 2, 1):
+        listing = "; ".join(f"{c} {n} of {usable}" for c, n in reach[:top])
+        text = (f"Midweek: companies whose tracking services were contacted before any click on the most of the "
+                f"{usable} news sites measured ({date}). {listing}. Counts of sites, not verdicts. Data: {report_url}")
+        if len(text) <= limit:
+            return [text]
+    raise PostTooLong("the midweek post does not fit the limit")
+
+
 def alt_text(reports: list[dict]) -> str:
     rows = ranking(reports)[:10]
     if not rows:
@@ -242,9 +268,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
                         help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
                              "(a broken scan must not become a post)")
+    parser.add_argument("--kind", choices=("weekly", "midweek"), default="weekly",
+                        help="weekly: the full thread; midweek: one post on the companies reaching the most sites "
+                             "(written to <date>-midweek, no image)")
     args = parser.parse_args(argv)
 
     date, reports = load_latest_reports(args.runs_dir)
+    if args.kind == "midweek":
+        posts = build_midweek(date, reports, platform=args.platform, report_url=args.report_url)
+        markdown = render_markdown(date, args.platform, posts, "", None)
+        print(markdown)
+        if not args.dry_run:
+            out_dir = Path(args.out) / f"{date}-midweek"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / f"{args.platform}.md").write_text(markdown, encoding="utf-8")
+            (out_dir / f"{args.platform}.json").write_text(json.dumps({
+                "date": date, "platform": args.platform, "generated_at": datetime.now(timezone.utc).isoformat(),
+                "status": "draft", "posts": posts, "image": None, "alt_text": ""}, indent=2, ensure_ascii=False),
+                encoding="utf-8")
+        return 0
     share = len(eligible(reports)) / len(reports) if reports else 0.0
     if share < args.min_measured:
         print(f"NO DRAFT: only {len(eligible(reports))} of {len(reports)} sites were measured well ({share:.0%}, "

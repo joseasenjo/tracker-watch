@@ -1,0 +1,56 @@
+# Posts one short mid-week post on Bluesky from the latest measurement (no new scan): which companies' tracking
+# services reach the most sites. Wednesdays 08:00 UTC. Off unless the repository variable POST_ENABLED is "true";
+# needs the secrets BLUESKY_HANDLE and BLUESKY_APP_PASSWORD. A failed step fails the run, and GitHub emails the owner.
+name: post-midweek
+
+on:
+  schedule:
+    - cron: "0 8 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-scan   # never at the same time as a scan that is committing reports
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+
+jobs:
+  post:
+    if: ${{ vars.POST_ENABLED == 'true' && vars.PUBLISH_SITE == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Draft the post
+        run: python -m traceguard.posts data/runs --platform bluesky --kind midweek --report-url "$SITE_URL"
+
+      - name: Publish on Bluesky
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+        run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -- '-midweek$' | sort | tail -1)" --platform bluesky --send
+
+      - name: Record what was posted (so a re-run never repeats it)
+        if: ${{ always() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/drafts
+          git diff --cached --quiet || git commit -m "posts: midweek $(date -u +%F)"
+          git pull --rebase --autostash
+          git push

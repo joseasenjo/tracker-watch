@@ -179,3 +179,26 @@ def test_the_chart_is_attached_to_post_one_with_its_alt_text(tmp_path, monkeypat
 def test_markdown_says_when_no_image_was_drawn():
     text = render_markdown("d", "bluesky", ["one", "two"], "alt")
     assert "no image was drawn" in text and "Image attached" not in text
+
+
+def _with_services(r, *companies):
+    r["summary"]["services"] = [{"service": f"{c.lower()}.example", "entity": c, "tracking": True, "stable": True}
+                                for c in companies]
+    return r
+
+
+def test_midweek_post_ranks_companies_by_sites_reached_and_names_no_outlet():
+    reports = [_with_services(report("News A", 2), "Alpha", "Beta"), _with_services(report("News B", 1), "Alpha"),
+               _with_services(report("News C", 1), "Alpha", "Gamma"), report("News F", 0, status="blocked")]
+    assert posts_module.company_reach(reports) == [("Alpha", 3), ("Beta", 1), ("Gamma", 1)]
+    (post,) = posts_module.build_midweek("2026-10-11", reports, platform="bluesky", report_url="https://x.test/")
+    assert "Alpha 3 of 3" in post and "News A" not in post and "@" not in post and len(post) <= LIMITS["bluesky"]
+
+
+def test_midweek_cli_writes_its_own_folder(tmp_path):
+    folder = tmp_path / "runs" / "2026-10-11"
+    folder.mkdir(parents=True)
+    (folder / "a.json").write_text(json.dumps(_with_services(report("News A", 1), "Alpha")), encoding="utf-8")
+    assert main([str(tmp_path / "runs"), "--kind", "midweek", "--out", str(tmp_path / "d")]) == 0
+    saved = json.loads((tmp_path / "d" / "2026-10-11-midweek" / "bluesky.json").read_text(encoding="utf-8"))
+    assert saved["status"] == "draft" and len(saved["posts"]) == 1 and saved["image"] is None
