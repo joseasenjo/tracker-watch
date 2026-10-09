@@ -1,0 +1,59 @@
+# Publishes a draft that is waiting for approval (review mode: repository variable POST_REVIEW = "true").
+# Started by hand or from the developer dashboard (python -m traceguard.admin, page /ops). Needs the secrets
+# BLUESKY_HANDLE and BLUESKY_APP_PASSWORD. A draft that was already published is never sent twice (the .posted.json
+# record), and one older than 14 days is refused.
+name: publish-draft
+
+on:
+  workflow_dispatch:
+    inputs:
+      folder:
+        description: "Draft folder, e.g. data/drafts/2026-10-12 or data/drafts/2026-10-14-midweek"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-scan   # never at the same time as a scan that is committing reports
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check the folder name
+        env:
+          FOLDER: ${{ github.event.inputs.folder }}
+        run: |
+          echo "$FOLDER" | grep -Eq '^data/drafts/[0-9]{4}-[0-9]{2}-[0-9]{2}(-midweek)?$' || { echo "bad folder name"; exit 1; }
+
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Publish on Bluesky
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          FOLDER: ${{ github.event.inputs.folder }}
+        run: python -m traceguard.publish "$FOLDER" --platform bluesky --send
+
+      - name: Record what was posted (so a re-run never repeats it)
+        if: ${{ always() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/drafts
+          git diff --cached --quiet || git commit -m "posts: approved draft"
+          git pull --rebase --autostash
+          git push

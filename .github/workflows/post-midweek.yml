@@ -39,7 +39,13 @@ jobs:
       - name: Draft the post
         run: python -m traceguard.posts data/runs --platform bluesky --kind midweek --report-url "$SITE_URL"
 
+      - name: Waiting for your approval (review mode is on)
+        if: ${{ vars.POST_REVIEW == 'true' }}
+        run: |
+          echo "Draft ready, NOT published. Approve it in the developer dashboard or run publish-draft." >> "$GITHUB_STEP_SUMMARY"
+
       - name: Publish on Bluesky
+        if: ${{ vars.POST_REVIEW != 'true' }}
         env:
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}

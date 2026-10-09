@@ -24,11 +24,14 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Callable
 
+from . import ops
 from .limits import BOUNDS, DEFAULTS, LimitsError, load_limits, save_limits
 
 DEFAULT_REPO = "joseasenjo/tracker-watch"
 LABELS = {"scan": "scan-request", "links": "link-request"}
 MAX_BODY = 20_000
+OPS_PAGE = Path(__file__).with_name("ops_page.html")
+OPS_POST = ("/api/ops/switch", "/api/ops/run", "/api/ops/approve", "/api/ops/pull")
 
 
 def recent_requests(repo: str, runner: Callable = subprocess.run, now: datetime | None = None) -> dict:
@@ -85,6 +88,17 @@ class Handler(SimpleHTTPRequestHandler):
                                         "bounds": BOUNDS, "file": str(self.limits_path)})
             except LimitsError as exc:
                 return self._json(500, {"error": str(exc)})
+        if self.path == "/ops":
+            data = OPS_PAGE.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(data)
+            return
+        if self.path == "/api/ops/status":
+            return self._json(200, ops.get_status(self.repo, runner=self.runner))
         if self.path == "/api/usage":
             return self._json(200, recent_requests(self.repo, self.runner))
         if self.path.startswith("/api/"):
@@ -94,12 +108,14 @@ class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
         if not self._allowed_host():
             return self._json(403, {"error": "forbidden host"})
-        if self.path != "/api/limits":
+        if self.path not in ("/api/limits", *OPS_POST):
             return self._json(404, {"error": "not found"})
         if not secrets.compare_digest(self.headers.get("X-Admin-Token", ""), self.token):
             return self._json(403, {"error": "bad token"})
         if "application/json" not in (self.headers.get("Content-Type") or ""):
             return self._json(415, {"error": "send JSON"})
+        if self.path in OPS_POST:
+            return self._ops_post()
         try:
             size = int(self.headers.get("Content-Length") or 0)
             if not 0 < size <= MAX_BODY:
@@ -108,6 +124,29 @@ class Handler(SimpleHTTPRequestHandler):
         except (ValueError, LimitsError) as exc:
             return self._json(400, {"error": str(exc)})
         return self._json(200, {"limits": saved, "saved_to": str(self.limits_path)})
+
+
+    def _ops_post(self):
+        """The few write actions of the developer dashboard; each one is checked again in traceguard.ops."""
+        try:
+            size = int(self.headers.get("Content-Length") or 0)
+            if not 0 < size <= MAX_BODY:
+                return self._json(413, {"error": "bad size"})
+            body = json.loads(self.rfile.read(size).decode("utf-8"))
+            if not isinstance(body, dict):
+                raise ops.OpsError("se esperaba un objeto JSON")
+            if self.path == "/api/ops/switch":
+                value = ops.set_switch(str(body.get("name", "")), body.get("value"), self.repo, self.runner)
+                return self._json(200, {"ok": True, "name": body["name"], "value": value})
+            if self.path == "/api/ops/run":
+                ops.run_workflow(str(body.get("workflow", "")), self.repo, self.runner)
+                return self._json(200, {"ok": True})
+            if self.path == "/api/ops/approve":
+                ops.approve_draft(str(body.get("folder", "")), self.repo, self.runner)
+                return self._json(200, {"ok": True})
+            return self._json(200, {"ok": True, "output": ops.pull_data(self.runner)})  # /api/ops/pull
+        except (ValueError, ops.OpsError) as exc:
+            return self._json(400, {"error": str(exc)})
 
 
 def make_server(dashboard_dir: Path | str, limits_path: Path | str, repo: str = DEFAULT_REPO, port: int = 8765,
@@ -130,7 +169,7 @@ def main(argv: list[str] | None = None) -> int:
               file=sys.stderr)
         return 2
     server = make_server(args.dashboard, args.limits, args.repo, args.port)
-    print(f"Dashboard: http://127.0.0.1:{server.server_address[1]}/   (Ctrl+C to stop)")
+    print(f"Dashboard: http://127.0.0.1:{server.server_address[1]}/   Developer panel: http://127.0.0.1:{server.server_address[1]}/ops   (Ctrl+C to stop)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
