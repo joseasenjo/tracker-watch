@@ -96,6 +96,13 @@ def test_ranking_card_lists_the_top_sites_with_scaled_bars(weeks):
     assert "News A: 3" in alt_text(ctx)
 
 
+def test_ranking_card_leaves_out_low_confidence_sites_like_the_weekly_thread():
+    ctx = {"measured": [{"name": "Low One", "tracking": 90, "band": "E", "confidence": "low"},
+                        {"name": "Solid One", "tracking": 50, "band": "E", "confidence": "high"},
+                        {"name": "Mid One", "tracking": 40, "band": "D", "confidence": "medium"}]}
+    assert [r["name"] for r in ranking_rows(ctx)] == ["Solid One", "Mid One"]
+
+
 def test_card_png_can_be_rendered_when_chromium_is_available(weeks, tmp_path):
     ctx = build_context(weeks / "runs")
     path = tmp_path / "card.png"

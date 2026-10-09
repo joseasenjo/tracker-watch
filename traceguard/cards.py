@@ -16,7 +16,8 @@ MAX_ROWS = 6
 
 def ranking_rows(ctx: dict) -> list[dict]:
     """Top sites by number of tracking services, with bar widths scaled to the largest."""
-    top = [e for e in ctx["measured"] if e["tracking"] > 0][:MAX_ROWS]
+    # same rule as the weekly thread: sites measured with low confidence are not ranked
+    top = [e for e in ctx["measured"] if e["tracking"] > 0 and e.get("confidence", "high") in ("high", "medium")][:MAX_ROWS]
     largest = max((e["tracking"] for e in top), default=1)
     return [{"name": e["name"], "count": e["tracking"], "band": e["band"],
              "width": max(4, round(100 * e["tracking"] / largest))} for e in top]
