@@ -239,9 +239,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", default="data/drafts", help="where draft files are written")
     parser.add_argument("--no-image", action="store_true", help="do not draw the chart image")
     parser.add_argument("--dry-run", action="store_true", help="print the draft and write nothing (no image either)")
+    parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
+                        help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
+                             "(a broken scan must not become a post)")
     args = parser.parse_args(argv)
 
     date, reports = load_latest_reports(args.runs_dir)
+    share = len(eligible(reports)) / len(reports) if reports else 0.0
+    if share < args.min_measured:
+        print(f"NO DRAFT: only {len(eligible(reports))} of {len(reports)} sites were measured well ({share:.0%}, "
+              f"the minimum is {args.min_measured:.0%}).", file=sys.stderr)
+        return 2
     diffs = compare_directories(args.runs_dir)
     groups = load_groups(args.sites_file)
     spain = load_spain(args.spain_dir, groups, date)

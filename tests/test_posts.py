@@ -87,6 +87,18 @@ def test_cli_dry_run_writes_nothing_and_normal_run_writes_a_draft(tmp_path, caps
     assert "NOT PUBLISHED" in capsys.readouterr().out
 
 
+def test_cli_refuses_to_draft_when_too_few_sites_were_measured_well(tmp_path):
+    folder = tmp_path / "runs" / "2026-10-11"
+    folder.mkdir(parents=True)
+    for r in REPORTS:  # 4 of 6 are usable
+        (folder / f"{r['site']['name'].replace(' ', '-')}.json").write_text(json.dumps(r), encoding="utf-8")
+    isolated = ["--sites-file", str(tmp_path / "none.json"), "--spain-dir", str(tmp_path / "none"),
+                "--out", str(tmp_path / "drafts"), "--no-image"]
+    assert main([str(tmp_path / "runs"), "--min-measured", "0.9", *isolated]) == 2
+    assert not (tmp_path / "drafts").exists()
+    assert main([str(tmp_path / "runs"), "--min-measured", "0.5", *isolated]) == 0
+
+
 def test_load_latest_reports_picks_newest_folder(tmp_path):
     for day in ("2026-10-04", "2026-10-11"):
         (tmp_path / day).mkdir()

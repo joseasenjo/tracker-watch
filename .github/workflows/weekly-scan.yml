@@ -1,6 +1,6 @@
 # Weekly scan of the outlet list. Commits the JSON reports (history) and builds the site.
 # The site is published to GitHub Pages only when the repository variable PUBLISH_SITE is "true".
-# It never posts to Bluesky or Mastodon.
+# After publishing it can post the weekly thread on Bluesky (job "post", off unless POST_ENABLED is "true").
 name: weekly-scan
 
 on:
@@ -97,3 +97,47 @@ jobs:
       - name: Publish to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Posts the weekly thread on Bluesky, only after the site is live (the thread links to it).
+  # Switch: the repository variable POST_ENABLED must be "true"; remove it to stop posting. Secrets needed:
+  # BLUESKY_HANDLE and BLUESKY_APP_PASSWORD. A failed step fails the run, and GitHub emails the owner.
+  post:
+    needs: deploy
+    if: ${{ vars.POST_ENABLED == 'true' && vars.PUBLISH_SITE == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # includes the reports the scan job just committed
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies and Chromium
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Draft the thread (stops if too few sites were measured well)
+        run: >
+          python -m traceguard.posts data/runs --platform bluesky --min-measured 0.6
+          --report-url "$SITE_URL"
+
+      - name: Publish on Bluesky
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+        run: python -m traceguard.publish "data/drafts/$(ls data/drafts | sort | tail -1)" --platform bluesky --send
+
+      - name: Record what was posted (so a re-run never repeats it)
+        if: ${{ always() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/drafts
+          git diff --cached --quiet || git commit -m "posts: $(date -u +%F)"
+          git pull --rebase --autostash
+          git push
