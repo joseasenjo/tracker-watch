@@ -14,7 +14,9 @@ Usage (from the workflow):
 from __future__ import annotations
 
 import argparse
+import base64
 import json
+import os
 import re
 import sys
 from datetime import datetime, timedelta, timezone
@@ -29,6 +31,7 @@ MIN_ACCOUNT_AGE_DAYS = DEFAULTS["scan"]["min_account_age_days"]
 GLOBAL_PER_DAY = DEFAULTS["scan"]["global_per_day"]
 PASSES = 2
 OBSERVE_SECONDS = 10.0
+RESULT_MARK = "tw-result"  # the hidden block the website reads to show a result on its own page
 URL_PATTERN = re.compile(r"https?://[^\s<>\"'`)\]]+", re.IGNORECASE)
 
 
@@ -85,8 +88,44 @@ def render_comment(report: dict) -> str:
     return "\n".join(lines) + foot
 
 
-def refusal_comment(reason: str) -> str:
-    return f"This request was not processed. {reason}"
+def result_block(report: dict, when: str) -> str:
+    """The same figures as the reply, as a hidden, machine-readable block (base64 JSON in an HTML comment) that the
+    website reads to show the result on its own page. Only sanitised host names, numbers and fixed labels go in."""
+    s, m = report["summary"], report["measurement"]
+    host = _safe_host(report["site"]["url"].split("/")[2]) if "//" in report["site"]["url"] else ""
+    payload = {"schema": 1, "host": host, "measured_at": when, "vantage": m["vantage"], "passes": m["passes"],
+               "observe_seconds": m["observe_seconds"], "status": s["status"], "confidence": s.get("confidence"),
+               "passes_ok": s.get("passes_ok"), "passes_total": s.get("passes_total")}
+    if s["status"] == "ok":
+        from .bands import band_for
+        metrics = s["metrics"]
+        payload["band"] = band_for(metrics["tracking_services"], s.get("confidence"))
+        payload["metrics"] = {k: metrics[k] for k in ("tracking_services", "third_party_domains", "third_party_requests",
+                                                      "third_party_cookies", "cookies_total")}
+        payload["services"] = [{"service": _safe_host(x["service"]), "company": re.sub(r"[^\w .()&+-]", "", str(x["entity"]))[:60],
+                                "category": re.sub(r"[^a-z_ ]", "", str(x["category"]))[:30]}
+                               for x in s["services"] if x["tracking"] and x["stable"]][:60]
+    raw = json.dumps(payload, separators=(",", ":"), ensure_ascii=True).encode("ascii")
+    return f"\n\n<!-- {RESULT_MARK}:{base64.b64encode(raw).decode('ascii')} -->"
+
+
+def decode_result_block(comment: str) -> dict | None:
+    found = re.search(rf"<!-- {RESULT_MARK}:([A-Za-z0-9+/=]+) -->", comment)
+    return json.loads(base64.b64decode(found.group(1))) if found else None
+
+
+def contact_line(env=None) -> str:
+    """Shown when a request is refused for the limit: where to turn for more, or for a project."""
+    env = os.environ if env is None else env
+    where = (env.get("CONTACT_EMAIL") or "").strip() or ((env.get("SITE_URL") or "").strip() + "contact.html" if env.get("SITE_URL") else "")
+    if not where:
+        return ""
+    return ("\n\nNeed more analyses, or a project of your own, such as regular scans of your sites or a custom "
+            f"report? Contact the developer: {where}")
+
+
+def refusal_comment(reason: str, contact: str = "") -> str:
+    return f"This request was not processed. {reason}{contact}"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -118,7 +157,8 @@ def main(argv: list[str] | None = None) -> int:
     allowed, reason = check_account(limits["scan"], limits["blocked_accounts"], args.author, args.account_created,
                                     history, now, "an analysis")
     if not allowed:
-        return finish(refusal_comment(reason), False, "limit")
+        capacity = reason.startswith(("Limit reached", "The daily capacity"))
+        return finish(refusal_comment(reason, contact_line() if capacity else ""), False, "limit")
     url = extract_url(body)
     if not url:
         return finish(refusal_comment("No web address was found in the request."), False, "no-url")
@@ -131,7 +171,7 @@ def main(argv: list[str] | None = None) -> int:
 
     from .scanner import scan_site  # imported here so tests run without a browser
     report = scan_site(url, passes=PASSES, observe_seconds=OBSERVE_SECONDS, vantage="github-actions-us")
-    return finish(render_comment(report), True)
+    return finish(render_comment(report) + result_block(report, now.strftime("%Y-%m-%d %H:%M UTC")), True)
 
 
 if __name__ == "__main__":

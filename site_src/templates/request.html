@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Try it on your own address{% endblock %}
+{% block head %}<script src="{{ root }}assets/result.js" defer></script>{% endblock %}
 {% block content %}
 <section>
   <div class="wrap">
@@ -18,7 +19,7 @@
           </div>
           <p class="note" role="status" hidden></p>
         </form>
-        <p class="small">Limit: {{ limits.scan.per_account }} per GitHub account every {{ limits.scan.window_hours }} hours; {{ limits.scan.global_per_day }} per day for the whole site.</p>
+        <p class="small">Limit: {{ limits.scan.per_account }} per GitHub account every {{ limits.scan.window_hours }} hours; {{ limits.scan.global_per_day }} per day for the whole site.{% if contact_email %} Need more, or a project of your own? <a href="mailto:{{ contact_email }}">Contact the developer</a>.{% endif %}</p>
         {% else %}
         <p class="note">Analyses are switched off for now.</p>
         {% endif %}
@@ -42,11 +43,25 @@
       </div>
     </div>
 
+    {% if limits.scan.enabled and repo_url %}
+    <h2>See your result here</h2>
+    <p class="sub">After you send an analysis above, come back to this page, type the same address and press the button: the result appears below, ready to read or to download as JSON or CSV.</p>
+    <form class="checker" id="result-form" data-repo="{{ repo_url }}" novalidate>
+      <div class="checker-row">
+        <input type="text" inputmode="url" autocomplete="off" placeholder="https://www.example-news.com" aria-label="Address you analysed">
+        <button class="btn" type="submit">Show the result</button>
+      </div>
+      <p class="note" role="status" hidden></p>
+    </form>
+    <p class="small">Pressing the button makes one or two requests to GitHub's public API from your browser, so GitHub sees your IP address. Nothing else on this site contacts a third party, and nothing is stored.</p>
+    <div id="result-out" aria-live="polite"></div>
+    {% endif %}
+
     <h2>How it works</h2>
     <div class="steps">
       <div class="step"><h3>1. Ask</h3><p>Pressing the button opens a GitHub issue with the address already filled in. You review it and submit it. Nothing is sent from this page.</p></div>
       <div class="step"><h3>2. Automatic check</h3><p>A workflow validates the address (public websites only), applies the limits, and then measures it or creates the link. Nobody approves it by hand.</p></div>
-      <div class="step"><h3>3. Reply</h3><p>The result is posted in the same issue, which is then closed. A new short link goes live a few minutes later, once the site has been republished.</p></div>
+      <div class="step"><h3>3. Reply</h3><p>The result is posted in the same issue, which is then closed, and you can read it on this page with the button above. A new short link goes live a few minutes later, once the site has been republished.</p></div>
     </div>
 
     <h2>What to know</h2>

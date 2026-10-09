@@ -322,3 +322,34 @@ def test_issue_forms_and_workflows_match_what_the_code_reads():
     for run_block in workflow.split("run: ")[1:]:
         assert "${{ github.event.issue" not in run_block.split("\n      - ")[0], "issue text must not reach a shell script"
     assert "publish-site.yml" in workflow and "data/limits.json" in workflow
+
+
+def test_limit_refusal_points_to_the_developer_and_the_reply_carries_a_hidden_machine_readable_result():
+    from traceguard import ondemand
+    contact = ondemand.contact_line({"CONTACT_EMAIL": "dev@example.org"})
+    text = ondemand.refusal_comment("Limit reached: at most 2 requests per account every 24 hours.", contact)
+    assert "Contact the developer: dev@example.org" in text and "project of your own" in text
+    assert ondemand.contact_line({"SITE_URL": "https://x.test/tw/"}).endswith("https://x.test/tw/contact.html")
+    assert ondemand.contact_line({}) == ""
+    report = {"site": {"url": "https://www.example-news.com/a"}, "measurement": {"vantage": "github-actions-us", "passes": 2, "observe_seconds": 10.0},
+              "summary": {"status": "ok", "confidence": "high", "passes_ok": 2, "passes_total": 2,
+                          "metrics": {"tracking_services": 3, "third_party_domains": 5, "third_party_requests": 9,
+                                      "third_party_cookies": 1, "cookies_total": 4},
+                          "services": [{"service": "ads.example.com", "entity": "Ad <b>Co</b>", "category": "advertising",
+                                        "tracking": True, "stable": True},
+                                       {"service": "cdn.example.com", "entity": "CDN", "category": "cdn", "tracking": False, "stable": True}]}}
+    block = ondemand.result_block(report, "2026-10-12 08:00 UTC")
+    assert "-->" in block and block.count("-->") == 1
+    decoded = ondemand.decode_result_block("Analysis...\n" + block)
+    assert decoded["host"] == "www.example-news.com" and decoded["metrics"]["tracking_services"] == 3
+    assert [s["service"] for s in decoded["services"]] == ["ads.example.com"]
+    assert "<" not in decoded["services"][0]["company"] and ondemand.decode_result_block("no block here") is None
+
+
+def test_the_try_it_page_shows_results_on_its_own_page_with_a_privacy_note_and_a_contact_for_more(site):
+    out, _ = site
+    page = (out / "request.html").read_text(encoding="utf-8")
+    assert 'id="result-form"' in page and "assets/result.js" in page and "GitHub sees your IP address" in page
+    js = (out / "assets" / "result.js").read_text(encoding="utf-8")
+    assert "github-actions[bot]" in js and "tw-result" in js and "Download JSON" in js and "Download CSV" in js
+    assert "innerHTML" not in js  # everything from GitHub is shown as text, never as HTML
