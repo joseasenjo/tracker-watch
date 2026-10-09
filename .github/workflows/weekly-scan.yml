@@ -4,9 +4,10 @@
 name: weekly-scan
 
 on:
-  # Schedule stays disabled until the owner decides to turn it on.
-  # schedule:
-  #   - cron: "0 5 * * 1"   # Mondays 05:00 UTC; scheduled runs can start a few minutes late
+  # Mondays 07:00 UTC (09:00 in Spain in summer): the scan takes about 40 minutes, so the thread goes out mid-morning.
+  # Scheduled runs can start a few minutes late.
+  schedule:
+    - cron: "0 7 * * 1"
   workflow_dispatch:
     inputs:
       passes:
