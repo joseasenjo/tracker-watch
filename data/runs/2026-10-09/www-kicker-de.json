@@ -1,0 +1,565 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-09T16:18:02+00:00",
+  "site": {
+    "name": "kicker",
+    "url": "https://www.kicker.de",
+    "first_party_domains": [
+      "kicker.de"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 3,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 202,
+    "final_url": "https://www.kicker.de/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": false,
+      "content_security_policy": "absent"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 8,
+      "third_party_domains": 2,
+      "tracking_requests": 0,
+      "total_bytes": 347753,
+      "third_party_bytes": 343378,
+      "tracking_bytes": 0,
+      "tracking_services": 0,
+      "third_party_cookies": 0,
+      "cookies_total": 2,
+      "storage_items": 4
+    },
+    "third_party_domains": [
+      {
+        "domain": "awswaf.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "captcha-delivery.com",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "services": [],
+    "observations": [],
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 8 requests to 2 third-party domains (median of 3 passes).",
+      "evidence": {
+        "requests": 8,
+        "domains": 2
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 348 kB transferred in that window (compressed responses that finished loading), 343 kB (99%) came from third-party domains, 0 B of it from services classified as tracking (0 requests).",
+      "evidence": {
+        "total_bytes": 347753,
+        "third_party_bytes": 343378,
+        "tracking_bytes": 0,
+        "tracking_requests": 0
+      }
+    },
+    {
+      "code": "NO_HSTS",
+      "severity": "info",
+      "text": "The main document response did not include a Strict-Transport-Security header.",
+      "evidence": {}
+    },
+    {
+      "code": "NO_CSP",
+      "severity": "info",
+      "text": "The main document response did not include a Content-Security-Policy header or meta tag.",
+      "evidence": {}
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 202,
+      "error": null,
+      "final_url": "https://www.kicker.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 58,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.kicker.de/",
+          "host": "www.kicker.de",
+          "bytes": 2819,
+          "domain": "kicker.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 253,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/challenge.js",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 311819,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 427,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/inputs",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 1116,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 563,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/mp_verify",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 735,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 787,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.kicker.de/",
+          "host": "www.kicker.de",
+          "bytes": 1560,
+          "domain": "kicker.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 868,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ct.captcha-delivery.com/c.js",
+          "host": "ct.captcha-delivery.com",
+          "bytes": 4203,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 962,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://geo.captcha-delivery.com/captcha/",
+          "host": "geo.captcha-delivery.com",
+          "bytes": 6660,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1115,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static.captcha-delivery.com/captcha/assets/tpl/6dc485c0c428c35b53577b146dc6f9179f55ef9ad41b327a2a179998839364bf/index.css",
+          "host": "static.captcha-delivery.com",
+          "bytes": 1837,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1116,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static.captcha-delivery.com/common/fonts/roboto/font-face.css",
+          "host": "static.captcha-delivery.com",
+          "bytes": 910,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1160,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://static.captcha-delivery.com/common/fonts/roboto/roboto.woff2",
+          "host": "static.captcha-delivery.com",
+          "bytes": 16076,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "aws-waf-token",
+          "domain": "kicker.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 4
+        },
+        {
+          "name": "datadome",
+          "domain": "kicker.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 1
+      },
+      "observations": []
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 202,
+      "error": null,
+      "final_url": "https://www.kicker.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 44,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.kicker.de/",
+          "host": "www.kicker.de",
+          "bytes": 2819,
+          "domain": "kicker.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 87,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/challenge.js",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 311847,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 248,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/inputs",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 1117,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 371,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/mp_verify",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 737,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 488,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.kicker.de/",
+          "host": "www.kicker.de",
+          "bytes": 1556,
+          "domain": "kicker.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 552,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ct.captcha-delivery.com/c.js",
+          "host": "ct.captcha-delivery.com",
+          "bytes": 4203,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 600,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://geo.captcha-delivery.com/captcha/",
+          "host": "geo.captcha-delivery.com",
+          "bytes": 6653,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 662,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static.captcha-delivery.com/captcha/assets/tpl/6dc485c0c428c35b53577b146dc6f9179f55ef9ad41b327a2a179998839364bf/index.css",
+          "host": "static.captcha-delivery.com",
+          "bytes": 1837,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 663,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static.captcha-delivery.com/common/fonts/roboto/font-face.css",
+          "host": "static.captcha-delivery.com",
+          "bytes": 908,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 704,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://static.captcha-delivery.com/common/fonts/roboto/roboto.woff2",
+          "host": "static.captcha-delivery.com",
+          "bytes": 16076,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "aws-waf-token",
+          "domain": "kicker.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 4
+        },
+        {
+          "name": "datadome",
+          "domain": "kicker.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 1
+      },
+      "observations": []
+    },
+    {
+      "pass": 3,
+      "status": "ok",
+      "http_status": 202,
+      "error": null,
+      "final_url": "https://www.kicker.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 36,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.kicker.de/",
+          "host": "www.kicker.de",
+          "bytes": 2819,
+          "domain": "kicker.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 86,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/challenge.js",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 311902,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 264,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/inputs",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 1117,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 393,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com/5e02c5ccc11c/0a9e4ed28e34/8af8c235a244/mp_verify",
+          "host": "5e02c5ccc11c.39c61680.us-east-1.token.awswaf.com",
+          "bytes": 734,
+          "domain": "awswaf.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 537,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.kicker.de/",
+          "host": "www.kicker.de",
+          "bytes": 1560,
+          "domain": "kicker.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 603,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ct.captcha-delivery.com/c.js",
+          "host": "ct.captcha-delivery.com",
+          "bytes": 4203,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 652,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://geo.captcha-delivery.com/captcha/",
+          "host": "geo.captcha-delivery.com",
+          "bytes": 6663,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 761,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static.captcha-delivery.com/captcha/assets/tpl/6dc485c0c428c35b53577b146dc6f9179f55ef9ad41b327a2a179998839364bf/index.css",
+          "host": "static.captcha-delivery.com",
+          "bytes": 1838,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 761,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://static.captcha-delivery.com/common/fonts/roboto/font-face.css",
+          "host": "static.captcha-delivery.com",
+          "bytes": 910,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 804,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://static.captcha-delivery.com/common/fonts/roboto/roboto.woff2",
+          "host": "static.captcha-delivery.com",
+          "bytes": 16076,
+          "domain": "captcha-delivery.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "aws-waf-token",
+          "domain": "kicker.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 4
+        },
+        {
+          "name": "datadome",
+          "domain": "kicker.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 1
+      },
+      "observations": []
+    }
+  ]
+}

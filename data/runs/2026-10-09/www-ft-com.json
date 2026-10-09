@@ -1,0 +1,2072 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-09T16:08:49+00:00",
+  "site": {
+    "name": "Financial Times",
+    "url": "https://www.ft.com",
+    "first_party_domains": [
+      "ft.com",
+      "ftcdn.net"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 1,
+    "status": "ok",
+    "confidence": "low",
+    "failed_passes": {
+      "blocked": 2
+    },
+    "http_status": 200,
+    "final_url": "https://www.ft.com/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 14,
+      "third_party_domains": 5,
+      "tracking_requests": 13,
+      "total_bytes": 2327703,
+      "third_party_bytes": 518734,
+      "tracking_bytes": 318913,
+      "tracking_services": 4,
+      "third_party_cookies": 0,
+      "cookies_total": 16,
+      "storage_items": 19
+    },
+    "third_party_domains": [
+      {
+        "domain": "adsafeprotected.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "chartbeat.com",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "chartbeat.net",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "doubleclick.net",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "domain": "googletagmanager.com",
+        "passes_seen": 1,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "adsafeprotected.com",
+        "entity": "Integral Ad Science",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "service": "chartbeat.com",
+        "entity": "Chartbeat",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "service": "chartbeat.net",
+        "entity": "Chartbeat",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "service": "doubleclick.net",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "service": "googletagmanager.com",
+        "entity": "Google",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 1,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "chartbeat.com",
+        "party": "third",
+        "passes_seen": 1,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "ft.com",
+        "party": "first",
+        "passes_seen": 1,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "LOW_CONFIDENCE",
+      "severity": "notable",
+      "text": "Only 1 of 3 passes could be measured (2 blocked). The figures come from a minority of passes and are indicative only.",
+      "evidence": {
+        "confidence": "low",
+        "failed_passes": {
+          "blocked": 2
+        }
+      }
+    },
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 14 requests to 5 third-party domains (median of 1 passes).",
+      "evidence": {
+        "requests": 14,
+        "domains": 5
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 2.3 MB transferred in that window (compressed responses that finished loading), 519 kB (22%) came from third-party domains, 319 kB of it from services classified as tracking (13 requests).",
+      "evidence": {
+        "total_bytes": 2327703,
+        "third_party_bytes": 518734,
+        "tracking_bytes": 318913,
+        "tracking_requests": 13
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "4 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: adsafeprotected.com (Integral Ad Science, advertising), chartbeat.com (Chartbeat, analytics), chartbeat.net (Chartbeat, analytics), doubleclick.net (Google, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 1,
+            "stable": true
+          },
+          {
+            "service": "chartbeat.com",
+            "entity": "Chartbeat",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 1,
+            "stable": true
+          },
+          {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 1,
+            "stable": true
+          },
+          {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 1,
+            "stable": true
+          }
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "blocked",
+      "http_status": 403,
+      "error": null,
+      "final_url": "https://www.ft.com/",
+      "navigation_redirects": [
+        {
+          "from": "https://www.ft.com/",
+          "to": "https://www.ft.com/",
+          "status": 307
+        }
+      ],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 61,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.ft.com/",
+          "host": "www.ft.com",
+          "bytes": 65
+        },
+        {
+          "t_ms": 329,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1",
+          "host": "www.ft.com"
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": []
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.ft.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 33,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.ft.com/",
+          "host": "www.ft.com",
+          "bytes": 42405,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 605,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static.chartbeat.com/js/chartbeat_mab.js",
+          "host": "static.chartbeat.com",
+          "bytes": 10450,
+          "domain": "chartbeat.com",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.com",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 606,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static.chartbeat.com/js/chartbeat.js",
+          "host": "static.chartbeat.com",
+          "bytes": 17402,
+          "domain": "chartbeat.com",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.com",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 607,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 38542,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 755,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-notice.ft.com/cmp.js",
+          "host": "consent-notice.ft.com",
+          "bytes": 13220,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 755,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/customCodeComponents.5cc70aa54c67.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 7113,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 919,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://pg.ft.com/adapters/dotcom-home-page.min.js",
+          "host": "pg.ft.com",
+          "bytes": 12897,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 920,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/webpack-runtime.15754492040b.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2978,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 921,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/page-kit-components.65984f671deb.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 4366,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 923,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-tracking.5fb2af57885c.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 7857,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 924,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-n-syndication.d2a7fe309e84.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 8007,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 924,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-header.e39ceb699fee.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 4348,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 925,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-viewport.8b736d9dfcdf.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2853,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 926,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-toggle.7010dd43053a.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2430,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 927,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-footer.c8b47af58667.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2002,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 928,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-expander.512452b0cd73.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 3345,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 929,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/shared.stable.7e00de2cd145.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 6301,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 929,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/next-session-client.820c771d0db1.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2023,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 930,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/privacy-components.ef4dde2c3ffe.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2395,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 931,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-date.b32f238f7d9b.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2702,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 932,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/superstore.62fc1eac5d3c.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 1963,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 933,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/react.7be633d7c0d6.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 1968,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 934,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/preact.12dc744080b6.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 6957,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 934,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-utils.f2b1a300cea6.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 1625,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 935,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-private-foundation.ad9ee90944ee.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 1680,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 936,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-x-engine.b64d09bbc27d.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 1387,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 937,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-ft-date-format.7c516a24dccf.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2718,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 938,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-o-grid.5fa09224f411.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 2079,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 939,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-n-tracking.34bc05d14509.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 7300,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 939,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/financial-times-n-exponea.32bebc7d5a3b.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 3044,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 940,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/227.19ed610db554.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 104570,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 941,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/scripts.3e6f3fa00c78.bundle.js",
+          "host": "www.ft.com",
+          "bytes": 14155,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 942,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.ft.com/__origami/service/build/v3/font",
+          "host": "www.ft.com",
+          "bytes": 124182,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 943,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.ft.com/__origami/service/build/v3/font",
+          "host": "www.ft.com",
+          "bytes": 65826,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 944,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/579.fc5bb38924ff.css",
+          "host": "www.ft.com",
+          "bytes": 29002,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 944,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/page-kit-layout-styles.74508e04204a.css",
+          "host": "www.ft.com",
+          "bytes": 14060,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 945,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/632.d01de9f81419.css",
+          "host": "www.ft.com",
+          "bytes": 28549,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 946,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.ft.com/__assets/hashed/page-kit/styles.156f4d2f0357.css",
+          "host": "www.ft.com",
+          "bytes": 29523,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 994,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F32f571f8-de83-411c-87c5-ae677be9cc77.jpg",
+          "host": "images.ft.com",
+          "bytes": 13678,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 996,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F00910373-3cf8-4a0c-b00d-949b113fdeb7.png",
+          "host": "images.ft.com",
+          "bytes": 41417,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1000,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://mab.chartbeat.com/mab_strategy/headline_testing/get_strategy/",
+          "host": "mab.chartbeat.com",
+          "bytes": 1709,
+          "domain": "chartbeat.com",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.com",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1002,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202610060101/pubads_impl.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 218899,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1083,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F07640120-5bce-47c2-be4c-b5611d232c58.jpg",
+          "host": "images.ft.com",
+          "bytes": 11848,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1083,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fd0d502ce-ea31-40e0-bcac-45cf6f115977.jpg",
+          "host": "images.ft.com",
+          "bytes": 20183,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1084,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fbc2e540d-bcb9-41e5-9e16-b8bd8d558102.jpg",
+          "host": "images.ft.com",
+          "bytes": 7452,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1085,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F1b92194d-2f81-4a96-bcbc-307d2195118d.jpg",
+          "host": "images.ft.com",
+          "bytes": 19703,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1086,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F2982ce4f-e18f-49e7-935a-ae5e364eb3c9.jpg",
+          "host": "images.ft.com",
+          "bytes": 24868,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1198,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bloomreach.ft.com/js/exponea.min.js",
+          "host": "bloomreach.ft.com",
+          "bytes": 58754,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1199,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F80758f41-3609-4902-9b74-07cf77aab57b.jpg",
+          "host": "images.ft.com",
+          "bytes": 32208,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1200,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fwww.ft.com%2F__assets%2Fcreatives%2Fhomepage-beta%2Fnewstip-thumb-sc-moD.png",
+          "host": "images.ft.com",
+          "bytes": 17985,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1201,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2F21d111b8-f4e7-4e51-97f9-7d2af99afa8d",
+          "host": "images.ft.com",
+          "bytes": 8976,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1202,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2Fca590621-6d71-4ae2-b9a9-9bea0854b27c",
+          "host": "images.ft.com",
+          "bytes": 13390,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1203,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2Fbe2110da-fe40-4263-8306-25f4f01150bd",
+          "host": "images.ft.com",
+          "bytes": 19522,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1204,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2F5e39e196-8efe-47cc-bd3d-ea8613d16bb7",
+          "host": "images.ft.com",
+          "bytes": 10543,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1205,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F0870c542-7d9e-447c-9ae8-ef9f06ef8d85.jpg",
+          "host": "images.ft.com",
+          "bytes": 61815,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1206,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fe6ad43d9-a35b-4439-ba99-25b45bd43736.png",
+          "host": "images.ft.com",
+          "bytes": 47917,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1207,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F55947db2-e870-4157-88c9-238eac773efd.jpg",
+          "host": "images.ft.com",
+          "bytes": 22074,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1207,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fa0d46c89-f1e1-4b99-a1e7-f1c7d7a8fa65.jpg",
+          "host": "images.ft.com",
+          "bytes": 62644,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fd2aa8ddf-b983-49d1-8de8-71b91e73bb2e.jpg",
+          "host": "images.ft.com",
+          "bytes": 72344,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1209,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2F24cc0ea5-fd88-4931-a6e5-32733185d6af",
+          "host": "images.ft.com",
+          "bytes": 9224,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1210,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2Fda2e901f-fff6-4afb-9d1d-3ebc11a3e1aa",
+          "host": "images.ft.com",
+          "bytes": 10858,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1211,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2F97a26eed-c894-49d4-ab62-6b13b5f262a4",
+          "host": "images.ft.com",
+          "bytes": 8102,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1211,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fnext-video-editor-images.s3.ap-northeast-1.amazonaws.com%2Fce483ef3-1082-40af-8a94-32a7c65f87cc",
+          "host": "images.ft.com",
+          "bytes": 9561,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1215,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "bytes": 199821,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1264,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://next-media-api.ft.com/clips/optimised-media-files/17914643569920/1280x720.mp4",
+          "host": "next-media-api.ft.com",
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1267,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.ft.com/__origami/service/image/v2/images/raw/fticon-v1:hamburger",
+          "host": "www.ft.com",
+          "bytes": 0,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1268,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.ft.com/__origami/service/image/v2/images/raw/fticon-v1:search",
+          "host": "www.ft.com",
+          "bytes": 0,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1269,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.ft.com/__origami/service/image/v2/images/raw/fticon-v1:user",
+          "host": "www.ft.com",
+          "bytes": 0,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1270,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.ft.com/__origami/service/image/v2/images/raw/fticon-v1:arrow-right",
+          "host": "www.ft.com",
+          "bytes": 0,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1271,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.ft.com/__origami/service/image/v2/images/raw/ftlogo:brand-nikkei-tagline",
+          "host": "www.ft.com",
+          "bytes": 0,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1272,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fuploaded-files%2FByline_Stuart-Kirk-67d70785-504d-407a-803f-8efd9e968a4d.png",
+          "host": "images.ft.com",
+          "bytes": 5070,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1272,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F3110f2d8-cad8-421e-be4f-752123dafdf6.jpg",
+          "host": "images.ft.com",
+          "bytes": 8981,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1273,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Ff99ae6ea-62be-4c50-a004-eb42caa1f9bf.jpg",
+          "host": "images.ft.com",
+          "bytes": 11036,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1274,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fd0a3793c-3e8e-447d-9019-b1a53650d51b.jpg",
+          "host": "images.ft.com",
+          "bytes": 9066,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Ff49ee502-0d80-42be-9a0c-24d2641a98be.jpg",
+          "host": "images.ft.com",
+          "bytes": 5412,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fuploaded-files%2FRobert-Armstrong-ad22ae7f-95c9-4294-a785-49b4b9cd2dcb.png",
+          "host": "images.ft.com",
+          "bytes": 5007,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1277,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F5ec3379f-c123-4610-a46f-784e195e4be5.jpg",
+          "host": "images.ft.com",
+          "bytes": 12632,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1278,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Ff527c7d7-cbe1-4e31-b01a-990e770523ec.jpg",
+          "host": "images.ft.com",
+          "bytes": 12401,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1279,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F680effe5-67ed-4574-bc28-7b3c86ddcafb.jpg",
+          "host": "images.ft.com",
+          "bytes": 9706,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1279,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F5df61ee2-e1b1-416a-9569-a6a509f900ab.jpg",
+          "host": "images.ft.com",
+          "bytes": 13197,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1280,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fec443e66-844b-40c7-a4e3-e696e0617a0d.jpg",
+          "host": "images.ft.com",
+          "bytes": 29796,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1281,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F0226d712-3337-4d44-ba17-b7b3b731d1e6.jpg",
+          "host": "images.ft.com",
+          "bytes": 16169,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1282,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F79c91b3a-915a-4f62-ab44-1ee5c150e85d.jpg",
+          "host": "images.ft.com",
+          "bytes": 10505,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1283,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fa8d98b68-a701-4ea7-9593-9c1c2f266217.jpg",
+          "host": "images.ft.com",
+          "bytes": 24503,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1285,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fec97d32e-ea4c-4a58-a549-12fa0138628c.jpg",
+          "host": "images.ft.com",
+          "bytes": 5608,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1286,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F854b8f59-ba2c-4665-a9a6-13dd90f4fe39.jpg",
+          "host": "images.ft.com",
+          "bytes": 6934,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1287,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2F3a7bdb17-cd50-43e8-a74b-c4a9eb8936f0.jpg",
+          "host": "images.ft.com",
+          "bytes": 24112,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1289,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fuploaded-files%2FConstanze-Stelzenmu%25CC%2588ller-22a299d2-98ff-498c-b15c-d8a8f6c07b2f.png",
+          "host": "images.ft.com",
+          "bytes": 5265,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1290,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fuploaded-files%2Ffthead-v1_gillian-tett-0df947ec-cd61-4d74-b2d8-e5f832415f1a.png",
+          "host": "images.ft.com",
+          "bytes": 5521,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1291,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fuploaded-files%2Frobert_shrimsley-ff15e61e-e8c4-4b51-a86e-5706b99741d8.png",
+          "host": "images.ft.com",
+          "bytes": 5205,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1292,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fuploaded-files%2FRichard%2520Waters-5c28ea3e-37d4-4075-9490-98de0c7ab93f.png",
+          "host": "images.ft.com",
+          "bytes": 5060,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1293,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fuploaded-files%2FMohamed-El-Erian-3ae1a64f-e035-4ac7-86ae-fe4a2df0213d.png",
+          "host": "images.ft.com",
+          "bytes": 5415,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1295,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ft.com/v3/image/raw/https%3A%2F%2Fd1e00ek4ebabms.cloudfront.net%2Fproduction%2Fe5357c01-c6cd-40ef-807b-6c9560f52726.jpg",
+          "host": "images.ft.com",
+          "bytes": 39334,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1334,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.adsafeprotected.com/iasPET.1.js",
+          "host": "cdn.adsafeprotected.com",
+          "bytes": 7098,
+          "domain": "adsafeprotected.com",
+          "party": "third",
+          "tracker": {
+            "service": "adsafeprotected.com",
+            "entity": "Integral Ad Science",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1421,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-manager.ft.com/unified/wrapperMessagingWithoutDetection.js",
+          "host": "consent-manager.ft.com",
+          "bytes": 44874,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1465,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://privacy.ft.com/api/v1/compliance-region.json",
+          "host": "privacy.ft.com",
+          "bytes": 492,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1511,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 365,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1512,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 713,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1543,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://markets-data-api-proxy.ft.com/research/webservices/securities/v1/quotes",
+          "host": "markets-data-api-proxy.ft.com",
+          "bytes": 2197,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1607,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://mabping.chartbeat.net/ping/mab",
+          "host": "mabping.chartbeat.net",
+          "bytes": 201,
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1608,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://mabping.chartbeat.net/ping/mab",
+          "host": "mabping.chartbeat.net",
+          "bytes": 200,
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1609,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://mabping.chartbeat.net/ping/mab",
+          "host": "mabping.chartbeat.net",
+          "bytes": 200,
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1610,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://mabping.chartbeat.net/ping/mab",
+          "host": "mabping.chartbeat.net",
+          "bytes": 200,
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1611,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://mabping.chartbeat.net/ping/mab",
+          "host": "mabping.chartbeat.net",
+          "bytes": 200,
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1614,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ping.chartbeat.net/ping",
+          "host": "ping.chartbeat.net",
+          "bytes": 201,
+          "domain": "chartbeat.net",
+          "party": "third",
+          "tracker": {
+            "service": "chartbeat.net",
+            "entity": "Chartbeat",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1619,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 363,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1620,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/webxp/projects/d6e5bd4c-9228-11eb-a414-9a67e462410e/bundle",
+          "host": "bloomreach.ft.com",
+          "bytes": 23387,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1622,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-manager.ft.com/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "consent-manager.ft.com",
+          "bytes": 25512,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1623,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-manager.ft.com/unified/4.40.3/usnat.17801fe5e33dd6698495.bundle.js",
+          "host": "consent-manager.ft.com",
+          "bytes": 35304,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1624,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-manager.ft.com/wrapper/v2/meta-data",
+          "host": "consent-manager.ft.com",
+          "bytes": 1139,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1633,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/bulk",
+          "host": "bloomreach.ft.com",
+          "bytes": 445,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1639,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610080101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 23611,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1640,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 366,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1682,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-manager.ft.com/wrapper/v2/messages",
+          "host": "consent-manager.ft.com",
+          "bytes": 5838,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1735,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://consent-manager.ft.com/wrapper/v2/pv-data",
+          "host": "consent-manager.ft.com",
+          "bytes": 856,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1736,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://consent-manager.ft.com/wrapper/v2/pv-data",
+          "host": "consent-manager.ft.com",
+          "bytes": 838,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1744,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 366,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1745,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 365,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1745,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 387,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1748,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://consent-manager.ft.com/index.html",
+          "host": "consent-manager.ft.com",
+          "bytes": 2416,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1755,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://markets-data-api-proxy.ft.com/research/webservices/securities/v1/quotes",
+          "host": "markets-data-api-proxy.ft.com",
+          "bytes": 1824,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1766,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://consent-manager.ft.com/Notice.1c267.css",
+          "host": "consent-manager.ft.com",
+          "bytes": 7009,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1766,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-manager.ft.com/polyfills.01516.js",
+          "host": "consent-manager.ft.com",
+          "bytes": 2476,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1768,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-manager.ft.com/Notice.97af9.js",
+          "host": "consent-manager.ft.com",
+          "bytes": 95127,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1840,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent-manager.ft.com/consent/tcfv2/vendor-list/categories",
+          "host": "consent-manager.ft.com",
+          "bytes": 1201,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1851,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/bulk",
+          "host": "bloomreach.ft.com",
+          "bytes": 333,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1853,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/managed-tags/show",
+          "host": "bloomreach.ft.com",
+          "bytes": 83,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1856,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/webxp/projects/d6e5bd4c-9228-11eb-a414-9a67e462410e/cookies/d2ec2a81-6014-4e57-9ac6-d15f55411769/link-ids",
+          "host": "bloomreach.ft.com",
+          "bytes": 40,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1870,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://runtime-api.ft.com/sync",
+          "host": "runtime-api.ft.com",
+          "bytes": 689,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1879,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.ft.com/__origami/service/build/v3/font",
+          "host": "www.ft.com",
+          "bytes": 32423,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1880,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.ft.com/__origami/service/build/v3/font",
+          "host": "www.ft.com",
+          "bytes": 30419,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1910,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://consent-manager.ft.com/mms/set_consent_cookies",
+          "host": "consent-manager.ft.com",
+          "bytes": 481,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2158,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bloomreach.ft.com/webxp/script/d6e5bd4c-9228-11eb-a414-9a67e462410e/d2ec2a81-6014-4e57-9ac6-d15f55411769/modifications.min.js",
+          "host": "bloomreach.ft.com",
+          "bytes": 15643,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2158,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/campaigns/banners/show",
+          "host": "bloomreach.ft.com",
+          "bytes": 2640,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2693,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/webxp/projects/d6e5bd4c-9228-11eb-a414-9a67e462410e/bundle",
+          "host": "bloomreach.ft.com",
+          "bytes": 23389,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2708,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.ft.com/__origami/service/image/v2/images/raw/fticon-v1:cross",
+          "host": "www.ft.com",
+          "bytes": 0,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2804,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://bloomreach.ft.com/bulk",
+          "host": "bloomreach.ft.com",
+          "bytes": 138,
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 11004,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://client-metrics.ft.com/api/v1/ingest",
+          "host": "client-metrics.ft.com",
+          "domain": "ft.com",
+          "party": "first",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "spoor-id",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        },
+        {
+          "name": "OriginalReferer",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "FtComEntryPoint",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_t_tests",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_cb",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_chartbeat2",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_cb_svref",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "xnpe_d6e5bd4c-9228-11eb-a414-9a67e462410e",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 182
+        },
+        {
+          "name": "__exponea_etc__",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 182
+        },
+        {
+          "name": "usnatUUID",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "consentUUID",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__exponea_time2__",
+          "domain": "ft.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 182
+        }
+      ],
+      "storage_items": {
+        "local": 17,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "ft.com",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "chartbeat.com",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 3,
+      "status": "blocked",
+      "http_status": 403,
+      "error": null,
+      "final_url": "https://www.ft.com/",
+      "navigation_redirects": [
+        {
+          "from": "https://www.ft.com/",
+          "to": "https://www.ft.com/",
+          "status": 307
+        }
+      ],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 36,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.ft.com/",
+          "host": "www.ft.com",
+          "bytes": 65
+        },
+        {
+          "t_ms": 282,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.ft.com/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1",
+          "host": "www.ft.com"
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": []
+    }
+  ]
+}
