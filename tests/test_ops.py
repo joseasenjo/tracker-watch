@@ -216,3 +216,91 @@ def test_a_damaged_whiteboard_is_never_overwritten(tmp_path):
 def test_notes_route_needs_the_token(admin):
     json_header = {"Content-Type": "application/json"}
     assert call(admin.base + "/api/ops/note", {"action": "add", "text": "x"}, json_header)[0] == 403
+
+
+# --- administrator tools: no limits, safety checks kept ------------------------------------------------------------
+
+PUBLIC = lambda host: ["93.184.216.34"]
+PRIVATE = lambda host: ["10.0.0.5"]
+
+
+def fake_report(url="https://www.example-news.com/"):
+    return {"site": {"url": url}, "measurement": {"vantage": "local-windows-spain", "passes": 3, "observe_seconds": 12.0},
+            "summary": {"status": "ok", "confidence": "high", "passes_ok": 3, "passes_total": 3,
+                        "metrics": {"tracking_services": 2, "third_party_domains": 4, "third_party_requests": 9,
+                                    "third_party_cookies": 1, "cookies_total": 3},
+                        "services": [{"service": "ads.example.com", "entity": "Ad Co", "category": "advertising",
+                                      "tracking": True, "stable": True}]}}
+
+
+def test_admin_scan_runs_without_limits_but_keeps_the_address_checks():
+    for n in range(5):  # no per-account, daily or total limit applies here
+        job = ops.start_scan("https://www.example-news.com/", scan=fake_report, resolver=PUBLIC, threaded=False)
+        status = ops.scan_status(job)
+        assert status["status"] == "done" and status["payload"]["metrics"]["tracking_services"] == 2
+    for bad in ("http://127.0.0.1/admin", "https://user:pw@example.com/", "ftp://example.com/"):
+        with pytest.raises(ops.OpsError):
+            ops.start_scan(bad, scan=fake_report, resolver=PUBLIC, threaded=False)
+    with pytest.raises(ops.OpsError):
+        ops.start_scan("https://internal.example/", scan=fake_report, resolver=PRIVATE, threaded=False)
+    boom = ops.start_scan("https://www.example-news.com/", scan=lambda u: 1 / 0, resolver=PUBLIC, threaded=False)
+    assert ops.scan_status(boom)["status"] == "error" and "ZeroDivisionError" in ops.scan_status(boom)["error"]
+    with pytest.raises(ops.OpsError):
+        ops.scan_status("nope")
+
+
+def test_admin_creates_and_removes_short_links_with_no_limits_but_the_blocklist_still_applies(tmp_path):
+    path = tmp_path / "links.json"
+    blocklist = {"bit.ly"}
+    check = lambda url: {"status": "ok", "tracking": 3, "band": "B", "confidence": "high", "vantage": "x", "date": "2026-10-12", "domains": []}
+    made = [ops.create_link(f"https://example.com/{n}", "", "", links_path=path, scan=check, blocklist=blocklist, resolver=PUBLIC)
+            for n in range(6)]  # far more than 4 a day, and the same account every time
+    assert all(m["created"] and m["url"].endswith(f"go/{m['code']}/") for m in made)
+    again = ops.create_link("https://example.com/0", "", "", links_path=path, scan=check, blocklist=blocklist, resolver=PUBLIC)
+    assert not again["created"] and again["code"] == made[0]["code"]
+    custom = ops.create_link("https://example.org/talk", "my-talk", "slides", links_path=path, scan=check,
+                             blocklist=blocklist, resolver=PUBLIC, measure=False)
+    assert custom["code"] == "my-talk"
+    for bad in (dict(url="https://bit.ly/abc"), dict(url="https://example.org/x", code="admin"),
+                dict(url="https://example.org/y", code="my-talk"), dict(url="http://127.0.0.1/")):
+        with pytest.raises(ops.OpsError):
+            ops.create_link(links_path=path, scan=check, blocklist=blocklist, resolver=PUBLIC, **bad)
+    ops.remove_link("my-talk", path)
+    with pytest.raises(ops.OpsError):
+        ops.remove_link("my-talk", path)
+    assert len(ops.list_links(path, lambda cmd, **kw: SimpleNamespace(returncode=0, stdout=" M data/links.json\n", stderr=""))["links"]) == 6
+
+
+def test_publishing_links_commits_only_the_links_file_and_republishes_the_site():
+    calls = []
+
+    def runner(staged):
+        def run(cmd, **kw):
+            calls.append(cmd)
+            return SimpleNamespace(returncode=0, stdout=staged if "--name-only" in cmd else "", stderr="")
+        return run
+
+    steps = ops.publish_links("o/r", runner("data/links.json\n"))
+    assert [c[3] for c in calls if c[0] == "git"] == ["add", "diff", "commit", "pull", "push"]
+    assert calls[-1] == ["gh", "workflow", "run", "publish-site.yml", "-R", "o/r"] and "commit hecho" in steps
+    calls.clear()
+    ops.publish_links("o/r", runner(""))  # nothing new: no commit, but the site is still republished
+    assert not any(c[3] == "commit" for c in calls if c[0] == "git") and calls[-1][0] == "gh"
+    calls.clear()
+    with pytest.raises(ops.OpsError):
+        ops.publish_links("o/r", runner("data/links.json\nextension/src/background.js\n"))
+    assert calls and not any(c[0] == "gh" or (c[0] == "git" and c[3] in ("commit", "push")) for c in calls)
+
+
+def test_admin_tool_routes_need_the_token_and_refuse_unsafe_addresses(admin):
+    json_header = {"Content-Type": "application/json"}
+    for path, body in (("/api/ops/scan", {"url": "https://example.com"}), ("/api/ops/link", {"url": "https://example.com"}),
+                       ("/api/ops/link/remove", {"code": "abc"}), ("/api/ops/links/publish", {})):
+        assert call(admin.base + path, body, json_header)[0] == 403
+    token = json.loads(call(admin.base + "/api/token")[1])["token"]
+    good = {**json_header, "X-Admin-Token": token}
+    assert call(admin.base + "/api/ops/scan", {"url": "http://127.0.0.1/admin"}, good)[0] == 400
+    assert call(admin.base + "/api/ops/link", {"url": "http://127.0.0.1/admin"}, good)[0] == 400
+    assert call(admin.base + "/api/ops/link/remove", {"code": "does-not-exist"}, good)[0] == 400
+    assert call(admin.base + "/api/ops/scan?id=nope")[0] == 404
+    assert call(admin.base + "/api/ops/links")[0] == 200

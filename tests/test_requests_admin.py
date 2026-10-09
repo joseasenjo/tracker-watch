@@ -367,8 +367,14 @@ def test_shortlink_limits_one_per_account_per_week_and_four_a_day_for_everyone(t
     other_user = request(tmp_path, BODY.format(code="third"), author="ben", limits=SHORTLINK_LIMITS,
                          history=[hist("ana", 30), hist("ben", 1)])
     assert other_user["created"]  # a different account is not held back by ana's request
-    crowded = request(tmp_path, BODY.format(code="fifth"), author="eva", limits=SHORTLINK_LIMITS,
-                      history=[hist(name, i + 1) for i, name in enumerate(("a1", "a2", "a3", "a4", "eva"))])
+    # the daily cap counts links created today, not requests: four refused requests do not use it up
+    refused_noise = [hist(name, i + 1) for i, name in enumerate(("a1", "a2", "a3", "a4", "eva"))]
+    assert request(tmp_path, BODY.format(code="fifth"), author="eva", limits=SHORTLINK_LIMITS, history=refused_noise)["created"]
+    today = NOW.date().isoformat()
+    from traceguard.links import save_links
+    save_links([{"code": f"made-{i}", "url": f"https://example.com/{i}", "host": "example.com", "note": "", "created": today,
+                 "check": None} for i in range(4)], tmp_path / "links.json")
+    crowded = request(tmp_path, BODY.format(code="sixth"), author="kim", limits=SHORTLINK_LIMITS, history=[hist("kim", 1)])
     assert not crowded["created"] and "daily capacity" in crowded["comment"]
 
 

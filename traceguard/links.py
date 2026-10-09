@@ -167,7 +167,9 @@ def process_request(body: str, author: str, account_created: str, history: list[
     def refuse(reason: str, text: str) -> dict:
         return {"created": False, "reason": reason, "code": None, "comment": f"This request was not processed. {text}"}
 
-    allowed, why = check_account(limits["links"], limits["blocked_accounts"], author, account_created, history, now,
+    # The daily cap counts links actually created (checked below), so refused or invalid requests cannot use it up.
+    per_request = {**limits["links"], "global_per_day": 10 ** 9}
+    allowed, why = check_account(per_request, limits["blocked_accounts"], author, account_created, history, now,
                                  "a short link")
     if not allowed:
         capacity = why.startswith(("Limit reached", "The daily capacity"))
@@ -192,6 +194,10 @@ def process_request(body: str, author: str, account_created: str, history: list[
             f"That address already has a short link: {site_url}go/{same['code']}/")}
     if code and any(l["code"] == code for l in links):
         return refuse("code-taken", f"The code `{code}` is already taken. Choose another or leave it empty.")
+    created_today = sum(1 for l in links if l.get("created") == now.date().isoformat())
+    if created_today >= limits["links"]["global_per_day"]:
+        return refuse("limit", "The daily capacity for short links has been reached. Please try again tomorrow."
+                      + contact_line(env))
     check = scan(url) if scan else None
     if check and check.get("status") == "error":
         return refuse("unreachable", "We could not load that address, so no link was created.")

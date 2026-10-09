@@ -13,6 +13,7 @@ import re
 import uuid
 import statistics
 import subprocess
+import threading
 import urllib.error
 import urllib.request
 from datetime import date as _date, datetime, timezone
@@ -382,3 +383,116 @@ def approve_draft(folder: str, repo: str = DEFAULT_REPO, runner: Callable = subp
 def pull_data(runner: Callable = subprocess.run, cwd: str = ".") -> str:
     """git pull --ff-only: brings in what the workflows committed; refuses anything that is not a plain catch-up."""
     return _run(runner, ["git", "-C", cwd, "pull", "--ff-only"], timeout=120).strip()
+
+
+# --- administrator tools: the same features as the public ones, without the limits ----------------------------------------
+# Only the rate limits are skipped (per account, account age, daily and total caps). The safety checks stay: public
+# addresses only, no credentials in the address, and the blocklist (other shorteners, blocked domains) for links.
+
+LINKS_FILE = Path("data/links.json")
+_jobs: dict[str, dict] = {}
+_jobs_lock = threading.Lock()
+
+
+def _local_scan(url: str) -> dict:
+    from .scanner import scan_site  # imported here so the module loads without a browser
+    return scan_site(url, passes=3, observe_seconds=12.0, vantage="local-windows-spain", locale="es-ES",
+                     timezone="Europe/Madrid")
+
+
+def start_scan(url: str, *, scan: Callable = _local_scan, resolver=None, threaded: bool = True) -> str:
+    """Measure an address from this PC, with no limits. Returns a job id; poll scan_status(id)."""
+    from .safety import UnsafeURL, check_target, system_resolver
+    try:
+        url = check_target(url, resolver or system_resolver)
+    except UnsafeURL as exc:
+        raise OpsError(f"esa dirección no se puede analizar: {exc}") from exc
+    job_id = uuid.uuid4().hex[:10]
+    with _jobs_lock:
+        while len(_jobs) >= 8:  # keep the last few only
+            _jobs.pop(next(iter(_jobs)))
+        _jobs[job_id] = {"status": "running", "url": url}
+
+    def work():
+        try:
+            from .ondemand import result_payload
+            report = scan(url)
+            done = {"status": "done", "url": url, "report": report,
+                    "payload": result_payload(report, datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))}
+        except Exception as exc:  # shown to the administrator, never raised into the server
+            done = {"status": "error", "url": url, "error": f"{type(exc).__name__}: {exc}"[:300]}
+        with _jobs_lock:
+            _jobs[job_id] = done
+
+    if threaded:
+        threading.Thread(target=work, daemon=True).start()
+    else:
+        work()
+    return job_id
+
+
+def scan_status(job_id: str) -> dict:
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+    if job is None:
+        raise OpsError("análisis desconocido (¿se reinició el panel?)")
+    return job
+
+
+def list_links(links_path: Path | str = LINKS_FILE, runner: Callable = subprocess.run, cwd: str = ".") -> dict:
+    from .links import load_links
+    links = load_links(links_path)
+    try:
+        dirty = bool(_run(runner, ["git", "-C", cwd, "status", "--porcelain", "--", str(links_path)]).strip())
+    except OpsError:
+        dirty = None
+    return {"links": sorted(links, key=lambda x: x.get("created", ""), reverse=True), "unpublished": dirty,
+            "site": SITE_URL}
+
+
+def create_link(url: str, code: str = "", note: str = "", *, links_path: Path | str = LINKS_FILE, measure: bool = True,
+                scan: Callable | None = None, blocklist=None, resolver=None) -> dict:
+    """Create a short link now, with no per-account, daily or total limit. It goes live after publish_links()."""
+    from . import links as L
+    from .safety import system_resolver
+    resolver = resolver or system_resolver
+    blocklist = L.load_blocklist() if blocklist is None else blocklist
+    try:
+        url = L.validate_target(url, blocklist, resolver)
+        existing = L.load_links(links_path)
+        same = next((x for x in existing if x["url"] == url), None)
+        if same and not code.strip():
+            return {"created": False, "code": same["code"], "url": SITE_URL + f"go/{same['code']}/",
+                    "message": "Esa dirección ya tenía un enlace."}
+        code = L.validate_code(code) if code.strip() else L.generate_code({x["code"] for x in existing})
+        check = (scan or L._scan_target)(url) if measure else None
+        L.add_link(links_path, code, url, note=note, check=check, blocklist=blocklist, resolver=resolver)
+    except L.LinkError as exc:
+        raise OpsError(str(exc)) from exc
+    return {"created": True, "code": code, "url": SITE_URL + f"go/{code}/", "message": "Enlace creado (aún no publicado)."}
+
+
+def remove_link(code: str, links_path: Path | str = LINKS_FILE) -> None:
+    from . import links as L
+    if not L.remove_link(links_path, code):
+        raise OpsError("ese enlace no existe")
+
+
+def publish_links(repo: str = DEFAULT_REPO, runner: Callable = subprocess.run, cwd: str = ".",
+                  links_path: Path | str = LINKS_FILE) -> list[str]:
+    """Commit data/links.json, push it and republish the website, so created or removed links go live."""
+    steps = []
+    path = str(links_path).replace(chr(92), "/")
+    _run(runner, ["git", "-C", cwd, "add", "--", path])
+    staged = _run(runner, ["git", "-C", cwd, "diff", "--cached", "--name-only"]).split()
+    if staged and set(staged) - {path}:
+        raise OpsError("hay otros archivos preparados en git: no publico enlaces para no mezclarlos")
+    if staged:
+        _run(runner, ["git", "-C", cwd, "commit", "-m", "Short links: update (from the developer panel)"])
+        steps.append("commit hecho")
+    _run(runner, ["git", "-C", cwd, "pull", "--rebase", "--autostash"], timeout=120)
+    _run(runner, ["git", "-C", cwd, "push"], timeout=120)
+    steps.append("subido a GitHub")
+    _run(runner, ["gh", "workflow", "run", "publish-site.yml", "-R", repo])
+    steps.append("web en proceso de republicación (unos 2 minutos)")
+    return steps

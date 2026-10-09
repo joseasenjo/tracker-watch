@@ -23,6 +23,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Callable
+from urllib.parse import parse_qs, urlsplit
 
 from . import ops
 from .limits import BOUNDS, DEFAULTS, LimitsError, load_limits, save_limits
@@ -31,7 +32,8 @@ DEFAULT_REPO = "joseasenjo/tracker-watch"
 LABELS = {"scan": "scan-request", "links": "link-request"}
 MAX_BODY = 20_000
 OPS_PAGE = Path(__file__).with_name("ops_page.html")
-OPS_POST = ("/api/ops/switch", "/api/ops/run", "/api/ops/approve", "/api/ops/pull", "/api/ops/note")
+OPS_POST = ("/api/ops/switch", "/api/ops/run", "/api/ops/approve", "/api/ops/pull", "/api/ops/note",
+            "/api/ops/scan", "/api/ops/link", "/api/ops/link/remove", "/api/ops/links/publish")
 
 
 def recent_requests(repo: str, runner: Callable = subprocess.run, now: datetime | None = None) -> dict:
@@ -99,6 +101,13 @@ class Handler(SimpleHTTPRequestHandler):
             return
         if self.path == "/api/ops/status":
             return self._json(200, ops.get_status(self.repo, runner=self.runner))
+        if self.path == "/api/ops/links":
+            return self._json(200, ops.list_links(runner=self.runner))
+        if self.path.startswith("/api/ops/scan?"):
+            try:
+                return self._json(200, ops.scan_status(parse_qs(urlsplit(self.path).query).get("id", [""])[0]))
+            except ops.OpsError as exc:
+                return self._json(404, {"error": str(exc)})
         if self.path == "/api/usage":
             return self._json(200, recent_requests(self.repo, self.runner))
         if self.path.startswith("/api/"):
@@ -145,6 +154,17 @@ class Handler(SimpleHTTPRequestHandler):
                 notes = ops.change_note(str(body.get("action", "")), note_id=str(body.get("id", "")),
                                         text=str(body.get("text", "")))
                 return self._json(200, {"ok": True, "notes": notes})
+            if self.path == "/api/ops/scan":
+                return self._json(200, {"ok": True, "id": ops.start_scan(str(body.get("url", "")))})
+            if self.path == "/api/ops/link":
+                done = ops.create_link(str(body.get("url", "")), str(body.get("code", "")), str(body.get("note", "")),
+                                       measure=bool(body.get("measure", True)))
+                return self._json(200, {"ok": True, **done})
+            if self.path == "/api/ops/link/remove":
+                ops.remove_link(str(body.get("code", "")))
+                return self._json(200, {"ok": True})
+            if self.path == "/api/ops/links/publish":
+                return self._json(200, {"ok": True, "steps": ops.publish_links(self.repo, self.runner)})
             if self.path == "/api/ops/approve":
                 ops.approve_draft(str(body.get("folder", "")), self.repo, self.runner)
                 return self._json(200, {"ok": True})

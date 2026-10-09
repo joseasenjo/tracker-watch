@@ -88,9 +88,8 @@ def render_comment(report: dict) -> str:
     return "\n".join(lines) + foot
 
 
-def result_block(report: dict, when: str) -> str:
-    """The same figures as the reply, as a hidden, machine-readable block (base64 JSON in an HTML comment) that the
-    website reads to show the result on its own page. Only sanitised host names, numbers and fixed labels go in."""
+def result_payload(report: dict, when: str) -> dict:
+    """The figures of a measurement in a compact form with only sanitised host names, numbers and fixed labels."""
     s, m = report["summary"], report["measurement"]
     host = _safe_host(report["site"]["url"].split("/")[2]) if "//" in report["site"]["url"] else ""
     payload = {"schema": 1, "host": host, "measured_at": when, "vantage": m["vantage"], "passes": m["passes"],
@@ -105,7 +104,13 @@ def result_block(report: dict, when: str) -> str:
         payload["services"] = [{"service": _safe_host(x["service"]), "company": re.sub(r"[^\w .()&+-]", "", str(x["entity"]))[:60],
                                 "category": re.sub(r"[^a-z_ ]", "", str(x["category"]))[:30]}
                                for x in s["services"] if x["tracking"] and x["stable"]][:60]
-    raw = json.dumps(payload, separators=(",", ":"), ensure_ascii=True).encode("ascii")
+    return payload
+
+
+def result_block(report: dict, when: str) -> str:
+    """The same figures as the reply, as a hidden, machine-readable block (base64 JSON in an HTML comment) that the
+    website reads to show the result on its own page."""
+    raw = json.dumps(result_payload(report, when), separators=(",", ":"), ensure_ascii=True).encode("ascii")
     return f"\n\n<!-- {RESULT_MARK}:{base64.b64encode(raw).decode('ascii')} -->"
 
 

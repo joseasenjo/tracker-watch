@@ -67,6 +67,33 @@
     </section>
   </div>
 
+  <section class="card"><h2>Herramientas del administrador (sin límites)</h2>
+    <p class="muted">Hacen lo mismo que las herramientas públicas, pero <b>sin límites</b> de cuenta, de día ni de total. Se mantienen las comprobaciones de seguridad: solo direcciones públicas, sin usuario ni clave en la dirección, y la lista de dominios bloqueados para los enlaces (otros acortadores, etc.).</p>
+    <div class="grid">
+      <div>
+        <h3>Analizar una web</h3>
+        <p class="muted">Se mide desde tu PC (configuración de España), con 3 pasadas de 12 s: unos 45 segundos. No entra en el ranking.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="adm-scan-url" type="text" placeholder="https://www.ejemplo.com" style="flex:1;min-width:200px;font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)"><button class="primary" id="adm-scan-go">Analizar</button></div>
+        <p class="muted" id="adm-scan-note"></p><div id="adm-scan-out"></div>
+      </div>
+      <div>
+        <h3>Crear un acortador</h3>
+        <p class="muted">El enlace se crea en tu copia local; sale a la web cuando pulses «Publicar enlaces».</p>
+        <div style="display:grid;gap:8px">
+          <input id="adm-link-url" type="text" placeholder="Dirección de destino, https://…" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+          <input id="adm-link-code" type="text" placeholder="Código (opcional, 3 a 32: letras minúsculas, cifras y guiones)" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+          <input id="adm-link-note" type="text" maxlength="200" placeholder="Nota (opcional)" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+          <label class="muted"><input type="checkbox" id="adm-link-measure" checked> Medir el destino (unos 30 s; se enseña en la página intermedia)</label>
+          <div><button class="primary" id="adm-link-go">Crear enlace</button></div>
+        </div>
+        <p class="muted" id="adm-link-note-out"></p>
+      </div>
+    </div>
+    <h3>Acortadores existentes <span id="adm-links-pill"></span></h3>
+    <div id="adm-links"><span class="muted">Cargando…</span></div>
+    <p><button id="adm-links-publish">Publicar enlaces (commit + subir + republicar la web)</button> <span class="muted" id="adm-publish-note"></span></p>
+  </section>
+
   <section class="card"><h2>Borradores</h2><div id="drafts"><span class="muted">Cargando…</span></div></section>
 
   <div class="grid">
@@ -228,6 +255,96 @@
     return el('table', {}, [el('thead', {}, [el('tr', {}, head.map(function (h) { return el('th', { text: h }); }))]),
       el('tbody', {}, rows.map(function (r) { return el('tr', {}, r.map(function (c) { return el('td', c && c.nodeType ? {} : { text: String(c) }, c && c.nodeType ? [c] : []); })); }))]);
   }
+  // --- administrator tools: no limits -----------------------------------------------------------------------------
+  function download(name, type, text) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: type }));
+    a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+  function csvCell(v) {
+    var t = String(v == null ? '' : v);
+    if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;
+    return '"' + t.replace(/"/g, '""') + '"';
+  }
+  function showScan(job) {
+    var r = job.payload, out = document.getElementById('adm-scan-out');
+    out.textContent = '';
+    var box = el('div', { class: 'card' }, [el('b', { text: 'Análisis de ' + r.host }),
+      el('div', { class: 'muted', text: 'Medido ' + r.measured_at + ' desde ' + r.vantage + ' · ' + r.passes + ' pasadas de ' + r.observe_seconds + ' s' })]);
+    if (r.status !== 'ok') {
+      box.appendChild(note('Sin cifras: la web no permitió la medición (estado: ' + r.status + ').'));
+    } else {
+      var m = r.metrics;
+      box.appendChild(el('div', { class: 'counters' }, [counter(m.tracking_services + (r.band ? ' (' + r.band + ')' : ''), 'servicios de rastreo'),
+        counter(m.third_party_domains, 'dominios de terceros'), counter(m.third_party_requests, 'peticiones a terceros'),
+        counter(m.third_party_cookies + ' de ' + m.cookies_total, 'cookies de terceros')]));
+      box.appendChild(note('Confianza: ' + (r.confidence || 'n/d') + ' (' + r.passes_ok + ' de ' + r.passes_total + ' pasadas).'));
+      if (r.services.length) box.appendChild(el('div', { class: 'scroll' }, [table(['Servicio', 'Empresa', 'Categoría'],
+        r.services.map(function (s) { return [s.service, s.company, s.category.replace(/_/g, ' ')]; }))]));
+    }
+    var json = el('button', { text: 'Descargar JSON completo', onclick: function () { download('tracker-watch-' + r.host + '.json', 'application/json', JSON.stringify(job.report, null, 2)); } });
+    var csv = el('button', { text: 'Descargar CSV', onclick: function () {
+      var lines = [['servicio', 'empresa', 'categoria'].map(csvCell).join(',')];
+      (r.services || []).forEach(function (s) { lines.push([s.service, s.company, s.category].map(csvCell).join(',')); });
+      download('tracker-watch-' + r.host + '.csv', 'text/csv', lines.join('\r\n') + '\r\n'); } });
+    box.appendChild(el('p', {}, [json, document.createTextNode(' '), csv]));
+    out.appendChild(box);
+  }
+  function pollScan(id) {
+    var n = document.getElementById('adm-scan-note');
+    fetch('/api/ops/scan?id=' + encodeURIComponent(id)).then(function (r) { return r.json(); }).then(function (job) {
+      if (job.error && !job.status) { n.textContent = 'Error: ' + job.error; return; }
+      if (job.status === 'running') { n.textContent = 'Midiendo… (puede tardar un minuto)'; setTimeout(function () { pollScan(id); }, 3000); return; }
+      document.getElementById('adm-scan-go').disabled = false;
+      if (job.status === 'error') { n.textContent = 'No se pudo analizar: ' + job.error; return; }
+      n.textContent = 'Listo.'; showScan(job);
+    }, function () { n.textContent = 'Se perdió la conexión con el panel.'; document.getElementById('adm-scan-go').disabled = false; });
+  }
+  function loadLinks() {
+    fetch('/api/ops/links').then(function (r) { return r.json(); }).then(function (d) {
+      document.getElementById('adm-links-pill').textContent = '';
+      if (d.unpublished) document.getElementById('adm-links-pill').appendChild(el('span', { class: 'pill media', text: 'cambios sin publicar' }));
+      fill('adm-links', d.links.length ? [table(['Enlace', 'Destino', 'Creado', 'Rastreo', ''], d.links.map(function (l) {
+        var t = (l.check && l.check.tracking != null) ? String(l.check.tracking) : '–';
+        var rm = el('button', { text: 'Retirar', onclick: function (e) {
+          if (!confirm('Retirar el enlace ' + l.code + '? Deja de funcionar cuando publiques los cambios.')) return;
+          post('/api/ops/link/remove', { code: l.code }, e.target).then(function () { toast('Retirado (falta publicar)'); loadLinks(); });
+        } });
+        return [el('a', { href: d.site + 'go/' + l.code + '/', target: '_blank', rel: 'noopener', text: 'go/' + l.code }), l.url, l.created, t, rm];
+      }))] : [note('Todavía no hay acortadores.')]);
+    }, function () { fill('adm-links', [note('No se pudo leer data/links.json.')]); });
+  }
+  function initAdminTools() {
+    document.getElementById('adm-scan-go').addEventListener('click', function (e) {
+      var url = document.getElementById('adm-scan-url').value.trim();
+      if (!url) { toast('Escribe una dirección'); return; }
+      document.getElementById('adm-scan-out').textContent = '';
+      document.getElementById('adm-scan-note').textContent = 'Empezando…';
+      post('/api/ops/scan', { url: url }, e.target).then(function (d) { e.target.disabled = true; pollScan(d.id); },
+        function (err) { document.getElementById('adm-scan-note').textContent = 'Error: ' + err.message; });
+    });
+    document.getElementById('adm-link-go').addEventListener('click', function (e) {
+      var out = document.getElementById('adm-link-note-out');
+      var url = document.getElementById('adm-link-url').value.trim();
+      if (!url) { toast('Escribe la dirección de destino'); return; }
+      out.textContent = 'Creando… (si mide el destino, unos 30 s)';
+      post('/api/ops/link', { url: url, code: document.getElementById('adm-link-code').value, note: document.getElementById('adm-link-note').value,
+        measure: document.getElementById('adm-link-measure').checked }, e.target).then(function (d) {
+        out.textContent = d.message + ' ' + d.url;
+        if (d.created) { document.getElementById('adm-link-url').value = ''; document.getElementById('adm-link-code').value = ''; document.getElementById('adm-link-note').value = ''; }
+        loadLinks();
+      }, function (err) { out.textContent = 'Error: ' + err.message; });
+    });
+    document.getElementById('adm-links-publish').addEventListener('click', function (e) {
+      if (!confirm('Publicar los enlaces ahora?\n\nHace commit de data/links.json, lo sube a GitHub y republica la web. Es público.')) return;
+      var n = document.getElementById('adm-publish-note'); n.textContent = 'Publicando…';
+      post('/api/ops/links/publish', {}, e.target).then(function (d) { n.textContent = d.steps.join(' · '); loadLinks(); },
+        function (err) { n.textContent = 'Error: ' + err.message; });
+    });
+    loadLinks();
+  }
+
   function load() {
     var btn = document.getElementById('refresh'); btn.disabled = true;
     fetch('/api/ops/status').then(function (r) { return r.json(); }).then(function (s) { btn.disabled = false; render(s); },
@@ -235,6 +352,7 @@
   }
   document.getElementById('refresh').onclick = load;
   initNotes();
+  initAdminTools();
   fetch('/api/token').then(function (r) { return r.json(); }).then(function (t) { token = t.token; load(); });
 })();
 </script>
