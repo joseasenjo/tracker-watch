@@ -1,0 +1,37 @@
+name: Report a short link
+description: A short link that leads somewhere harmful, illegal, misleading or abusive, or that you want removed.
+title: "[Report link] "
+labels: ["link-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This issue is public.** Do not include personal data, and do not paste the content you are reporting.
+        We aim to review every report within 3 working days; a link that looks like phishing, malware or illegal content is looked at as soon as we see it. While we check it, a link can be removed first and reviewed afterwards.
+        If you prefer not to write in public, email the developer (address in the site footer).
+  - type: input
+    id: link
+    attributes:
+      label: The short link
+      placeholder: "https://…/go/abc1234/"
+    validations:
+      required: true
+  - type: dropdown
+    id: reason
+    attributes:
+      label: What is the problem?
+      options:
+        - It looks like phishing or a scam
+        - It leads to malware or an unwanted download
+        - It leads to illegal content
+        - It is misleading, harassing or abusive
+        - It infringes my rights (copyright, trademark, privacy)
+        - I created it and I want it removed
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What did you see, and when? Do not include personal data.

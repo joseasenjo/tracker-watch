@@ -18,8 +18,18 @@
     <ul>
       <li>Only <code>http</code> and <code>https</code> addresses on public websites. Addresses that point to private networks, carry credentials, or belong to other link shorteners are refused.</li>
       <li>Limits per GitHub account: {{ limits.links.per_account }} every {{ limits.links.window_hours|span }}, {{ limits.links.global_per_day }} per day for the whole site, and at most {{ limits.links.max_total }} links in total.</li>
-      <li>We may remove a link at any time, for example if it leads to harmful or misleading content.</li>
-      <li>The page shows counts of what the destination contacted, not a judgement about it.</li>
+      <li>We may remove a link at any time. See "Reports and removal" below.</li>
+      <li>The page shows counts of what the destination contacted, not a judgement about it. A link here is not an endorsement of the destination, and we do not control what it shows later.</li>
+    </ul>
+
+    <h2 style="margin-top:28px">Reports and removal</h2>
+    <ul>
+      <li><b>How to report a link.</b>{% if repo_url %} Open a <a href="{{ repo_url }}/issues/new?template=report-link.yml" rel="noopener">report</a> (public: do not include personal data){% else %} Use the report form on the project page (public: do not include personal data){% endif %}{% if contact_email %}, or write to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> if you prefer not to do it in public{% endif %}. Anyone can report, with or without an account on this site.</li>
+      <li><b>What we remove.</b> Links that lead to phishing or scams, malware, content that is illegal, or content that is misleading, harassing or abusive; links that infringe someone's rights; links made to hide a destination or to abuse this service; and any link its creator asks us to remove.</li>
+      <li><b>How fast.</b> We aim to review each report within 3 working days. When a link looks like phishing, malware or illegal content we remove it first and review afterwards. This is a small project run by one person, so these are goals, not guarantees.</li>
+      <li><b>What removal means.</b> The link page disappears when the site is republished (a few minutes after we remove it) and the code is not reused for another destination.</li>
+      <li><b>Who is told.</b> For a link made through a request, we comment on the original issue with the reason; the person who reported it gets an answer in their report. If you think we removed a link by mistake, write to us and we will look again.</li>
+      <li><b>What we keep.</b> The code, the destination address, the date, an optional note and the measurement shown on the link page. The request issue, including the GitHub account name, stays public on GitHub. See the <a href="{{ root }}privacy.html">Privacy</a> page.</li>
     </ul>
     {% if repo_url and limits.links.enabled %}
     <p><a class="btn" href="{{ root }}request.html">Create a short link</a></p>
