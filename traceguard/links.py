@@ -61,12 +61,24 @@ def load_links(path: Path | str = DEFAULT_LINKS) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8")).get("links", [])
 
 
-def save_links(links: list[dict], path: Path | str = DEFAULT_LINKS) -> None:
+def load_retired(path: Path | str = DEFAULT_LINKS) -> set[str]:
+    """Codes of links that were removed. They are never given out again, so an old link cannot start
+    leading somewhere else."""
+    path = Path(path)
+    if not path.exists():
+        return set()
+    return set(json.loads(path.read_text(encoding="utf-8")).get("retired", []))
+
+
+def save_links(links: list[dict], path: Path | str = DEFAULT_LINKS, retired: set[str] | None = None) -> None:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    kept = load_retired(path) if retired is None else retired
+    data = {"links": sorted(links, key=lambda x: x["code"])}
+    if kept:
+        data["retired"] = sorted(kept)
     temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps({"links": sorted(links, key=lambda x: x["code"])}, indent=2, ensure_ascii=False) + "\n",
-                         encoding="utf-8")
+    temporary.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     temporary.replace(path)
 
 
@@ -120,6 +132,8 @@ def add_link(path: Path | str, code: str, url: str, *, note: str = "", check: di
     links = load_links(path)
     if any(link["code"] == code for link in links):
         raise LinkError(f"the code '{code}' already exists")
+    if code in load_retired(path):
+        raise LinkError(f"the code '{code}' belonged to a link that was removed and is not reused")
     record = {"code": code, "url": url, "host": (urlsplit(url).hostname or "").lower(),
               "note": note.strip()[:200], "created": (now or datetime.now(timezone.utc)).date().isoformat(),
               "check": check, "source": source if source in ("public", "admin") else "admin"}
@@ -146,6 +160,13 @@ def _scan_target(url: str) -> dict | None:
         return None
 
 
+def on_demand_message(author: str, env=None) -> str:
+    """Reply when the short link tool is switched off: it is available on demand, through the developer."""
+    where = contact_where(env) or "the contact page of this site"
+    return ("The short link tool is temporarily available on demand only. To request access, contact the developer "
+            f"and ask for the GitHub account `{author}` to be added to the allowed accounts: {where}")
+
+
 def contact_line(env=None) -> str:
     """For anyone who wants a custom short link, or more than the limits allow."""
     where = contact_where(env)
@@ -168,7 +189,10 @@ def process_request(body: str, author: str, account_created: str, history: list[
         return {"created": False, "reason": reason, "code": None, "comment": f"This request was not processed. {text}"}
 
     # The daily cap counts links actually created (checked below), so refused or invalid requests cannot use it up.
-    per_request = {**limits["links"], "global_per_day": 10 ** 9}
+    granted = author.lower() in {a.lower() for a in limits.get("allowed_accounts", [])}
+    if not limits["links"]["enabled"] and not granted:
+        return refuse("on-demand", on_demand_message(author, env))
+    per_request = {**limits["links"], "global_per_day": 10 ** 9, "enabled": True}  # the switch was handled above
     allowed, why = check_account(per_request, limits["blocked_accounts"], author, account_created, history, now,
                                  "a short link")
     if not allowed:
@@ -192,7 +216,8 @@ def process_request(body: str, author: str, account_created: str, history: list[
     if same and not code:
         return {"created": False, "reason": "exists", "code": same["code"], "comment": (
             f"That address already has a short link: {site_url}go/{same['code']}/")}
-    if code and any(l["code"] == code for l in links):
+    retired = load_retired(links_path)
+    if code and (any(l["code"] == code for l in links) or code in retired):
         return refuse("code-taken", f"The code `{code}` is already taken. Choose another or leave it empty.")
     created_today = sum(1 for l in links if l.get("created") == now.date().isoformat())
     if created_today >= limits["links"]["global_per_day"]:
@@ -201,7 +226,7 @@ def process_request(body: str, author: str, account_created: str, history: list[
     check = scan(url) if scan else None
     if check and check.get("status") == "error":
         return refuse("unreachable", "We could not load that address, so no link was created.")
-    code = code or generate_code({l["code"] for l in links})
+    code = code or generate_code({l["code"] for l in links} | retired)
     add_link(links_path, code, url, check=check, blocklist=blocklist, resolver=resolver, now=now, source="public")
     shown = (f"; it contacted {check['tracking']} tracking services before any interaction"
              if check and check.get("status") == "ok" else "")
@@ -212,11 +237,12 @@ def process_request(body: str, author: str, account_created: str, history: list[
 
 
 def remove_link(path: Path | str, code: str) -> bool:
+    code = code.strip().lower()
     links = load_links(path)
-    kept = [link for link in links if link["code"] != code.strip().lower()]
+    kept = [link for link in links if link["code"] != code]
     if len(kept) == len(links):
         return False
-    save_links(kept, path)
+    save_links(kept, path, retired=load_retired(path) | {code})
     return True
 
 

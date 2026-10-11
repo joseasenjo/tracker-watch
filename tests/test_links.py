@@ -75,6 +75,22 @@ def test_add_list_remove_roundtrip_and_duplicates(tmp_path):
     assert load_links(tmp_path / "missing.json") == []
 
 
+def test_a_removed_code_is_retired_and_never_given_out_again(tmp_path):
+    path = tmp_path / "links.json"
+    add_link(path, "keep", "https://example.com/", blocklist=BLOCK, resolver=PUBLIC)
+    add_link(path, "gone", "https://example.org/", blocklist=BLOCK, resolver=PUBLIC)
+    assert remove_link(path, " GONE ") is True
+    assert [l["code"] for l in load_links(path)] == ["keep"]
+    assert links_module.load_retired(path) == {"gone"}
+    with pytest.raises(LinkError, match="not reused"):
+        add_link(path, "gone", "https://example.net/", blocklist=BLOCK, resolver=PUBLIC)
+    add_link(path, "other", "https://example.net/", blocklist=BLOCK, resolver=PUBLIC)  # saving keeps the retired list
+    assert links_module.load_retired(path) == {"gone"} and remove_link(path, "other")
+    assert links_module.load_retired(path) == {"gone", "other"}
+    assert remove_link(path, "never-there") is False and links_module.load_retired(path) == {"gone", "other"}
+    assert links_module.generate_code({"x"} | links_module.load_retired(path)) not in {"gone", "other"}
+
+
 def test_failed_additions_leave_the_file_untouched(tmp_path):
     path = tmp_path / "links.json"
     with pytest.raises(LinkError):

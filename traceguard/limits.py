@@ -9,6 +9,10 @@ blocked accounts.
   python -m traceguard.limits show
   python -m traceguard.limits set scan.per_account=1 links.enabled=false
   python -m traceguard.limits block SOMEACCOUNT      (or: unblock)
+  python -m traceguard.limits allow SOMEACCOUNT      (or: disallow)
+
+"allowed_accounts" are the accounts the developer has granted access to a feature that is switched off
+(links.enabled = false): the tool is then available on demand only. Their other limits still apply.
 """
 from __future__ import annotations
 
@@ -28,6 +32,7 @@ DEFAULTS: dict = {
     "links": {"enabled": True, "per_account": 3, "window_hours": 24, "min_account_age_days": 7,
               "global_per_day": 20, "max_total": 500},
     "blocked_accounts": [],
+    "allowed_accounts": [],
 }
 # (minimum, maximum) accepted for each number
 BOUNDS = {"per_account": (0, 50), "window_hours": (1, 168), "min_account_age_days": (0, 3650),
@@ -80,6 +85,11 @@ def validate(data: dict) -> dict:
             not isinstance(b, str) or not LOGIN.match(b) for b in blocked):
         raise LimitsError("blocked_accounts must be a list of GitHub account names (up to 200)")
     result["blocked_accounts"] = sorted({b.lower() for b in blocked})
+    allowed = data.get("allowed_accounts", [])
+    if not isinstance(allowed, list) or len(allowed) > MAX_BLOCKED or any(
+            not isinstance(a, str) or not LOGIN.match(a) for a in allowed):
+        raise LimitsError("allowed_accounts must be a list of GitHub account names (up to 200)")
+    result["allowed_accounts"] = sorted({a.lower() for a in allowed})
     unknown = set(data) - set(DEFAULTS)
     if unknown:
         raise LimitsError(f"unknown section {sorted(unknown)[0]}")
@@ -149,7 +159,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("show")
     setter = sub.add_parser("set")
     setter.add_argument("assignments", nargs="+", help="e.g. scan.per_account=1 links.enabled=false")
-    for name in ("block", "unblock"):
+    for name in ("block", "unblock", "allow", "disallow"):
         sub.add_parser(name).add_argument("account")
     args = parser.parse_args(argv)
     try:
@@ -161,6 +171,10 @@ def main(argv: list[str] | None = None) -> int:
             accounts = set(data["blocked_accounts"])
             (accounts.add if args.command == "block" else accounts.discard)(args.account.lower())
             data["blocked_accounts"] = sorted(accounts)
+        elif args.command in ("allow", "disallow"):
+            accounts = set(data["allowed_accounts"])
+            (accounts.add if args.command == "allow" else accounts.discard)(args.account.lower())
+            data["allowed_accounts"] = sorted(accounts)
         if args.command != "show":
             data = save_limits(data, args.file)
             print(f"saved {args.file}. Commit and push it for the workflows to use it.")

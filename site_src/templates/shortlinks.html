@@ -11,6 +11,9 @@
       <div class="step"><h3>Check before you go</h3><p>The link opens a page with the destination, what we measured there when available, and a button to continue. Nothing redirects by itself.</p></div>
     </div>
 
+    {% if not limits.links.enabled %}
+    <p class="note"><b>On demand only, for now.</b> The short link tool is temporarily available by request. To get access, contact the developer and ask for your GitHub account to be added to the allowed accounts.{% if contact_email %} <a href="mailto:{{ contact_email }}?subject=Short%20link%20tool%20access">{{ contact_email }}</a>{% endif %}</p>
+    {% endif %}
     <h2 style="margin-top:28px">Rules</h2>
     <ul>
       <li>Only <code>http</code> and <code>https</code> addresses on public websites. Addresses that point to private networks, carry credentials, or belong to other link shorteners are refused.</li>
@@ -18,7 +21,7 @@
       <li>We may remove a link at any time, for example if it leads to harmful or misleading content.</li>
       <li>The page shows counts of what the destination contacted, not a judgement about it.</li>
     </ul>
-    {% if repo_url %}
+    {% if repo_url and limits.links.enabled %}
     <p><a class="btn" href="{{ root }}request.html">Create a short link</a></p>
     {% endif %}
 

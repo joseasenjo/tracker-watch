@@ -68,6 +68,8 @@
     </table></div>
     <p><label for="blocked"><b>Cuentas bloqueadas</b> (una por línea, nombre de GitHub):</label><br>
       <textarea id="blocked" rows="3" style="width:100%;max-width:420px"></textarea></p>
+    <p><label for="allowed"><b>Cuentas con acceso concedido</b> (una por línea): pueden usar el acortador aunque esté apagado; siguen sujetas a sus límites.</label><br>
+      <textarea id="allowed" rows="3" style="width:100%;max-width:420px"></textarea></p>
     <p>
       <button class="btn" type="submit" id="limits-save">Guardar en data/limits.json</button>
       <button class="btn sec" type="button" id="limits-copy">Copiar JSON</button>
@@ -107,9 +109,11 @@
         if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
       });
       document.getElementById('blocked').value = (l.blocked_accounts || []).join('\n');
+      document.getElementById('allowed').value = (l.allowed_accounts || []).join('\n');
     }
     function read() {
-      var l = { scan: {}, links: {}, blocked_accounts: document.getElementById('blocked').value.split(/\s+/).filter(Boolean) };
+      var l = { scan: {}, links: {}, blocked_accounts: document.getElementById('blocked').value.split(/\s+/).filter(Boolean),
+        allowed_accounts: document.getElementById('allowed').value.split(/\s+/).filter(Boolean) };
       document.querySelectorAll('[data-k]').forEach(function (el) {
         var p = el.dataset.k.split('.');
         l[p[0]][p[1]] = el.type === 'checkbox' ? el.checked : parseInt(el.value, 10);

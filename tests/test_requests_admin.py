@@ -13,7 +13,7 @@ from traceguard import ondemand
 from traceguard.admin import make_server, recent_requests
 from traceguard.categories import CATEGORIES, describe
 from traceguard.limits import DEFAULTS, LimitsError, check_account, load_limits, main as limits_main, save_limits, validate
-from traceguard.links import generate_code, load_links, main as links_main, process_request
+from traceguard.links import generate_code, load_links, main as links_main, process_request, remove_link as links_module_remove
 from traceguard.site import build_site
 
 from test_links import BLOCK, PUBLIC
@@ -39,7 +39,7 @@ def test_missing_file_means_defaults_and_values_are_filled_in(tmp_path):
     [], {"scan": {"per_account": -1}}, {"scan": {"per_account": 1.5}}, {"scan": {"per_account": True}},
     {"scan": {"per_account": 9999}}, {"links": {"enabled": "yes"}}, {"scan": {"max_total": 5}},
     {"other": {}}, {"blocked_accounts": ["x y"]}, {"blocked_accounts": "bob"}, {"scan": []},
-    {"blocked_accounts": ["a"] * 201}])
+    {"blocked_accounts": ["a"] * 201}, {"allowed_accounts": ["x y"]}, {"allowed_accounts": "bob"}])
 def test_invalid_limits_are_rejected(data):
     with pytest.raises(LimitsError):
         validate(data)
@@ -60,6 +60,8 @@ def test_save_roundtrip_and_cli(tmp_path, capsys):
     assert limits_main(["--file", str(path), "block", "Spammer"]) == 0
     assert load_limits(path)["blocked_accounts"] == ["spammer"]
     assert limits_main(["--file", str(path), "unblock", "spammer"]) == 0 and load_limits(path)["blocked_accounts"] == []
+    assert limits_main(["--file", str(path), "allow", "Ana"]) == 0 and load_limits(path)["allowed_accounts"] == ["ana"]
+    assert limits_main(["--file", str(path), "disallow", "ana"]) == 0 and load_limits(path)["allowed_accounts"] == []
     assert limits_main(["--file", str(path), "set", "scan.per_account=-4"]) == 2
     assert limits_main(["--file", str(path), "set", "nonsense"]) == 2
     assert save_limits({"scan": {"window_hours": 48}}, path)["scan"]["window_hours"] == 48
@@ -122,6 +124,37 @@ def test_public_links_are_marked_public_and_the_reply_gives_a_realistic_wait(tmp
     assert "about 5 minutes" in result["comment"] and "couple of minutes" not in result["comment"]
 
 
+def test_switched_off_short_links_are_on_demand_and_only_allowed_accounts_get_through(tmp_path):
+    off = {**DEFAULTS, "links": {**DEFAULTS["links"], "enabled": False}, "allowed_accounts": []}
+    env = {"CONTACT_EMAIL": "dev@example.org"}
+    refused = process_request(BODY.format(code="my-talk"), "ana", OLD, [hist("ana", 1)], off,
+                              tmp_path / "links.json", "https://owner.github.io/tracker-watch", now=NOW, env=env,
+                              blocklist=BLOCK, resolver=PUBLIC, scan=lambda url: dict(OK_CHECK))
+    assert not refused["created"] and refused["reason"] == "on-demand"
+    assert "temporarily available on demand only" in refused["comment"] and "dev@example.org" in refused["comment"]
+    assert "`ana`" in refused["comment"] and load_links(tmp_path / "links.json") == []
+    granted = {**off, "allowed_accounts": ["ANA"]}
+    ok = process_request(BODY.format(code="my-talk"), "ana", OLD, [hist("ana", 1)], granted,
+                         tmp_path / "links.json", "https://owner.github.io/tracker-watch", now=NOW, env=env,
+                         blocklist=BLOCK, resolver=PUBLIC, scan=lambda url: dict(OK_CHECK))
+    assert ok["created"] and ok["code"] == "my-talk"
+    # a granted account still obeys the other limits (here: a blocked account stays blocked)
+    both = {**granted, "blocked_accounts": ["ana"]}
+    still = process_request(BODY.format(code="other"), "ana", OLD, [hist("ana", 1)], both, tmp_path / "links.json",
+                            "https://owner.github.io/tracker-watch", now=NOW, env=env, blocklist=BLOCK,
+                            resolver=PUBLIC, scan=lambda url: dict(OK_CHECK))
+    assert not still["created"] and "cannot use this feature" in still["comment"]
+
+
+def test_a_public_request_cannot_take_the_code_of_a_removed_link(tmp_path):
+    first = request(tmp_path)
+    assert first["created"]
+    links_module_remove(tmp_path / "links.json", "my-talk")
+    again = request(tmp_path, history=[hist("ana", 1)], limits=DEFAULTS)
+    assert not again["created"] and again["reason"] == "code-taken"
+    assert load_links(tmp_path / "links.json") == []
+
+
 def test_a_valid_request_creates_the_link_with_no_approval(tmp_path):
     result = request(tmp_path)
     assert result["created"] and result["code"] == "my-talk"
@@ -141,7 +174,7 @@ def test_without_a_code_a_random_one_is_generated_and_the_same_address_is_reused
 
 
 @pytest.mark.parametrize("kwargs, reason", [
-    ({"limits": {**DEFAULTS, "links": {**DEFAULTS["links"], "enabled": False}}}, "limit"),
+    ({"limits": {**DEFAULTS, "links": {**DEFAULTS["links"], "enabled": False}}}, "on-demand"),
     ({"limits": {**DEFAULTS, "blocked_accounts": ["ana"]}}, "limit"),
     ({"history": [hist("ana", h, h) for h in (1, 2, 3, 4)]}, "limit"),
     ({"created": (NOW - timedelta(days=1)).isoformat()}, "limit"),
@@ -295,7 +328,7 @@ def test_try_it_page_states_the_current_limits_and_switches(site):
     out, _ = site
     page = (out / "request.html").read_text(encoding="utf-8")
     assert "Limit: 4 per GitHub account every 24 hours" in page
-    assert "Short links are switched off for now" in page and 'data-template="link-request.yml"' not in page
+    assert "Short links: on demand only, for now" in page and 'data-template="link-request.yml"' not in page
     assert 'data-template="scan-request.yml"' in page and "nobody approves" in page.replace("Nobody approves it by hand", "nobody approves")
     assert "public GitHub issue" in page
 
@@ -407,3 +440,19 @@ def test_the_try_it_page_tells_people_to_contact_the_developer_for_a_custom_shor
     page = (tmp_path / "site" / "request.html").read_text(encoding="utf-8")
     assert "1 per GitHub account every 7 days; 4 new links per day for the whole site, whoever asks; the account must be at least 7 days old" in page
     assert "Want a custom short link" in page and 'href="mailto:dev@example.org"' in page
+
+
+def test_the_public_pages_say_the_short_link_tool_is_on_demand_when_it_is_switched_off(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", vantage="github-actions-us")})
+    (tmp_path / "limits.json").write_text(json.dumps({"links": {"enabled": False}}), encoding="utf-8")
+    out = tmp_path / "site"
+    build_site(tmp_path / "runs", out, repo_url="https://github.com/o/r", contact_email="dev@example.org")
+    for name in ("request.html", "shortlinks.html"):
+        page = (out / name).read_text(encoding="utf-8")
+        assert "on demand" in page.lower() and "allowed accounts" in page and "dev@example.org" in page
+        assert 'id="link-form"' not in page
+    assert "Create a short link" not in (out / "shortlinks.html").read_text(encoding="utf-8")
+    (tmp_path / "limits.json").write_text(json.dumps({"links": {"enabled": True}}), encoding="utf-8")
+    build_site(tmp_path / "runs", out, repo_url="https://github.com/o/r", contact_email="dev@example.org")
+    assert 'id="link-form"' in (out / "request.html").read_text(encoding="utf-8")
+    assert "Create a short link" in (out / "shortlinks.html").read_text(encoding="utf-8")
