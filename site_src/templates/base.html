@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ site_name }}{% endblock %} · {{ site_name }}</title>
   <meta name="description" content="{% block description %}Weekly, reproducible measurement of the third-party tracking services contacted by news websites before any user interaction.{% endblock %}">
-  <link rel="stylesheet" href="{{ root }}assets/style.css">
+  <link rel="stylesheet" href="{{ root }}assets/style.css?v={{ asset_v }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site_name }}" href="{{ root }}feed.xml">
   {% block head %}{% endblock %}
   <script>document.documentElement.classList.add('js')</script>
@@ -79,6 +79,6 @@
     </div>
   </div>
 </footer>
-<script src="{{ root }}assets/site.js" defer></script>
+<script src="{{ root }}assets/site.js?v={{ asset_v }}" defer></script>
 </body>
 </html>

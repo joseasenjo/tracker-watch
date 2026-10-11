@@ -43,6 +43,22 @@ nav.links .menu-panel { position: absolute; left: -12px; top: calc(100% + 10px);
 nav.links .menu-panel a { padding: 8px 12px; border-radius: 8px; white-space: nowrap; }
 nav.links .menu-panel a:hover { background: var(--bg); }
 nav.links summary:focus-visible, nav.links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+/* Desktop: every top-level item is the same kind of button; the sub-options open as a vertical list underneath. */
+@media (min-width: 721px) {
+  nav.links { gap: 8px; }
+  nav.links > a:not(.menu-cta), nav.links .menu-group > summary, nav.links .menu-cta {
+    display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box; min-height: 36px; padding: 6px 14px;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--text);
+    font-size: .93rem; font-weight: 500; line-height: 1.2; text-decoration: none; cursor: pointer; }
+  nav.links > a:not(.menu-cta):hover, nav.links .menu-group > summary:hover, nav.links .menu-group[open] > summary {
+    border-color: var(--accent); color: var(--accent); }
+  nav.links > a[aria-current="page"], nav.links .menu-group > summary.here {
+    border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--panel)); }
+  nav.links .menu-cta { margin-left: 4px; background: var(--accent); border-color: var(--accent); font-weight: 600; }
+  nav.links a.menu-cta, nav.links a.menu-cta:hover, nav.links a.menu-cta[aria-current="page"] { color: var(--accent-text); background: var(--accent); }
+  nav.links .menu-panel { align-items: stretch; gap: 2px; left: 0; }
+  nav.links .menu-panel a { display: block; text-align: left; }
+}
 .menu-btn { display: none; }
 
 .hero { background: linear-gradient(180deg, var(--hero-1), var(--hero-2)); padding: 48px 0 36px; border-bottom: 1px solid var(--line); }

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import re
 import shutil
@@ -93,6 +94,13 @@ def _env() -> Environment:
                       autoescape=select_autoescape(["html", "xml"]), trim_blocks=True, lstrip_blocks=True)
     env.filters["size"] = format_bytes
     env.filters["span"] = span
+    # Version tag for the assets: browsers keep an old style sheet or script unless the address changes.
+    digest = hashlib.sha256()
+    for name in ("style.css", "site.js", "result.js"):
+        asset = SRC / "assets" / name
+        if asset.exists():
+            digest.update(asset.read_bytes())
+    env.globals["asset_v"] = digest.hexdigest()[:10]
 
     @pass_context
     def catlink(context, category: str) -> Markup:
