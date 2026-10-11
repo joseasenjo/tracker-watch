@@ -10,6 +10,7 @@ remove links by hand and change the limits from the local dashboard.
 Usage:
   python -m traceguard.links add CODE URL [--note TEXT] [--scan]
   python -m traceguard.links remove CODE
+  python -m traceguard.links demo CODE [--off]     (shown as an example on the Short links page)
   python -m traceguard.links list
   python -m traceguard.links pending [--repo OWNER/NAME]
   python -m traceguard.links request --body-file body.txt --author LOGIN --account-created ISO \
@@ -128,7 +129,7 @@ def summarize_check(report: dict) -> dict:
 
 def add_link(path: Path | str, code: str, url: str, *, note: str = "", check: dict | None = None,
              blocklist: set[str] | None = None, resolver: Resolver = system_resolver,
-             now: datetime | None = None, source: str = "admin") -> dict:
+             now: datetime | None = None, source: str = "admin", demo: bool = False) -> dict:
     code = validate_code(code)
     blocklist = load_blocklist() if blocklist is None else blocklist
     url = validate_target(url, blocklist, resolver)
@@ -140,6 +141,8 @@ def add_link(path: Path | str, code: str, url: str, *, note: str = "", check: di
     record = {"code": code, "url": url, "host": (urlsplit(url).hostname or "").lower(),
               "note": note.strip()[:200], "created": (now or datetime.now(timezone.utc)).date().isoformat(),
               "check": check, "source": source if source in ("public", "admin") else "admin"}
+    if demo:
+        record["demo"] = True  # shown in the "See it in action" block of the Short links page
     save_links(links + [record], path)
     return record
 
@@ -240,6 +243,23 @@ def process_request(body: str, author: str, account_created: str, history: list[
         "The link can be removed at any time if it breaks the rules on the Short links page.")}
 
 
+def set_demo(path: Path | str, code: str, value: bool = True) -> bool:
+    """Mark (or unmark) a link as a demonstration. False when there is no such code."""
+    code = code.strip().lower()
+    links = load_links(path)
+    found = False
+    for link in links:
+        if link["code"] == code:
+            found = True
+            if value:
+                link["demo"] = True
+            else:
+                link.pop("demo", None)
+    if found:
+        save_links(links, path)
+    return found
+
+
 def remove_link(path: Path | str, code: str) -> bool:
     code = code.strip().lower()
     links = load_links(path)
@@ -291,6 +311,9 @@ def main(argv: list[str] | None = None) -> int:
     add.add_argument("--scan", action="store_true", help="measure the target first and store the summary")
     rem = sub.add_parser("remove")
     rem.add_argument("code")
+    dem = sub.add_parser("demo", help="mark a link as a demonstration (or --off to unmark it)")
+    dem.add_argument("code")
+    dem.add_argument("--off", action="store_true")
     sub.add_parser("list")
     pend = sub.add_parser("pending")
     pend.add_argument("--repo", default=DEFAULT_REPO)
@@ -327,6 +350,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "remove":
         print("removed" if remove_link(args.file, args.code) else "no such code")
+        return 0
+    if args.command == "demo":
+        print(("unmarked" if args.off else "marked as a demonstration") if set_demo(args.file, args.code, not args.off)
+              else "no such code")
         return 0
     if args.command == "pending":
         requests = pending_requests(args.repo)

@@ -158,3 +158,13 @@ details.fold[open] > summary::before { transform: rotate(45deg); }
 details.fold > .sub { margin-top: 0; }
 footer .credit { text-align: center; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); }
 footer .credit p { margin: 2px 0; }
+
+/* Short links page: the example cards show label/value pairs, stacked on narrow screens. */
+dl.demo-facts { margin: 0 0 12px; display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 0; }
+dl.demo-facts dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--soft); font-weight: 700; padding: 10px 12px 10px 0; border-top: 1px solid var(--line); }
+dl.demo-facts dd { margin: 0; padding: 8px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+@media (max-width: 720px) {
+  dl.demo-facts { grid-template-columns: 1fr; }
+  dl.demo-facts dt { padding: 10px 0 0; border-top: 1px solid var(--line); }
+  dl.demo-facts dd { padding: 2px 0 10px; border-top: 0; }
+}

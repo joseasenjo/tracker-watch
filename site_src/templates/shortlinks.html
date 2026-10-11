@@ -14,6 +14,28 @@
     {% if not limits.links.enabled %}
     <p class="note"><b>On demand only, for now.</b> The short link tool is temporarily available by request. To get access, contact the developer and ask for your GitHub account to be added to the allowed accounts.{% if contact_email %} <a href="mailto:{{ contact_email }}?subject=Short%20link%20tool%20access">{{ contact_email }}</a>{% endif %}</p>
     {% endif %}
+    {% if demos %}
+    <h2 style="margin-top:28px">See it in action</h2>
+    <p class="sub">Open an example: you land on our page first, which shows where the link leads and what we measured there. You choose whether to continue.</p>
+    {% for d in demos %}
+    <div class="card">
+      <h3 style="margin-top:0">{{ d.name }}{% if d.name != d.host %} <span class="small">{{ d.host }}{% if d.group %} · {{ d.group }}{% endif %}</span>{% endif %}</h3>
+      <dl class="demo-facts">
+          <dt>Measured by this tool</dt><dd>{{ d.date }}, from {{ d.where }}</dd>
+          <dt>What it found</dt><dd>{% if d.measured %}<b>{{ d.tracking }}</b> third-party tracking services before any interaction{% if d.band %} (band {{ d.band }}){% endif %}{% if d.confidence %}, confidence {{ d.confidence }}{% endif %}{% elif d.light %}This page loads very few resources (fewer than the 5 requests our method needs), so it was not measured.{% else %}It could not be measured ({{ d.status }}).{% endif %}</dd>
+          {% if d.weekly %}
+          <dt>Our weekly measurement</dt><dd>{{ d.weekly.tracking }} services, {{ d.weekly_date }}, from {{ d.weekly_where }} (<a href="{{ root }}sites/{{ d.weekly.stem }}.html">{{ d.name }}</a>)</dd>
+          {% if d.delta is not none %}
+          <dt>Agreement between the two runs</dt><dd>{% if d.delta == 0 %}Both runs found the same number of services.{% else %}The two runs differ by {{ d.delta|abs }} service{{ '' if d.delta|abs == 1 else 's' }}.{% endif %} Two visits, on different days and from different places, with the same method.</dd>
+          {% endif %}
+          {% endif %}
+      </dl>
+      <p class="small">Counts, not verdicts: a page can serve different things from one visit to the next, so small differences are normal.</p>
+      <p><a class="btn" href="{{ root }}go/{{ d.code }}/">Open the example</a></p>
+    </div>
+    {% endfor %}
+    {% endif %}
+
     <h2 style="margin-top:28px">Rules</h2>
     <ul>
       <li>Only <code>http</code> and <code>https</code> addresses on public websites. Addresses that point to private networks, carry credentials, or belong to other link shorteners are refused.</li>
@@ -35,12 +57,13 @@
     <p><a class="btn" href="{{ root }}request.html">Create a short link</a></p>
     {% endif %}
 
-    {% if links %}
+    {% set others = links|rejectattr('demo')|list %}
+    {% if others %}
     <h2>Active links</h2>
-    <p class="sub">{{ links|length }} active.</p>
+    <p class="sub">{{ others|length }} active.</p>
     <div class="table-scroll"><table class="t">
       <thead><tr><th>Link</th><th>Leads to</th></tr></thead>
-      <tbody>{% for l in links %}<tr><td><a href="{{ root }}go/{{ l.code }}/">{{ l.code }}</a></td><td>{{ l.host }}</td></tr>{% endfor %}</tbody>
+      <tbody>{% for l in others %}<tr><td><a href="{{ root }}go/{{ l.code }}/">{{ l.code }}</a></td><td>{{ l.host }}</td></tr>{% endfor %}</tbody>
     </table></div>
     {% endif %}
   </div>

@@ -262,3 +262,47 @@ def test_cli_add_list_remove_and_error_codes(tmp_path, monkeypatch, capsys):
     assert links_module.main(["--file", path, "add", "mytalk", "https://example.com/t"]) == 2
     assert links_module.main(["--file", path, "add", "admin", "https://example.com/t"]) == 2
     assert links_module.main(["--file", path, "remove", "mytalk"]) == 0
+
+
+def test_set_demo_marks_and_unmarks_a_link_and_the_flag_is_saved_only_when_true(tmp_path):
+    path = tmp_path / "links.json"
+    add_link(path, "one", "https://example.com/", blocklist=BLOCK, resolver=PUBLIC)
+    add_link(path, "two", "https://example.org/", blocklist=BLOCK, resolver=PUBLIC, demo=True)
+    assert "demo" not in load_links(path)[0] and load_links(path)[1]["demo"] is True
+    assert links_module.set_demo(path, "ONE") is True and load_links(path)[0]["demo"] is True
+    assert links_module.set_demo(path, "one", False) is True and "demo" not in load_links(path)[0]
+    assert links_module.set_demo(path, "nope") is False
+
+
+def test_the_short_links_page_shows_demos_with_name_date_result_and_the_weekly_comparison(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", tracking=4, vantage="github-actions-us")})
+    links = tmp_path / "links.json"
+    measured = {"status": "ok", "tracking": 3, "band": "B", "confidence": "high", "vantage": "local-windows-spain",
+                "date": "2026-10-11", "domains": []}
+    light = {"status": "incomplete", "tracking": None, "band": None, "domains": [], "too_few_requests": True,
+             "vantage": "local-windows-spain", "date": "2026-10-11"}
+    add_link(links, "news-a", "https://a.example/", check=measured, blocklist=BLOCK, resolver=PUBLIC, demo=True)
+    add_link(links, "light", "https://example.com/", check=light, blocklist=BLOCK, resolver=PUBLIC, demo=True)
+    add_link(links, "normal", "https://example.org/", blocklist=BLOCK, resolver=PUBLIC)
+    out = tmp_path / "site"
+    ctx = build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
+    page = (out / "shortlinks.html").read_text(encoding="utf-8")
+    assert "See it in action" in page and "News A" in page and "2026-10-11" in page
+    assert "<b>3</b> third-party tracking services" in page and "band B" in page
+    assert "Our weekly measurement" in page and "4 services, 2026-10-04" in page
+    assert "differ by 1 service." in page
+    assert "loads very few resources" in page and "Open the example" in page
+    listing = page.split("Active links")[1]
+    assert "normal" in listing and "news-a" not in listing and "light" not in listing
+    by_code = {d["code"]: d for d in ctx["demos"]}
+    assert set(by_code) == {"news-a", "light"} and by_code["news-a"]["delta"] == 1 and by_code["light"]["delta"] is None
+    assert "Example link created by the site" in (out / "go" / "news-a" / "index.html").read_text(encoding="utf-8")
+
+
+def test_no_demos_means_no_example_block(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", vantage="github-actions-us")})
+    links = tmp_path / "links.json"
+    add_link(links, "plain", "https://example.org/", blocklist=BLOCK, resolver=PUBLIC)
+    out = tmp_path / "site"
+    build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
+    assert "See it in action" not in (out / "shortlinks.html").read_text(encoding="utf-8")

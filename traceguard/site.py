@@ -497,6 +497,36 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
     (data_dir / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False), encoding="utf-8")
 
 
+COUNTRIES = {"US": "United States", "UK": "United Kingdom", "DE": "Germany", "ES": "Spain"}
+
+
+def demo_cards(ctx: dict, own_host: str = "") -> list[dict]:
+    """The links marked as demonstrations, with what was measured on that page, when and from where, and, when the
+    page is one of the weekly sites, how the weekly figure compares (a consistency check between two runs)."""
+    by_host = {(urlsplit(e["url"]).hostname or "").removeprefix("www."): e for e in ctx["entries"]}
+    cards = []
+    for link in ctx["links"]:
+        if not link.get("demo"):
+            continue
+        check = link.get("check") or {}
+        host = link["host"].removeprefix("www.")
+        site = by_host.get(host)
+        measured = check.get("status") == "ok"
+        weekly = site if site and site["status"] == "ok" else None
+        cards.append({
+            "code": link["code"], "host": link["host"], "url": link["url"], "note": link.get("note", ""),
+            "name": site["name"] if site else ("%s (this site)" % SITE_NAME if own_host and host == own_host else link["host"]),
+            "group": COUNTRIES.get(site["group"], site["group"]) if site else "",
+            "measured": measured, "tracking": check.get("tracking"), "band": check.get("band"),
+            "confidence": check.get("confidence"), "date": check.get("date", link.get("created", "")),
+            "where": VANTAGE_LABELS.get(check.get("vantage"), check.get("vantage") or ""),
+            "light": bool(check.get("too_few_requests")), "status": check.get("status"),
+            "weekly": weekly, "weekly_date": ctx["date"], "weekly_where": ctx["vantage"],
+            "delta": (weekly["tracking"] - check["tracking"]) if weekly and measured else None,
+        })
+    return cards
+
+
 def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | None = None,
                base_url: str = "https://example.org/tracker-watch/", subscribe_url: str | None = None,
                repo_url: str | None = None, contact_email: str | None = None, linkedin_url: str | None = None,
@@ -508,6 +538,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     ctx["limits"] = load_limits(limits_file if limits_file is not None else Path(runs_dir).parent / "limits.json")
     ctx["links"] = load_links(links_file if links_file is not None else Path(runs_dir).parent / "links.json")
     base = base_url if base_url.endswith("/") else base_url + "/"
+    ctx["demos"] = demo_cards(ctx, (urlsplit(base).hostname or "").removeprefix("www."))
     ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
     ctx["share_origins_image"], ctx["share_origins_alt"] = "", origins_alt_text(ctx)
     ctx["site_base"] = base
