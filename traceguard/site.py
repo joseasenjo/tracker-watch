@@ -580,7 +580,9 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("contact.html", out / "contact.html", page="contact")
     render("shortlinks.html", out / "shortlinks.html", page="shortlinks")
     for link in ctx["links"]:
-        render("go.html", out / "go" / link["code"] / "index.html", page="go", link=link)
+        # Only the maintainer's own links can go straight to the destination; a public link always shows where it leads.
+        direct = bool(link.get("direct")) and link.get("source") == "admin"
+        render("go_direct.html" if direct else "go.html", out / "go" / link["code"] / "index.html", page="go", link=link)
     (out / "data").mkdir(exist_ok=True)
     _write_downloads(ctx, out / "data", base)
     for entry in ctx["entries"]:

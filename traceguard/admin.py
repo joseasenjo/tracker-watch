@@ -169,7 +169,7 @@ class Handler(SimpleHTTPRequestHandler):
                 return self._json(200, {"ok": True, "id": ops.start_scan(str(body.get("url", "")))})
             if self.path == "/api/ops/link":
                 done = ops.create_link(str(body.get("url", "")), str(body.get("code", "")), str(body.get("note", "")),
-                                       measure=bool(body.get("measure", True)), demo=bool(body.get("demo", False)))
+                                       measure=bool(body.get("measure", True)), demo=bool(body.get("demo", False)), direct=bool(body.get("direct", False)))
                 return self._json(200, {"ok": True, **done})
             if self.path == "/api/ops/link/remove":
                 ops.remove_link(str(body.get("code", "")))

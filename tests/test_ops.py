@@ -319,3 +319,18 @@ def test_admin_tool_routes_need_the_token_and_refuse_unsafe_addresses(admin):
     assert call(admin.base + "/api/ops/link/remove", {"code": "does-not-exist"}, good)[0] == 400
     assert call(admin.base + "/api/ops/scan?id=nope")[0] == 404
     assert call(admin.base + "/api/ops/links")[0] == 200
+
+
+def test_a_direct_admin_link_is_not_measured_and_a_demo_is_never_direct(tmp_path):
+    from traceguard import links as L
+    from traceguard.ops import create_link
+    path = tmp_path / "links.json"
+    called = []
+    scan = lambda url: called.append(url) or {"status": "ok", "tracking": 1}
+    kw = dict(links_path=path, blocklist=set(), resolver=lambda host: ["93.184.216.34"], scan=scan)
+    assert create_link("https://example.com/", "mine", direct=True, measure=True, **kw)["created"]
+    assert called == [] and L.load_links(path)[0]["direct"] is True and L.load_links(path)[0]["check"] is None
+    assert create_link("https://example.org/", "show", direct=True, demo=True, measure=True, **kw)["created"]
+    assert called == ["https://example.org/"]
+    by = {l["code"]: l for l in L.load_links(path)}
+    assert "direct" not in by["show"] and by["show"]["demo"] is True

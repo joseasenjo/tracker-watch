@@ -306,3 +306,43 @@ def test_no_demos_means_no_example_block(tmp_path):
     out = tmp_path / "site"
     build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
     assert "See it in action" not in (out / "shortlinks.html").read_text(encoding="utf-8")
+
+
+def test_a_direct_link_is_only_for_the_maintainer_and_never_for_a_public_request_or_a_demo(tmp_path):
+    path = tmp_path / "links.json"
+    add_link(path, "mine", "https://example.com/", blocklist=BLOCK, resolver=PUBLIC, direct=True)
+    add_link(path, "theirs", "https://example.org/", blocklist=BLOCK, resolver=PUBLIC, source="public", direct=True)
+    add_link(path, "show", "https://example.net/", blocklist=BLOCK, resolver=PUBLIC, demo=True, direct=True)
+    by = {l["code"]: l for l in load_links(path)}
+    assert by["mine"]["direct"] is True and "direct" not in by["theirs"] and "direct" not in by["show"]
+    assert links_module.set_direct(path, "theirs") is True and "direct" not in {l["code"]: l for l in load_links(path)}["theirs"]
+    # asking explicitly turns a demo into a direct link (it stops being an example)
+    assert links_module.set_direct(path, "show") is True
+    show = {l["code"]: l for l in load_links(path)}["show"]
+    assert show["direct"] is True and "demo" not in show
+    assert links_module.set_direct(path, "mine", False) is True and "direct" not in {l["code"]: l for l in load_links(path)}["mine"]
+    assert links_module.set_direct(path, "nope") is False
+
+
+def test_the_page_of_a_direct_link_goes_straight_to_the_destination_and_the_others_still_ask(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", vantage="github-actions-us")})
+    links = tmp_path / "links.json"
+    add_link(links, "mine", "https://example.com/a?x=1&y=<2>", blocklist=BLOCK, resolver=PUBLIC, direct=True)
+    add_link(links, "ask", "https://example.org/", blocklist=BLOCK, resolver=PUBLIC)
+    add_link(links, "pub", "https://example.net/", blocklist=BLOCK, resolver=PUBLIC, source="public")
+    raw = json.loads(links.read_text(encoding="utf-8"))
+    for item in raw["links"]:  # a hand-edited file cannot make a public link direct
+        if item["code"] == "pub":
+            item["direct"] = True
+    links.write_text(json.dumps(raw), encoding="utf-8")
+    out = tmp_path / "site"
+    build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
+    page = lambda code: (out / "go" / code / "index.html").read_text(encoding="utf-8")
+    direct = page("mine")
+    assert 'http-equiv="refresh" content="0; url=https://example.com/a?x=1&amp;y=&lt;2&gt;"' in direct
+    assert "window.location.replace(" in direct and "&lt;2&gt;" in direct and "noindex,nofollow" in direct
+    assert 'href="https://example.com/a?x=1&amp;y=&lt;2&gt;"' in direct  # the visible fallback link
+    for code in ("ask", "pub"):
+        assert "http-equiv" not in page(code).lower() and "window.location" not in page(code) and "Continue to" in page(code)
+    listing = (out / "shortlinks.html").read_text(encoding="utf-8").split("Active links")[1]
+    assert "Goes straight there" in listing and listing.count("Shows where it leads first") == 2

@@ -8,7 +8,7 @@
     <div class="steps">
       <div class="step"><h3>Ask</h3><p>Open a request with the address you want to shorten and, optionally, the code you would like. Anyone with a GitHub account can, and nobody approves it by hand.</p></div>
       <div class="step"><h3>Automatic check</h3><p>A workflow checks the address, applies the limits, measures the destination, creates the link and replies in the issue. The site republishes a few minutes later.</p></div>
-      <div class="step"><h3>Check before you go</h3><p>The link opens a page with the destination, what we measured there when available, and a button to continue. Nothing redirects by itself.</p></div>
+      <div class="step"><h3>Check before you go</h3><p>A link made through a request opens a page with the destination, what we measured there when available, and a button to continue. Nothing redirects by itself. Links the maintainer makes for their own use are marked "direct" in the list below and go straight to their destination.</p></div>
     </div>
 
     {% if not limits.links.enabled %}
@@ -62,8 +62,8 @@
     <h2>Active links</h2>
     <p class="sub">{{ others|length }} active.</p>
     <div class="table-scroll"><table class="t">
-      <thead><tr><th>Link</th><th>Leads to</th></tr></thead>
-      <tbody>{% for l in others %}<tr><td><a href="{{ root }}go/{{ l.code }}/">{{ l.code }}</a></td><td>{{ l.host }}</td></tr>{% endfor %}</tbody>
+      <thead><tr><th>Link</th><th>Leads to</th><th>Behaviour</th></tr></thead>
+      <tbody>{% for l in others %}<tr><td><a href="{{ root }}go/{{ l.code }}/">{{ l.code }}</a></td><td>{{ l.host }}</td><td>{% if l.direct and l.source == 'admin' %}Goes straight there{% else %}Shows where it leads first{% endif %}</td></tr>{% endfor %}</tbody>
     </table></div>
     {% endif %}
   </div>

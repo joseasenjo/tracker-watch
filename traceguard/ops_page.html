@@ -89,8 +89,8 @@
           <input id="adm-link-url" type="text" placeholder="Dirección de destino, https://…" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
           <input id="adm-link-code" type="text" placeholder="Código (opcional, 3 a 32: letras minúsculas, cifras y guiones)" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
           <input id="adm-link-note" type="text" maxlength="200" placeholder="Nota (opcional)" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
-          <label class="muted"><input type="checkbox" id="adm-link-measure" checked> Medir el destino (unos 30 s; se enseña en la página intermedia)</label>
-          <label class="muted"><input type="checkbox" id="adm-link-demo"> Es una demostración (sale como ejemplo en la página «Short links» con su medición)</label>
+          <label class="muted"><input type="checkbox" id="adm-link-inter"> Con página intermedia: enseña adónde lleva y mide el destino (unos 30 s). Sin marcar, el nombre lleva directamente al destino.</label>
+          <label class="muted"><input type="checkbox" id="adm-link-demo"> Es una demostración (sale como ejemplo en «Short links»; lleva página intermedia)</label>
           <div><button class="primary" id="adm-link-go">Crear enlace</button></div>
         </div>
         <p class="muted" id="adm-link-note-out"></p>
@@ -333,7 +333,7 @@
           if (!confirm('Retirar el enlace ' + l.code + '? Deja de funcionar cuando publiques los cambios.')) return;
           post('/api/ops/link/remove', { code: l.code }, e.target).then(function () { toast('Retirado (falta publicar)'); loadLinks(); });
         } });
-        return [el('a', { href: d.site + 'go/' + l.code + '/', target: '_blank', rel: 'noopener', text: 'go/' + l.code + (l.demo ? ' (demo)' : '') }), l.url, l.created, t, rm];
+        return [el('a', { href: d.site + 'go/' + l.code + '/', target: '_blank', rel: 'noopener', text: 'go/' + l.code + (l.demo ? ' (demo)' : l.direct ? ' (directo)' : ' (con página intermedia)') }), l.url, l.created, t, rm];
       }))] : [note('Todavía no hay acortadores.')]);
     }, function () { fill('adm-links', [note('No se pudo leer data/links.json.')]); });
   }
@@ -347,12 +347,13 @@
         function (err) { document.getElementById('adm-scan-note').textContent = 'Error: ' + err.message; });
     });
     document.getElementById('adm-link-go').addEventListener('click', function (e) {
+      var demo = document.getElementById('adm-link-demo').checked, wantsCheck = demo || document.getElementById('adm-link-inter').checked;
       var out = document.getElementById('adm-link-note-out');
       var url = document.getElementById('adm-link-url').value.trim();
       if (!url) { toast('Escribe la dirección de destino'); return; }
       out.textContent = 'Creando… (si mide el destino, unos 30 s)';
       post('/api/ops/link', { url: url, code: document.getElementById('adm-link-code').value, note: document.getElementById('adm-link-note').value,
-        measure: document.getElementById('adm-link-measure').checked, demo: document.getElementById('adm-link-demo').checked }, e.target).then(function (d) {
+        measure: wantsCheck, demo: demo, direct: !wantsCheck }, e.target).then(function (d) {
         out.textContent = d.message + ' ' + d.url;
         if (d.created) { document.getElementById('adm-link-url').value = ''; document.getElementById('adm-link-code').value = ''; document.getElementById('adm-link-note').value = ''; }
         loadLinks();
