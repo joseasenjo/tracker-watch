@@ -469,7 +469,7 @@ def create_link(url: str, code: str = "", note: str = "", *, links_path: Path | 
                     "message": "Esa dirección ya tenía un enlace."}
         code = L.validate_code(code) if code.strip() else L.generate_code({x["code"] for x in existing})
         check = (scan or L._scan_target)(url) if measure else None
-        L.add_link(links_path, code, url, note=note, check=check, blocklist=blocklist, resolver=resolver)
+        L.add_link(links_path, code, url, note=note, check=check, blocklist=blocklist, resolver=resolver, source="admin")
     except L.LinkError as exc:
         raise OpsError(str(exc)) from exc
     return {"created": True, "code": code, "url": SITE_URL + f"go/{code}/", "message": "Enlace creado, pero TODAVÍA NO ESTÁ EN LA WEB: pulsa «Publicar enlaces» para que funcione."}
@@ -497,5 +497,5 @@ def publish_links(repo: str = DEFAULT_REPO, runner: Callable = subprocess.run, c
     _run(runner, ["git", "-C", cwd, "push"], timeout=120)
     steps.append("subido a GitHub")
     _run(runner, ["gh", "workflow", "run", "publish-site.yml", "-R", repo])
-    steps.append("web en proceso de republicación (unos 2 minutos)")
+    steps.append("web en proceso de republicación (unos 3 a 5 minutos)")
     return steps

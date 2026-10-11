@@ -116,6 +116,12 @@ def request(tmp_path, body=None, author="ana", history=None, limits=None, scan=l
                            blocklist=BLOCK, resolver=PUBLIC, scan=scan)
 
 
+def test_public_links_are_marked_public_and_the_reply_gives_a_realistic_wait(tmp_path):
+    result = request(tmp_path)
+    assert load_links(tmp_path / "links.json")[0]["source"] == "public"
+    assert "about 5 minutes" in result["comment"] and "couple of minutes" not in result["comment"]
+
+
 def test_a_valid_request_creates_the_link_with_no_approval(tmp_path):
     result = request(tmp_path)
     assert result["created"] and result["code"] == "my-talk"

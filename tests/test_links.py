@@ -155,6 +155,29 @@ def test_each_link_gets_a_static_interstitial_that_never_redirects_by_itself(sit
     assert "contacted <b>4</b> third-party tracking services (band B)" in page and "doubleclick.net" in page
 
 
+def test_the_interstitial_says_who_made_the_link(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", vantage="github-actions-us")})
+    links = tmp_path / "links.json"
+    add_link(links, "mine", "https://example.com/", blocklist=BLOCK, resolver=PUBLIC)  # default: the maintainer
+    add_link(links, "theirs", "https://example.org/", blocklist=BLOCK, resolver=PUBLIC, source="public")
+    add_link(links, "weird", "https://example.net/", blocklist=BLOCK, resolver=PUBLIC, source="<script>")
+    out = tmp_path / "site"
+    build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
+    page = lambda code: (out / "go" / code / "index.html").read_text(encoding="utf-8")
+    assert "created by the site's maintainer" in page("mine") and "created through the public form" not in page("mine")
+    assert "created through the public form" in page("theirs")
+    assert "created by the site's maintainer" in page("weird") and next(l for l in load_links(links) if l["code"] == "weird")["source"] == "admin"
+    assert load_links(links)[0]["source"] == "admin"
+    # an old record without the field gets a neutral line
+    raw = json.loads(links.read_text(encoding="utf-8"))
+    for item in raw["links"]:
+        item.pop("source")
+    links.write_text(json.dumps(raw), encoding="utf-8")
+    build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
+    assert "created through the public form" not in page("theirs") and "created by the site" not in page("theirs")
+    assert "Short link. We never redirect automatically." in page("theirs")
+
+
 def test_interstitial_is_escaped_and_covers_unmeasured_and_failed_checks(site_with_links):
     _, out, _ = site_with_links
     page = (out / "go" / "good" / "index.html").read_text(encoding="utf-8")

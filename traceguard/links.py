@@ -113,7 +113,7 @@ def summarize_check(report: dict) -> dict:
 
 def add_link(path: Path | str, code: str, url: str, *, note: str = "", check: dict | None = None,
              blocklist: set[str] | None = None, resolver: Resolver = system_resolver,
-             now: datetime | None = None) -> dict:
+             now: datetime | None = None, source: str = "admin") -> dict:
     code = validate_code(code)
     blocklist = load_blocklist() if blocklist is None else blocklist
     url = validate_target(url, blocklist, resolver)
@@ -122,7 +122,7 @@ def add_link(path: Path | str, code: str, url: str, *, note: str = "", check: di
         raise LinkError(f"the code '{code}' already exists")
     record = {"code": code, "url": url, "host": (urlsplit(url).hostname or "").lower(),
               "note": note.strip()[:200], "created": (now or datetime.now(timezone.utc)).date().isoformat(),
-              "check": check}
+              "check": check, "source": source if source in ("public", "admin") else "admin"}
     save_links(links + [record], path)
     return record
 
@@ -202,11 +202,11 @@ def process_request(body: str, author: str, account_created: str, history: list[
     if check and check.get("status") == "error":
         return refuse("unreachable", "We could not load that address, so no link was created.")
     code = code or generate_code({l["code"] for l in links})
-    add_link(links_path, code, url, check=check, blocklist=blocklist, resolver=resolver, now=now)
+    add_link(links_path, code, url, check=check, blocklist=blocklist, resolver=resolver, now=now, source="public")
     shown = (f"; it contacted {check['tracking']} tracking services before any interaction"
              if check and check.get("status") == "ok" else "")
     return {"created": True, "reason": "created", "code": code, "comment": (
-        f"Your short link: **{site_url}go/{code}/**\n\nIt will be live in a couple of minutes, after the site is "
+        f"Your short link: **{site_url}go/{code}/**\n\nIt will be live in about 5 minutes, after the site is "
         f"republished. The page shows where it leads and a button to continue; it never redirects by itself{shown}. "
         "The link can be removed at any time if it breaks the rules on the Short links page.")}
 
