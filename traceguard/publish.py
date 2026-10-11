@@ -23,6 +23,7 @@ import hashlib
 import json
 import os
 import re
+import smtplib
 import sys
 import time
 import urllib.error
@@ -32,6 +33,7 @@ import uuid
 from datetime import date as _date, datetime, timezone
 from pathlib import Path
 
+from .notify import notify_published
 from .posts import LIMITS
 
 BLUESKY_SERVICE = "https://bsky.social"
@@ -354,7 +356,8 @@ def make_client(platform: str, env, http):
     return Mastodon(http, env["MASTODON_URL"], env["MASTODON_TOKEN"])
 
 
-def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _date | None = None) -> int:
+def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _date | None = None,
+         smtp=None, smtp_ssl=None) -> int:
     parser = argparse.ArgumentParser(prog="traceguard.publish", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("draft_dir", nargs="?", help="a dated folder of drafts, e.g. data/drafts/2026-10-04")
@@ -369,6 +372,7 @@ def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _d
                              "for scheduled runs that can meet the same draft twice")
     args = parser.parse_args(argv)
     env = os.environ if env is None else env
+    smtp, smtp_ssl = smtp or smtplib.SMTP, smtp_ssl or smtplib.SMTP_SSL
     if args.only_label:
         if not args.send:
             print("[bluesky] DRY RUN: --send would add the 'bot' self-label to the profile; nothing is published.\n"
@@ -400,7 +404,8 @@ def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _d
             if args.label_bot and platform == "bluesky":
                 client.label_bot()
                 print("[bluesky] the 'bot' self-label is on the profile.")
-            publish_thread(client, draft, draft_path, state)
+            done = publish_thread(client, draft, draft_path, state)
+            print(f"[{platform}] {notify_published(draft, platform, done, draft_path, env, smtp=smtp, smtp_ssl=smtp_ssl)}")
         except AlreadyPublished as exc:
             if not args.skip_if_published:
                 failed = True
