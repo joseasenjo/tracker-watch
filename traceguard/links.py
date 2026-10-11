@@ -115,6 +115,9 @@ def summarize_check(report: dict) -> dict:
             "date": report["generated_at"][:10], "tracking": None, "band": None, "confidence": s.get("confidence"),
             "domains": []}
     if s["status"] != "ok":
+        reason = str(s.get("error") or "")
+        if s["status"] == "incomplete" and reason.startswith("only ") and "request(s) observed" in reason:
+            base["too_few_requests"] = True  # a very light page: below the minimum our method needs, not an error
         return base
     tracking = s["metrics"]["tracking_services"]
     base.update(tracking=tracking, band=band_for(tracking, s.get("confidence")))
@@ -151,11 +154,12 @@ def generate_code(existing: set[str], length: int = 7) -> str:
             return code
 
 
-def _scan_target(url: str) -> dict | None:
-    """Measure the target for the interstitial. None when the browser is not available."""
+def _scan_target(url: str, vantage: str = "github-actions-us") -> dict | None:
+    """Measure the target for the interstitial. None when the browser is not available.
+    The vantage names where the measurement really ran (the workflow's servers, or the administrator's PC)."""
     try:
         from .scanner import scan_site  # imported here so the module works without a browser
-        return summarize_check(scan_site(url, passes=2, observe_seconds=10.0, vantage="github-actions-us"))
+        return summarize_check(scan_site(url, passes=2, observe_seconds=10.0, vantage=vantage))
     except Exception:
         return None
 

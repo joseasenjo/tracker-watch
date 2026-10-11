@@ -121,6 +121,11 @@ def test_summarize_check_for_ok_and_blocked_reports():
     blocked = {"generated_at": "2026-10-05T10:00:00+00:00", "measurement": {"vantage": "v"},
                "summary": {"status": "blocked"}}
     assert summarize_check(blocked)["tracking"] is None
+    light = {"generated_at": "2026-10-05T10:00:00+00:00", "measurement": {"vantage": "v"},
+             "summary": {"status": "incomplete", "error": "only 3 request(s) observed (minimum 5)"}}
+    assert summarize_check(light)["too_few_requests"] is True and "too_few_requests" not in summarize_check(blocked)
+    other = {**light, "summary": {"status": "incomplete", "error": "navigation timeout"}}
+    assert "too_few_requests" not in summarize_check(other)
 
 
 def test_parse_request_reads_the_issue_form_fields():
@@ -192,6 +197,18 @@ def test_the_interstitial_says_who_made_the_link(tmp_path):
     build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
     assert "created through the public form" not in page("theirs") and "created by the site" not in page("theirs")
     assert "Short link. We never redirect automatically." in page("theirs")
+
+
+def test_a_very_light_page_gets_an_honest_note_not_an_error(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report("News A", "https://a.example/", vantage="github-actions-us")})
+    links = tmp_path / "links.json"
+    check = {"status": "incomplete", "tracking": None, "band": None, "domains": [], "too_few_requests": True,
+             "vantage": "local-windows-spain", "date": "2026-10-11"}
+    add_link(links, "light", "https://example.com/", check=check, blocklist=BLOCK, resolver=PUBLIC)
+    out = tmp_path / "site"
+    build_site(tmp_path / "runs", out, links_file=links, repo_url="https://github.com/x/y")
+    page = (out / "go" / "light" / "index.html").read_text(encoding="utf-8")
+    assert "loads very few resources" in page and "We could not measure that page" not in page
 
 
 def test_interstitial_is_escaped_and_covers_unmeasured_and_failed_checks(site_with_links):

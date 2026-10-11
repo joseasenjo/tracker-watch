@@ -468,7 +468,7 @@ def create_link(url: str, code: str = "", note: str = "", *, links_path: Path | 
             return {"created": False, "code": same["code"], "url": SITE_URL + f"go/{same['code']}/",
                     "message": "Esa dirección ya tenía un enlace."}
         code = L.validate_code(code) if code.strip() else L.generate_code({x["code"] for x in existing} | L.load_retired(links_path))
-        check = (scan or L._scan_target)(url) if measure else None
+        check = (scan or (lambda target: L._scan_target(target, vantage="local-windows-spain")))(url) if measure else None
         L.add_link(links_path, code, url, note=note, check=check, blocklist=blocklist, resolver=resolver, source="admin")
     except L.LinkError as exc:
         raise OpsError(str(exc)) from exc

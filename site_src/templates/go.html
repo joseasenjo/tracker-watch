@@ -23,6 +23,8 @@
       {% endif %}
       <p class="small">Counts, not verdicts: this is not a statement about safety or legality. <a href="{{ root }}method.html">Method and limits</a>.</p>
     </div>
+    {% elif link.check and link.check.too_few_requests %}
+    <div class="note">This page loads very few resources (fewer than the 5 requests our method needs), so we did not measure it. That usually means it contacts no third parties, but we have no measurement to show.</div>
     {% elif link.check %}
     <div class="note">We could not measure that page ({{ link.check.status }}), so we have nothing to show about it.</div>
     {% else %}
