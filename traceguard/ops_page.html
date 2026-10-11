@@ -37,6 +37,12 @@
   table { width:100%; border-collapse:collapse; font-size:14px; } th,td { text-align:left; padding:5px 8px; border-top:1px solid var(--line); vertical-align:top; }
   th { color:var(--muted); font-weight:600; border-top:0; } .scroll { overflow-x:auto; }
   blockquote { margin:6px 0; padding:6px 10px; border-left:3px solid var(--line); overflow-wrap:anywhere; }
+  details.fold > summary { cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px; }
+  details.fold > summary::-webkit-details-marker { display:none; }
+  details.fold > summary::before { content:"\25B6"; font-size:12px; color:var(--muted); transition:transform .15s; }
+  details.fold[open] > summary::before { transform:rotate(90deg); }
+  details.fold > summary h2 { margin:0; }
+  details.fold[open] > summary { margin-bottom:10px; }
   a { color:var(--accent); } #toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:var(--ink);
            color:var(--bg); padding:8px 14px; border-radius:8px; display:none; max-width:90vw; z-index:5; }
 </style>
@@ -50,11 +56,11 @@
 <main>
   <section class="card"><h2>Qué necesita atención</h2><ul class="plain" id="alerts"><li class="muted">Cargando…</li></ul></section>
 
-  <section class="card"><h2>Pizarra</h2>
+  <details class="card fold" id="sec-pizarra"><summary><h2>Pizarra <span class="muted" id="notes-count"></span></h2></summary>
     <p class="muted">Tus notas. Se guardan en <code>notas_desarrollador/pizarra.json</code> (solo en tu ordenador, fuera de git) y «Archivar» solo las oculta; «Borrar» las elimina de verdad (queda una copia de seguridad del estado anterior en <code>pizarra.bak.json</code>).</p>
     <textarea id="note-text" rows="3" maxlength="4000" placeholder="Escribe una nota…" style="width:100%;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)"></textarea>
     <p><button class="primary" id="note-add">Añadir nota</button> <label class="muted"><input type="checkbox" id="note-archived"> ver archivadas</label></p>
-    <div id="notes"></div></section>
+    <div id="notes"></div></details>
 
   <div class="grid">
     <section class="card"><h2>Interruptores</h2><div id="switches"></div>
@@ -67,7 +73,7 @@
     </section>
   </div>
 
-  <section class="card"><h2>Herramientas del administrador (sin límites)</h2>
+  <details class="card fold" id="sec-admin"><summary><h2>Herramientas del administrador (sin límites) <span class="muted" id="adm-fold-count"></span></h2></summary>
     <p class="muted">Hacen lo mismo que las herramientas públicas, pero <b>sin límites</b> de cuenta, de día ni de total. Se mantienen las comprobaciones de seguridad: solo direcciones públicas, sin usuario ni clave en la dirección, y la lista de dominios bloqueados para los enlaces (otros acortadores, etc.).</p>
     <div class="grid">
       <div>
@@ -92,7 +98,7 @@
     <h3>Acortadores existentes <span id="adm-links-pill"></span></h3>
     <div id="adm-links"><span class="muted">Cargando…</span></div>
     <p><button id="adm-links-publish">Publicar enlaces (commit + subir + republicar la web)</button> <span class="muted" id="adm-publish-note"></span></p>
-  </section>
+  </details>
 
   <section class="card"><h2>Borradores</h2><div id="drafts"><span class="muted">Cargando…</span></div></section>
 
@@ -158,6 +164,16 @@
       return el('div', { class: 'row', style: 'align-items:flex-start' }, [box, el('div', { style: 'flex:1;min-width:0' }, [
         body, el('div', { class: 'muted', text: n.created + (n.edited ? ' · editada ' + n.edited : '') })]), el('div', { style: 'display:flex;gap:6px;flex-wrap:wrap' }, actions)]);
     }) : [note(showArchived ? 'No hay notas archivadas.' : 'Sin notas todavía.')]);
+    var active = notesState.filter(function (n) { return !n.archived; }).length;
+    document.getElementById('notes-count').textContent = '(' + active + (active === 1 ? ' nota' : ' notas') + ')';
+  }
+  function initFolds() {
+    // Pizarra and admin tools start closed; the panel remembers what you opened in this browser.
+    ['sec-pizarra', 'sec-admin'].forEach(function (id) {
+      var d = document.getElementById(id), key = 'tw-open-' + id;
+      try { if (localStorage.getItem(key) === '1') d.open = true; } catch (e) { /* storage unavailable */ }
+      d.addEventListener('toggle', function () { try { localStorage.setItem(key, d.open ? '1' : '0'); } catch (e) { /* ignore */ } });
+    });
   }
   function noteAction(body) {
     return post('/api/ops/note', body).then(function (d) { notesState = d.notes; renderNotes(); return d; });
@@ -308,6 +324,7 @@
   function loadLinks() {
     fetch('/api/ops/links').then(function (r) { return r.json(); }).then(function (d) {
       document.getElementById('adm-links-pill').textContent = '';
+      document.getElementById('adm-fold-count').textContent = '(' + d.links.length + (d.links.length === 1 ? ' enlace' : ' enlaces') + (d.unpublished ? ' · sin publicar' : '') + ')';
       if (d.unpublished) document.getElementById('adm-links-pill').appendChild(el('span', { class: 'pill media', text: 'cambios sin publicar' }));
       fill('adm-links', d.links.length ? [table(['Enlace', 'Destino', 'Creado', 'Rastreo', ''], d.links.map(function (l) {
         var t = (l.check && l.check.tracking != null) ? String(l.check.tracking) : '–';
@@ -355,6 +372,7 @@
       function () { btn.disabled = false; toast('No se pudo cargar el estado'); });
   }
   document.getElementById('refresh').onclick = load;
+  initFolds();
   initNotes();
   initAdminTools();
   fetch('/api/token').then(function (r) { return r.json(); }).then(function (t) { token = t.token; load(); });
