@@ -242,6 +242,29 @@ def test_send_publishes_both_threads_and_never_prints_a_secret(tmp_path, capsys)
     assert server.posted == 6 and "already published" in capsys.readouterr().err
 
 
+def test_a_scheduled_run_that_meets_a_published_draft_skips_it_without_failing(tmp_path, capsys):
+    write_draft(tmp_path / "d", "bluesky")
+    server = FakeServer()
+    assert main([str(tmp_path / "d"), "--platform", "bluesky", "--send"], env=BSKY_ENV, http=server, today=TODAY) == 0
+    posted = server.posted
+    capsys.readouterr()
+    # default: a repeat is refused and reported as a failure (a person pressing the button must notice)
+    assert main([str(tmp_path / "d"), "--platform", "bluesky", "--send"], env=BSKY_ENV, http=server, today=TODAY) == 1
+    capsys.readouterr()
+    # scheduled runs: the same repeat is a skip, and still nothing is sent
+    assert main([str(tmp_path / "d"), "--platform", "bluesky", "--send", "--skip-if-published"],
+                env=BSKY_ENV, http=server, today=TODAY) == 0
+    streams = capsys.readouterr()
+    assert "SKIPPED" in streams.out and "already published" in streams.out and server.posted == posted
+
+
+def test_skip_if_published_does_not_hide_real_failures(tmp_path, capsys):
+    write_draft(tmp_path / "d", "bluesky")
+    assert main([str(tmp_path / "d"), "--platform", "bluesky", "--send", "--skip-if-published"],
+                env={}, http=FakeServer(), today=TODAY) == 1  # missing credentials still fails
+    assert "missing environment variable" in capsys.readouterr().err
+
+
 def test_missing_credentials_or_a_stale_draft_publish_nothing(tmp_path, capsys):
     write_draft(tmp_path / "d", "bluesky")
     server = FakeServer()

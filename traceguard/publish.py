@@ -47,6 +47,10 @@ class PublishError(RuntimeError):
     pass
 
 
+class AlreadyPublished(PublishError):
+    """The thread is complete in the record: sending it again would repeat it."""
+
+
 # --- transport -------------------------------------------------------------------------------------------------
 
 def urllib_http(method: str, url: str, *, headers: dict | None = None, data: bytes | None = None,
@@ -307,7 +311,7 @@ def publish_thread(client, draft: dict, draft_path: Path, state: dict, *, log=pr
     platform = client.name
     path = state_path(draft_path)
     if state["complete"]:
-        raise PublishError(f"the {platform} thread of {draft['date']} was already published; nothing sent")
+        raise AlreadyPublished(f"the {platform} thread of {draft['date']} was already published; nothing sent")
     posts = draft["posts"]
     image_bytes = (draft_path.parent / draft["image"]).read_bytes() if draft.get("image") else None
     alt = draft.get("alt_text", "")
@@ -360,6 +364,9 @@ def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _d
     parser.add_argument("--only-label", action="store_true",
                         help="only put the 'bot' self-label on the Bluesky profile; no draft needed, nothing is published")
     parser.add_argument("--max-age-days", type=int, default=MAX_AGE_DAYS)
+    parser.add_argument("--skip-if-published", action="store_true",
+                        help="a thread that was already published is reported as skipped (exit 0) instead of as a failure; "
+                             "for scheduled runs that can meet the same draft twice")
     args = parser.parse_args(argv)
     env = os.environ if env is None else env
     if args.only_label:
@@ -394,6 +401,12 @@ def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _d
                 client.label_bot()
                 print("[bluesky] the 'bot' self-label is on the profile.")
             publish_thread(client, draft, draft_path, state)
+        except AlreadyPublished as exc:
+            if not args.skip_if_published:
+                failed = True
+                print(f"[{platform}] NOT PUBLISHED: {exc}", file=sys.stderr)
+            else:
+                print(f"[{platform}] SKIPPED: {exc}")
         except PublishError as exc:
             failed = True
             print(f"[{platform}] NOT PUBLISHED: {exc}", file=sys.stderr)
