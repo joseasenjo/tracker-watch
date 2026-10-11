@@ -15,19 +15,37 @@
   <div class="wrap">
     <a class="logo" href="{{ root }}index.html">{{ site_name }}</a>
     <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu-nav" aria-label="Open the menu">&#9776;</button>
+    {% set data_pages = ['changes', 'companies', 'origins', 'consent'] %}
+    {% set protect_pages = ['protect', 'protection'] %}
+    {% set about_pages = ['method', 'about'] %}
     <nav class="links" id="menu-nav" aria-label="Main">
+      <a class="menu-cta" href="{{ root }}extension.html"{% if page == 'extension' %} aria-current="page"{% endif %}>Get the extension</a>
       <a href="{{ root }}index.html"{% if page == 'index' %} aria-current="page"{% endif %}>Sites</a>
-      <a href="{{ root }}changes.html"{% if page == 'changes' %} aria-current="page"{% endif %}>Changes</a>
-      <a href="{{ root }}companies.html"{% if page == 'companies' %} aria-current="page"{% endif %}>Companies</a>
-      <a href="{{ root }}origins.html"{% if page == 'origins' %} aria-current="page"{% endif %}>Countries</a>
-      <a href="{{ root }}consent.html"{% if page == 'consent' %} aria-current="page"{% endif %}>After the banner</a>
-      <a href="{{ root }}protection.html"{% if page == 'protection' %} aria-current="page"{% endif %}>Blocking list</a>
-      <a href="{{ root }}protect.html"{% if page == 'protect' %} aria-current="page"{% endif %}>Protect yourself</a>
-      <a href="{{ root }}extension.html"{% if page == 'extension' %} aria-current="page"{% endif %}>Extension</a>
+      <details class="menu-group">
+        <summary{% if page in data_pages %} class="here"{% endif %}>Data</summary>
+        <div class="menu-panel">
+          <a href="{{ root }}changes.html"{% if page == 'changes' %} aria-current="page"{% endif %}>Changes</a>
+          <a href="{{ root }}companies.html"{% if page == 'companies' %} aria-current="page"{% endif %}>Companies</a>
+          <a href="{{ root }}origins.html"{% if page == 'origins' %} aria-current="page"{% endif %}>Countries</a>
+          <a href="{{ root }}consent.html"{% if page == 'consent' %} aria-current="page"{% endif %}>After the banner</a>
+        </div>
+      </details>
+      <details class="menu-group">
+        <summary{% if page in protect_pages %} class="here"{% endif %}>Protect</summary>
+        <div class="menu-panel">
+          <a href="{{ root }}protect.html"{% if page == 'protect' %} aria-current="page"{% endif %}>Protect yourself</a>
+          <a href="{{ root }}protection.html"{% if page == 'protection' %} aria-current="page"{% endif %}>Blocking list</a>
+        </div>
+      </details>
       <a href="{{ root }}request.html"{% if page == 'request' %} aria-current="page"{% endif %}>Try it</a>
-      <a href="{{ root }}method.html"{% if page == 'method' %} aria-current="page"{% endif %}>Method</a>
-      <a href="{{ root }}about.html"{% if page == 'about' %} aria-current="page"{% endif %}>About</a>
-      <a href="{{ root }}feed.xml">RSS</a>
+      <details class="menu-group">
+        <summary{% if page in about_pages %} class="here"{% endif %}>About</summary>
+        <div class="menu-panel">
+          <a href="{{ root }}method.html"{% if page == 'method' %} aria-current="page"{% endif %}>Method</a>
+          <a href="{{ root }}about.html"{% if page == 'about' %} aria-current="page"{% endif %}>About and corrections</a>
+          <a href="{{ root }}feed.xml">RSS</a>
+        </div>
+      </details>
     </nav>
   </div>
 </header>

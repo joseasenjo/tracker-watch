@@ -9,6 +9,21 @@
     });
   }
 
+  // Menu groups: one open at a time; Escape or a click elsewhere closes them. Works without this script too.
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.menu-group'));
+  groups.forEach(function (g) {
+    g.addEventListener('toggle', function () {
+      if (g.open) groups.forEach(function (o) { if (o !== g) o.open = false; });
+    });
+  });
+  document.addEventListener('click', function (event) {
+    groups.forEach(function (g) { if (g.open && !g.contains(event.target)) g.open = false; });
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    groups.forEach(function (g) { if (g.open) { g.open = false; g.querySelector('summary').focus(); } });
+  });
+
   // "Is your site in the list?": looks the typed host up in the list embedded in the page.
   // Nothing typed is sent anywhere.
   var form = document.getElementById('check-form');
