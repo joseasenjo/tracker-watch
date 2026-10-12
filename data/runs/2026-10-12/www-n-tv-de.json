@@ -1,0 +1,5339 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-12T16:46:28+00:00",
+  "site": {
+    "name": "n-tv",
+    "url": "https://www.n-tv.de",
+    "first_party_domains": [
+      "n-tv.de"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 3,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.n-tv.de/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 39,
+      "third_party_domains": 13,
+      "tracking_requests": 3,
+      "total_bytes": 3986900,
+      "third_party_bytes": 868915,
+      "tracking_bytes": 4799,
+      "tracking_services": 2,
+      "third_party_cookies": 0,
+      "cookies_total": 4,
+      "storage_items": 8
+    },
+    "third_party_domains": [
+      {
+        "domain": "akamaihd.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "ay.delivery",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "ebxcdn.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "googletagmanager.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "hs-data.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "lotto24.de",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "marktjagd.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "marktjagd.de",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "nmrodam.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "offerista.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "permutive.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "technical-service.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "unpkg.com",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "ebxcdn.com",
+        "entity": "Unidentified operator",
+        "category": "analytics",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "googletagmanager.com",
+        "entity": "Google",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "permutive.com",
+        "entity": "Permutive",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "ay.delivery",
+        "party": "third",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "n-tv.de",
+        "party": "first",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "unpkg.com",
+        "party": "third",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 39 requests to 13 third-party domains (median of 3 passes).",
+      "evidence": {
+        "requests": 39,
+        "domains": 13
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 4.0 MB transferred in that window (compressed responses that finished loading), 869 kB (22%) came from third-party domains, 5 kB of it from services classified as tracking (3 requests).",
+      "evidence": {
+        "total_bytes": 3986900,
+        "third_party_bytes": 868915,
+        "tracking_bytes": 4799,
+        "tracking_requests": 3
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "2 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: ebxcdn.com (Unidentified operator, analytics), permutive.com (Permutive, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.n-tv.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 145,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.n-tv.de/",
+          "host": "www.n-tv.de",
+          "bytes": 1391402,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 206,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/fddff1087a1c2d83-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 57023,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 207,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/a6cb01422af61021-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 64708,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 208,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/d6b236d59080f586-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 68589,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 209,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/eced63159c168414-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 61279,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 210,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/1c626168cca93b06-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 37906,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 214,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/5d9339bd992283f0.css",
+          "host": "www.n-tv.de",
+          "bytes": 2293,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 215,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/a096967eabc3cb15.css",
+          "host": "www.n-tv.de",
+          "bytes": 6626,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 216,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/b88d60a596cf94fa.css",
+          "host": "www.n-tv.de",
+          "bytes": 2508,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 217,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/bd6519a5e89b6484.css",
+          "host": "www.n-tv.de",
+          "bytes": 1192,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 217,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/83d6ab291ba4f258.css",
+          "host": "www.n-tv.de",
+          "bytes": 15614,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 219,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/1f36e871e3dd0d87.css",
+          "host": "www.n-tv.de",
+          "bytes": 973,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 220,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/70a9a58aeb470939.css",
+          "host": "www.n-tv.de",
+          "bytes": 1980,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 221,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/0cd54441d5cc9677.css",
+          "host": "www.n-tv.de",
+          "bytes": 1352,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 221,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/f9447cb9a885ac06.css",
+          "host": "www.n-tv.de",
+          "bytes": 2503,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 222,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/ea9aea0e2f10a9ab.css",
+          "host": "www.n-tv.de",
+          "bytes": 834,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 223,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/772a90f02340d91c.css",
+          "host": "www.n-tv.de",
+          "bytes": 1210,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 223,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/89b8c6ec2b6dec53.css",
+          "host": "www.n-tv.de",
+          "bytes": 827,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 224,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/2c625e2fe93b0a94.css",
+          "host": "www.n-tv.de",
+          "bytes": 624,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 224,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/iframeResizer.min.js",
+          "host": "www.n-tv.de",
+          "bytes": 7282,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 225,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4932.eca3a57f45ca3fae.js",
+          "host": "www.n-tv.de",
+          "bytes": 10259,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 226,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6012.21cddd664b667aae.js",
+          "host": "www.n-tv.de",
+          "bytes": 1996,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 226,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/659.6b549cc58ee97a84.js",
+          "host": "www.n-tv.de",
+          "bytes": 783,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 227,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5753.a1776ca4c32ca6a7.js",
+          "host": "www.n-tv.de",
+          "bytes": 2582,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 227,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/8237.bb28887e7add0524.js",
+          "host": "www.n-tv.de",
+          "bytes": 3047,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 228,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9149.375c0cf9ad0a3263.js",
+          "host": "www.n-tv.de",
+          "bytes": 1430,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 229,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7535.2e67eb8c26aaf288.js",
+          "host": "www.n-tv.de",
+          "bytes": 25964,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 230,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7628.a540c26560af01e0.js",
+          "host": "www.n-tv.de",
+          "bytes": 2983,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 232,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6610.bee87d145ff8d9c5.js",
+          "host": "www.n-tv.de",
+          "bytes": 3482,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 233,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5118.f7e651cd2b171a59.js",
+          "host": "www.n-tv.de",
+          "bytes": 3739,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 234,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/2017.6f522cc0913b85a1.js",
+          "host": "www.n-tv.de",
+          "bytes": 5020,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 236,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/8935.d58294e001920ead.js",
+          "host": "www.n-tv.de",
+          "bytes": 2391,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 239,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/2665.0d6913931245302b.js",
+          "host": "www.n-tv.de",
+          "bytes": 2502,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 240,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6929.5157aa37014c7d5b.js",
+          "host": "www.n-tv.de",
+          "bytes": 3863,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 242,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9198.dccb00d326f480c7.js",
+          "host": "www.n-tv.de",
+          "bytes": 7504,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 243,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7669.74a70d5e968d70bb.js",
+          "host": "www.n-tv.de",
+          "bytes": 4264,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 244,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/953.b530497b90ff644b.js",
+          "host": "www.n-tv.de",
+          "bytes": 1537,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 244,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1857.95b1fa5731353601.js",
+          "host": "www.n-tv.de",
+          "bytes": 1421,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 245,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9673.fb9a5d346417a993.js",
+          "host": "www.n-tv.de",
+          "bytes": 4295,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 246,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1719.633f11e61bc03581.js",
+          "host": "www.n-tv.de",
+          "bytes": 1202,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 247,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/655.41296f10220aa239.js",
+          "host": "www.n-tv.de",
+          "bytes": 3296,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 248,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9423.d5e348c3f31b72e8.js",
+          "host": "www.n-tv.de",
+          "bytes": 1101,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 248,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6744.d10f6792831f88e3.js",
+          "host": "www.n-tv.de",
+          "bytes": 3156,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 249,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1881.0665023d3ff0b5b9.js",
+          "host": "www.n-tv.de",
+          "bytes": 2242,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 250,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/3469.57490a75ef4fca13.js",
+          "host": "www.n-tv.de",
+          "bytes": 4831,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 250,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4807.87af2d737014bdab.js",
+          "host": "www.n-tv.de",
+          "bytes": 3812,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 251,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6445.649d801db240e5db.js",
+          "host": "www.n-tv.de",
+          "bytes": 2233,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 255,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5902.64cd639e1aed1123.js",
+          "host": "www.n-tv.de",
+          "bytes": 3072,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 255,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/246.4ac6a6e8e7f3f2a7.js",
+          "host": "www.n-tv.de",
+          "bytes": 2591,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 256,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/webpack-ab0dc6611a3ab0a0.js",
+          "host": "www.n-tv.de",
+          "bytes": 5708,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 257,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/framework-c4ac86d8d57ebe79.js",
+          "host": "www.n-tv.de",
+          "bytes": 69483,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 261,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/main-caa8da37b51e4fc6.js",
+          "host": "www.n-tv.de",
+          "bytes": 44549,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 262,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/pages/_app-7281e7d1030edba8.js",
+          "host": "www.n-tv.de",
+          "bytes": 3578,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 263,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/3672-09c7dfc6c787ed44.js",
+          "host": "www.n-tv.de",
+          "bytes": 5401,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 263,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9214-00b67a979fd8cb2e.js",
+          "host": "www.n-tv.de",
+          "bytes": 17431,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 264,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4137-b3c114b5245bbf40.js",
+          "host": "www.n-tv.de",
+          "bytes": 16977,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 264,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6796-8fb54bb9124214d2.js",
+          "host": "www.n-tv.de",
+          "bytes": 3924,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 265,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/pages/%5B%5B...all%5D%5D-f7da37aa69036eec.js",
+          "host": "www.n-tv.de",
+          "bytes": 1171,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 265,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/3JZZUdSntdq-XRnnn1Djg/_buildManifest.js",
+          "host": "www.n-tv.de",
+          "bytes": 1388,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 266,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/3JZZUdSntdq-XRnnn1Djg/_ssgManifest.js",
+          "host": "www.n-tv.de",
+          "bytes": 543,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 267,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31410130/1791830194/Img_17_6/360/624667504.webp",
+          "host": "www.n-tv.de",
+          "bytes": 13273,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 267,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409651/1791823670/Img_17_6/360/image.webp",
+          "host": "www.n-tv.de",
+          "bytes": 11047,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 268,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409400/1791821160/Img_17_6/360/image.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9852,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 869,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker-fussball/wf0/ls-full/to3377",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 540,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 870,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker/sp5/wf0/to3377/ls-full/",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 692,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 873,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker-formel-1/wh0/rr1-3",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 610,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 873,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409750/1791824588/Img_17_6/1024/624723586.webp",
+          "host": "www.n-tv.de",
+          "bytes": 20376,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 874,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408430/1791812523/Img_17_6/1024/620585965.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14277,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 875,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408774/1791815991/Img_17_6/1024/562850210.webp",
+          "host": "www.n-tv.de",
+          "bytes": 50456,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 876,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409847/1791828544/Img_17_6/1024/623545105.webp",
+          "host": "www.n-tv.de",
+          "bytes": 26642,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 877,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409850/1791827200/Img_17_6/1024/624724297.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14697,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 877,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408356/1791811667/Img_17_6/1024/407734126.webp",
+          "host": "www.n-tv.de",
+          "bytes": 66354,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 878,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409416/1791821457/Img_16_9/360/epi_1088488517_DPA%20BF_cl7bmdxmzl-v2-ax-ms6144.jpeg_B%C3%A4rbel%20Bas%20und%20Lars%20.webp",
+          "host": "www.n-tv.de",
+          "bytes": 8629,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 879,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409224/1791827529/Img_16_9/360/KoelnNews_347079728_1175.webp",
+          "host": "www.n-tv.de",
+          "bytes": 3528,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 879,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408752/1791815809/Img_16_9/360/epi_1088610965_IMAGO%20SP_imago%20st%201012%2014320001%200869244630.jpg_Pressekonferenz%20mit%20.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9811,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 880,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408049/1791808478/Img_16_9/360/KoelnNews_347063127_19289.webp",
+          "host": "www.n-tv.de",
+          "bytes": 5952,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 881,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408755/1791815842/Img_16_9/360/KoelnNews_347070188_41925.webp",
+          "host": "www.n-tv.de",
+          "bytes": 7017,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 883,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408258/1791810348/Img_16_9/360/WEB%20Markt.00_00_48_04.Still001.webp",
+          "host": "www.n-tv.de",
+          "bytes": 12938,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 884,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409332/1791820709/Img_16_9/360/KoelnNews_347076447_5535.webp",
+          "host": "www.n-tv.de",
+          "bytes": 11176,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 885,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31407471/1791803233/Img_16_9/360/LufthansaLA.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9051,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 885,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408960/1791817706/Img_16_9/360/KoelnNews_347074080_0.webp",
+          "host": "www.n-tv.de",
+          "bytes": 17113,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 886,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31407813/1791806374/Img_16_9/360/KoelnNews_347059750_22017.webp",
+          "host": "www.n-tv.de",
+          "bytes": 5041,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 887,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409567/1791823162/Img_16_9/360/KoelnNews_347083469_150.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9614,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 888,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409879/1791826573/Img_16_9/360/epi_1087746750_IMAGO%20SPORT_imago%20sp%201010%2018070001%201084324346.jpg_GER%2C%20FC%20Augsburg%20vs..webp",
+          "host": "www.n-tv.de",
+          "bytes": 12155,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 889,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31406993/1791797288/Img_16_9/360/KoelnNews_347050934_183.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14583,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 903,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/1a9f917b9c361961.css",
+          "host": "www.n-tv.de",
+          "bytes": 820,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 904,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5781.46e677232d83ca2b.js",
+          "host": "www.n-tv.de",
+          "bytes": 1217,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1029,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://te-static.technical-service.net/netid/ntvde.min.js",
+          "host": "te-static.technical-service.net",
+          "bytes": 6682,
+          "domain": "technical-service.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1173,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 42260,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1174,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "bytes": 154878,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1175,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/stat/molten/live/ntv/MoltenBundle.top.js",
+          "host": "www.n-tv.de",
+          "bytes": 227749,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1176,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/stat/molten/live/ntv/MoltenBundle.bottom.js",
+          "host": "www.n-tv.de",
+          "bytes": 303617,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1207,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bilder-a.akamaihd.net/ip/vcc/vcc.min.js",
+          "host": "bilder-a.akamaihd.net",
+          "bytes": 12638,
+          "domain": "akamaihd.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1337,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.lotto24.de/public/product-info/v3/drawinfo/draws",
+          "host": "www.lotto24.de",
+          "domain": "lotto24.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1338,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.lotto24.de/public/product-info/v3/drawinfo/draws",
+          "host": "www.lotto24.de",
+          "domain": "lotto24.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1458,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://gutscheine.n-tv.de/widget/index/raw",
+          "host": "gutscheine.n-tv.de",
+          "bytes": 859,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1634,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://widget.marktjagd.de/dist/latest/js/init.min.js",
+          "host": "widget.marktjagd.de",
+          "bytes": 30036,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1635,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.n-tv.de/auth/handler.html",
+          "host": "www.n-tv.de",
+          "bytes": 2004,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1810,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://metrics.n-tv.de/count",
+          "host": "metrics.n-tv.de",
+          "bytes": 71,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1842,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25643,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1843,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16891,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1843,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5498,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1844,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25633,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1846,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16834,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1847,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5197,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1848,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25581,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1849,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16836,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1850,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5200,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1863,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.permutive.com/ctx/v1/segment",
+          "host": "api.permutive.com",
+          "bytes": 329,
+          "domain": "permutive.com",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1890,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://m8wq3i3re5rsr8dhs.ay.delivery/client-v2.js",
+          "host": "m8wq3i3re5rsr8dhs.ay.delivery",
+          "bytes": 41379,
+          "domain": "ay.delivery",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1892,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 25492,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1893,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/mms/v2/get_site_data",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 703,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1895,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://applets.ebxcdn.com/ebx.js",
+          "host": "applets.ebxcdn.com",
+          "bytes": 991,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2009,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://unpkg.com/web-vitals@1.1.2/dist/web-vitals.umd.js",
+          "host": "unpkg.com",
+          "bytes": 2213,
+          "domain": "unpkg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2134,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn-gl.nmrodam.com/conf/PCA6E6C30-EDCD-4F42-8AC2-DEEBFFDC91C2.js",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 6839,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2135,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "bytes": 184244,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2137,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/checkout-charlie.svg",
+          "host": "www.n-tv.de",
+          "bytes": 2187,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2138,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/auth/main.js",
+          "host": "www.n-tv.de",
+          "bytes": 14596,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2139,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/auth/images/logo.svg",
+          "host": "www.n-tv.de",
+          "bytes": 3024,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2293,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://spotlight.offerista.com/js/widget2.min.js",
+          "host": "spotlight.offerista.com",
+          "bytes": 141699,
+          "domain": "offerista.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2307,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/wrapper/v2/meta-data",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 874,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2311,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://applets.ebxcdn.com/applets/www.n-tv.de/scripts.js",
+          "host": "applets.ebxcdn.com",
+          "bytes": 3466,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2345,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://event.ay.delivery/pageview",
+          "host": "event.ay.delivery",
+          "bytes": 268,
+          "domain": "ay.delivery",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2350,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/auth/images/icon__loading__grey.svg",
+          "host": "www.n-tv.de",
+          "bytes": 1390,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2352,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn-gl.nmrodam.com/novms/js/2/nlsSDK600.eu.bundle.min.js",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 76476,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2359,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/wrapper/v2/messages",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 9558,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2559,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/cities",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1146,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2562,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://trackerapi.ebxcdn.com/v1/track",
+          "host": "trackerapi.ebxcdn.com",
+          "bytes": 385,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 2564,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn-gl.nmrodam.com/novms/html/ls.html",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 3966,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2567,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sourcepoint.n-tv.de/index.html",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2415,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2582,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://sourcepoint.n-tv.de/Notice.1c267.css",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 7028,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2582,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/polyfills.01516.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2484,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2584,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/Notice.97af9.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 95160,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2775,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://secure-eu.nmrodam.com/cgi-bin/gn",
+          "host": "secure-eu.nmrodam.com",
+          "bytes": 424,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2930,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://doi3o9y2zx41umjhkifjorbyx5bgl1791823546.nuid.nmrodam.com/",
+          "host": "doi3o9y2zx41umjhkifjorbyx5bgl1791823546.nuid.nmrodam.com",
+          "bytes": 352,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2933,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sourcepoint.n-tv.de/consent/tcfv2/vendor-list/categories",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2620,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2935,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers",
+          "host": "middleware.marktjagd.de",
+          "bytes": 2795,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2960,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sourcepoint.n-tv.de/consent/tcfv2/vendor-list/categories",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2682,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3053,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers/brochures/6281614",
+          "host": "middleware.marktjagd.de",
+          "bytes": 13281,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3054,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers/brochures/6281645",
+          "host": "middleware.marktjagd.de",
+          "bytes": 894,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3055,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/companies/106",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1001,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3056,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/companies/26",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1161,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3261,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/client/key",
+          "host": "middleware.marktjagd.de",
+          "bytes": 504,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3509,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/1018489_48x18.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 1021,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3510,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/20692622_270x408.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 32434,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3510,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/20692623_81x122.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 4258,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4437,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://secure-eu.nmrodam.com/cgi-bin/gn",
+          "host": "secure-eu.nmrodam.com",
+          "bytes": 423,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_ntv_vf",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_ntv_pmode",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 14
+        },
+        {
+          "name": "_ntv_laurl",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": true,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 7,
+        "session": 1
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "n-tv.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "ay.delivery",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "unpkg.com",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.n-tv.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 37,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.n-tv.de/",
+          "host": "www.n-tv.de",
+          "bytes": 1391465,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 78,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/fddff1087a1c2d83-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 57016,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 79,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/a6cb01422af61021-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 64713,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 80,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/d6b236d59080f586-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 68580,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 84,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/eced63159c168414-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 61286,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 85,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/1c626168cca93b06-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 37899,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 86,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/5d9339bd992283f0.css",
+          "host": "www.n-tv.de",
+          "bytes": 2300,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 87,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/a096967eabc3cb15.css",
+          "host": "www.n-tv.de",
+          "bytes": 6616,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 87,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/b88d60a596cf94fa.css",
+          "host": "www.n-tv.de",
+          "bytes": 2502,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 88,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/bd6519a5e89b6484.css",
+          "host": "www.n-tv.de",
+          "bytes": 1198,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 89,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/83d6ab291ba4f258.css",
+          "host": "www.n-tv.de",
+          "bytes": 15605,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 90,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/1f36e871e3dd0d87.css",
+          "host": "www.n-tv.de",
+          "bytes": 965,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 90,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/70a9a58aeb470939.css",
+          "host": "www.n-tv.de",
+          "bytes": 1973,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 92,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/0cd54441d5cc9677.css",
+          "host": "www.n-tv.de",
+          "bytes": 1345,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 92,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/f9447cb9a885ac06.css",
+          "host": "www.n-tv.de",
+          "bytes": 2496,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 93,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/ea9aea0e2f10a9ab.css",
+          "host": "www.n-tv.de",
+          "bytes": 828,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 94,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/772a90f02340d91c.css",
+          "host": "www.n-tv.de",
+          "bytes": 1204,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 94,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/89b8c6ec2b6dec53.css",
+          "host": "www.n-tv.de",
+          "bytes": 818,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 95,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/2c625e2fe93b0a94.css",
+          "host": "www.n-tv.de",
+          "bytes": 615,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 96,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/iframeResizer.min.js",
+          "host": "www.n-tv.de",
+          "bytes": 7274,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 97,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4932.eca3a57f45ca3fae.js",
+          "host": "www.n-tv.de",
+          "bytes": 10254,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 97,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6012.21cddd664b667aae.js",
+          "host": "www.n-tv.de",
+          "bytes": 1987,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 98,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/659.6b549cc58ee97a84.js",
+          "host": "www.n-tv.de",
+          "bytes": 776,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 99,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5753.a1776ca4c32ca6a7.js",
+          "host": "www.n-tv.de",
+          "bytes": 2574,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 100,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/8237.bb28887e7add0524.js",
+          "host": "www.n-tv.de",
+          "bytes": 3042,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 102,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9149.375c0cf9ad0a3263.js",
+          "host": "www.n-tv.de",
+          "bytes": 1421,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7535.2e67eb8c26aaf288.js",
+          "host": "www.n-tv.de",
+          "bytes": 25955,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7628.a540c26560af01e0.js",
+          "host": "www.n-tv.de",
+          "bytes": 2980,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 104,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6610.bee87d145ff8d9c5.js",
+          "host": "www.n-tv.de",
+          "bytes": 3479,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 105,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5118.f7e651cd2b171a59.js",
+          "host": "www.n-tv.de",
+          "bytes": 3732,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 106,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/2017.6f522cc0913b85a1.js",
+          "host": "www.n-tv.de",
+          "bytes": 5014,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 107,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/8935.d58294e001920ead.js",
+          "host": "www.n-tv.de",
+          "bytes": 2384,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 108,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/2665.0d6913931245302b.js",
+          "host": "www.n-tv.de",
+          "bytes": 2496,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 108,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6929.5157aa37014c7d5b.js",
+          "host": "www.n-tv.de",
+          "bytes": 3856,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 109,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9198.dccb00d326f480c7.js",
+          "host": "www.n-tv.de",
+          "bytes": 7504,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 110,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7669.74a70d5e968d70bb.js",
+          "host": "www.n-tv.de",
+          "bytes": 4257,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 110,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/953.b530497b90ff644b.js",
+          "host": "www.n-tv.de",
+          "bytes": 1536,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 111,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1857.95b1fa5731353601.js",
+          "host": "www.n-tv.de",
+          "bytes": 1418,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 112,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9673.fb9a5d346417a993.js",
+          "host": "www.n-tv.de",
+          "bytes": 4287,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 113,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1719.633f11e61bc03581.js",
+          "host": "www.n-tv.de",
+          "bytes": 1195,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 114,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/655.41296f10220aa239.js",
+          "host": "www.n-tv.de",
+          "bytes": 3289,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 114,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9423.d5e348c3f31b72e8.js",
+          "host": "www.n-tv.de",
+          "bytes": 1093,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 115,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6744.d10f6792831f88e3.js",
+          "host": "www.n-tv.de",
+          "bytes": 3149,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 116,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1881.0665023d3ff0b5b9.js",
+          "host": "www.n-tv.de",
+          "bytes": 2236,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 117,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/3469.57490a75ef4fca13.js",
+          "host": "www.n-tv.de",
+          "bytes": 4826,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 118,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4807.87af2d737014bdab.js",
+          "host": "www.n-tv.de",
+          "bytes": 3805,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 119,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6445.649d801db240e5db.js",
+          "host": "www.n-tv.de",
+          "bytes": 2224,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 120,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5902.64cd639e1aed1123.js",
+          "host": "www.n-tv.de",
+          "bytes": 3064,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 120,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/246.4ac6a6e8e7f3f2a7.js",
+          "host": "www.n-tv.de",
+          "bytes": 2589,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 121,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/webpack-ab0dc6611a3ab0a0.js",
+          "host": "www.n-tv.de",
+          "bytes": 5700,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 122,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/framework-c4ac86d8d57ebe79.js",
+          "host": "www.n-tv.de",
+          "bytes": 69473,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 122,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/main-caa8da37b51e4fc6.js",
+          "host": "www.n-tv.de",
+          "bytes": 44544,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 123,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/pages/_app-7281e7d1030edba8.js",
+          "host": "www.n-tv.de",
+          "bytes": 3578,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 124,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/3672-09c7dfc6c787ed44.js",
+          "host": "www.n-tv.de",
+          "bytes": 5393,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 125,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9214-00b67a979fd8cb2e.js",
+          "host": "www.n-tv.de",
+          "bytes": 17426,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 126,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4137-b3c114b5245bbf40.js",
+          "host": "www.n-tv.de",
+          "bytes": 16970,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 126,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6796-8fb54bb9124214d2.js",
+          "host": "www.n-tv.de",
+          "bytes": 3923,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 127,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/pages/%5B%5B...all%5D%5D-f7da37aa69036eec.js",
+          "host": "www.n-tv.de",
+          "bytes": 1164,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 128,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/3JZZUdSntdq-XRnnn1Djg/_buildManifest.js",
+          "host": "www.n-tv.de",
+          "bytes": 1379,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 128,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/3JZZUdSntdq-XRnnn1Djg/_ssgManifest.js",
+          "host": "www.n-tv.de",
+          "bytes": 537,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 129,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31410130/1791830194/Img_17_6/360/624667504.webp",
+          "host": "www.n-tv.de",
+          "bytes": 13264,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 130,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409651/1791823670/Img_17_6/360/image.webp",
+          "host": "www.n-tv.de",
+          "bytes": 11047,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 131,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409400/1791821160/Img_17_6/360/image.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9843,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 405,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker-fussball/wf0/ls-full/to3377",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 689,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 407,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409750/1791824588/Img_17_6/1024/624723586.webp",
+          "host": "www.n-tv.de",
+          "bytes": 20374,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 407,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker/sp5/wf0/to3377/ls-full/",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 543,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 409,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker-formel-1/wh0/rr1-3",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 602,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 410,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408430/1791812523/Img_17_6/1024/620585965.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14277,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 411,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408774/1791815991/Img_17_6/1024/562850210.webp",
+          "host": "www.n-tv.de",
+          "bytes": 50456,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 412,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409847/1791828544/Img_17_6/1024/623545105.webp",
+          "host": "www.n-tv.de",
+          "bytes": 26641,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 412,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409850/1791827200/Img_17_6/1024/624724297.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14686,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 413,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408356/1791811667/Img_17_6/1024/407734126.webp",
+          "host": "www.n-tv.de",
+          "bytes": 66355,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 414,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409416/1791821457/Img_16_9/360/epi_1088488517_DPA%20BF_cl7bmdxmzl-v2-ax-ms6144.jpeg_B%C3%A4rbel%20Bas%20und%20Lars%20.webp",
+          "host": "www.n-tv.de",
+          "bytes": 8628,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 415,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409224/1791827529/Img_16_9/360/KoelnNews_347079728_1175.webp",
+          "host": "www.n-tv.de",
+          "bytes": 3526,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 415,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408752/1791815809/Img_16_9/360/epi_1088610965_IMAGO%20SP_imago%20st%201012%2014320001%200869244630.jpg_Pressekonferenz%20mit%20.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9812,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 416,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408049/1791808478/Img_16_9/360/KoelnNews_347063127_19289.webp",
+          "host": "www.n-tv.de",
+          "bytes": 5951,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 417,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408755/1791815842/Img_16_9/360/KoelnNews_347070188_41925.webp",
+          "host": "www.n-tv.de",
+          "bytes": 7017,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 418,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408258/1791810348/Img_16_9/360/WEB%20Markt.00_00_48_04.Still001.webp",
+          "host": "www.n-tv.de",
+          "bytes": 12939,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 418,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409332/1791820709/Img_16_9/360/KoelnNews_347076447_5535.webp",
+          "host": "www.n-tv.de",
+          "bytes": 11177,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 419,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31407471/1791803233/Img_16_9/360/LufthansaLA.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9050,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 420,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408960/1791817706/Img_16_9/360/KoelnNews_347074080_0.webp",
+          "host": "www.n-tv.de",
+          "bytes": 17114,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 421,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31407813/1791806374/Img_16_9/360/KoelnNews_347059750_22017.webp",
+          "host": "www.n-tv.de",
+          "bytes": 5039,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 421,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409567/1791823162/Img_16_9/360/KoelnNews_347083469_150.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9614,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 422,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409879/1791826573/Img_16_9/360/epi_1087746750_IMAGO%20SPORT_imago%20sp%201010%2018070001%201084324346.jpg_GER%2C%20FC%20Augsburg%20vs..webp",
+          "host": "www.n-tv.de",
+          "bytes": 12155,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 423,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31406993/1791797288/Img_16_9/360/KoelnNews_347050934_183.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14584,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 510,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25534,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 511,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16772,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 511,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5255,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 515,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25574,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 515,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 17127,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 518,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5200,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 518,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25534,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 519,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16772,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 520,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5197,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 634,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/1a9f917b9c361961.css",
+          "host": "www.n-tv.de",
+          "bytes": 810,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 634,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5781.46e677232d83ca2b.js",
+          "host": "www.n-tv.de",
+          "bytes": 1213,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 635,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://te-static.technical-service.net/netid/ntvde.min.js",
+          "host": "te-static.technical-service.net",
+          "bytes": 6682,
+          "domain": "technical-service.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 636,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 42251,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 637,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "bytes": 154879,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 638,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/stat/molten/live/ntv/MoltenBundle.top.js",
+          "host": "www.n-tv.de",
+          "bytes": 227749,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 638,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/stat/molten/live/ntv/MoltenBundle.bottom.js",
+          "host": "www.n-tv.de",
+          "bytes": 303619,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 639,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bilder-a.akamaihd.net/ip/vcc/vcc.min.js",
+          "host": "bilder-a.akamaihd.net",
+          "bytes": 12637,
+          "domain": "akamaihd.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 679,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.lotto24.de/public/product-info/v3/drawinfo/draws",
+          "host": "www.lotto24.de",
+          "domain": "lotto24.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 679,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.lotto24.de/public/product-info/v3/drawinfo/draws",
+          "host": "www.lotto24.de",
+          "domain": "lotto24.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 681,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://gutscheine.n-tv.de/widget/index/raw",
+          "host": "gutscheine.n-tv.de",
+          "bytes": 849,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 682,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://widget.marktjagd.de/dist/latest/js/init.min.js",
+          "host": "widget.marktjagd.de",
+          "bytes": 30034,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 685,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.n-tv.de/auth/handler.html",
+          "host": "www.n-tv.de",
+          "bytes": 1996,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 703,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://metrics.n-tv.de/count",
+          "host": "metrics.n-tv.de",
+          "bytes": 71,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 747,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/auth/main.js",
+          "host": "www.n-tv.de",
+          "bytes": 14587,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 748,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/auth/images/logo.svg",
+          "host": "www.n-tv.de",
+          "bytes": 3017,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 809,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.permutive.com/ctx/v1/segment",
+          "host": "api.permutive.com",
+          "bytes": 329,
+          "domain": "permutive.com",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 810,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://m8wq3i3re5rsr8dhs.ay.delivery/client-v2.js",
+          "host": "m8wq3i3re5rsr8dhs.ay.delivery",
+          "bytes": 41389,
+          "domain": "ay.delivery",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 824,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 25491,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 825,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/mms/v2/get_site_data",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 695,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 845,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/auth/images/icon__loading__grey.svg",
+          "host": "www.n-tv.de",
+          "bytes": 1382,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 850,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/wrapper/v2/meta-data",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 866,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 862,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/checkout-charlie.svg",
+          "host": "www.n-tv.de",
+          "bytes": 2178,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 886,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/wrapper/v2/messages",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 9565,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 928,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://spotlight.offerista.com/js/widget2.min.js",
+          "host": "spotlight.offerista.com",
+          "bytes": 141698,
+          "domain": "offerista.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 952,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sourcepoint.n-tv.de/index.html",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2415,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 999,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://sourcepoint.n-tv.de/Notice.1c267.css",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 7011,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1000,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/polyfills.01516.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2475,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1001,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/Notice.97af9.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 95152,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1033,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://applets.ebxcdn.com/ebx.js",
+          "host": "applets.ebxcdn.com",
+          "bytes": 996,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1033,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://unpkg.com/web-vitals@1.1.2/dist/web-vitals.umd.js",
+          "host": "unpkg.com",
+          "bytes": 2213,
+          "domain": "unpkg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1034,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn-gl.nmrodam.com/conf/PCA6E6C30-EDCD-4F42-8AC2-DEEBFFDC91C2.js",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 6849,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1092,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/cities",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1147,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "bytes": 184221,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1139,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers",
+          "host": "middleware.marktjagd.de",
+          "bytes": 2784,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1176,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sourcepoint.n-tv.de/consent/tcfv2/vendor-list/categories",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2621,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1182,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers/brochures/6281614",
+          "host": "middleware.marktjagd.de",
+          "bytes": 13280,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1183,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers/brochures/6281645",
+          "host": "middleware.marktjagd.de",
+          "bytes": 893,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1185,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/companies/106",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1003,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1186,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/companies/26",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1161,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1200,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://event.ay.delivery/pageview",
+          "host": "event.ay.delivery",
+          "bytes": 268,
+          "domain": "ay.delivery",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1204,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://applets.ebxcdn.com/applets/www.n-tv.de/scripts.js",
+          "host": "applets.ebxcdn.com",
+          "bytes": 3474,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1223,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sourcepoint.n-tv.de/consent/tcfv2/vendor-list/categories",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2683,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1244,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/client/key",
+          "host": "middleware.marktjagd.de",
+          "bytes": 503,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1273,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn-gl.nmrodam.com/novms/js/2/nlsSDK600.eu.bundle.min.js",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 76475,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1315,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn-gl.nmrodam.com/novms/html/ls.html",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 3967,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1415,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://secure-eu.nmrodam.com/cgi-bin/gn",
+          "host": "secure-eu.nmrodam.com",
+          "bytes": 424,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1579,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://fkanvx38ryvflk7qvkrylzzyx6tu81791823562.nuid.nmrodam.com/",
+          "host": "fkanvx38ryvflk7qvkrylzzyx6tu81791823562.nuid.nmrodam.com",
+          "bytes": 352,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1581,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/1018489_48x18.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 1024,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1582,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/20692622_270x408.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 32432,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1583,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/20692623_81x122.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 4258,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3331,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://secure-eu.nmrodam.com/cgi-bin/gn",
+          "host": "secure-eu.nmrodam.com",
+          "bytes": 423,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_ntv_vf",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_ntv_pmode",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 14
+        },
+        {
+          "name": "_ntv_laurl",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": true,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 7,
+        "session": 1
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "n-tv.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "ay.delivery",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "unpkg.com",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 3,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.n-tv.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 35,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.n-tv.de/",
+          "host": "www.n-tv.de",
+          "bytes": 1391425,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 74,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/fddff1087a1c2d83-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 57021,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 75,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/a6cb01422af61021-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 64717,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 75,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/d6b236d59080f586-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 68589,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 76,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/eced63159c168414-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 61288,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 77,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.n-tv.de/_next/static/media/1c626168cca93b06-s.p.woff2",
+          "host": "www.n-tv.de",
+          "bytes": 37909,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 78,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/5d9339bd992283f0.css",
+          "host": "www.n-tv.de",
+          "bytes": 2304,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 78,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/a096967eabc3cb15.css",
+          "host": "www.n-tv.de",
+          "bytes": 6625,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 80,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/b88d60a596cf94fa.css",
+          "host": "www.n-tv.de",
+          "bytes": 2510,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 81,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/bd6519a5e89b6484.css",
+          "host": "www.n-tv.de",
+          "bytes": 1200,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 82,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/83d6ab291ba4f258.css",
+          "host": "www.n-tv.de",
+          "bytes": 15612,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 82,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/1f36e871e3dd0d87.css",
+          "host": "www.n-tv.de",
+          "bytes": 973,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 83,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/70a9a58aeb470939.css",
+          "host": "www.n-tv.de",
+          "bytes": 1981,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 84,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/0cd54441d5cc9677.css",
+          "host": "www.n-tv.de",
+          "bytes": 1354,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 85,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/f9447cb9a885ac06.css",
+          "host": "www.n-tv.de",
+          "bytes": 2505,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 86,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/ea9aea0e2f10a9ab.css",
+          "host": "www.n-tv.de",
+          "bytes": 837,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 86,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/772a90f02340d91c.css",
+          "host": "www.n-tv.de",
+          "bytes": 1214,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 88,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/89b8c6ec2b6dec53.css",
+          "host": "www.n-tv.de",
+          "bytes": 827,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 89,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/2c625e2fe93b0a94.css",
+          "host": "www.n-tv.de",
+          "bytes": 626,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 90,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/iframeResizer.min.js",
+          "host": "www.n-tv.de",
+          "bytes": 7283,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 90,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4932.eca3a57f45ca3fae.js",
+          "host": "www.n-tv.de",
+          "bytes": 10264,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 91,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6012.21cddd664b667aae.js",
+          "host": "www.n-tv.de",
+          "bytes": 1998,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 92,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/659.6b549cc58ee97a84.js",
+          "host": "www.n-tv.de",
+          "bytes": 784,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 92,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5753.a1776ca4c32ca6a7.js",
+          "host": "www.n-tv.de",
+          "bytes": 2585,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 93,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/8237.bb28887e7add0524.js",
+          "host": "www.n-tv.de",
+          "bytes": 3051,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 93,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9149.375c0cf9ad0a3263.js",
+          "host": "www.n-tv.de",
+          "bytes": 1432,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 96,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7535.2e67eb8c26aaf288.js",
+          "host": "www.n-tv.de",
+          "bytes": 25965,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 97,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7628.a540c26560af01e0.js",
+          "host": "www.n-tv.de",
+          "bytes": 2983,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 97,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6610.bee87d145ff8d9c5.js",
+          "host": "www.n-tv.de",
+          "bytes": 3482,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 98,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5118.f7e651cd2b171a59.js",
+          "host": "www.n-tv.de",
+          "bytes": 3742,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 161,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/2017.6f522cc0913b85a1.js",
+          "host": "www.n-tv.de",
+          "bytes": 5024,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 162,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/8935.d58294e001920ead.js",
+          "host": "www.n-tv.de",
+          "bytes": 2393,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 162,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/2665.0d6913931245302b.js",
+          "host": "www.n-tv.de",
+          "bytes": 2504,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 163,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6929.5157aa37014c7d5b.js",
+          "host": "www.n-tv.de",
+          "bytes": 3865,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 164,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9198.dccb00d326f480c7.js",
+          "host": "www.n-tv.de",
+          "bytes": 7506,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 165,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/7669.74a70d5e968d70bb.js",
+          "host": "www.n-tv.de",
+          "bytes": 4265,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 166,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/953.b530497b90ff644b.js",
+          "host": "www.n-tv.de",
+          "bytes": 1537,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 167,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1857.95b1fa5731353601.js",
+          "host": "www.n-tv.de",
+          "bytes": 1420,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 167,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9673.fb9a5d346417a993.js",
+          "host": "www.n-tv.de",
+          "bytes": 4298,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 168,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1719.633f11e61bc03581.js",
+          "host": "www.n-tv.de",
+          "bytes": 1206,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 169,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/655.41296f10220aa239.js",
+          "host": "www.n-tv.de",
+          "bytes": 3298,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 170,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9423.d5e348c3f31b72e8.js",
+          "host": "www.n-tv.de",
+          "bytes": 1104,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 171,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6744.d10f6792831f88e3.js",
+          "host": "www.n-tv.de",
+          "bytes": 3159,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 171,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/1881.0665023d3ff0b5b9.js",
+          "host": "www.n-tv.de",
+          "bytes": 2246,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 172,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/3469.57490a75ef4fca13.js",
+          "host": "www.n-tv.de",
+          "bytes": 4829,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 173,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4807.87af2d737014bdab.js",
+          "host": "www.n-tv.de",
+          "bytes": 3816,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 173,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6445.649d801db240e5db.js",
+          "host": "www.n-tv.de",
+          "bytes": 2236,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 174,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5902.64cd639e1aed1123.js",
+          "host": "www.n-tv.de",
+          "bytes": 3074,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 175,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/246.4ac6a6e8e7f3f2a7.js",
+          "host": "www.n-tv.de",
+          "bytes": 2591,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 176,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/webpack-ab0dc6611a3ab0a0.js",
+          "host": "www.n-tv.de",
+          "bytes": 5709,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 176,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/framework-c4ac86d8d57ebe79.js",
+          "host": "www.n-tv.de",
+          "bytes": 69485,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 177,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/main-caa8da37b51e4fc6.js",
+          "host": "www.n-tv.de",
+          "bytes": 44554,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 178,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/pages/_app-7281e7d1030edba8.js",
+          "host": "www.n-tv.de",
+          "bytes": 3579,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 179,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/3672-09c7dfc6c787ed44.js",
+          "host": "www.n-tv.de",
+          "bytes": 5404,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 179,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/9214-00b67a979fd8cb2e.js",
+          "host": "www.n-tv.de",
+          "bytes": 17435,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 180,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/4137-b3c114b5245bbf40.js",
+          "host": "www.n-tv.de",
+          "bytes": 16980,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 181,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/6796-8fb54bb9124214d2.js",
+          "host": "www.n-tv.de",
+          "bytes": 3924,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 182,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/pages/%5B%5B...all%5D%5D-f7da37aa69036eec.js",
+          "host": "www.n-tv.de",
+          "bytes": 1174,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 183,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/3JZZUdSntdq-XRnnn1Djg/_buildManifest.js",
+          "host": "www.n-tv.de",
+          "bytes": 1388,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 183,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/3JZZUdSntdq-XRnnn1Djg/_ssgManifest.js",
+          "host": "www.n-tv.de",
+          "bytes": 545,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 184,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31410130/1791830194/Img_17_6/360/624667504.webp",
+          "host": "www.n-tv.de",
+          "bytes": 13273,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 186,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409651/1791823670/Img_17_6/360/image.webp",
+          "host": "www.n-tv.de",
+          "bytes": 11048,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 187,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409400/1791821160/Img_17_6/360/image.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9852,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 512,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409750/1791824588/Img_17_6/1024/624723586.webp",
+          "host": "www.n-tv.de",
+          "bytes": 20387,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 513,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408430/1791812523/Img_17_6/1024/620585965.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14286,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 514,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408774/1791815991/Img_17_6/1024/562850210.webp",
+          "host": "www.n-tv.de",
+          "bytes": 50457,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 516,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409847/1791828544/Img_17_6/1024/623545105.webp",
+          "host": "www.n-tv.de",
+          "bytes": 26653,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 517,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409850/1791827200/Img_17_6/1024/624724297.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14696,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 518,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408356/1791811667/Img_17_6/1024/407734126.webp",
+          "host": "www.n-tv.de",
+          "bytes": 66364,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 519,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409416/1791821457/Img_16_9/360/epi_1088488517_DPA%20BF_cl7bmdxmzl-v2-ax-ms6144.jpeg_B%C3%A4rbel%20Bas%20und%20Lars%20.webp",
+          "host": "www.n-tv.de",
+          "bytes": 8637,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 520,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409224/1791827529/Img_16_9/360/KoelnNews_347079728_1175.webp",
+          "host": "www.n-tv.de",
+          "bytes": 3537,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 522,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408752/1791815809/Img_16_9/360/epi_1088610965_IMAGO%20SP_imago%20st%201012%2014320001%200869244630.jpg_Pressekonferenz%20mit%20.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9821,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 523,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408049/1791808478/Img_16_9/360/KoelnNews_347063127_19289.webp",
+          "host": "www.n-tv.de",
+          "bytes": 5951,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 523,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408755/1791815842/Img_16_9/360/KoelnNews_347070188_41925.webp",
+          "host": "www.n-tv.de",
+          "bytes": 7017,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 525,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408258/1791810348/Img_16_9/360/WEB%20Markt.00_00_48_04.Still001.webp",
+          "host": "www.n-tv.de",
+          "bytes": 12940,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 527,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409332/1791820709/Img_16_9/360/KoelnNews_347076447_5535.webp",
+          "host": "www.n-tv.de",
+          "bytes": 11187,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 527,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31407471/1791803233/Img_16_9/360/LufthansaLA.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9052,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 529,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31408960/1791817706/Img_16_9/360/KoelnNews_347074080_0.webp",
+          "host": "www.n-tv.de",
+          "bytes": 17115,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 530,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31407813/1791806374/Img_16_9/360/KoelnNews_347059750_22017.webp",
+          "host": "www.n-tv.de",
+          "bytes": 5042,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 531,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409567/1791823162/Img_16_9/360/KoelnNews_347083469_150.webp",
+          "host": "www.n-tv.de",
+          "bytes": 9625,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 531,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31409879/1791826573/Img_16_9/360/epi_1087746750_IMAGO%20SPORT_imago%20sp%201010%2018070001%201084324346.jpg_GER%2C%20FC%20Augsburg%20vs..webp",
+          "host": "www.n-tv.de",
+          "bytes": 12166,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 532,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker-fussball/wf0/ls-full/to3377",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 599,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 533,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker/sp5/wf0/to3377/ls-full/",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 543,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 534,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sportdaten.n-tv.de/iframe/startseitenticker-formel-1/wh0/rr1-3",
+          "host": "sportdaten.n-tv.de",
+          "bytes": 692,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 536,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/img/31406993/1791797288/Img_16_9/360/KoelnNews_347050934_183.webp",
+          "host": "www.n-tv.de",
+          "bytes": 14593,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 614,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25538,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 615,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16841,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 616,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5200,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 618,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25605,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 619,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16827,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 620,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5498,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 621,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/css/dist/widget.min.css",
+          "host": "s.hs-data.com",
+          "bytes": 25647,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 622,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/ntv/static/js/dist/default.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 16817,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 623,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://s.hs-data.com/comon/prj/isdc/v3/default/static/js/lib/iframeResizer-4.3.5.contentWindow.min.js",
+          "host": "s.hs-data.com",
+          "bytes": 5197,
+          "domain": "hs-data.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 734,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.n-tv.de/_next/static/css/1a9f917b9c361961.css",
+          "host": "www.n-tv.de",
+          "bytes": 818,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 735,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/_next/static/chunks/5781.46e677232d83ca2b.js",
+          "host": "www.n-tv.de",
+          "bytes": 1215,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 736,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://te-static.technical-service.net/netid/ntvde.min.js",
+          "host": "te-static.technical-service.net",
+          "bytes": 6683,
+          "domain": "technical-service.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 737,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 42253,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 738,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "bytes": 154878,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 739,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/stat/molten/live/ntv/MoltenBundle.top.js",
+          "host": "www.n-tv.de",
+          "bytes": 227751,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 739,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/stat/molten/live/ntv/MoltenBundle.bottom.js",
+          "host": "www.n-tv.de",
+          "bytes": 303627,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 740,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://bilder-a.akamaihd.net/ip/vcc/vcc.min.js",
+          "host": "bilder-a.akamaihd.net",
+          "bytes": 12638,
+          "domain": "akamaihd.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 767,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.lotto24.de/public/product-info/v3/drawinfo/draws",
+          "host": "www.lotto24.de",
+          "domain": "lotto24.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 767,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.lotto24.de/public/product-info/v3/drawinfo/draws",
+          "host": "www.lotto24.de",
+          "domain": "lotto24.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 768,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://gutscheine.n-tv.de/widget/index/raw",
+          "host": "gutscheine.n-tv.de",
+          "bytes": 859,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 769,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://widget.marktjagd.de/dist/latest/js/init.min.js",
+          "host": "widget.marktjagd.de",
+          "bytes": 30026,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 771,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.n-tv.de/auth/handler.html",
+          "host": "www.n-tv.de",
+          "bytes": 1997,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 783,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://metrics.n-tv.de/count",
+          "host": "metrics.n-tv.de",
+          "bytes": 71,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 828,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.n-tv.de/auth/main.js",
+          "host": "www.n-tv.de",
+          "bytes": 14596,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 829,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/auth/images/logo.svg",
+          "host": "www.n-tv.de",
+          "bytes": 3024,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 889,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.permutive.com/ctx/v1/segment",
+          "host": "api.permutive.com",
+          "bytes": 329,
+          "domain": "permutive.com",
+          "party": "third",
+          "tracker": {
+            "service": "permutive.com",
+            "entity": "Permutive",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 890,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://m8wq3i3re5rsr8dhs.ay.delivery/client-v2.js",
+          "host": "m8wq3i3re5rsr8dhs.ay.delivery",
+          "bytes": 41390,
+          "domain": "ay.delivery",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 905,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 25490,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 906,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/mms/v2/get_site_data",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 705,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 929,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/wrapper/v2/meta-data",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 875,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 937,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/auth/images/icon__loading__grey.svg",
+          "host": "www.n-tv.de",
+          "bytes": 1392,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 958,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.n-tv.de/checkout-charlie.svg",
+          "host": "www.n-tv.de",
+          "bytes": 2189,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 971,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sourcepoint.n-tv.de/wrapper/v2/messages",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 9564,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1026,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://spotlight.offerista.com/js/widget2.min.js",
+          "host": "spotlight.offerista.com",
+          "bytes": 141688,
+          "domain": "offerista.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1029,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sourcepoint.n-tv.de/index.html",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2425,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1087,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://sourcepoint.n-tv.de/Notice.1c267.css",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 7020,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1088,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/polyfills.01516.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2484,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1089,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sourcepoint.n-tv.de/Notice.97af9.js",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 95160,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1123,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://applets.ebxcdn.com/ebx.js",
+          "host": "applets.ebxcdn.com",
+          "bytes": 988,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1124,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://unpkg.com/web-vitals@1.1.2/dist/web-vitals.umd.js",
+          "host": "unpkg.com",
+          "bytes": 2213,
+          "domain": "unpkg.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1125,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn-gl.nmrodam.com/conf/PCA6E6C30-EDCD-4F42-8AC2-DEEBFFDC91C2.js",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 6831,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1186,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/cities",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1147,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1207,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtag/js",
+          "host": "www.googletagmanager.com",
+          "bytes": 184221,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1234,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers",
+          "host": "middleware.marktjagd.de",
+          "bytes": 2785,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1237,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://applets.ebxcdn.com/applets/www.n-tv.de/scripts.js",
+          "host": "applets.ebxcdn.com",
+          "bytes": 3469,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 1271,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sourcepoint.n-tv.de/consent/tcfv2/vendor-list/categories",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2621,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1279,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers/brochures/6281614",
+          "host": "middleware.marktjagd.de",
+          "bytes": 13280,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1280,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/offers/brochures/6281645",
+          "host": "middleware.marktjagd.de",
+          "bytes": 893,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1282,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/companies/106",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1002,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1283,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/proxy/companies/26",
+          "host": "middleware.marktjagd.de",
+          "bytes": 1161,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1297,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://event.ay.delivery/pageview",
+          "host": "event.ay.delivery",
+          "bytes": 268,
+          "domain": "ay.delivery",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1305,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://middleware.marktjagd.de/client/key",
+          "host": "middleware.marktjagd.de",
+          "bytes": 503,
+          "domain": "marktjagd.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1324,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sourcepoint.n-tv.de/consent/tcfv2/vendor-list/categories",
+          "host": "sourcepoint.n-tv.de",
+          "bytes": 2682,
+          "domain": "n-tv.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1352,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn-gl.nmrodam.com/novms/js/2/nlsSDK600.eu.bundle.min.js",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 76475,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1394,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn-gl.nmrodam.com/novms/html/ls.html",
+          "host": "cdn-gl.nmrodam.com",
+          "bytes": 3966,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1417,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://secure-eu.nmrodam.com/cgi-bin/gn",
+          "host": "secure-eu.nmrodam.com",
+          "bytes": 424,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1498,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://5o6gkpv2c4npg85vu769zy4saqona1791823577.nuid.nmrodam.com/",
+          "host": "5o6gkpv2c4npg85vu769zy4saqona1791823577.nuid.nmrodam.com",
+          "bytes": 352,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1573,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/1018489_48x18.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 1023,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1574,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/20692622_270x408.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 32432,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1575,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.marktjagd.com/20692623_81x122.webp",
+          "host": "media.marktjagd.com",
+          "bytes": 4257,
+          "domain": "marktjagd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3412,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://secure-eu.nmrodam.com/cgi-bin/gn",
+          "host": "secure-eu.nmrodam.com",
+          "bytes": 423,
+          "domain": "nmrodam.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_ntv_vf",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_ntv_pmode",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 14
+        },
+        {
+          "name": "_ntv_laurl",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": true,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax"
+        },
+        {
+          "name": "_sp_su",
+          "domain": "n-tv.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 7,
+        "session": 1
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "n-tv.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "unpkg.com",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "ay.delivery",
+          "party": "third"
+        }
+      ]
+    }
+  ]
+}

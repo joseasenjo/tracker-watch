@@ -1,0 +1,4757 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-12T16:42:25+00:00",
+  "site": {
+    "name": "Süddeutsche Zeitung",
+    "url": "https://www.sueddeutsche.de",
+    "first_party_domains": [
+      "sueddeutsche.de"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 3,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.sueddeutsche.de/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 37,
+      "third_party_domains": 9,
+      "tracking_requests": 9,
+      "total_bytes": 2643323,
+      "third_party_bytes": 352192,
+      "tracking_bytes": 47139,
+      "tracking_services": 2,
+      "third_party_cookies": 0,
+      "cookies_total": 12,
+      "storage_items": 11
+    },
+    "third_party_domains": [
+      {
+        "domain": "ad-delivery.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "adspirit.de",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "benelph.de",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "browser-intake-datadoghq.eu",
+        "passes_seen": 1,
+        "stable": false
+      },
+      {
+        "domain": "btloader.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "cxense.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "dns-finder.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "doubleclick.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "googletagmanager.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "kameleoon.eu",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "cxense.com",
+        "entity": "Piano (Cxense)",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "doubleclick.net",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "googletagmanager.com",
+        "entity": "Google",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "cxense.com",
+        "party": "third",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "kameleoon.eu",
+        "party": "third",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "sueddeutsche.de",
+        "party": "first",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 37 requests to 9 third-party domains (median of 3 passes).",
+      "evidence": {
+        "requests": 37,
+        "domains": 9
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 2.6 MB transferred in that window (compressed responses that finished loading), 352 kB (13%) came from third-party domains, 47 kB of it from services classified as tracking (9 requests).",
+      "evidence": {
+        "total_bytes": 2643323,
+        "third_party_bytes": 352192,
+        "tracking_bytes": 47139,
+        "tracking_requests": 9
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "2 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: cxense.com (Piano (Cxense), advertising), doubleclick.net (Google, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "cxense.com",
+            "entity": "Piano (Cxense)",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.sueddeutsche.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 68,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.sueddeutsche.de/",
+          "host": "www.sueddeutsche.de",
+          "bytes": 291011,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 255,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://wni4spsbqo.kameleoon.eu/engine.js",
+          "host": "wni4spsbqo.kameleoon.eu",
+          "bytes": 53412,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 256,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/department-page-CfGg_ysn.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1474,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 257,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/header-vendors-6bd59b52b71563222d4c.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 126404,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 258,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/header-full-5faf899a0748a4d1db1f.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 29461,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 259,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/cfec7c72-69b8-4278-bde4-e979ebc3b760.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 83388,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 260,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/pay/piano/prod/index.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 40726,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 648,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/embed.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 4158,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 649,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/embed.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 4303,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 650,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/datadog-logs-v5.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 20505,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 650,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 4608,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 654,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "bytes": 202076,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 919,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 44832,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 921,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/cdn_iqdsz/live/iqadcontroller.js.gz",
+          "host": "www.sueddeutsche.de",
+          "bytes": 83284,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 922,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/adcontroller-finalize-iqdcomplete.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 473,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 922,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/szde-assets/szde-simple-pages/css/utiq-custom-styles.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 809,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 923,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/cfec7c72-69b8-4278-bde4-e979ebc3b760.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 47573,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 925,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/67b8a55e7fdd6808a987472678c41246.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 22857,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 926,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/217e1fa86dcffb1f4f0ce5ba4958ca67.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23508,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 927,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/e117a79bf09a4a75acc1f986ea51261d.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23816,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 928,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/c8c2bcbcf9b2beb9ab6894981b90ce26.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 16823,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 929,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/2c7636c98303f1059d2e553a1ea8a872.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 30443,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 930,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/b1f05a6d991bac01f7b690ab9847d524.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31815,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 930,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/d202b291ffe3c074c83b3e64b525a991.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23538,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 931,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2024/07/15/c1104daa-8f26-4b21-9e31-fec8a605d093.png",
+          "host": "www.sueddeutsche.de",
+          "bytes": 15016,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 932,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/f68aa866-e593-49fa-ab96-c155184b9830.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11447,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 933,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/05/2f109d5d-08b7-469b-a5de-204fccd412af.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11562,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 934,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/11/29efc9bd-00aa-4f5f-afce-a513a73cf665.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 26724,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 935,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/06/e5b45b95-4402-4ffd-aac6-874a9372a644.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 13722,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 936,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/99ca268f-f538-443b-acf5-7749981de00d.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12289,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 937,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/78306f68-7ff5-43cc-98f3-a3c677e4605c.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11680,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 937,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/74d3f265-ddf3-4af8-82f1-fff52ba1d01a.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 15758,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 938,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/5ec6f974-5a77-4a8d-9e90-477147e692f1.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11602,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 939,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/f75f1d1b-2898-4186-925c-63a64b5ab9db.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12364,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 940,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/b9552da5-ab98-4bad-b41c-c5f3d8d1df93.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 27148,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 941,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/98c5cb07-fc9c-478a-9373-a6275ed6c228.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 29708,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1016,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/technik-sde-BLTkhNLG.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 178772,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1017,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/dist-rO774lpZ.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 97783,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1017,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/emotion-1fbvW_re.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12849,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1479,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.sueddeutsche.de/api/tinypass.min.js",
+          "host": "cdn.sueddeutsche.de",
+          "bytes": 144886,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1480,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2023/05/25/d8fccdb8-d554-458c-8c7e-7c1908c62381.webp",
+          "host": "www.sueddeutsche.de",
+          "bytes": 20245,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1481,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5824976/1402x295",
+          "host": "www.sueddeutsche.de",
+          "bytes": 33369,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1560,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 397,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1561,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 398,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1562,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 397,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1566,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/streiflicht_v1.1.0_28b574f6/main.css",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 1404,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1566,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/streiflicht_v1.1.0_28b574f6/main.iife.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 20133,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1567,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/main.css",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 2843,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1568,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/main.iife.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 16915,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1591,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 25427,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1591,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-cdn.sueddeutsche.de/wrapper/v2/meta-data",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 862,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1592,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/rolldown-runtime-1yejwUCm.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1346,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1593,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/datadog-DqjRORmd.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 77825,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1749,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.cxense.com/cx.cce.js",
+          "host": "cdn.cxense.com",
+          "bytes": 6957,
+          "domain": "cxense.com",
+          "party": "third",
+          "tracker": {
+            "service": "cxense.com",
+            "entity": "Piano (Cxense)",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1755,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-cdn.sueddeutsche.de/wrapper/v2/messages",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 13744,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1919,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://auth.sueddeutsche.de/id/api/v1/identity/token/verify",
+          "host": "auth.sueddeutsche.de",
+          "bytes": 904,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1920,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/lightGradientLandscape.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 3190,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1921,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/darkGradientLandscape.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 1544,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1922,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/card-1.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 12076,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2319,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.adspirit.de/adasync.min.js",
+          "host": "cdn.adspirit.de",
+          "bytes": 9112,
+          "domain": "adspirit.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2321,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/33db65d7b27970bec6250a50fe6c03e6.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 32222,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2322,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/card-2.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 14518,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2330,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://consent-cdn.sueddeutsche.de/index.html",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2415,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2338,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://btloader.com/tag",
+          "host": "btloader.com",
+          "bytes": 33281,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2476,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://c2.sueddeutsche.de/xbuilder/experience/execute",
+          "host": "c2.sueddeutsche.de",
+          "bytes": 2521,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2765,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://px.sueddeutsche.de/v3/teaser-recommendations",
+          "host": "px.sueddeutsche.de",
+          "bytes": 83793,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2770,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://consent-cdn.sueddeutsche.de/Notice.1c267.css",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 7007,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2771,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/polyfills.01516.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2474,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2771,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/Notice.97af9.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 95035,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2774,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/5f43676094b26f440591ad70fbca1618.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31803,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2778,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.cxense.com/cx.js",
+          "host": "cdn.cxense.com",
+          "bytes": 38808,
+          "domain": "cxense.com",
+          "party": "third",
+          "tracker": {
+            "service": "cxense.com",
+            "entity": "Piano (Cxense)",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2800,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2810,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 565,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2811,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 612,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2822,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn.btloader.com/cchecker.html",
+          "host": "cdn.btloader.com",
+          "bytes": 747,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2836,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ab.dns-finder.com/meta/dns",
+          "host": "ab.dns-finder.com",
+          "bytes": 214,
+          "domain": "dns-finder.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2838,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://btloader.com/trustedIframe.html",
+          "host": "btloader.com",
+          "bytes": 2196,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2847,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.api.btloader.com/device",
+          "host": "cdn.api.btloader.com",
+          "bytes": 294,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2880,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent-cdn.sueddeutsche.de/consent/tcfv2/vendor-list/categories",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2275,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2931,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/exd",
+          "host": "api.btloader.com",
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2949,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/assets/contracts/fonts/fonts2019.3.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1108,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2949,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent-cdn.sueddeutsche.de/consent/tcfv2/vendor-list/categories",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2276,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2987,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/4e10fe1ffaa4436c37f6c45486d5b6d9.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14937,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2988,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/b5e0e178c2959ba0ed0e3a551ef038d5.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14637,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2989,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/b8cc1746c0a8538cd47c135ecbc50681.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14872,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3044,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush-vars.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 513,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3045,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/config.json",
+          "host": "www.sueddeutsche.de",
+          "bytes": 965,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3105,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5804018/1114x941",
+          "host": "www.sueddeutsche.de",
+          "bytes": 415,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3109,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3113,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush-core.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 24377,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3482,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://benelph.de/160x600/6f7578ce698b516cb7db.png",
+          "host": "benelph.de",
+          "bytes": 365,
+          "domain": "benelph.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3483,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://btloader.com/favicon.ico",
+          "host": "btloader.com",
+          "bytes": 160,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3484,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3484,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 164,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3581,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/796105b7-fae9-4112-b11b-5274d6960902.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 43169,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3582,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/09/28/d961e53b-4b79-4ef1-9e7e-7cb36861e96c.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 46541,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3583,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/11/15cf4ee9-5530-4432-8be9-bacd0c61984f.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31110,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3608,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5783646/1555x387",
+          "host": "www.sueddeutsche.de",
+          "bytes": 415,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4212,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 135,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4214,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4215,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4216,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ab.dns-finder.com/meta/dns",
+          "host": "ab.dns-finder.com",
+          "bytes": 55,
+          "domain": "dns-finder.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4441,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4635,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4636,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5051,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 135,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5056,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 5469,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 113,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5472,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 5786,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://vx.sueddeutsche.de/api/v3/anon/assets/sdk-runtime-config.js",
+          "host": "vx.sueddeutsche.de",
+          "bytes": 787,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 5881,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 133,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5889,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 6315,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/country",
+          "host": "api.btloader.com",
+          "bytes": 153,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 6317,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/pv",
+          "host": "api.btloader.com",
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_pprv",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_dd_s",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_pctx",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_sp_su",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__pid",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_dd_s_v2",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 365
+        },
+        {
+          "name": "SZExperiments",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 5
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__tbc",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 400
+        },
+        {
+          "name": "xbc",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 400
+        }
+      ],
+      "storage_items": {
+        "local": 9,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "kameleoon.eu",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "sueddeutsche.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "cxense.com",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.sueddeutsche.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 38,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.sueddeutsche.de/",
+          "host": "www.sueddeutsche.de",
+          "bytes": 290930,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 77,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://wni4spsbqo.kameleoon.eu/engine.js",
+          "host": "wni4spsbqo.kameleoon.eu",
+          "bytes": 53412,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 78,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/department-page-CfGg_ysn.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1475,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 79,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/header-vendors-6bd59b52b71563222d4c.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 126414,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 80,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/header-full-5faf899a0748a4d1db1f.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 29470,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 81,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/cfec7c72-69b8-4278-bde4-e979ebc3b760.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 83389,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 101,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/pay/piano/prod/index.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 40557,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 102,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/embed.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 4159,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 102,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/embed.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 4300,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/datadog-logs-v5.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 20505,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 104,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 4607,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 105,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "bytes": 202076,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 109,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 44844,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 109,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/cdn_iqdsz/live/iqadcontroller.js.gz",
+          "host": "www.sueddeutsche.de",
+          "bytes": 83285,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 110,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/adcontroller-finalize-iqdcomplete.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 473,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 113,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/szde-assets/szde-simple-pages/css/utiq-custom-styles.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 811,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 133,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/cfec7c72-69b8-4278-bde4-e979ebc3b760.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 47573,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 164,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/67b8a55e7fdd6808a987472678c41246.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 22859,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 165,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/217e1fa86dcffb1f4f0ce5ba4958ca67.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23509,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 166,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/e117a79bf09a4a75acc1f986ea51261d.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23816,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 167,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/c8c2bcbcf9b2beb9ab6894981b90ce26.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 16825,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 168,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/2c7636c98303f1059d2e553a1ea8a872.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 30443,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 169,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2024/07/15/c1104daa-8f26-4b21-9e31-fec8a605d093.png",
+          "host": "www.sueddeutsche.de",
+          "bytes": 15015,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 179,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/technik-sde-BLTkhNLG.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 178772,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 181,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/dist-rO774lpZ.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 97784,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 182,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/emotion-1fbvW_re.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12850,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 230,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/b1f05a6d991bac01f7b690ab9847d524.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31816,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 231,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/d202b291ffe3c074c83b3e64b525a991.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23539,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 256,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/f68aa866-e593-49fa-ab96-c155184b9830.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11447,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 256,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/05/2f109d5d-08b7-469b-a5de-204fccd412af.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11564,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 257,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/11/29efc9bd-00aa-4f5f-afce-a513a73cf665.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 26725,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 258,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/06/e5b45b95-4402-4ffd-aac6-874a9372a644.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 13724,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 259,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/99ca268f-f538-443b-acf5-7749981de00d.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12289,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 260,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/78306f68-7ff5-43cc-98f3-a3c677e4605c.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11680,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 261,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/74d3f265-ddf3-4af8-82f1-fff52ba1d01a.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 15758,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 262,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/5ec6f974-5a77-4a8d-9e90-477147e692f1.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11603,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 263,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/f75f1d1b-2898-4186-925c-63a64b5ab9db.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12367,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 264,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/b9552da5-ab98-4bad-b41c-c5f3d8d1df93.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 27150,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 265,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/98c5cb07-fc9c-478a-9373-a6275ed6c228.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 29709,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 351,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.sueddeutsche.de/api/tinypass.min.js",
+          "host": "cdn.sueddeutsche.de",
+          "bytes": 144937,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 352,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/rolldown-runtime-1yejwUCm.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1346,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 353,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/datadog-DqjRORmd.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 77826,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 463,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2023/05/25/d8fccdb8-d554-458c-8c7e-7c1908c62381.webp",
+          "host": "www.sueddeutsche.de",
+          "bytes": 20245,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 464,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5824976/1402x295",
+          "host": "www.sueddeutsche.de",
+          "bytes": 33374,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 465,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 398,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 466,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 397,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 467,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 397,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 551,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.adspirit.de/adasync.min.js",
+          "host": "cdn.adspirit.de",
+          "bytes": 9110,
+          "domain": "adspirit.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 788,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.cxense.com/cx.cce.js",
+          "host": "cdn.cxense.com",
+          "bytes": 6957,
+          "domain": "cxense.com",
+          "party": "third",
+          "tracker": {
+            "service": "cxense.com",
+            "entity": "Piano (Cxense)",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 889,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 25429,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 895,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-cdn.sueddeutsche.de/wrapper/v2/meta-data",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 863,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 917,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/main.css",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 2844,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 918,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/main.iife.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 16918,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 920,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/streiflicht_v1.1.0_28b574f6/main.css",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 1405,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 921,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/streiflicht_v1.1.0_28b574f6/main.iife.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 20135,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 925,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://btloader.com/tag",
+          "host": "btloader.com",
+          "bytes": 31841,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1139,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://auth.sueddeutsche.de/id/api/v1/identity/token/verify",
+          "host": "auth.sueddeutsche.de",
+          "bytes": 901,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1147,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-cdn.sueddeutsche.de/wrapper/v2/messages",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 13746,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1274,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/lightGradientLandscape.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 3190,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/darkGradientLandscape.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 1544,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/card-1.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 12078,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1291,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/card-2.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 14518,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1305,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/33db65d7b27970bec6250a50fe6c03e6.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 32222,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1318,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://consent-cdn.sueddeutsche.de/index.html",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2433,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1352,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://consent-cdn.sueddeutsche.de/Notice.1c267.css",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 7007,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1353,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/polyfills.01516.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2477,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1354,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/Notice.97af9.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 95036,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1382,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://c2.sueddeutsche.de/xbuilder/experience/execute",
+          "host": "c2.sueddeutsche.de",
+          "bytes": 2531,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1478,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent-cdn.sueddeutsche.de/consent/tcfv2/vendor-list/categories",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2275,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1537,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://px.sueddeutsche.de/v3/teaser-recommendations",
+          "host": "px.sueddeutsche.de",
+          "bytes": 83009,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1566,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/assets/contracts/fonts/fonts2019.3.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1108,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1566,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent-cdn.sueddeutsche.de/consent/tcfv2/vendor-list/categories",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2276,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1605,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/4e10fe1ffaa4436c37f6c45486d5b6d9.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14936,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1605,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/b5e0e178c2959ba0ed0e3a551ef038d5.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14636,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1606,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/b8cc1746c0a8538cd47c135ecbc50681.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14870,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1885,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/5f43676094b26f440591ad70fbca1618.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31805,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2063,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.cxense.com/cx.js",
+          "host": "cdn.cxense.com",
+          "bytes": 38808,
+          "domain": "cxense.com",
+          "party": "third",
+          "tracker": {
+            "service": "cxense.com",
+            "entity": "Piano (Cxense)",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2073,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn.btloader.com/cchecker.html",
+          "host": "cdn.btloader.com",
+          "bytes": 755,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2080,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2081,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 565,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2082,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 612,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2083,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ab.dns-finder.com/meta/dns",
+          "host": "ab.dns-finder.com",
+          "bytes": 214,
+          "domain": "dns-finder.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2085,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://btloader.com/trustedIframe.html",
+          "host": "btloader.com",
+          "bytes": 2196,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2087,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.api.btloader.com/device",
+          "host": "cdn.api.btloader.com",
+          "bytes": 294,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2154,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush-vars.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 514,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2155,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/config.json",
+          "host": "www.sueddeutsche.de",
+          "bytes": 965,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2160,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/exd",
+          "host": "api.btloader.com",
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2222,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5804018/1114x941",
+          "host": "www.sueddeutsche.de",
+          "bytes": 414,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2229,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush-core.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 24394,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2322,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2423,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/796105b7-fae9-4112-b11b-5274d6960902.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 43169,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2424,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/08/c8399b35-ed60-41eb-a5b9-4ed2460d53e2.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23563,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2424,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/07/8cecb83c-4ccd-45a4-9711-a8d5cf1f1dcb.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 20835,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2514,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2563,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 164,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2592,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://benelph.de/160x600/6f7578ce698b516cb7db.png",
+          "host": "benelph.de",
+          "bytes": 365,
+          "domain": "benelph.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2593,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://btloader.com/favicon.ico",
+          "host": "btloader.com",
+          "bytes": 150,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2615,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5783646/1555x387",
+          "host": "www.sueddeutsche.de",
+          "bytes": 415,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3255,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 135,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3256,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3257,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3257,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ab.dns-finder.com/meta/dns",
+          "host": "ab.dns-finder.com",
+          "bytes": 55,
+          "domain": "dns-finder.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3474,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3670,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3687,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4084,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 135,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4118,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4511,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4547,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4586,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://vx.sueddeutsche.de/api/v3/anon/assets/sdk-runtime-config.js",
+          "host": "vx.sueddeutsche.de",
+          "bytes": 786,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4928,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 133,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4979,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 5413,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/country",
+          "host": "api.btloader.com",
+          "bytes": 172,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5414,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/pv",
+          "host": "api.btloader.com",
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_dd_s",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_pprv",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_pctx",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_sp_su",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__pid",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_dd_s_v2",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__tbc",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 400
+        },
+        {
+          "name": "xbc",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 400
+        },
+        {
+          "name": "SZExperiments",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 5
+        }
+      ],
+      "storage_items": {
+        "local": 9,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "sueddeutsche.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "kameleoon.eu",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "cxense.com",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 3,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.sueddeutsche.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 37,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.sueddeutsche.de/",
+          "host": "www.sueddeutsche.de",
+          "bytes": 290928,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 71,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://wni4spsbqo.kameleoon.eu/engine.js",
+          "host": "wni4spsbqo.kameleoon.eu",
+          "bytes": 53412,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 72,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/department-page-CfGg_ysn.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1474,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 73,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/header-vendors-6bd59b52b71563222d4c.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 126051,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 73,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/header-full-5faf899a0748a4d1db1f.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 29386,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 74,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/cfec7c72-69b8-4278-bde4-e979ebc3b760.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 83387,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 96,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/pay/piano/prod/index.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 40558,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 97,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/embed.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 4160,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 99,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/embed.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 4301,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 100,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/datadog-logs-v5.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 20505,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 101,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 4608,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 101,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.googletagmanager.com/gtm.js",
+          "host": "www.googletagmanager.com",
+          "bytes": 202071,
+          "domain": "googletagmanager.com",
+          "party": "third",
+          "tracker": {
+            "service": "googletagmanager.com",
+            "entity": "Google",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 102,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 44834,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/cdn_iqdsz/live/iqadcontroller.js.gz",
+          "host": "www.sueddeutsche.de",
+          "bytes": 83285,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/js/adcontroller-finalize-iqdcomplete.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 473,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 104,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/szde-assets/szde-simple-pages/css/utiq-custom-styles.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 811,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 123,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/cfec7c72-69b8-4278-bde4-e979ebc3b760.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 47571,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 164,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/67b8a55e7fdd6808a987472678c41246.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 22859,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 166,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/217e1fa86dcffb1f4f0ce5ba4958ca67.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23509,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 168,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/e117a79bf09a4a75acc1f986ea51261d.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23814,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 170,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/c8c2bcbcf9b2beb9ab6894981b90ce26.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 16826,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 171,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/2c7636c98303f1059d2e553a1ea8a872.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 30443,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 171,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/d202b291ffe3c074c83b3e64b525a991.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 23539,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 172,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2024/07/15/c1104daa-8f26-4b21-9e31-fec8a605d093.png",
+          "host": "www.sueddeutsche.de",
+          "bytes": 15016,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 177,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/technik-sde-BLTkhNLG.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 178773,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 178,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/dist-rO774lpZ.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 97785,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 180,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/emotion-1fbvW_re.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12850,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 231,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/b1f05a6d991bac01f7b690ab9847d524.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31814,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 233,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/f68aa866-e593-49fa-ab96-c155184b9830.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11448,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 234,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/05/2f109d5d-08b7-469b-a5de-204fccd412af.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11564,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 235,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/11/29efc9bd-00aa-4f5f-afce-a513a73cf665.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 26725,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 236,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/06/e5b45b95-4402-4ffd-aac6-874a9372a644.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 13723,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 238,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/99ca268f-f538-443b-acf5-7749981de00d.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12288,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 238,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/78306f68-7ff5-43cc-98f3-a3c677e4605c.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11680,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 239,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/74d3f265-ddf3-4af8-82f1-fff52ba1d01a.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 15758,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 240,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/5ec6f974-5a77-4a8d-9e90-477147e692f1.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 11602,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 243,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/f75f1d1b-2898-4186-925c-63a64b5ab9db.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 12366,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 244,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/b9552da5-ab98-4bad-b41c-c5f3d8d1df93.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 27149,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 245,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/98c5cb07-fc9c-478a-9373-a6275ed6c228.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 29710,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 289,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/main.css",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 2845,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 289,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/main.iife.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 16916,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 324,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/streiflicht_v1.1.0_28b574f6/main.css",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 1405,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 325,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://gfx.sueddeutsche.de/apps/e822411/www/streiflicht_v1.1.0_28b574f6/main.iife.js",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 20135,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 360,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.sueddeutsche.de/api/tinypass.min.js",
+          "host": "cdn.sueddeutsche.de",
+          "bytes": 144935,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 361,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/rolldown-runtime-1yejwUCm.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1347,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 362,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/szhp-pages/szde-pages/js/datadog-DqjRORmd.mjs",
+          "host": "www.sueddeutsche.de",
+          "bytes": 77824,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 415,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/lightGradientLandscape.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 3192,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 416,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/darkGradientLandscape.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 1547,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 417,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/card-1.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 12077,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 450,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://gfx.sueddeutsche.de/apps/e653442/www/2026-nsdap-search-hp_v1.0.6_15d345d3/resources/card-2.avif",
+          "host": "gfx.sueddeutsche.de",
+          "bytes": 14518,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 494,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/33db65d7b27970bec6250a50fe6c03e6.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 32222,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 537,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2023/05/25/d8fccdb8-d554-458c-8c7e-7c1908c62381.webp",
+          "host": "www.sueddeutsche.de",
+          "bytes": 20245,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 538,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5824976/1402x295",
+          "host": "www.sueddeutsche.de",
+          "bytes": 33374,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 540,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 398,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 540,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 397,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 541,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://eu-data.kameleoon.eu/map/map",
+          "host": "eu-data.kameleoon.eu",
+          "bytes": 397,
+          "domain": "kameleoon.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 622,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.adspirit.de/adasync.min.js",
+          "host": "cdn.adspirit.de",
+          "bytes": 9111,
+          "domain": "adspirit.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 847,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.cxense.com/cx.cce.js",
+          "host": "cdn.cxense.com",
+          "bytes": 6977,
+          "domain": "cxense.com",
+          "party": "third",
+          "tracker": {
+            "service": "cxense.com",
+            "entity": "Piano (Cxense)",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 951,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/unified/4.40.3/gdpr-tcf.205218eeda1bb062edfc.bundle.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 25428,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 957,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-cdn.sueddeutsche.de/wrapper/v2/meta-data",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 872,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1135,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://auth.sueddeutsche.de/id/api/v1/identity/token/verify",
+          "host": "auth.sueddeutsche.de",
+          "bytes": 903,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1211,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent-cdn.sueddeutsche.de/wrapper/v2/messages",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 13745,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1222,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://btloader.com/tag",
+          "host": "btloader.com",
+          "bytes": 33309,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1373,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://consent-cdn.sueddeutsche.de/index.html",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2415,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1387,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://c2.sueddeutsche.de/xbuilder/experience/execute",
+          "host": "c2.sueddeutsche.de",
+          "bytes": 2523,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1403,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://consent-cdn.sueddeutsche.de/Notice.1c267.css",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 7008,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1404,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/polyfills.01516.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2476,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1405,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent-cdn.sueddeutsche.de/Notice.97af9.js",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 95037,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1509,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent-cdn.sueddeutsche.de/consent/tcfv2/vendor-list/categories",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2276,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1644,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 113,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1647,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/assets/contracts/fonts/fonts2019.3.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 1108,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1647,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent-cdn.sueddeutsche.de/consent/tcfv2/vendor-list/categories",
+          "host": "consent-cdn.sueddeutsche.de",
+          "bytes": 2276,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1648,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 288,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1649,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://px.sueddeutsche.de/v3/teaser-recommendations",
+          "host": "px.sueddeutsche.de",
+          "bytes": 83531,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1681,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/4e10fe1ffaa4436c37f6c45486d5b6d9.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14938,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1682,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/b5e0e178c2959ba0ed0e3a551ef038d5.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14639,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1684,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/assets/woff2/b8cc1746c0a8538cd47c135ecbc50681.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 14871,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2009,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.sueddeutsche.de/szde-assets/woff2/5f43676094b26f440591ad70fbca1618.woff2",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31804,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2012,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/12/796105b7-fae9-4112-b11b-5274d6960902.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 43171,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2013,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/09/28/d961e53b-4b79-4ef1-9e7e-7cb36861e96c.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 46542,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2015,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/2026/10/11/15cf4ee9-5530-4432-8be9-bacd0c61984f.jpg",
+          "host": "www.sueddeutsche.de",
+          "bytes": 31110,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2088,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.cxense.com/cx.js",
+          "host": "cdn.cxense.com",
+          "bytes": 38808,
+          "domain": "cxense.com",
+          "party": "third",
+          "tracker": {
+            "service": "cxense.com",
+            "entity": "Piano (Cxense)",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2140,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2241,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn.btloader.com/cchecker.html",
+          "host": "cdn.btloader.com",
+          "bytes": 747,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2247,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 612,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2249,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 565,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2250,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2251,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ab.dns-finder.com/meta/dns",
+          "host": "ab.dns-finder.com",
+          "bytes": 214,
+          "domain": "dns-finder.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2252,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://btloader.com/trustedIframe.html",
+          "host": "btloader.com",
+          "bytes": 2196,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2255,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.api.btloader.com/device",
+          "host": "cdn.api.btloader.com",
+          "bytes": 319,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2301,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2303,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2305,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2306,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2316,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush-vars.css",
+          "host": "www.sueddeutsche.de",
+          "bytes": 515,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2317,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/config.json",
+          "host": "www.sueddeutsche.de",
+          "bytes": 965,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2323,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/exd",
+          "host": "api.btloader.com",
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2379,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2385,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5804018/1114x941",
+          "host": "www.sueddeutsche.de",
+          "bytes": 415,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2399,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.sueddeutsche.de/szde-assets/webpush/prod/webpush-core.js",
+          "host": "www.sueddeutsche.de",
+          "bytes": 24483,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2486,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2498,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 113,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2500,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 135,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2524,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2559,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 112,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2599,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 113,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2685,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2705,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 164,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 2734,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://benelph.de/160x600/6f7578ce698b516cb7db.png",
+          "host": "benelph.de",
+          "bytes": 365,
+          "domain": "benelph.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2735,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://btloader.com/favicon.ico",
+          "host": "btloader.com",
+          "bytes": 150,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2765,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.sueddeutsche.de/image/sz.1.5783646/1555x387",
+          "host": "www.sueddeutsche.de",
+          "bytes": 416,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3400,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 135,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3401,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3402,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3402,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ab.dns-finder.com/meta/dns",
+          "host": "ab.dns-finder.com",
+          "bytes": 55,
+          "domain": "dns-finder.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3522,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 135,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3622,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3820,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3829,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3937,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 113,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4236,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 133,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4258,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4538,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 135,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4563,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://vx.sueddeutsche.de/api/v3/anon/assets/sdk-runtime-config.js",
+          "host": "vx.sueddeutsche.de",
+          "bytes": 785,
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4652,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 112,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4688,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 5067,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad-delivery.net/px.gif",
+          "host": "ad-delivery.net",
+          "bytes": 110,
+          "domain": "ad-delivery.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5118,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://ad.doubleclick.net/favicon.ico",
+          "host": "ad.doubleclick.net",
+          "bytes": 129,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 5183,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 113,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5549,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/country",
+          "host": "api.btloader.com",
+          "bytes": 153,
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5550,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://api.btloader.com/pv",
+          "host": "api.btloader.com",
+          "domain": "btloader.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 7538,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://browser-intake-datadoghq.eu/api/v2/rum",
+          "host": "browser-intake-datadoghq.eu",
+          "bytes": 135,
+          "domain": "browser-intake-datadoghq.eu",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_dd_s",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_pprv",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_pctx",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "_sp_su",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__pid",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_dd_s_v2",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "__tbc",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 400
+        },
+        {
+          "name": "xbc",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 400
+        },
+        {
+          "name": "SZExperiments",
+          "domain": "sueddeutsche.de",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 5
+        }
+      ],
+      "storage_items": {
+        "local": 9,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "sueddeutsche.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "kameleoon.eu",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "cxense.com",
+          "party": "third"
+        }
+      ]
+    }
+  ]
+}
