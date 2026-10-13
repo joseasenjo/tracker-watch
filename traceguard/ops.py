@@ -30,7 +30,7 @@ SWITCHES = {
 WORKFLOWS = {"weekly-scan.yml": "Escaneo semanal + hilo", "post-midweek.yml": "Post de media semana"}
 SECRETS = ("BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD")
 SITE_URL = "https://joseasenjo.github.io/tracker-watch/"
-DRAFT_RE = re.compile(r"^data/drafts/\d{4}-\d{2}-\d{2}(-midweek|-alert)?$")
+DRAFT_RE = re.compile(r"^data/drafts/\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook)?$")
 SWING = 30            # a change of this many tracking services between two scans is worth a look
 MIN_SHARE = 0.6       # below this share of measured sites the weekly thread is not drafted
 STALE_DAYS = 9        # a weekly scan older than this means the schedule did not run
@@ -141,7 +141,7 @@ def pending_drafts(drafts_dir: Path | str, today: _date | None = None) -> list[d
     base, today, rows = Path(drafts_dir), today or _date.today(), []
     if not base.is_dir():
         return rows
-    for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert)?", p.name)),
+    for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook)?", p.name)),
                          reverse=True):
         draft_file = folder / "bluesky.json"
         if not draft_file.exists():
@@ -157,7 +157,8 @@ def pending_drafts(drafts_dir: Path | str, today: _date | None = None) -> list[d
         except ValueError:
             age = None
         rows.append({"folder": f"data/drafts/{folder.name}", "kind": ("media semana" if folder.name.endswith("midweek") else
-                                 "alerta de cambio" if folder.name.endswith("alert") else "hilo semanal"),
+                                 "alerta de cambio" if folder.name.endswith("alert") else
+                                 "post de gancho" if folder.name.endswith("hook") else "hilo semanal"),
                      "date": draft.get("date"), "posts": draft.get("posts", []), "image": bool(draft.get("image")),
                      "posted": posted, "age_days": age, "stale": age is not None and age > 14})
     return rows[:12]

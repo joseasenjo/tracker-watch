@@ -1,0 +1,40 @@
+# Creates (once) the Bluesky list "News outlets measured by Tracker Watch" and adds the outlets in data/bsky_accounts.json
+# that are missing from it. Started by hand. It never removes anything. Needs the secrets BLUESKY_HANDLE and
+# BLUESKY_APP_PASSWORD. "dry_run" shows what would happen and changes nothing.
+name: bluesky-list
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true = only show what would be done"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create or update the list
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then python -m traceguard.bsky_list sync --dry-run; else python -m traceguard.bsky_list sync; fi

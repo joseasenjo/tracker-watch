@@ -128,10 +128,10 @@ jobs:
           python -m traceguard.posts data/runs --platform bluesky --min-measured 0.6
           --report-url "$SITE_URL"
 
-      - name: Draft an alert if a site changed a lot (never published automatically)
-        run: >
-          python -m traceguard.posts data/runs --platform bluesky --kind alert
-          --report-url "$SITE_URL" || echo "no alert drafted"
+      - name: Draft an alert and a hook post (never published automatically)
+        run: |
+          python -m traceguard.posts data/runs --platform bluesky --kind alert --report-url "$SITE_URL" || echo "no alert drafted"
+          python -m traceguard.posts data/runs --platform bluesky --kind hook --report-url "$SITE_URL" || echo "no hook drafted"
 
       - name: Waiting for your approval (review mode is on)
         if: ${{ vars.POST_REVIEW == 'true' }}

@@ -48,7 +48,8 @@ def mask(address: str) -> str:
 def build_message(draft: dict, platform: str, state: dict, folder: str, config: dict) -> EmailMessage:
     folder_name = folder.rstrip("/")
     kind = ("mid-week post" if folder_name.endswith("-midweek") else
-            "alert post" if folder_name.endswith("-alert") else "weekly thread")
+            "alert post" if folder_name.endswith("-alert") else
+            "hook post" if folder_name.endswith("-hook") else "weekly thread")
     name = PLATFORM_NAMES.get(platform, platform)
     posts = state.get("posts", [])
     texts = draft.get("posts", [])

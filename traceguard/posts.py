@@ -211,6 +211,23 @@ def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: 
     raise PostTooLong("the midweek post does not fit the limit")
 
 
+def build_hook(date: str, reports: list[dict], *, platform: str, report_url: str) -> list[str]:
+    """One standalone post on the single most-tracked outlet of the week (the rule fixed by the maintainer).
+    It names an outlet, so it is only ever a draft that a person approves."""
+    rows = ranking(reports)
+    if not rows:
+        raise ValueError("no measured site contacted a tracking service: nothing to post")
+    top, limit = rows[0], LIMITS[platform]
+    text = (f"{top['name']}: {top['tracking_services']} third-party tracking services contacted before any click, "
+            f"the most of the {len(eligible(reports))} news sites measured with enough confidence ({date}, from "
+            f"{_vantage(reports)}). Counts, not verdicts. Data: {report_url}")
+    for tags in ROOT_TAGS[:2]:
+        candidate = f"{text} {tags}"
+        if len(candidate) <= limit:
+            return [candidate]
+    raise PostTooLong("the hook post does not fit the limit")
+
+
 def _day(stamp: str) -> str:
     return str(stamp)[:10]
 
@@ -329,10 +346,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
                         help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
                              "(a broken scan must not become a post)")
-    parser.add_argument("--kind", choices=("weekly", "midweek", "alert"), default="weekly",
+    parser.add_argument("--kind", choices=("weekly", "midweek", "alert", "hook"), default="weekly",
                         help="weekly: the full thread; midweek: one post on the companies reaching the most sites "
                              "(written to <date>-midweek, no image); alert: one post on the biggest swing since the "
-                             "last measurement (written to <date>-alert, never published automatically)")
+                             "last measurement (written to <date>-alert); hook: one post on the most-tracked outlet of the "
+                             "week (written to <date>-hook). Alerts and hooks are never published automatically")
     args = parser.parse_args(argv)
 
     date, reports = load_latest_reports(args.runs_dir)
@@ -349,16 +367,19 @@ def main(argv: list[str] | None = None) -> int:
                 "status": "draft", "posts": posts, "image": None, "alt_text": ""}, indent=2, ensure_ascii=False),
                 encoding="utf-8")
         return 0
-    if args.kind == "alert":
-        swings = notable_swings(compare_directories(args.runs_dir))
-        if not swings:
-            print("No notable swing since the last measurement: no alert drafted.")
-            return 0
-        posts = build_alert(swings, platform=args.platform, report_url=args.report_url)
+    if args.kind in ("alert", "hook"):
+        if args.kind == "alert":
+            swings = notable_swings(compare_directories(args.runs_dir))
+            if not swings:
+                print("No notable swing since the last measurement: no alert drafted.")
+                return 0
+            posts = build_alert(swings, platform=args.platform, report_url=args.report_url)
+        else:
+            posts = build_hook(date, reports, platform=args.platform, report_url=args.report_url)
         markdown = render_markdown(date, args.platform, posts, "", None)
         print(markdown)
         if not args.dry_run:
-            out_dir = Path(args.out) / f"{date}-alert"
+            out_dir = Path(args.out) / f"{date}-{args.kind}"
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / f"{args.platform}.md").write_text(markdown, encoding="utf-8")
             (out_dir / f"{args.platform}.json").write_text(json.dumps({

@@ -248,3 +248,16 @@ def test_alert_cli_writes_its_own_folder_only_when_there_is_a_swing(tmp_path):
     assert main([str(runs), "--kind", "alert", "--out", str(tmp_path / "d")]) == 0
     saved = json.loads((tmp_path / "d" / "2026-10-12-alert" / "bluesky.json").read_text(encoding="utf-8"))
     assert saved["status"] == "draft" and "from 40" in saved["posts"][0]
+
+
+def test_hook_names_only_the_most_tracked_outlet_and_is_a_draft(tmp_path):
+    reports = [report("News A", 9), report("News B", 4), report("News C", 0)]
+    (post,) = posts_module.build_hook("2026-10-11", reports, platform="bluesky", report_url="https://x.test/")
+    assert post.startswith("News A: 9 third-party tracking services") and "News B" not in post
+    assert len(post) <= LIMITS["bluesky"] and "@" not in post and "Automated post." in post
+    folder = tmp_path / "runs" / "2026-10-11"
+    folder.mkdir(parents=True)
+    (folder / "a.json").write_text(json.dumps(reports[0]), encoding="utf-8")
+    assert main([str(tmp_path / "runs"), "--kind", "hook", "--out", str(tmp_path / "d")]) == 0
+    saved = json.loads((tmp_path / "d" / "2026-10-11-hook" / "bluesky.json").read_text(encoding="utf-8"))
+    assert saved["status"] == "draft" and saved["image"] is None
