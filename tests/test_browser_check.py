@@ -58,6 +58,15 @@ def test_page_has_the_selector_and_open_close_all_and_wraps_each_group():
     assert html.count("<div") == html.count("</div>")
 
 
+def test_glossary_and_links_from_other_pages():
+    templates = ROOT / "site_src" / "templates"
+    html = (templates / "browser_check.html").read_text(encoding="utf-8")
+    for term in ("Browser fingerprint", "Canvas", "WebGL and WebGPU", "WebRTC", "STUN server", "TLS", "Hash"):
+        assert f"<dt>{term}</dt>" in html, term
+    for page in ("protect.html", "extension.html", "index.html"):
+        assert "browser-check.html" in (templates / page).read_text(encoding="utf-8"), page
+
+
 def test_reading_waits_for_a_button():
     app = _code(ASSETS / "app.js")
     assert "addEventListener('click', onRead)" in app
