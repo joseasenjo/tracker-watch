@@ -51,6 +51,13 @@ def test_template_loads_only_its_own_script_and_names_no_third_party_resource():
     assert not re.findall(r"<(?:script|img|link|iframe)[^>]+(?:src|href)=\"https?://", html)
 
 
+def test_page_has_the_selector_and_the_two_views_and_wraps_each_group():
+    html = (ROOT / "site_src" / "templates" / "browser_check.html").read_text(encoding="utf-8")
+    for needle in ("bc-select", "bc-view-simple", "bc-view-detailed", "bc-groups", 'class="bc-group"'):
+        assert needle in html, needle
+    assert html.count("<div") == html.count("</div>")
+
+
 def test_reading_waits_for_a_button():
     app = _code(ASSETS / "app.js")
     assert "addEventListener('click', onRead)" in app
@@ -77,3 +84,11 @@ def test_javascript_unit_tests_pass():
     done = subprocess.run(["node", "--test", "tests/browser_check/util.test.js"], cwd=ROOT, capture_output=True,
                           text=True, timeout=120)
     assert done.returncode == 0, done.stdout + done.stderr
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="Node is not installed")
+@pytest.mark.parametrize("path", sorted(ASSETS.glob("*.js")), ids=lambda p: p.name)
+def test_every_module_is_valid_javascript(path):
+    done = subprocess.run(["node", "--input-type=module", "--check"], input=path.read_bytes(), capture_output=True,
+                          timeout=60)
+    assert done.returncode == 0, done.stderr.decode("utf-8", "replace")

@@ -156,3 +156,11 @@ test('a report can be read back and compared, with multi-line values kept on one
   assert.equal(diff.same, 1);
   assert.deepEqual(diff.different.map((r) => r.title).sort(), ['Combined code', 'Platform']);
 });
+
+import { timezoneExample } from '../../site_src/assets/browser-check/util.js';
+
+test('timezoneExample puts the local clock next to universal time and states the difference', () => {
+  const text = timezoneExample(new Date(Date.UTC(2026, 0, 15, 12, 0)), 'UTC');
+  assert.match(text, /Your clock now: 12:00\. Universal time: 12:00\./);
+  assert.match(text, /Difference: [+-]\d+(:\d\d)? hours\./);
+});

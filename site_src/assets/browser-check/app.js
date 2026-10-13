@@ -6,7 +6,7 @@ import { BY_ID, CATALOG, GROUPS, WEIGHTS } from './catalog.js';
 import { runConnectionTest } from './connection-test.js';
 import { COLLECTORS } from './collectors.js';
 import { runTrackerTest, VERDICT_TEXT } from './tracker-test.js';
-import { combinedCode, compareReports, plural, reportText, shorten } from './util.js';
+import { combinedCode, compareReports, plural, reportText, shorten, timezoneExample } from './util.js';
 
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -20,25 +20,28 @@ function el(tag, attrs = {}, children = []) {
 
 const $ = (id) => document.getElementById(id);
 
+// Worked examples shown only in the detailed view, for the details where seeing the numbers helps.
+const EXTRAS = { timezone: () => timezoneExample() };
+
 function entryNode(result) {
   const meta = BY_ID[result.id];
   const unavailable = /^Not available|^Hidden by/.test(result.value);
-  const summary = el('summary', {}, [
+  const head = el('div', { class: 'bc-head' }, [
     el('span', { class: 'bc-title', text: meta.title }),
     el('span', { class: 'bc-value', text: result.value.split('\n')[0] }),
     el('span', { class: `pill ${unavailable ? 'ok' : meta.weight === 'high' ? 'warn' : ''}`, text: WEIGHTS[meta.weight] }),
   ]);
-  const body = el('div', { class: 'bc-body' }, [
+  const simple = el('p', { class: 'bc-what', text: meta.what });
+  const detail = el('div', { class: 'bc-detail' }, [
     el('h4', { text: 'What a script reads' }),
     el('pre', { class: 'bc-raw', text: result.value }),
-    el('h4', { text: 'What is this?' }),
-    el('p', { text: meta.what }),
+    EXTRAS[meta.id] ? el('p', { class: 'bc-extra', text: EXTRAS[meta.id]() }) : null,
     el('h4', { text: 'How can it be used to recognise you?' }),
     el('p', { text: meta.how }),
     el('h4', { text: 'What can I do about it?' }),
     el('p', { text: ACTIONS[meta.id] }),
   ]);
-  return el('details', { class: 'bc-entry', id: `bc-${meta.id}` }, [summary, body]);
+  return el('article', { class: 'bc-entry', id: `bc-${meta.id}`, 'data-id': meta.id }, [head, simple, detail]);
 }
 
 function tile(label, value, note) {
@@ -88,6 +91,7 @@ async function render(results) {
     $(`bc-group-${group.id}`).replaceChildren(...results.filter((r) => BY_ID[r.id].group === group.id).map(entryNode));
   }
   $('bc-results').hidden = false;
+  applySelection();
   return code;
 }
 
@@ -215,3 +219,32 @@ $('bc-conn').addEventListener('click', async () => {
   else if (rtc.hiddenLocal) lines.push(el('p', { class: 'small', text: 'Your local network address is hidden behind a random name, which is what current browsers do.' }));
   out.replaceChildren(el('div', { class: 'bc-tiles' }, tiles), ...lines);
 });
+
+// View (simple or detailed) and the "select a characteristic" list.
+function setView(detailed) {
+  $('bc-groups').classList.toggle('bc-simple', !detailed);
+  $('bc-view-simple').setAttribute('aria-pressed', String(!detailed));
+  $('bc-view-detailed').setAttribute('aria-pressed', String(detailed));
+}
+
+function applySelection() {
+  const chosen = $('bc-select').value;
+  for (const entry of document.querySelectorAll('.bc-entry')) entry.hidden = chosen !== 'all' && entry.dataset.id !== chosen;
+  for (const wrap of document.querySelectorAll('.bc-group')) wrap.hidden = !wrap.querySelector('.bc-entry:not([hidden])');
+}
+
+function fillSelect() {
+  const select = $('bc-select');
+  select.replaceChildren(el('option', { value: 'all', text: 'All characteristics' }));
+  for (const group of GROUPS) {
+    const box = el('optgroup', { label: group.title });
+    for (const meta of CATALOG.filter((m) => m.group === group.id)) box.appendChild(el('option', { value: meta.id, text: meta.title }));
+    select.appendChild(box);
+  }
+}
+
+fillSelect();
+setView(false);
+$('bc-view-simple').addEventListener('click', () => setView(false));
+$('bc-view-detailed').addEventListener('click', () => setView(true));
+$('bc-select').addEventListener('change', applySelection);

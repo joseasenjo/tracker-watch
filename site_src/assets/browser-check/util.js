@@ -66,6 +66,17 @@ export async function combinedCode(results, hash = hashText) {
   return hash(stable.join('\n'));
 }
 
+// A worked example for the time zone: your clock next to universal time, so the offset a script reads is visible.
+export function timezoneExample(now = new Date(), zone = undefined) {
+  const clock = (timeZone) => new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone }).format(now);
+  const offset = -now.getTimezoneOffset();
+  const sign = offset >= 0 ? '+' : '-';
+  const hours = Math.floor(Math.abs(offset) / 60);
+  const minutes = Math.abs(offset) % 60;
+  const text = `${sign}${hours}${minutes ? `:${String(minutes).padStart(2, '0')}` : ''}`;
+  return `Your clock now: ${clock(zone)}. Universal time: ${clock('UTC')}. Difference: ${text} hours.`;
+}
+
 export function plural(n, one, many) {
   return `${n} ${n === 1 ? one : many}`;
 }

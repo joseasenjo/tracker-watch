@@ -27,11 +27,23 @@
         <p>This is the short code a script could compute from all the stable details below. If two sites computed the same code, they could tell it was the same browser without using a cookie. It is not an identity: it only says that this combination of details is what a script sees right now. Clear your cookies and it stays the same, which is the point of the exercise.</p>
       </div>
 
+      <div class="bc-controls">
+        <div class="bc-toggle" role="group" aria-label="How much to show">
+          <button type="button" class="btn sec" id="bc-view-simple" aria-pressed="true">Simple view</button>
+          <button type="button" class="btn sec" id="bc-view-detailed" aria-pressed="false">Detailed view</button>
+        </div>
+        <label class="small" for="bc-select">Select a characteristic</label>
+        <select id="bc-select"></select>
+      </div>
+      <div id="bc-groups" class="bc-simple">
       {% for group in [('sent', 'What your browser tells every site it visits', 'These details travel with every request, before any script runs. Here we read them through the browser, which gives the same values.'), ('scripts', 'What a script on a page can find out', 'These need a script to run on the page. Scripts from advertising and analytics companies run on many sites, and some read these details.')] %}
+      <div class="bc-group">
       <h2>{{ group[1] }}</h2>
       <p>{{ group[2] }}</p>
       <div class="bc-list" id="bc-group-{{ group[0] }}"></div>
+      </div>
       {% endfor %}
+      </div>
 
     </div>
 

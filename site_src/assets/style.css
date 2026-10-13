@@ -176,14 +176,21 @@ dl.demo-facts dd { margin: 0; padding: 8px 0; border-top: 1px solid var(--line);
 .bc-tile-value { font-size: 1.4rem; font-weight: 700; margin: 2px 0 4px; }
 .bc-tile-note { font-size: .82rem; color: var(--soft); margin: 0; }
 .bc-code code { font-size: 1rem; word-break: break-all; }
-.bc-list details.bc-entry { padding: 2px 14px; }
-.bc-list summary { display: grid; grid-template-columns: minmax(130px, 1fr) minmax(0, 2fr) auto; gap: 10px; align-items: center; font-weight: 400; }
+.bc-entry { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
+.bc-head { display: grid; grid-template-columns: minmax(130px, 1fr) minmax(0, 2fr) auto; gap: 10px; align-items: center; }
 .bc-title { font-weight: 600; }
 .bc-value { color: var(--soft); font-size: .88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bc-body h4 { margin: 10px 0 2px; font-size: .9rem; }
-.bc-body p { margin: 0 0 8px; }
+.bc-detail h4 { margin: 10px 0 2px; font-size: .9rem; }
+.bc-detail p, .bc-what { margin: 0 0 8px; }
 .bc-raw { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: .82rem; white-space: pre-wrap; word-break: break-word; margin: 0 0 8px; }
-@media (max-width: 640px) { .bc-list summary { grid-template-columns: 1fr; gap: 2px; } .bc-value { white-space: normal; } }
+@media (max-width: 640px) { .bc-head { grid-template-columns: 1fr; gap: 2px; } .bc-value { white-space: normal; } }
 
 .bc-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0; }
 .bc-paste { width: 100%; font: .82rem/1.4 ui-monospace, Consolas, monospace; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.bc-simple .bc-detail { display: none; }
+.bc-what { color: var(--soft); font-size: .92rem; margin: 6px 0 0; }
+.bc-extra { background: var(--hero-1); border-radius: 8px; padding: 6px 10px; font-size: .88rem; }
+.bc-controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin: 16px 0 6px; }
+.bc-toggle { display: inline-flex; gap: 6px; }
+.bc-toggle .btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); }
+#bc-select { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); max-width: 100%; }
