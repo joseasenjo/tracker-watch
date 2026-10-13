@@ -11,10 +11,17 @@
 {% endblock %}
 {% block content %}
 <div class="hero">
-  <div class="wrap">
-    <span class="kicker">Last scan: {{ scan_finished }} · from {{ vantage }}</span>
-    <h1>Which news sites contact the most tracking services before you click anything?</h1>
-    <p class="lead">Each page is loaded with no clicks and no consent given, three times, and we count the third-party tracking services it contacts. These are counts, not verdicts: read the <a href="{{ root }}method.html">method and its limits</a> before drawing conclusions.</p>
+  <div class="wrap hero-grid">
+    <div class="hero-main">
+      <span class="kicker">Last scan: {{ scan_finished }} · from {{ vantage }}</span>
+      <h1>Which news sites contact the most tracking services before you click anything?</h1>
+      <p class="lead">Each page is loaded with no clicks and no consent given, three times, and we count the third-party tracking services it contacts. These are counts, not verdicts: read the <a href="{{ root }}method.html">method and its limits</a> before drawing conclusions.</p>
+    </div>
+    <a class="hero-shot" href="{{ root }}browser-check.html">
+      <img src="{{ root }}assets/browser-check-preview.png" width="960" height="502" alt="Example reading of the Browser check page: four summary tiles (details a script could read, signs of fingerprint defences, ad filter in the browser, privacy signals), a combined code, and the first two details with their labels.">
+      <span class="hero-shot-cta">Analyse your browser <span aria-hidden="true">&rarr;</span></span>
+      <span class="hero-shot-note">What can any web page read about your browser? Free, nothing is sent or stored.</span>
+    </a>
     <div class="counters">
       <div class="counter"><b>{{ measured|length }}</b><span>sites measured</span></div>
       <div class="counter"><b>{{ with_tracking }}</b><span>contacted at least one tracking service</span></div>

@@ -174,3 +174,20 @@ def test_nothing_overflows_on_a_phone_sized_screen(browser, served):
     visit.page.click("#bc-expand")
     assert visit.page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1")
     assert visit.errors == []
+
+
+def test_home_page_shows_the_preview_beside_the_title_on_desktop_and_below_the_text_on_a_phone(browser, served):
+    visit = Visit(browser, served)
+    visit.page.goto(served + "/site/index.html")
+    visit.page.set_viewport_size({"width": 1280, "height": 800})
+    box = lambda sel: visit.page.locator(sel).bounding_box()  # noqa: E731
+    title, shot = box(".hero h1"), box(".hero-shot")
+    assert shot["x"] > title["x"] + title["width"] - 5 and abs((shot["y"] + shot["height"] / 2) - (title["y"] + title["height"] / 2)) < 400
+    assert visit.page.evaluate("document.querySelector('.hero-shot img').naturalWidth") > 0
+    visit.page.set_viewport_size({"width": 375, "height": 812})
+    lead, shot = box(".hero .lead"), box(".hero-shot")
+    assert shot["y"] >= lead["y"] + lead["height"] - 1 and shot["width"] <= 375
+    assert visit.page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1")
+    visit.page.click(".hero-shot")
+    visit.page.wait_for_url("**/browser-check.html")
+    assert visit.errors == []

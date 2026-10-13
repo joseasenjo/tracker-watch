@@ -67,6 +67,18 @@ def test_glossary_and_links_from_other_pages():
         assert "browser-check.html" in (templates / page).read_text(encoding="utf-8"), page
 
 
+def test_home_hero_links_to_the_page_with_a_correctly_sized_preview():
+    import struct
+    home = (ROOT / "site_src" / "templates" / "index.html").read_text(encoding="utf-8")
+    assert 'class="hero-shot"' in home and "browser-check.html" in home and "Analyse your browser" in home
+    image = ROOT / "site_src" / "assets" / "browser-check-preview.png"
+    data = image.read_bytes()
+    width, height = struct.unpack(">II", data[16:24])
+    assert f'width="{width}" height="{height}"' in home
+    assert len(data) < 150_000
+    assert re.search(r'<img[^>]+alt="[^"]{40,}"', home)
+
+
 def test_reading_waits_for_a_button():
     app = _code(ASSETS / "app.js")
     assert "addEventListener('click', onRead)" in app
