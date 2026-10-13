@@ -27,7 +27,7 @@ jobs:
         env:
           FOLDER: ${{ github.event.inputs.folder }}
         run: |
-          echo "$FOLDER" | grep -Eq '^data/drafts/[0-9]{4}-[0-9]{2}-[0-9]{2}(-midweek|-alert|-hook)?$' || { echo "bad folder name"; exit 1; }
+          echo "$FOLDER" | grep -Eq '^data/drafts/[0-9]{4}-[0-9]{2}-[0-9]{2}(-midweek|-alert|-hook|-announce)?$' || { echo "bad folder name"; exit 1; }
 
       - uses: actions/checkout@v4
         with:
