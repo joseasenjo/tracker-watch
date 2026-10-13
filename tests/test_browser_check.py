@@ -51,9 +51,9 @@ def test_template_loads_only_its_own_script_and_names_no_third_party_resource():
     assert not re.findall(r"<(?:script|img|link|iframe)[^>]+(?:src|href)=\"https?://", html)
 
 
-def test_page_has_the_selector_and_the_two_views_and_wraps_each_group():
+def test_page_has_the_selector_and_open_close_all_and_wraps_each_group():
     html = (ROOT / "site_src" / "templates" / "browser_check.html").read_text(encoding="utf-8")
-    for needle in ("bc-select", "bc-view-simple", "bc-view-detailed", "bc-groups", 'class="bc-group"'):
+    for needle in ("bc-select", "bc-expand", "bc-collapse", "bc-groups", 'class="bc-group"'):
         assert needle in html, needle
     assert html.count("<div") == html.count("</div>")
 

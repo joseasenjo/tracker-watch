@@ -26,22 +26,23 @@ const EXTRAS = { timezone: () => timezoneExample() };
 function entryNode(result) {
   const meta = BY_ID[result.id];
   const unavailable = /^Not available|^Hidden by/.test(result.value);
-  const head = el('div', { class: 'bc-head' }, [
+  const summary = el('summary', { class: 'bc-head' }, [
     el('span', { class: 'bc-title', text: meta.title }),
-    el('span', { class: 'bc-value', text: result.value.split('\n')[0] }),
+    el('span', { class: 'bc-value', text: result.value.split(String.fromCharCode(10))[0] }),
     el('span', { class: `pill ${unavailable ? 'ok' : meta.weight === 'high' ? 'warn' : ''}`, text: WEIGHTS[meta.weight] }),
   ]);
-  const simple = el('p', { class: 'bc-what', text: meta.what });
-  const detail = el('div', { class: 'bc-detail' }, [
+  const body = el('div', { class: 'bc-detail' }, [
     el('h4', { text: 'What a script reads' }),
     el('pre', { class: 'bc-raw', text: result.value }),
     EXTRAS[meta.id] ? el('p', { class: 'bc-extra', text: EXTRAS[meta.id]() }) : null,
+    el('h4', { text: 'What is this?' }),
+    el('p', { text: meta.what }),
     el('h4', { text: 'How can it be used to recognise you?' }),
     el('p', { text: meta.how }),
     el('h4', { text: 'What can I do about it?' }),
     el('p', { text: ACTIONS[meta.id] }),
   ]);
-  return el('article', { class: 'bc-entry', id: `bc-${meta.id}`, 'data-id': meta.id }, [head, simple, detail]);
+  return el('details', { class: 'bc-entry', id: `bc-${meta.id}`, 'data-id': meta.id }, [summary, body]);
 }
 
 function tile(label, value, note) {
@@ -220,11 +221,9 @@ $('bc-conn').addEventListener('click', async () => {
   out.replaceChildren(el('div', { class: 'bc-tiles' }, tiles), ...lines);
 });
 
-// View (simple or detailed) and the "select a characteristic" list.
-function setView(detailed) {
-  $('bc-groups').classList.toggle('bc-simple', !detailed);
-  $('bc-view-simple').setAttribute('aria-pressed', String(!detailed));
-  $('bc-view-detailed').setAttribute('aria-pressed', String(detailed));
+// Open or close every line at once. Nothing is hidden by either: it only saves clicking.
+function setOpen(open) {
+  for (const entry of document.querySelectorAll('.bc-entry')) entry.open = open;
 }
 
 function applySelection() {
@@ -244,7 +243,6 @@ function fillSelect() {
 }
 
 fillSelect();
-setView(false);
-$('bc-view-simple').addEventListener('click', () => setView(false));
-$('bc-view-detailed').addEventListener('click', () => setView(true));
+$('bc-collapse').addEventListener('click', () => setOpen(false));
+$('bc-expand').addEventListener('click', () => setOpen(true));
 $('bc-select').addEventListener('change', applySelection);
