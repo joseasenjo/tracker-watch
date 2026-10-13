@@ -1,4 +1,4 @@
-"""The Browser check page: built into the site, linked from the menu, and never touching the network."""
+"""The Browser check page: built into the site, linked from the menu, and touching the network only in its opt-in test."""
 import re
 import shutil
 import subprocess
@@ -8,27 +8,56 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "site_src" / "assets" / "browser-check"
+NETWORK_WORDS = re.compile(r"\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource)\b")
+STORAGE_WORDS = re.compile(r"\b(localStorage\.setItem|sessionStorage\.setItem|document\.cookie|indexedDB\.open)\b")
+ONLY_THE_TEST_MAY_ASK = ("tracker-test.js", "app.js")
 
 
-def test_modules_make_no_network_request_and_store_nothing():
-    forbidden = re.compile(r"\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage\.setItem|"
-                           r"sessionStorage\.setItem|document\.cookie|indexedDB\.open)\b|https?://")
+def _code(path):
+    """The module without its comments (they may mention these words)."""
+    return re.sub(r"//[^\n]*", "", path.read_text(encoding="utf-8"))
+
+
+def test_nothing_stores_anything_and_only_the_opt_in_test_can_ask_for_the_network():
     for path in ASSETS.glob("*.js"):
-        text = path.read_text(encoding="utf-8")
-        text = re.sub(r"//[^\n]*", "", text)  # comments may mention these words
-        assert not forbidden.search(text), path.name
+        text = _code(path)
+        assert not STORAGE_WORDS.search(text), path.name
+        if path.name not in ONLY_THE_TEST_MAY_ASK:
+            assert not NETWORK_WORDS.search(text), path.name
+            assert "https://" not in text, path.name
+
+
+def test_app_asks_for_the_network_only_inside_the_test_button_handler():
+    text = _code(ASSETS / "app.js")
+    assert text.count("fetch(") == 1
+    assert text.index("fetch(") > text.index("async function onTest")
+
+
+def test_the_template_lists_every_server_the_opt_in_test_contacts():
+    html = (ROOT / "site_src" / "templates" / "browser_check.html").read_text(encoding="utf-8")
+    hosts = re.findall(r"host: '([^']+)'", (ASSETS / "tracker-test.js").read_text(encoding="utf-8"))
+    assert len(hosts) == 7
+    for host in hosts:
+        assert host in html, host
 
 
 def test_template_loads_only_its_own_script_and_names_no_third_party_resource():
     html = (ROOT / "site_src" / "templates" / "browser_check.html").read_text(encoding="utf-8")
     assert "assets/browser-check/app.js" in html
-    for tag in re.findall(r"<(?:script|img|link|iframe)[^>]+(?:src|href)=\"(https?://[^\"]+)\"", html):
-        raise AssertionError(f"external resource: {tag}")
+    assert not re.findall(r"<(?:script|img|link|iframe)[^>]+(?:src|href)=\"https?://", html)
 
 
-def test_menu_and_footer_link_to_the_page():
+def test_reading_waits_for_a_button():
+    app = _code(ASSETS / "app.js")
+    assert "addEventListener('click', onRead)" in app
+    assert not re.search(r"^run\(\)|^onRead\(\)|^readAll\(\)", app, re.M)
+
+
+def test_menu_footer_and_privacy_page_mention_the_page_and_its_test():
     base = (ROOT / "site_src" / "templates" / "base.html").read_text(encoding="utf-8")
-    assert base.count("browser-check.html") >= 2 and "'browser-check'" in base
+    assert base.count("browser-check.html") >= 3 and "'browser-check'" in base
+    privacy = (ROOT / "site_src" / "templates" / "privacy.html").read_text(encoding="utf-8")
+    assert "tracker test" in privacy
 
 
 def _node_major():
@@ -41,5 +70,6 @@ def _node_major():
 
 @pytest.mark.skipif(_node_major() < 22, reason="Node 22 or newer is needed to run the ES-module tests")
 def test_javascript_unit_tests_pass():
-    done = subprocess.run(["node", "--test", "tests/browser_check/util.test.js"], cwd=ROOT, capture_output=True, text=True, timeout=120)
+    done = subprocess.run(["node", "--test", "tests/browser_check/util.test.js"], cwd=ROOT, capture_output=True,
+                          text=True, timeout=120)
     assert done.returncode == 0, done.stdout + done.stderr

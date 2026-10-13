@@ -172,6 +172,31 @@ export const COLLECTORS = {
   'cpu-class': safe(async () => ({ value: navigator.cpuClass || NA })),
   cores: safe(async () => ({ value: String(navigator.hardwareConcurrency) })),
   memory: safe(async () => ({ value: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : NA })),
+  'client-hints': safe(async () => {
+    const hints = navigator.userAgentData;
+    if (!hints || !hints.getHighEntropyValues) return { value: NA };
+    const high = await hints.getHighEntropyValues(['architecture', 'bitness', 'model', 'platformVersion', 'uaFullVersion']);
+    const parts = Object.entries(high).filter(([key, value]) => key !== 'brands' && key !== 'mobile' && value !== '' && value !== undefined)
+      .map(([key, value]) => `${key}: ${Array.isArray(value) ? JSON.stringify(value) : value}`);
+    return { value: parts.join('; ') || NA };
+  }),
+  preferences: safe(async () => {
+    const asks = [['colour scheme', ['dark', 'light'], 'prefers-color-scheme'], ['motion', ['reduce'], 'prefers-reduced-motion'],
+      ['contrast', ['more', 'less'], 'prefers-contrast'], ['colour gamut', ['rec2020', 'p3', 'srgb'], 'color-gamut'],
+      ['pointer', ['fine', 'coarse', 'none'], 'pointer'], ['hover', ['hover', 'none'], 'hover']];
+    const parts = asks.map(([label, options, query]) => {
+      const hit = options.find((o) => window.matchMedia(`(${query}: ${o})`).matches);
+      return `${label}: ${hit || 'default'}`;
+    });
+    if (window.matchMedia('(forced-colors: active)').matches) parts.push('forced colours: on');
+    if (window.matchMedia('(dynamic-range: high)').matches) parts.push('high dynamic range: yes');
+    return { value: parts.join('; ') };
+  }),
+  connection: safe(async () => {
+    const c = navigator.connection;
+    if (!c) return { value: NA };
+    return { value: `${c.effectiveType || 'unknown'}, about ${c.downlink ?? '?'} Mbit/s, data saver: ${c.saveData ? 'on' : 'off'}`, stable: false };
+  }),
   'ad-filter': safe(async () => {
     const bait = document.createElement('div');
     bait.className = 'adsbox ad-banner ad_unit textads banner-ads sponsored-ad';

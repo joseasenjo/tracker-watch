@@ -56,3 +56,49 @@ test('every catalog entry is complete and belongs to a known group and weight', 
     ids.add(entry.id);
   }
 });
+
+import { TARGETS, probe, runTrackerTest, verdict } from '../../site_src/assets/browser-check/tracker-test.js';
+
+const blockingFetch = (blocked) => async (url) => {
+  if ([...blocked].some((host) => url.includes(host))) throw new TypeError('Failed to fetch');
+  return {};
+};
+
+test('probe says reachable, blocked or timeout and always uses no cookies and no referrer', async () => {
+  let seen;
+  assert.equal(await probe('https://a.test/x', async (url, init) => { seen = init; return {}; }), 'reachable');
+  assert.equal(seen.credentials, 'omit');
+  assert.equal(seen.referrerPolicy, 'no-referrer');
+  assert.equal(await probe('https://a.test/x', async () => { throw new TypeError('x'); }), 'blocked');
+  const abort = Object.assign(new Error('x'), { name: 'AbortError' });
+  assert.equal(await probe('https://a.test/x', async () => { throw abort; }), 'timeout');
+});
+
+test('verdict is yes only when everything that answered was blocked, and ignores timeouts', () => {
+  assert.equal(verdict([{ state: 'blocked' }, { state: 'blocked' }]), 'yes');
+  assert.equal(verdict([{ state: 'reachable' }, { state: 'reachable' }]), 'no');
+  assert.equal(verdict([{ state: 'blocked' }, { state: 'reachable' }]), 'partly');
+  assert.equal(verdict([{ state: 'blocked' }, { state: 'timeout' }]), 'yes');
+  assert.equal(verdict([{ state: 'timeout' }]), 'none');
+});
+
+test('the test concludes nothing when the visitor cannot even reach this site', async () => {
+  const result = await runTrackerTest({ fetchFn: async () => { throw new TypeError('offline'); }, controlUrl: 'https://self.test/' });
+  assert.equal(result.ok, false);
+});
+
+test('the test reports ads and analytics separately', async () => {
+  const adHosts = TARGETS.filter((t) => t.kind === 'ads').map((t) => t.host);
+  const result = await runTrackerTest({ fetchFn: blockingFetch(adHosts), controlUrl: 'https://self.test/' });
+  assert.equal(result.ok, true);
+  assert.equal(result.ads, 'yes');
+  assert.equal(result.analytics, 'no');
+});
+
+test('every target is an https address on the host it names, with a known kind', () => {
+  assert.equal(TARGETS.length, 7);
+  for (const t of TARGETS) {
+    assert.ok(t.url.startsWith(`https://${t.host}/`), t.id);
+    assert.ok(['ads', 'analytics'].includes(t.kind), t.id);
+  }
+});

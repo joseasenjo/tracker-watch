@@ -8,10 +8,15 @@
     <h1>Browser check</h1>
     <p class="sub">Every time you open a web page, your browser answers a number of questions about itself. This page asks them the way a tracking script would, shows you the answers and explains what each one is for.</p>
 
-    <div class="note"><b>Nothing leaves this page.</b> The check runs in your browser. It makes no request to any server, sets no cookie and stores nothing, not even in your browser. Close the tab and it is gone.</div>
+    <div class="note"><b>Nothing happens until you press a button.</b> The first button reads your browser inside this page: it makes no request to any server, sets no cookie and stores nothing, not even in your browser. Close the tab and it is gone. The second test, further down, is optional and does contact other servers, as it explains before you press it.</div>
 
     <noscript><p class="note">This page needs JavaScript to read your browser, just as a tracker would. The explanations below still apply.</p></noscript>
-    <p id="bc-status" class="note" role="status">Reading your browser…</p>
+    <p id="bc-status" class="note" role="status" hidden></p>
+
+    <div id="bc-intro-actions" class="bc-actions">
+      <button type="button" class="btn" id="bc-read">Read my browser</button>
+      <span class="small">Takes about a second.</span>
+    </div>
 
     <div id="bc-results" hidden>
       <h2>What this shows about your browser</h2>
@@ -28,8 +33,23 @@
       <div class="bc-list" id="bc-group-{{ group[0] }}"></div>
       {% endfor %}
 
-      <p><button type="button" class="btn sec" id="bc-copy">Copy this report as text</button></p>
     </div>
+
+    <div id="bc-after" hidden>
+      <p class="bc-actions"><button type="button" class="btn sec" id="bc-again">Read again and compare</button>
+        <button type="button" class="btn sec" id="bc-copy">Copy this report as text</button></p>
+      <p id="bc-compare" class="small" role="status"></p>
+    </div>
+
+    <h2>Are trackers blocked? An optional test</h2>
+    <p>The reading above looks at your browser. This test looks at your protection: it asks for a well-known script from seven advertising and analytics servers and sees whether your browser lets the request through. It is the only part of this site that contacts other companies, so it never runs by itself.</p>
+    <details>
+      <summary>What exactly is contacted, and what do they learn?</summary>
+      <p>When you press the button, your browser makes seven requests, one to each of these servers: pagead2.googlesyndication.com, securepubads.g.doubleclick.net, static.ads-twitter.com, bat.bing.com, www.google-analytics.com, connect.facebook.net and sb.scorecardresearch.com. Each one receives what any request carries: your IP address and your browser's user agent. We send no cookies and no referring page. The result stays in this page: it is not stored, and we never receive it. One extra request goes to this site itself, to check that your connection works.</p>
+      <p>A request that never leaves your browser (blocked by an extension, a filter on your network or a browser setting) counts as blocked. A request that gets any answer counts as reached.</p>
+    </details>
+    <p class="bc-actions"><button type="button" class="btn" id="bc-test">Run the tracker test</button></p>
+    <div id="bc-test-out" role="status"></div>
 
     <h2>How to read the report</h2>
     <p>Each line is one detail, in the form a script receives it. Open a line to see what it is and how it can be used. The label on the right says how much that <i>kind</i> of detail usually tells apart in published studies: it is a general guide to the kind of detail, not a measurement of your browser.</p>
@@ -45,7 +65,7 @@
     <h2>What this page cannot tell you</h2>
     <ul>
       <li><b>Whether anyone is tracking you.</b> A detail being readable does not mean a site reads it, and a unique combination does not mean you are being followed. It shows what is possible.</li>
-      <li><b>Whether trackers are blocked on the network.</b> Testing that means asking advertising servers for something, and this site never contacts third parties. The one filter check here only sees whether the browser hides page elements.</li>
+      <li><b>Whether every tracker is blocked.</b> The optional test asks seven well-known servers. Your protection may treat others differently, so a clean result is a sample, not a guarantee.</li>
       <li><b>What your browser would do on other sites.</b> Your extensions and settings can change by site.</li>
     </ul>
 
