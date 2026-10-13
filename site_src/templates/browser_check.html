@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Browser check{% endblock %}
+{% block description %}See what a script on any web page can read about your browser, with a plain explanation of each detail. Everything stays in your browser: nothing is sent or stored.{% endblock %}
+{% block head %}<script type="module" src="{{ root }}assets/browser-check/app.js?v={{ asset_v }}"></script>{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Browser check</h1>
+    <p class="sub">Every time you open a web page, your browser answers a number of questions about itself. This page asks them the way a tracking script would, shows you the answers and explains what each one is for.</p>
+
+    <div class="note"><b>Nothing leaves this page.</b> The check runs in your browser. It makes no request to any server, sets no cookie and stores nothing, not even in your browser. Close the tab and it is gone.</div>
+
+    <noscript><p class="note">This page needs JavaScript to read your browser, just as a tracker would. The explanations below still apply.</p></noscript>
+    <p id="bc-status" class="note" role="status">Reading your browser…</p>
+
+    <div id="bc-results" hidden>
+      <h2>What this shows about your browser</h2>
+      <div class="bc-tiles" id="bc-tiles"></div>
+
+      <div class="card bc-code" id="bc-code-box" hidden>
+        <h3>Your combined code: <code id="bc-code"></code></h3>
+        <p>This is the short code a script could compute from all the stable details below. If two sites computed the same code, they could tell it was the same browser without using a cookie. It is not an identity: it only says that this combination of details is what a script sees right now. Clear your cookies and it stays the same, which is the point of the exercise.</p>
+      </div>
+
+      {% for group in [('sent', 'What your browser tells every site it visits', 'These details travel with every request, before any script runs. Here we read them through the browser, which gives the same values.'), ('scripts', 'What a script on a page can find out', 'These need a script to run on the page. Scripts from advertising and analytics companies run on many sites, and some read these details.')] %}
+      <h2>{{ group[1] }}</h2>
+      <p>{{ group[2] }}</p>
+      <div class="bc-list" id="bc-group-{{ group[0] }}"></div>
+      {% endfor %}
+
+      <p><button type="button" class="btn sec" id="bc-copy">Copy this report as text</button></p>
+    </div>
+
+    <h2>How to read the report</h2>
+    <p>Each line is one detail, in the form a script receives it. Open a line to see what it is and how it can be used. The label on the right says how much that <i>kind</i> of detail usually tells apart in published studies: it is a general guide to the kind of detail, not a measurement of your browser.</p>
+
+    <h2>What is browser fingerprinting?</h2>
+    <p>A cookie is a label a site puts on your browser to recognise it later. You can see and delete cookies, and blocking tools go after them first. A fingerprint is different: nothing is stored on your computer. A script reads many small details that are already there (your screen, fonts, graphics hardware, language, time zone) and combines them. The combination is often different enough from other people's to recognise the same browser again, on the same site or on another one.</p>
+    <p>That is why deleting cookies does not help against it, and why it matters to know which details your browser gives away.</p>
+
+    <h2>Why there is no “unique among X browsers” number here</h2>
+    <p>Other tools tell you how rare your combination is, in “bits of information”. A bit is the smallest unit of information: one yes-or-no answer. Every detail that splits the crowd in two adds about one bit, so around 33 bits are enough to single out one person among all of humanity. To say how many bits <i>your</i> details are worth, a tool must have recorded the details of a very large number of other visitors. This site records nothing about anyone, so it has no such population and will not invent a figure.</p>
+    <p>If you want that comparison, tools run by organisations that collect it for research exist, for example <a href="https://coveryourtracks.eff.org/" rel="noopener">Cover Your Tracks</a> from the Electronic Frontier Foundation, which this page is inspired by. Their sample comes from people who chose to run the test, so read the figure as a guide, not a verdict.</p>
+
+    <h2>What this page cannot tell you</h2>
+    <ul>
+      <li><b>Whether anyone is tracking you.</b> A detail being readable does not mean a site reads it, and a unique combination does not mean you are being followed. It shows what is possible.</li>
+      <li><b>Whether trackers are blocked on the network.</b> Testing that means asking advertising servers for something, and this site never contacts third parties. The one filter check here only sees whether the browser hides page elements.</li>
+      <li><b>What your browser would do on other sites.</b> Your extensions and settings can change by site.</li>
+    </ul>
+
+    <h2>What you can do with the result</h2>
+    <ul>
+      <li>Read <a href="{{ root }}protect.html">how to browse with less tracking</a>: it covers blocking trackers, the browsers with built-in protection against fingerprinting, and their limits.</li>
+      <li>Try <a href="{{ root }}extension.html">Tracker Watch Lens</a>, which shows which third parties a page contacts and lets you block them.</li>
+      <li>Look at the <a href="{{ root }}index.html">weekly measurement</a> of what news sites contact before you click anything. This page looks at your browser, and that one looks at the sites.</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

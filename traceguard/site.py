@@ -96,7 +96,8 @@ def _env() -> Environment:
     env.filters["span"] = span
     # Version tag for the assets: browsers keep an old style sheet or script unless the address changes.
     digest = hashlib.sha256()
-    for name in ("style.css", "site.js", "result.js"):
+    for name in ("style.css", "site.js", "result.js", *sorted(p.relative_to(SRC / "assets").as_posix()
+                                                              for p in (SRC / "assets" / "browser-check").glob("*.js"))):
         asset = SRC / "assets" / name
         if asset.exists():
             digest.update(asset.read_bytes())
@@ -567,6 +568,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("glossary.html", out / "glossary.html", page="glossary")
     render("filters.html", out / "filters.html", page="filters")
     render("protect.html", out / "protect.html", page="protect", guide_html=guide_html())
+    render("browser_check.html", out / "browser-check.html", page="browser-check")
     render("extension.html", out / "extension.html", page="extension", extension_version=extension_version())
     render("extension_privacy.html", out / "extension-privacy.html", page="extension", policy_html=md_html(POLICY))
     render("request.html", out / "request.html", page="request")
