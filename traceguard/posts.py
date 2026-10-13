@@ -21,6 +21,9 @@ VANTAGE_LABELS = {"github-actions-us": "GitHub servers in the US", "local-window
 USABLE_CONFIDENCE = ("high", "medium")
 SPAIN_GROUP = "ES"
 SPAIN_MAX_AGE_DAYS = 7  # a Spain measurement older than this (against the main one) is left out of the thread
+ROOT_TAGS = ("Automated post. #privacy #adtech #GDPR", "Automated post.", "")  # tried in this order, longest first
+ALERT_MIN_DELTA = 15  # a site's tracking services must change by at least this many ...
+ALERT_MIN_RATIO = 0.5  # ... and by at least this share of the larger of the two counts, to be worth an alert
 CHART_FILE = "chart.png"
 MAX_IMAGE_BYTES = 950_000  # Bluesky refuses images over about 1 MB
 MAX_ALT_CHARS = 1500  # Mastodon's default limit for an image description
@@ -62,15 +65,25 @@ def _vantage(reports: list[dict]) -> str:
     return VANTAGE_LABELS.get(raw, raw)
 
 
-def _headline(date: str, reports: list[dict], top: int) -> str:
+def _headline(date: str, reports: list[dict], top: int, tags: str = "") -> str:
     rows = ranking(reports)[:top]
     leaders = ", ".join(f"{r['name']} {r['tracking_services']}" for r in rows) or "none contacted any"
-    return (f"Weekly check ({date}): news sites and the third-party tracking services they contact before "
+    text = (f"Weekly check ({date}): news sites and the third-party tracking services they contact before "
             f"you click anything. {len(measured(reports))} of {len(reports)} sites measured, from "
             f"{_vantage(reports)}. Most: {leaders}. Thread below.")
+    return f"{text} {tags}" if tags else text
 
 
-def _changes(diffs: list[dict], limit: int) -> str:
+def _change_line(d: dict) -> str:
+    bits = []
+    if d["added_tracking_services"]:
+        bits.append("added " + ", ".join(s["service"] for s in d["added_tracking_services"][:2]))
+    if d["removed_tracking_services"]:
+        bits.append("dropped " + ", ".join(s["service"] for s in d["removed_tracking_services"][:2]))
+    return f"{d['site']}: {'; '.join(bits)}"
+
+
+def _changes(diffs: list[dict], limit: int, report_url: str | None = None) -> str:
     if not diffs:
         return "Changes since last week: this is the first measurement, so there is nothing to compare yet."
     notable = [d for d in diffs if d["comparable"] and d["notable"]]
@@ -79,17 +92,16 @@ def _changes(diffs: list[dict], limit: int) -> str:
         if not comparable:
             return "Changes since last week: not comparable (measurement conditions differed)."
         return "Changes since last week: no stable change in tracking services on the sites we could compare."
+    link = f"{report_url.rstrip('/')}/changes.html" if report_url else None
     for shown in range(len(notable), 0, -1):
-        parts = []
-        for d in notable[:shown]:
-            bits = []
-            if d["added_tracking_services"]:
-                bits.append("+" + ", ".join(s["service"] for s in d["added_tracking_services"][:2]))
-            if d["removed_tracking_services"]:
-                bits.append("-" + ", ".join(s["service"] for s in d["removed_tracking_services"][:2]))
-            parts.append(f"{d['site']} {' '.join(bits)}")
-        extra = f" (+{len(notable) - shown} more)" if shown < len(notable) else ""
-        text = "Changes since last week (stable in most passes): " + "; ".join(parts) + extra + "."
+        more = len(notable) - shown
+        if link:
+            tail = f"All {len(notable)} changes: {link}" if more else f"Detail: {link}"
+        else:
+            tail = f"(+{more} more)" if more else ""
+        lines = ["Changes since last week (stable in most passes):",
+                 *(_change_line(d) for d in notable[:shown]), *([tail] if tail else [])]
+        text = "\n".join(lines)
         if len(text) <= limit:
             return text
     return f"Changes since last week: {len(notable)} sites changed. See the report."
@@ -149,10 +161,13 @@ def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform:
     measured from Spain (adds a post of its own). Without them the thread is the three basic posts."""
     limit = LIMITS[platform]
     headline = None
-    for top in (3, 2, 1, 0):
-        candidate = _headline(date, reports, top)
-        if len(candidate) <= limit:
-            headline = candidate
+    for tags in ROOT_TAGS:
+        for top in (3, 2, 1, 0):
+            candidate = _headline(date, reports, top, tags)
+            if len(candidate) <= limit:
+                headline = candidate
+                break
+        if headline:
             break
     posts = [headline or _headline(date, reports, 0)]
     countries = _countries(reports, groups) if groups else None
@@ -161,7 +176,7 @@ def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform:
     spanish = _spain(spain[0], spain[1], limit) if spain and spain[1] else None
     if spanish:
         posts.append(spanish)
-    posts += [_changes(diffs, limit), _method(reports, report_url)]
+    posts += [_changes(diffs, limit, report_url), _method(reports, report_url)]
     for index, post in enumerate(posts, 1):
         if len(post) > limit:
             raise PostTooLong(f"post {index} has {len(post)} characters (limit {limit})")
@@ -189,9 +204,47 @@ def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: 
         listing = "; ".join(f"{c} {n} of {usable}" for c, n in reach[:top])
         text = (f"Midweek: companies whose tracking services were contacted before any click on the most of the "
                 f"{usable} news sites measured with enough confidence ({date}). {listing}. Counts of sites, not verdicts. Data: {report_url}")
-        if len(text) <= limit:
-            return [text]
+        for tags in ROOT_TAGS:
+            candidate = f"{text} {tags}" if tags else text
+            if len(candidate) <= limit:
+                return [candidate]
     raise PostTooLong("the midweek post does not fit the limit")
+
+
+def _day(stamp: str) -> str:
+    return str(stamp)[:10]
+
+
+def notable_swings(diffs: list[dict]) -> list[dict]:
+    """Comparable sites whose tracking-service count moved a lot between two measurements, biggest first."""
+    swings = []
+    for d in diffs:
+        if not d.get("comparable"):
+            continue
+        m = d["metrics"]["tracking_services"]
+        top = max(m["previous"], m["current"])
+        if abs(m["delta"]) >= ALERT_MIN_DELTA and top and abs(m["delta"]) / top >= ALERT_MIN_RATIO:
+            swings.append({"site": d["site"], "previous": m["previous"], "current": m["current"],
+                           "previous_at": _day(d["previous_at"]), "current_at": _day(d["current_at"])})
+    return sorted(swings, key=lambda x: (-abs(x["current"] - x["previous"]), x["site"]))
+
+
+def build_alert(swings: list[dict], *, platform: str, report_url: str) -> list[str]:
+    """One post on the biggest swing. It names an outlet, so it is only ever a draft that a person approves."""
+    if not swings:
+        raise ValueError("no notable swing: nothing to post")
+    limit, w = LIMITS[platform], swings[0]
+    link = f"{report_url.rstrip('/')}/changes.html"
+    for note in (" A consent banner or measurement difference could explain it.", ""):
+        text = (f"Notable change: tracking services contacted by {w['site']} before any click went from "
+                f"{w['previous']} ({w['previous_at']}) to {w['current']} ({w['current_at']}). "
+                f"Same method and vantage point.{note} "
+                f"Counts, not verdicts. Data: {link}")
+        for tags in ROOT_TAGS[:2]:
+            candidate = f"{text} {tags}"
+            if len(candidate) <= limit:
+                return [candidate]
+    raise PostTooLong("the alert post does not fit the limit")
 
 
 def alt_text(reports: list[dict]) -> str:
@@ -276,9 +329,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
                         help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
                              "(a broken scan must not become a post)")
-    parser.add_argument("--kind", choices=("weekly", "midweek"), default="weekly",
+    parser.add_argument("--kind", choices=("weekly", "midweek", "alert"), default="weekly",
                         help="weekly: the full thread; midweek: one post on the companies reaching the most sites "
-                             "(written to <date>-midweek, no image)")
+                             "(written to <date>-midweek, no image); alert: one post on the biggest swing since the "
+                             "last measurement (written to <date>-alert, never published automatically)")
     args = parser.parse_args(argv)
 
     date, reports = load_latest_reports(args.runs_dir)
@@ -288,6 +342,23 @@ def main(argv: list[str] | None = None) -> int:
         print(markdown)
         if not args.dry_run:
             out_dir = Path(args.out) / f"{date}-midweek"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / f"{args.platform}.md").write_text(markdown, encoding="utf-8")
+            (out_dir / f"{args.platform}.json").write_text(json.dumps({
+                "date": date, "platform": args.platform, "generated_at": datetime.now(timezone.utc).isoformat(),
+                "status": "draft", "posts": posts, "image": None, "alt_text": ""}, indent=2, ensure_ascii=False),
+                encoding="utf-8")
+        return 0
+    if args.kind == "alert":
+        swings = notable_swings(compare_directories(args.runs_dir))
+        if not swings:
+            print("No notable swing since the last measurement: no alert drafted.")
+            return 0
+        posts = build_alert(swings, platform=args.platform, report_url=args.report_url)
+        markdown = render_markdown(date, args.platform, posts, "", None)
+        print(markdown)
+        if not args.dry_run:
+            out_dir = Path(args.out) / f"{date}-alert"
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / f"{args.platform}.md").write_text(markdown, encoding="utf-8")
             (out_dir / f"{args.platform}.json").write_text(json.dumps({

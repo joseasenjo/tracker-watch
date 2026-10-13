@@ -52,7 +52,7 @@ def test_changes_post_covers_first_week_stable_changes_and_no_changes():
     first = build_thread("d", REPORTS, [], platform="bluesky", report_url="u")[1]
     assert "first measurement" in first
     changed = build_thread("d", REPORTS, [DIFF_NOTABLE], platform="bluesky", report_url="u")[1]
-    assert "News A +ads.example" in changed
+    assert "News A: added ads.example" in changed and "u/changes.html" in changed
     quiet = dict(DIFF_NOTABLE, notable=False)
     assert "no stable change" in build_thread("d", REPORTS, [quiet], platform="bluesky", report_url="u")[1]
     not_comparable = {"site": "x", "comparable": False, "reasons": ["different vantage"]}
@@ -203,3 +203,48 @@ def test_midweek_cli_writes_its_own_folder(tmp_path):
     assert main([str(tmp_path / "runs"), "--kind", "midweek", "--out", str(tmp_path / "d")]) == 0
     saved = json.loads((tmp_path / "d" / "2026-10-11-midweek" / "bluesky.json").read_text(encoding="utf-8"))
     assert saved["status"] == "draft" and len(saved["posts"]) == 1 and saved["image"] is None
+
+
+def test_root_post_says_it_is_automated_and_carries_hashtags():
+    root = build_thread("2026-10-11", REPORTS, [], platform="bluesky", report_url="u")[0]
+    assert root.endswith("Automated post. #privacy #adtech #GDPR") and len(root) <= LIMITS["bluesky"]
+    many = [report(f"A very long outlet name number {i}", 10 - i) for i in range(5)]
+    long_root = build_thread("2026-10-11", many, [], platform="bluesky", report_url="u")[0]
+    assert "Automated post." in long_root and len(long_root) <= LIMITS["bluesky"]
+
+
+def test_changes_post_lists_added_and_dropped_per_site_with_a_link_and_fits():
+    many = [dict(DIFF_NOTABLE, site=f"Outlet {i}") for i in range(12)]
+    text = build_thread("d", REPORTS, many, platform="bluesky", report_url="https://x.test/")[1]
+    assert len(text) <= LIMITS["bluesky"] and "All 12 changes: https://x.test/changes.html" in text
+
+
+def _swing(site, previous, current, comparable=True):
+    if not comparable:
+        return {"site": site, "comparable": False, "reasons": ["x"]}
+    return {"site": site, "comparable": True, "previous_at": "2026-10-05T07:00:00", "current_at": "2026-10-12T07:00:00",
+            "metrics": {"tracking_services": {"previous": previous, "current": current, "delta": current - previous}}}
+
+
+def test_alert_picks_only_big_swings_and_names_the_dates():
+    diffs = [_swing("BBC News", 52, 3), _swing("Small", 10, 4), _swing("Skipped", 90, 1, comparable=False),
+             _swing("Slight", 80, 90)]
+    swings = posts_module.notable_swings(diffs)
+    assert [s["site"] for s in swings] == ["BBC News"]
+    (post,) = posts_module.build_alert(swings, platform="bluesky", report_url="https://x.test/")
+    assert "from 52 (2026-10-05) to 3 (2026-10-12)" in post and len(post) <= LIMITS["bluesky"] and "@" not in post
+
+
+def test_alert_cli_writes_its_own_folder_only_when_there_is_a_swing(tmp_path):
+    runs = tmp_path / "runs"
+    for day, n in (("2026-10-05", 40), ("2026-10-12", 5)):
+        (runs / day).mkdir(parents=True)
+        r = report("News A", n)
+        r["generated_at"] = day
+        r["summary"].update(services=[], third_party_domains=[])
+        from traceguard.diff import METRICS
+        r["summary"]["metrics"].update({m: r["summary"]["metrics"].get(m, 0) for m in METRICS})
+        (runs / day / "a.json").write_text(json.dumps(r), encoding="utf-8")
+    assert main([str(runs), "--kind", "alert", "--out", str(tmp_path / "d")]) == 0
+    saved = json.loads((tmp_path / "d" / "2026-10-12-alert" / "bluesky.json").read_text(encoding="utf-8"))
+    assert saved["status"] == "draft" and "from 40" in saved["posts"][0]

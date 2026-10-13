@@ -285,3 +285,12 @@ def test_only_label_marks_the_profile_without_a_draft_and_publishes_nothing(caps
     assert not any(c[1].endswith("createRecord") for c in server.calls) and server.posted == 0
     assert main(["--only-label", "--send"], env={}, http=server) == 1
     assert "NOT LABELLED" in capsys.readouterr().err
+
+
+def test_hashtags_get_facets_with_byte_ranges():
+    from traceguard.publish import tag_facets
+    text = "café #privacy and #adtech, not C#sharp"
+    facets = tag_facets(text)
+    assert [f["features"][0]["tag"] for f in facets] == ["privacy", "adtech"]
+    raw = text.encode("utf-8")
+    assert raw[facets[0]["index"]["byteStart"]:facets[0]["index"]["byteEnd"]] == b"#privacy"

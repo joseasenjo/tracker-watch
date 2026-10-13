@@ -128,6 +128,11 @@ jobs:
           python -m traceguard.posts data/runs --platform bluesky --min-measured 0.6
           --report-url "$SITE_URL"
 
+      - name: Draft an alert if a site changed a lot (never published automatically)
+        run: >
+          python -m traceguard.posts data/runs --platform bluesky --kind alert
+          --report-url "$SITE_URL" || echo "no alert drafted"
+
       - name: Waiting for your approval (review mode is on)
         if: ${{ vars.POST_REVIEW == 'true' }}
         run: |
@@ -144,7 +149,7 @@ jobs:
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           MAIL_FROM: ${{ vars.MAIL_FROM }}
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
-        run: python -m traceguard.publish "data/drafts/$(ls data/drafts | sort | tail -1)" --platform bluesky --send
+        run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --platform bluesky --send
 
       - name: Record what was posted (so a re-run never repeats it)
         if: ${{ always() }}

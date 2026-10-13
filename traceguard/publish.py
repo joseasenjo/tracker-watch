@@ -97,6 +97,19 @@ def link_facets(text: str) -> list[dict]:
     return facets
 
 
+TAG_RE = re.compile(r"(?<![\w&])#([A-Za-z][A-Za-z0-9_]{0,63})")
+
+
+def tag_facets(text: str) -> list[dict]:
+    """Hashtags need a facet too, or Bluesky shows them as plain text."""
+    facets = []
+    for match in TAG_RE.finditer(text):
+        start = len(text[:match.start()].encode("utf-8"))
+        facets.append({"index": {"byteStart": start, "byteEnd": start + len(match.group(0).encode("utf-8"))},
+                       "features": [{"$type": "app.bsky.richtext.facet#tag", "tag": match.group(1)}]})
+    return facets
+
+
 def png_size(data: bytes) -> tuple[int, int] | None:
     if data[:8] != b"\x89PNG\r\n\x1a\n" or len(data) < 24:
         return None
@@ -204,7 +217,7 @@ class Bluesky:
 
     def post(self, text: str, *, reply: dict | None = None, image: dict | None = None, alt: str = "") -> dict:
         record: dict = {"$type": "app.bsky.feed.post", "text": text, "createdAt": _now(), "langs": ["en"]}
-        facets = link_facets(text)
+        facets = link_facets(text) + tag_facets(text)
         if facets:
             record["facets"] = facets
         if image:
