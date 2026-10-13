@@ -197,6 +197,57 @@ export const COLLECTORS = {
     if (!c) return { value: NA };
     return { value: `${c.effectiveType || 'unknown'}, about ${c.downlink ?? '?'} Mbit/s, data saver: ${c.saveData ? 'on' : 'off'}`, stable: false };
   }),
+  voices: safe(async () => {
+    if (!window.speechSynthesis) return { value: NA };
+    let voices = speechSynthesis.getVoices();
+    if (!voices.length) {
+      await new Promise((resolve) => {
+        speechSynthesis.addEventListener('voiceschanged', resolve, { once: true });
+        setTimeout(resolve, 800);
+      });
+      voices = speechSynthesis.getVoices();
+    }
+    if (!voices.length) return { value: 'None reported' };
+    const names = voices.map((v) => `${v.name} (${v.lang})`);
+    return { value: `${names.length} voices: ${names.slice(0, 6).join(', ')}${names.length > 6 ? ', …' : ''}`, raw: names.sort().join(',') };
+  }),
+  codecs: safe(async () => {
+    const media = ['audio/mpeg', 'audio/ogg; codecs="vorbis"', 'audio/ogg; codecs="opus"', 'audio/aac', 'audio/flac',
+      'audio/webm; codecs="opus"', 'video/mp4; codecs="avc1.42E01E"', 'video/mp4; codecs="hev1.1.6.L93.B0"',
+      'video/mp4; codecs="av01.0.05M.08"', 'video/webm; codecs="vp8"', 'video/webm; codecs="vp9"', 'video/ogg; codecs="theora"'];
+    const probe = document.createElement('video');
+    const ok = media.filter((type) => probe.canPlayType(type) !== '');
+    return { value: `${ok.length} of ${media.length} tested: ${ok.join(' | ')}`, raw: ok.join('|') };
+  }),
+  webgpu: safe(async () => {
+    if (!navigator.gpu || !navigator.gpu.requestAdapter) return { value: NA };
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) return { value: 'No adapter available' };
+    const info = adapter.info || (adapter.requestAdapterInfo ? await adapter.requestAdapterInfo() : null);
+    if (!info) return { value: 'Available, details hidden' };
+    const parts = ['vendor', 'architecture', 'device', 'description'].filter((k) => info[k]).map((k) => `${k}: ${info[k]}`);
+    return { value: parts.join('; ') || 'Available, details hidden' };
+  }),
+  intl: safe(async () => {
+    const options = Intl.DateTimeFormat().resolvedOptions();
+    const sample = new Date(Date.UTC(2020, 11, 31, 23, 59, 58));
+    const parts = [`locale ${options.locale}`, `calendar ${options.calendar}`, `numbering ${options.numberingSystem}`,
+      `number ${new Intl.NumberFormat().format(1234567.891)}`, `date ${sample.toLocaleDateString()}`,
+      `time ${sample.toLocaleTimeString()}`, `hour cycle ${options.hourCycle || 'default'}`];
+    return { value: parts.join('; ') };
+  }),
+  emoji: safe(async () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 220;
+    canvas.height = 40;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return { value: NA };
+    ctx.font = '28px sans-serif';
+    ctx.textBaseline = 'top';
+    ctx.fillText('😀🧑‍🚀🏳️‍🌈🫠🐢', 2, 4);
+    const code = await hashText(canvas.toDataURL());
+    return { value: `${shorten(code)}…`, raw: code };
+  }),
   'ad-filter': safe(async () => {
     const bait = document.createElement('div');
     bait.className = 'adsbox ad-banner ad_unit textads banner-ads sponsored-ad';

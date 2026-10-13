@@ -102,3 +102,57 @@ test('every target is an https address on the host it names, with a known kind',
     assert.ok(['ads', 'analytics'].includes(t.kind), t.id);
   }
 });
+
+import { ACTIONS } from '../../site_src/assets/browser-check/actions.js';
+import { compareAddresses, parseCandidate, parseTrace, runConnectionTest } from '../../site_src/assets/browser-check/connection-test.js';
+import { compareReports, parseReport } from '../../site_src/assets/browser-check/util.js';
+
+test('every catalog entry has advice, and no advice is left without an entry', () => {
+  for (const entry of CATALOG) assert.ok(ACTIONS[entry.id] && ACTIONS[entry.id].length > 20, entry.id);
+  const ids = new Set(CATALOG.map((e) => e.id));
+  for (const key of Object.keys(ACTIONS)) assert.ok(ids.has(key), key);
+});
+
+test('parseTrace reads key=value lines', () => {
+  const t = parseTrace('fl=1\nip=203.0.113.7\nloc=ES\ntls=TLSv1.3\nhttp=http/2\n');
+  assert.deepEqual([t.ip, t.loc, t.tls, t.http], ['203.0.113.7', 'ES', 'TLSv1.3', 'http/2']);
+});
+
+test('parseCandidate takes the type and the address, and ignores junk', () => {
+  assert.deepEqual(parseCandidate('candidate:84 1 udp 16777 203.0.113.7 54400 typ srflx raddr 0.0.0.0 rport 0'),
+    { type: 'srflx', address: '203.0.113.7' });
+  assert.deepEqual(parseCandidate('candidate:1 1 udp 2113937151 abcd-1234.local 5000 typ host generation 0'),
+    { type: 'host', address: 'abcd-1234.local' });
+  assert.equal(parseCandidate('nonsense'), null);
+});
+
+test('compareAddresses tells same, different and none, and hides mDNS names from the exposed list', () => {
+  const host = { type: 'host', address: 'abcd.local' };
+  assert.equal(compareAddresses('1.1.1.1', [host, { type: 'srflx', address: '1.1.1.1' }]).relation, 'same');
+  assert.equal(compareAddresses('1.1.1.1', [{ type: 'srflx', address: '2.2.2.2' }]).relation, 'different');
+  const none = compareAddresses('1.1.1.1', [host]);
+  assert.equal(none.relation, 'none');
+  assert.equal(none.hiddenLocal, 1);
+  assert.deepEqual(none.exposedLocal, []);
+  assert.deepEqual(compareAddresses('1.1.1.1', [{ type: 'host', address: '192.168.1.5' }]).exposedLocal, ['192.168.1.5']);
+});
+
+test('the connection test still reports WebRTC when the trace page fails, and works without WebRTC', async () => {
+  const failing = async () => { throw new TypeError('offline'); };
+  const result = await runConnectionTest({ fetchFn: failing, RTC: undefined });
+  assert.equal(result.trace, null);
+  assert.equal(result.rtcAvailable, false);
+  const ok = await runConnectionTest({ fetchFn: async () => ({ text: async () => 'ip=1.2.3.4\nloc=ES\n' }), RTC: undefined });
+  assert.equal(ok.trace.ip, '1.2.3.4');
+});
+
+test('a report can be read back and compared, with multi-line values kept on one line', () => {
+  const results = [{ title: 'Platform', value: 'Win32' }, { title: 'User agent', value: 'Mozilla\nClient hints: x' }];
+  const text = reportText(results, '2026-10-13', 'abc123');
+  assert.match(text, /Combined code: abc123/);
+  assert.equal(parseReport(text).get('User agent'), 'Mozilla / Client hints: x');
+  const other = reportText([{ title: 'Platform', value: 'Linux' }, { title: 'User agent', value: 'Mozilla\nClient hints: x' }], '2026-10-13', 'zzz999');
+  const diff = compareReports(text, other);
+  assert.equal(diff.same, 1);
+  assert.deepEqual(diff.different.map((r) => r.title).sort(), ['Combined code', 'Platform']);
+});

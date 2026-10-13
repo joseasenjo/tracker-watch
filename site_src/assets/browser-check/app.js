@@ -1,10 +1,12 @@
 // Browser check: reads what a script can see about this browser and shows it with a plain explanation.
 // Reading happens only when the visitor presses the button, and only inside this page: nothing is sent, nothing is
 // stored. The tracker test is a second, separate button because it is the one thing that contacts other servers.
+import { ACTIONS } from './actions.js';
 import { BY_ID, CATALOG, GROUPS, WEIGHTS } from './catalog.js';
+import { runConnectionTest } from './connection-test.js';
 import { COLLECTORS } from './collectors.js';
 import { runTrackerTest, VERDICT_TEXT } from './tracker-test.js';
-import { combinedCode, plural, reportText, shorten } from './util.js';
+import { combinedCode, compareReports, plural, reportText, shorten } from './util.js';
 
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -33,6 +35,8 @@ function entryNode(result) {
     el('p', { text: meta.what }),
     el('h4', { text: 'How can it be used to recognise you?' }),
     el('p', { text: meta.how }),
+    el('h4', { text: 'What can I do about it?' }),
+    el('p', { text: ACTIONS[meta.id] }),
   ]);
   return el('details', { class: 'bc-entry', id: `bc-${meta.id}` }, [summary, body]);
 }
@@ -61,6 +65,7 @@ function defences(by) {
 
 let first = null;
 let last = null;
+let lastCode = '';
 
 async function render(results) {
   const by = Object.fromEntries(results.map((r) => [r.id, r]));
@@ -76,7 +81,8 @@ async function render(results) {
       'Checks whether a block of the kind ad filters hide was hidden. It makes no request, so it cannot tell whether trackers are blocked on the network: for that, use the test below.'),
     tile('Privacy signals', by['privacy-signals'].on ? 'On' : 'Off',
       'Do Not Track or Global Privacy Control. They are requests that sites can ignore.'));
-  $('bc-code').textContent = shorten(code, 16);
+  lastCode = shorten(code, 16);
+  $('bc-code').textContent = lastCode;
   $('bc-code-box').hidden = false;
   for (const group of GROUPS) {
     $(`bc-group-${group.id}`).replaceChildren(...results.filter((r) => BY_ID[r.id].group === group.id).map(entryNode));
@@ -146,10 +152,66 @@ $('bc-test').addEventListener('click', onTest);
 $('bc-copy').addEventListener('click', async () => {
   const copy = $('bc-copy');
   try {
-    await navigator.clipboard.writeText(reportText(last || [], new Date().toISOString().slice(0, 10)));
+    await navigator.clipboard.writeText(reportText(last || [], new Date().toISOString().slice(0, 10), lastCode));
     copy.textContent = 'Copied';
   } catch (error) {
     copy.textContent = 'Could not copy';
   }
   setTimeout(() => { copy.textContent = 'Copy this report as text'; }, 2500);
+});
+
+$('bc-compare-btn').addEventListener('click', () => {
+  const pasted = $('bc-paste').value;
+  const out = $('bc-compare-out');
+  if (!pasted.trim()) {
+    out.textContent = 'Paste a report from another browser or window first.';
+    return;
+  }
+  const mine = reportText(last || [], new Date().toISOString().slice(0, 10), lastCode);
+  const result = compareReports(mine, pasted);
+  if (!result.rows.some((r) => r.a !== '(missing)' && r.b !== '(missing)')) {
+    out.textContent = 'That text does not look like a report from this page. Use "Copy this report as text" in the other browser.';
+    return;
+  }
+  const head = el('p', { text: `${plural(result.same, 'detail is', 'details are')} identical and ${plural(result.different.length, 'differs', 'differ')}.` });
+  if (!result.different.length) {
+    out.replaceChildren(head, el('p', { text: 'Both browsers show the same details: a script would see them as the same browser.' }));
+    return;
+  }
+  out.replaceChildren(head, el('div', { class: 'table-scroll' }, [el('table', { class: 't' }, [
+    el('thead', {}, [el('tr', {}, ['Detail', 'This browser', 'The pasted report'].map((h) => el('th', { text: h })))]),
+    el('tbody', {}, result.different.map((r) => el('tr', {}, [el('td', { text: r.title }), el('td', { text: r.a }), el('td', { text: r.b })]))),
+  ])]));
+});
+
+$('bc-conn').addEventListener('click', async () => {
+  const out = $('bc-conn-out');
+  const button = $('bc-conn');
+  button.disabled = true;
+  button.textContent = 'Checking…';
+  out.textContent = '';
+  const result = await runConnectionTest({ fetchFn: (url, init) => fetch(url, init), RTC: window.RTCPeerConnection });
+  button.disabled = false;
+  button.textContent = 'Check again';
+  const trace = result.trace;
+  const rtc = result.rtc;
+  const rtcText = !result.rtcAvailable ? 'Not available in this browser'
+    : rtc.relation === 'none' ? 'No public address revealed (blocked or hidden)'
+    : rtc.relation === 'same' ? 'Same address as websites see'
+    : 'A different address from the one websites see';
+  const rtcNote = rtc.relation === 'different'
+    ? 'WebRTC revealed an address other than the one your normal browsing shows. With a VPN this can mean the VPN is not covering WebRTC.'
+    : rtc.relation === 'same' ? 'Nothing extra is revealed through WebRTC.' : 'A page cannot learn an extra address through WebRTC here.';
+  const tiles = [];
+  if (trace) {
+    tiles.push(tile('Address websites see', trace.ip || 'Unknown', 'The address your requests come from. Every site you visit receives it.'),
+      tile('Country it suggests', trace.loc || 'Unknown', 'Deduced from the address, not from your device. A VPN changes it.'),
+      tile('Connection security', `${trace.tls || '?'} over ${trace.http || '?'}`, 'The encryption and web protocol version of this connection.'));
+  }
+  tiles.push(tile('Address through WebRTC', rtcText, rtcNote));
+  const lines = [];
+  if (!trace) lines.push(el('p', { class: 'note', text: 'The connection service did not answer, so only the WebRTC check is shown.' }));
+  if (rtc.exposedLocal.length) lines.push(el('p', { class: 'small', text: `Local address revealed: ${rtc.exposedLocal.join(', ')}. Most browsers now hide it behind a random name.` }));
+  else if (rtc.hiddenLocal) lines.push(el('p', { class: 'small', text: 'Your local network address is hidden behind a random name, which is what current browsers do.' }));
+  out.replaceChildren(el('div', { class: 'bc-tiles' }, tiles), ...lines);
 });

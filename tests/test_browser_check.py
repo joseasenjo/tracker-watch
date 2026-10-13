@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "site_src" / "assets" / "browser-check"
 NETWORK_WORDS = re.compile(r"\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource)\b")
 STORAGE_WORDS = re.compile(r"\b(localStorage\.setItem|sessionStorage\.setItem|document\.cookie|indexedDB\.open)\b")
-ONLY_THE_TEST_MAY_ASK = ("tracker-test.js", "app.js")
+ONLY_THE_OPT_IN_CHECKS_MAY_ASK = ("tracker-test.js", "connection-test.js", "app.js")
 
 
 def _code(path):
@@ -22,15 +22,16 @@ def test_nothing_stores_anything_and_only_the_opt_in_test_can_ask_for_the_networ
     for path in ASSETS.glob("*.js"):
         text = _code(path)
         assert not STORAGE_WORDS.search(text), path.name
-        if path.name not in ONLY_THE_TEST_MAY_ASK:
+        if path.name not in ONLY_THE_OPT_IN_CHECKS_MAY_ASK:
             assert not NETWORK_WORDS.search(text), path.name
             assert "https://" not in text, path.name
 
 
-def test_app_asks_for_the_network_only_inside_the_test_button_handler():
+def test_app_asks_for_the_network_only_inside_the_two_opt_in_handlers():
     text = _code(ASSETS / "app.js")
-    assert text.count("fetch(") == 1
+    assert text.count("fetch(") == 2
     assert text.index("fetch(") > text.index("async function onTest")
+    assert text.count("RTCPeerConnection") == 1 and text.index("RTCPeerConnection") > text.index("bc-conn")
 
 
 def test_the_template_lists_every_server_the_opt_in_test_contacts():
@@ -39,6 +40,9 @@ def test_the_template_lists_every_server_the_opt_in_test_contacts():
     assert len(hosts) == 7
     for host in hosts:
         assert host in html, host
+    connection = (ASSETS / "connection-test.js").read_text(encoding="utf-8")
+    for needle in re.findall(r"'(?:https://|stun:)([^':/]+)", connection):
+        assert needle in html, needle
 
 
 def test_template_loads_only_its_own_script_and_names_no_third_party_resource():

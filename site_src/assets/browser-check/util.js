@@ -27,11 +27,37 @@ export function detectFonts(candidates, bases, measure) {
   return candidates.filter((font) => bases.some((base) => measure(`"${font}", ${base}`, base) !== baseWidth[base]));
 }
 
-// One line per characteristic, ready to copy: "Title: value".
-export function reportText(results, when) {
-  const lines = [`Browser check, ${when}. Read locally; nothing was sent anywhere.`, ''];
-  for (const r of results) lines.push(`${r.title}: ${r.value}`);
+// One line per characteristic, ready to copy: "Title: value". A value that spans lines is joined with " / " so that
+// every detail stays on one line and a report can be read back by compareReports.
+export function reportText(results, when, code = '') {
+  const lines = [`Browser check, ${when}. Read locally; nothing was sent anywhere.`];
+  if (code) lines.push(`Combined code: ${code}`);
+  lines.push('');
+  for (const r of results) lines.push(`${r.title}: ${String(r.value).replace(/\s*\n\s*/g, ' / ')}`);
   return lines.join('\n');
+}
+
+// "Title: value" lines of a copied report -> Map(title -> value). Anything else in the text is ignored.
+export function parseReport(text) {
+  const map = new Map();
+  for (const line of String(text).split('\n')) {
+    const at = line.indexOf(': ');
+    if (at > 0 && !line.startsWith('Browser check,')) map.set(line.slice(0, at).trim(), line.slice(at + 2).trim());
+  }
+  return map;
+}
+
+// What changed and what stayed the same between two reports. Details present in only one are listed as such.
+export function compareReports(textA, textB) {
+  const a = parseReport(textA);
+  const b = parseReport(textB);
+  const rows = [];
+  for (const title of new Set([...a.keys(), ...b.keys()])) {
+    const left = a.get(title);
+    const right = b.get(title);
+    rows.push({ title, a: left ?? '(missing)', b: right ?? '(missing)', same: left === right });
+  }
+  return { rows, same: rows.filter((r) => r.same).length, different: rows.filter((r) => !r.same) };
 }
 
 // The code a tracker could compute from the values below: if two sites get the same code, they can link the visits.

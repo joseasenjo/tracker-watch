@@ -8,7 +8,7 @@
     <h1>Browser check</h1>
     <p class="sub">Every time you open a web page, your browser answers a number of questions about itself. This page asks them the way a tracking script would, shows you the answers and explains what each one is for.</p>
 
-    <div class="note"><b>Nothing happens until you press a button.</b> The first button reads your browser inside this page: it makes no request to any server, sets no cookie and stores nothing, not even in your browser. Close the tab and it is gone. The second test, further down, is optional and does contact other servers, as it explains before you press it.</div>
+    <div class="note"><b>Nothing happens until you press a button.</b> The first button reads your browser inside this page: it makes no request to any server, sets no cookie and stores nothing, not even in your browser. Close the tab and it is gone. The two checks further down are optional and do contact other servers, as each one explains before you press it.</div>
 
     <noscript><p class="note">This page needs JavaScript to read your browser, just as a tracker would. The explanations below still apply.</p></noscript>
     <p id="bc-status" class="note" role="status" hidden></p>
@@ -39,6 +39,14 @@
       <p class="bc-actions"><button type="button" class="btn sec" id="bc-again">Read again and compare</button>
         <button type="button" class="btn sec" id="bc-copy">Copy this report as text</button></p>
       <p id="bc-compare" class="small" role="status"></p>
+      <details>
+        <summary>Compare with another browser or a private window</summary>
+        <p>Open this page in the other browser (or in a private window), read it there, press "Copy this report as text" and paste the text here. The comparison happens in this page; nothing is sent. It shows which details change and which do not: switching browser changes many, while a private window usually changes few, because the hardware and settings are the same.</p>
+        <p><label for="bc-paste" class="small">Report from the other browser</label><br>
+          <textarea id="bc-paste" class="bc-paste" rows="6" spellcheck="false"></textarea></p>
+        <p class="bc-actions"><button type="button" class="btn sec" id="bc-compare-btn">Compare</button></p>
+        <div id="bc-compare-out" role="status"></div>
+      </details>
     </div>
 
     <h2>Are trackers blocked? An optional test</h2>
@@ -50,6 +58,15 @@
     </details>
     <p class="bc-actions"><button type="button" class="btn" id="bc-test">Run the tracker test</button></p>
     <div id="bc-test-out" role="status"></div>
+
+    <h2>What does your connection reveal? Another optional check</h2>
+    <p>Whatever your browser says about itself, every site also sees the address your requests come from, and a page can sometimes learn an extra address through a feature called WebRTC. This check shows both. It never runs by itself.</p>
+    <details>
+      <summary>What exactly is contacted, and what do they learn?</summary>
+      <p>When you press the button, your browser makes two kinds of request, both to Cloudflare, a company that runs a large part of the web's infrastructure: one to its public connection page (www.cloudflare.com/cdn-cgi/trace), which answers with the address it sees you coming from, and a WebRTC exchange with its public server (stun.cloudflare.com), which is how a page can learn addresses. Cloudflare receives what any request carries, such as your IP address and your browser's user agent; we send no cookies and no referring page. The answers are shown only to you: they are not stored and we never receive them.</p>
+    </details>
+    <p class="bc-actions"><button type="button" class="btn" id="bc-conn">Check my connection</button></p>
+    <div id="bc-conn-out" role="status"></div>
 
     <h2>How to read the report</h2>
     <p>Each line is one detail, in the form a script receives it. Open a line to see what it is and how it can be used. The label on the right says how much that <i>kind</i> of detail usually tells apart in published studies: it is a general guide to the kind of detail, not a measurement of your browser.</p>
