@@ -46,11 +46,26 @@ function entryNode(result) {
   return el('details', { class: 'bc-entry', id: `bc-${meta.id}`, 'data-id': meta.id }, [summary, body]);
 }
 
-function tile(label, value, note) {
+function tile(label, value, note, extra = null) {
   return el('div', { class: 'bc-tile' }, [
     el('div', { class: 'bc-tile-label', text: label }),
     el('div', { class: 'bc-tile-value', text: value }),
     el('p', { class: 'bc-tile-note', text: note }),
+    extra,
+  ]);
+}
+
+// The list behind the first tile: every detail that was read, each linking to its line, and the ones that were not available.
+function detailList(results) {
+  const read = results.filter((r) => !/^Not available/.test(r.value));
+  const missing = results.filter((r) => /^Not available/.test(r.value));
+  const link = (r) => el('li', {}, [el('a', { href: `#bc-${r.id}`, text: r.title })]);
+  return el('details', { class: 'bc-tile-list' }, [
+    el('summary', { text: 'See the list' }),
+    el('p', { class: 'small', text: `Read in this browser (${read.length}):` }),
+    el('ul', {}, read.map(link)),
+    missing.length ? el('p', { class: 'small', text: `Not available in this browser (${missing.length}):` }) : null,
+    missing.length ? el('ul', {}, missing.map((r) => el('li', { text: r.title }))) : null,
   ]);
 }
 
@@ -109,7 +124,8 @@ async function render(results) {
   const signs = defences(by);
   $('bc-tiles').replaceChildren(
     tile('Details a script could read', String(results.length - missing),
-      missing ? `${plural(missing, 'more was', 'more were')} not available in this browser.` : 'All of them were available.'),
+      missing ? `${plural(missing, 'more was', 'more were')} not available in this browser.` : 'All of them were available.',
+      detailList(results)),
     tile('Signs of fingerprint defences', signs.length ? String(signs.length) : 'None seen',
       signs.length ? `Seen: ${signs.join(', ')}.` : 'Nothing suggests that your browser hides or disturbs these details.'),
     tile('Ad filter in the browser', by['ad-filter'].hidden ? 'Detected' : 'Not detected',
@@ -282,3 +298,23 @@ fillSelect();
 $('bc-collapse').addEventListener('click', () => setOpen(false));
 $('bc-expand').addEventListener('click', () => setOpen(true));
 $('bc-select').addEventListener('change', applySelection);
+
+// A link to a detail (from the list or from the summary) opens that line, even if the selector had hidden it.
+document.addEventListener('click', (event) => {
+  const link = event.target.closest && event.target.closest('.bc-tile-list a, .bc-summary-list a');
+  if (!link) return;
+  $('bc-select').value = 'all';
+  applySelection();
+  const entry = document.getElementById(link.getAttribute('href').slice(1));
+  if (entry) entry.open = true;
+});
+
+// The summary is shown only when the visitor asks for it, after looking at the details.
+$('bc-summary-btn').addEventListener('click', () => {
+  renderSummary();
+  const card = $('bc-summary');
+  card.hidden = false;
+  $('bc-summary-btn').setAttribute('aria-expanded', 'true');
+  $('bc-summary-btn').textContent = 'Refresh the summary';
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});

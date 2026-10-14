@@ -22,11 +22,6 @@
       <h2>What this shows about your browser</h2>
       <div class="bc-tiles" id="bc-tiles"></div>
 
-      <div class="card bc-summary" id="bc-summary">
-        <h3>Summary of what was observed</h3>
-        <div id="bc-summary-body"></div>
-      </div>
-
       <div class="card bc-code" id="bc-code-box" hidden>
         <h3>Your combined code: <code id="bc-code"></code></h3>
         <p>This is the short code a script could compute from all the stable details below. If two sites computed the same code, they could tell it was the same browser without using a cookie. It is not an identity: it only says that this combination of details is what a script sees right now. Clear your cookies and it stays the same, which is the point of the exercise.</p>
@@ -48,6 +43,14 @@
       <div class="bc-list" id="bc-group-{{ group[0] }}"></div>
       </div>
       {% endfor %}
+      </div>
+
+      <h2>Summary of my analysis</h2>
+      <p>When you have gone through the details above, press the button for a plain summary of what this page observed in this browser: what it saw, what is worth knowing and what you could change. It also takes into account the two optional checks below if you have run them.</p>
+      <p class="bc-actions"><button type="button" class="btn" id="bc-summary-btn" aria-expanded="false" aria-controls="bc-summary">Summary of my analysis</button></p>
+      <div class="card bc-summary" id="bc-summary" hidden role="region" aria-label="Summary of my analysis">
+        <h3>Summary of what was observed</h3>
+        <div id="bc-summary-body"></div>
       </div>
 
     </div>

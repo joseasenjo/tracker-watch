@@ -197,6 +197,9 @@ def test_summary_appears_after_reading_and_grows_with_the_optional_checks(browse
     visit = Visit(browser, served, outside="abort")
     visit.page.click("#bc-read")
     visit.page.wait_for_selector("#bc-results:not([hidden])", timeout=15000)
+    assert visit.page.locator("#bc-summary").is_hidden()  # only on request, after looking at the details
+    visit.page.click("#bc-summary-btn")
+    assert visit.page.locator("#bc-summary").is_visible()
     text = visit.page.locator("#bc-summary").inner_text()
     assert "Observed" in text and "not a security audit and not a verdict" in text
     assert "tracker test has not been run" in text and "connection check has not been run" in text
@@ -210,4 +213,21 @@ def test_summary_appears_after_reading_and_grows_with_the_optional_checks(browse
     assert "TLSv1.3" in text and "connection check has not been run" not in text
     assert not re.search(r"\b(safe|dangerous|at risk|vulnerable)\b", text, re.I)
     # the browser logs a line for every request that is cut on purpose; anything else would be a real error
+    assert [e for e in visit.errors if "Failed to load resource" not in e] == []
+
+
+def test_the_first_tile_lists_every_detail_that_was_read_and_each_link_opens_its_line(browser, served):
+    visit = Visit(browser, served)
+    visit.page.click("#bc-read")
+    visit.page.wait_for_selector("#bc-results:not([hidden])", timeout=15000)
+    shown = int(visit.page.locator("#bc-tiles .bc-tile-value").first.inner_text())
+    visit.page.locator(".bc-tile-list summary").click()
+    links = visit.page.locator(".bc-tile-list ul").first.locator("a")
+    assert links.count() == shown
+    missing = visit.page.locator(".bc-tile-list ul").nth(1).locator("li").count() if visit.page.locator(".bc-tile-list ul").count() > 1 else 0
+    assert shown + missing == visit.page.locator(".bc-entry").count()
+    visit.page.select_option("#bc-select", "fonts")  # hide everything but one line
+    links.filter(has_text="Number and date formats").click()
+    assert visit.page.locator("#bc-intl").get_attribute("open") is not None
+    assert visit.page.locator(".bc-entry:visible").count() == visit.page.locator(".bc-entry").count()
     assert [e for e in visit.errors if "Failed to load resource" not in e] == []
