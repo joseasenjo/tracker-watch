@@ -261,3 +261,12 @@ def test_hook_names_only_the_most_tracked_outlet_and_is_a_draft(tmp_path):
     assert main([str(tmp_path / "runs"), "--kind", "hook", "--out", str(tmp_path / "d")]) == 0
     saved = json.loads((tmp_path / "d" / "2026-10-11-hook" / "bluesky.json").read_text(encoding="utf-8"))
     assert saved["status"] == "draft" and saved["image"] is None
+
+
+def test_midweek_keeps_automated_post_and_drops_a_company_before_dropping_it():
+    reports = [_with_services(report(f"News {i}", 1), "Google Advertising", "Amazon Technologies", "Comscore Audience") for i in range(30)]
+    (post,) = posts_module.build_midweek("2026-10-14", reports, platform="bluesky", report_url="https://joseasenjo.github.io/tracker-watch/")
+    assert "Automated post." in post and len(post) <= LIMITS["bluesky"]
+    short = [_with_services(report("News A", 1), "Alpha")]
+    (small,) = posts_module.build_midweek("2026-10-14", short, platform="bluesky", report_url="u")
+    assert small.endswith("Automated post. #privacy #adtech #GDPR")

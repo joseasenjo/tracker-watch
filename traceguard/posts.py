@@ -200,11 +200,12 @@ def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: 
     reach = company_reach(reports)
     if not reach:
         raise ValueError("no company contacted on any measured site: nothing to post")
+    # "Automated post." is kept before a longer company list: only if even one company does not fit is it dropped.
     for top in (3, 2, 1):
         listing = "; ".join(f"{c} {n} of {usable}" for c, n in reach[:top])
         text = (f"Midweek: companies whose tracking services were contacted before any click on the most of the "
                 f"{usable} news sites measured with enough confidence ({date}). {listing}. Counts of sites, not verdicts. Data: {report_url}")
-        for tags in ROOT_TAGS:
+        for tags in ROOT_TAGS[:2] + (ROOT_TAGS[2:] if top == 1 else ()):
             candidate = f"{text} {tags}" if tags else text
             if len(candidate) <= limit:
                 return [candidate]
