@@ -150,8 +150,11 @@
         {% if subscribe_url %}
         <p class="small">A weekly summary. The signup page is hosted by {{ subscribe_host }}; this site never sees your address. <a href="{{ root }}privacy.html">Privacy</a>.</p>
         <a class="btn sec" href="{{ subscribe_url }}" rel="noopener">Subscribe</a>
+        {% elif contact_email %}
+        <p class="small">A weekly summary by email is not available yet. To be told when it is, write to <a href="mailto:{{ contact_email }}?subject=Weekly%20summary%20by%20email">{{ contact_email }}</a>. <a href="{{ root }}privacy.html">Privacy</a>.</p>
+        <a class="btn sec" href="mailto:{{ contact_email }}?subject=Weekly%20summary%20by%20email">Write to us</a>
         {% else %}
-        <p class="small">A weekly summary. Not available yet.</p><span class="btn sec" aria-disabled="true">Coming soon</span>
+        <p class="small">A weekly summary by email is not available yet.</p><span class="btn sec" aria-disabled="true">Coming soon</span>
         {% endif %}
       </div>
       <div class="card"><h3>Raw data</h3><p class="small">Every report is published as JSON, with the full history and a JSON index as CSV and JSON for journalists and researchers.</p><a class="btn sec" href="{{ root }}method.html#data">Downloads</a></div>

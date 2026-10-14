@@ -282,6 +282,19 @@ def test_subscribe_button_is_disabled_without_a_url_and_active_with_one(built, t
     assert "https://github.com/x/y" in (out2 / "privacy.html").read_text(encoding="utf-8")
 
 
+def test_email_card_points_to_the_contact_address_when_there_is_no_subscription_service(built, tmp_path):
+    plain = (built[1] / "index.html").read_text(encoding="utf-8")
+    assert "A weekly summary by email is not available yet." in plain and "mailto:" not in plain.split("Follow the weekly results")[1].split("Raw data")[0]
+    out = tmp_path / "site_mail"
+    build_site(tmp_path / "runs", out, contact_email="dev@example.org")
+    html = (out / "index.html").read_text(encoding="utf-8")
+    card = html.split("Follow the weekly results")[1].split("Raw data")[0]
+    assert 'href="mailto:dev@example.org?subject=Weekly%20summary%20by%20email"' in card and "Write to us" in card
+    assert "Coming soon" not in card and "Not available yet" not in card
+    privacy = (out / "privacy.html").read_text(encoding="utf-8")
+    assert "mailto:dev@example.org" in privacy and "use it only to answer you" in privacy
+
+
 def test_subscribe_url_must_be_https(built, tmp_path):
     with pytest.raises(ValueError):
         build_site(tmp_path / "runs", tmp_path / "site3", subscribe_url="http://newsletter.example/signup")
