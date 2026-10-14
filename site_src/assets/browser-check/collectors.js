@@ -130,7 +130,17 @@ export const COLLECTORS = {
     value: `${screen.width}x${screen.height}, colour depth ${screen.colorDepth}, pixel ratio ${window.devicePixelRatio}`,
     raw: `${screen.width}x${screen.height}x${screen.colorDepth}` })),
   fonts: safe(async () => {
-    const found = detectFonts(FONTS, ['monospace', 'sans-serif', 'serif'], fontMeasurer());
+    // The first measurements after the page opens can run before the browser has settled its font fallbacks: wait for
+    // the fonts to be ready and measure again until three passes in a row agree (at most fifteen passes).
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    let found = detectFonts(FONTS, ['monospace', 'sans-serif', 'serif'], fontMeasurer());
+    let agreeing = 0;
+    for (let pass = 0; pass < 15 && agreeing < 3; pass++) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const again = detectFonts(FONTS, ['monospace', 'sans-serif', 'serif'], fontMeasurer());
+      agreeing = again.join() === found.join() ? agreeing + 1 : 0;
+      found = again;
+    }
     return { value: found.length ? `${found.length} of ${FONTS.length} tested: ${found.join(', ')}` : `0 of ${FONTS.length} tested`,
       raw: found.join(',') };
   }),
@@ -199,13 +209,14 @@ export const COLLECTORS = {
   }),
   voices: safe(async () => {
     if (!window.speechSynthesis) return { value: NA };
+    // Browsers load the voice list in the background: wait until the count stops changing (at most 2 seconds).
     let voices = speechSynthesis.getVoices();
-    if (!voices.length) {
-      await new Promise((resolve) => {
-        speechSynthesis.addEventListener('voiceschanged', resolve, { once: true });
-        setTimeout(resolve, 800);
-      });
-      voices = speechSynthesis.getVoices();
+    let steady = 0;
+    for (let waited = 0; waited < 2000 && steady < 3; waited += 100) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const now = speechSynthesis.getVoices();
+      steady = now.length === voices.length && now.length > 0 ? steady + 1 : 0;
+      voices = now;
     }
     if (!voices.length) return { value: 'None reported' };
     const names = voices.map((v) => `${v.name} (${v.lang})`);

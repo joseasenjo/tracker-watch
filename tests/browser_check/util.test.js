@@ -171,3 +171,14 @@ test('extra report lines with a comma in the title are read back and compared', 
   const diff = compareReports(a, b);
   assert.deepEqual(diff.different.map((r) => [r.title, r.a, r.b]), [['Tracker test, servers stopped', '7 of 7', '0 of 7']]);
 });
+
+import { PROTECTION_TITLES, groupDifferences } from '../../site_src/assets/browser-check/util.js';
+
+test('differences are split into protection first and everything else after, keeping the order', () => {
+  const diff = [{ title: 'Screen size and colour depth' }, { title: 'Tracker test, servers stopped' }, { title: 'Canvas drawing' },
+    { title: 'Ad filter in the browser' }];
+  const g = groupDifferences(diff);
+  assert.deepEqual(g.protection.map((r) => r.title), ['Tracker test, servers stopped', 'Ad filter in the browser']);
+  assert.deepEqual(g.other.map((r) => r.title), ['Screen size and colour depth', 'Canvas drawing']);
+  assert.ok(PROTECTION_TITLES.every((t) => typeof t === 'string'));
+});

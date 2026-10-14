@@ -84,6 +84,18 @@ export function timezoneExample(now = new Date(), zone = undefined) {
   return `Your clock now: ${clock(zone)}. Universal time: ${clock('UTC')}. Difference: ${text} hours.`;
 }
 
+// The lines of a report that describe protection (what stops or hides things), as opposed to hardware and settings.
+export const PROTECTION_TITLES = ['Ad filter in the browser', 'Tracker test, servers stopped', 'Do Not Track and Global Privacy Control',
+  'Connection check, WebRTC', 'Connection check, country of the address'];
+
+// Splits the differences of compareReports into protection first, everything else after.
+export function groupDifferences(different) {
+  return {
+    protection: different.filter((r) => PROTECTION_TITLES.includes(r.title)),
+    other: different.filter((r) => !PROTECTION_TITLES.includes(r.title)),
+  };
+}
+
 export function plural(n, one, many) {
   return `${n} ${n === 1 ? one : many}`;
 }

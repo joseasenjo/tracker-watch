@@ -7,7 +7,7 @@ import { runConnectionTest } from './connection-test.js';
 import { COLLECTORS } from './collectors.js';
 import { SUMMARY_NOTE, summarise } from './summary.js';
 import { preloadProbe, rowText, runTrackerTest, VERDICT_TEXT } from './tracker-test.js';
-import { combinedCode, compareReports, plural, reportText, shorten, timezoneExample } from './util.js';
+import { combinedCode, compareReports, groupDifferences, plural, reportText, shorten, timezoneExample } from './util.js';
 
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
@@ -188,7 +188,7 @@ async function onAgain() {
   await render(again);
   $('bc-compare').textContent = code === first
     ? 'Same combined code as the first reading: these details are stable, so a script would see you as the same browser each time.'
-    : 'The combined code is different from the first reading: something changed between the two (for example noise your browser adds, or a setting you changed).';
+    : 'The combined code is different from the first reading: something changed between the two (for example noise your browser adds, a setting you changed, or a detail the browser loads late, such as which fonts it reports). Read again to see whether it settles.';
 }
 
 async function onTest() {
@@ -252,10 +252,17 @@ $('bc-compare-btn').addEventListener('click', () => {
     out.replaceChildren(head, el('p', { text: 'Both browsers show the same details: a script would see them as the same browser.' }));
     return;
   }
-  out.replaceChildren(head, el('div', { class: 'table-scroll' }, [el('table', { class: 't' }, [
+  const table = (rows) => el('div', { class: 'table-scroll' }, [el('table', { class: 't' }, [
     el('thead', {}, [el('tr', {}, ['Detail', 'This browser', 'The pasted report'].map((h) => el('th', { text: h })))]),
-    el('tbody', {}, result.different.map((r) => el('tr', {}, [el('td', { text: r.title }), el('td', { text: r.a }), el('td', { text: r.b })]))),
-  ])]));
+    el('tbody', {}, rows.map((r) => el('tr', {}, [el('td', { text: r.title }), el('td', { text: r.a }), el('td', { text: r.b })]))),
+  ])]);
+  const groups = groupDifferences(result.different);
+  out.replaceChildren(head,
+    el('h4', { text: 'Differences in protection' }),
+    groups.protection.length ? table(groups.protection)
+      : el('p', { class: 'small', text: 'No difference in the protection details that this page can see. If you ran the optional checks in only one of the two browsers, run them in both.' }),
+    groups.other.length ? el('h4', { text: 'Other differences (hardware, system and settings)' }) : null,
+    groups.other.length ? table(groups.other) : null);
 });
 
 $('bc-conn').addEventListener('click', async () => {
