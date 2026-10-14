@@ -182,3 +182,14 @@ test('differences are split into protection first and everything else after, kee
   assert.deepEqual(g.other.map((r) => r.title), ['Screen size and colour depth', 'Canvas drawing']);
   assert.ok(PROTECTION_TITLES.every((t) => typeof t === 'string'));
 });
+
+import { classifyPixels } from '../../site_src/assets/browser-check/util.js';
+
+test('classifyPixels tells exact, altered and blank readings of a known colour', () => {
+  const want = [37, 99, 235, 255];
+  const px = (r, g, b, a) => [r, g, b, a];
+  assert.equal(classifyPixels([...px(37, 99, 235, 255), ...px(37, 99, 235, 255)], want), 'exact');
+  assert.equal(classifyPixels([...px(37, 99, 235, 255), ...px(38, 99, 235, 255)], want), 'altered');
+  assert.equal(classifyPixels([...px(0, 0, 0, 0), ...px(0, 0, 0, 0)], want), 'blank');
+  assert.equal(classifyPixels([], want), 'altered');
+});

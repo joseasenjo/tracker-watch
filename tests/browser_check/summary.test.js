@@ -107,3 +107,13 @@ test('the change suggestions make sense on their own and the tracker advice is s
   assert.match(worth, /Some of those servers got an answer/);
   assert.doesNotMatch(texts.join(' '), /nothing stopped/i);
 });
+
+test('the summary tells apart changing noise from altered pixels, and never claims a guarantee', () => {
+  const varies = summarise({ by: { ...READ, canvas: { value: 'x', randomised: true, varies: true, integrity: 'exact' } }, language: 'en' });
+  assert.match(varies.worth.join(' '), /adds noise to the canvas drawing/);
+  const altered = summarise({ by: { ...READ, canvas: { value: 'x', randomised: true, varies: false, integrity: 'altered' } }, language: 'en' });
+  assert.match(altered.worth.join(' '), /known colour drawn on a canvas came back different/);
+  const none = summarise({ by: READ, language: 'en' });
+  assert.match(none.worth.join(' '), /None of the signs we check were seen/);
+  assert.match(none.worth.join(' '), /not a guarantee/);
+});

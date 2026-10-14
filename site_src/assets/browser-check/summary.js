@@ -50,9 +50,10 @@ export function summarise({ by, tracker = null, connection = null, language = ''
   const fonts = /^(\d+) of/.exec(by.fonts ? by.fonts.value : '');
   const noise = Boolean(by.canvas && by.canvas.randomised);
   const hiddenGpu = Boolean(by['webgl-renderer'] && /^Hidden by/.test(by['webgl-renderer'].value));
-  if (noise) worth.push('Your browser adds noise to the canvas drawing, so a script gets a different value each time. That makes the value less useful for recognising you, although a changing value can itself be noticed.');
+  if (noise && by.canvas.varies) worth.push('Your browser adds noise to the canvas drawing, so a script gets a different value each time. That makes the value less useful for recognising you, although a changing value can itself be noticed.');
+  else if (noise) worth.push('A known colour drawn on a canvas came back different, so your browser alters or blocks what a script reads back from it. That is a fingerprint defence, and the value may stay the same during a visit.');
   if (hiddenGpu) worth.push('Your browser hides the name of the graphics card from pages.');
-  if (!noise && !hiddenGpu) worth.push('Nothing suggests that this browser hides or disturbs the details a script reads for a fingerprint.');
+  if (!noise && !hiddenGpu) worth.push('None of the signs we check were seen that this browser hides or disturbs the details a script reads for a fingerprint. That is not a guarantee: only a few signs are checked.');
   if (by['privacy-signals'] && !by['privacy-signals'].on) worth.push('Do Not Track and Global Privacy Control are both off, so sites are not asked to avoid tracking you. They are requests that sites can ignore.');
   if (by['ad-filter']) {
     worth.push(by['ad-filter'].hidden

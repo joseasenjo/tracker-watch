@@ -253,3 +253,36 @@ def test_the_copied_report_includes_the_optional_checks_but_never_the_address(br
     assert "Connection check, country of the address: ES" in text
     assert "203.0.113.9" not in text  # the address returned by the (mocked) service stays out of the report
     assert "- Observed:" in text
+
+
+NOISE = """
+const original = CanvasRenderingContext2D.prototype.getImageData;
+CanvasRenderingContext2D.prototype.getImageData = function (...args) {
+  const image = original.apply(this, args);
+  image.data[0] = (image.data[0] + 1) % 256; // a stable change, the same on every read
+  return image;
+};
+"""
+
+
+def test_a_stable_change_to_canvas_pixels_is_seen_as_a_fingerprint_defence(browser, served):
+    visit = Visit(browser, served)
+    visit.page.close()
+    page = browser.new_page()
+    page.add_init_script(NOISE)
+    page.route("**/*", lambda route: route.continue_() if urlparse(route.request.url).netloc.startswith("127.0.0.1") else route.abort())
+    page.goto(served + PAGE)
+    page.click("#bc-read")
+    page.wait_for_selector("#bc-results:not([hidden])", timeout=15000)
+    tile = page.locator("#bc-tiles .bc-tile").nth(1).inner_text()
+    assert "Signs of fingerprint defences" in tile and "canvas pixels altered or blocked" in tile
+    page.click("#bc-summary-btn")
+    assert "known colour drawn on a canvas came back different" in page.locator("#bc-summary").inner_text()
+
+
+def test_a_normal_browser_shows_no_defence_and_the_honest_wording(browser, served):
+    visit = Visit(browser, served)
+    visit.page.click("#bc-read")
+    visit.page.wait_for_selector("#bc-results:not([hidden])", timeout=15000)
+    tile = visit.page.locator("#bc-tiles .bc-tile").nth(1).inner_text()
+    assert "None seen" in tile and "None of the signs we check were seen" in tile and "not a guarantee" in tile

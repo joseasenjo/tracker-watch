@@ -1,6 +1,6 @@
 // One collector per characteristic. Each returns { value, raw?, stable? } and never throws: a detail the browser
 // refuses to give is reported as such. Nothing here makes a network request or stores anything.
-import { detectFonts, hashText, shorten } from './util.js';
+import { classifyPixels, detectFonts, hashText, shorten } from './util.js';
 
 const NA = 'Not available';
 const FONTS = ['Arial', 'Arial Black', 'Arial Narrow', 'Bookman Old Style', 'Calibri', 'Cambria', 'Cambria Math',
@@ -40,6 +40,22 @@ function drawCanvas() {
   ctx.fillStyle = 'rgb(255,0,255)';
   ctx.beginPath(); ctx.arc(50, 50, 50, 0, Math.PI * 2, true); ctx.closePath(); ctx.fill();
   return canvas.toDataURL();
+}
+
+// Draws a known colour and reads it back: a browser that adds noise or blocks the reading returns something else.
+function canvasIntegrity() {
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 16;
+    canvas.height = 16;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return 'unavailable';
+    ctx.fillStyle = 'rgb(37, 99, 235)';
+    ctx.fillRect(0, 0, 16, 16);
+    return classifyPixels(ctx.getImageData(0, 0, 16, 16).data, [37, 99, 235, 255]);
+  } catch (error) {
+    return 'blocked';
+  }
 }
 
 function webglContext() {
@@ -150,8 +166,12 @@ export const COLLECTORS = {
     const second = drawCanvas();
     const code = await hashText(first);
     const varies = first !== second;
-    return { value: varies ? `${shorten(code)}… (changes on every read: your browser adds noise)` : `${shorten(code)}…`,
-      raw: varies ? 'randomised' : code, randomised: varies, stable: !varies };
+    const integrity = canvasIntegrity();
+    const altered = integrity === 'altered' || integrity === 'blank' || integrity === 'blocked';
+    const note = varies ? ' (changes on every read: your browser adds noise)'
+      : altered ? ' (a known colour came back different: your browser alters or blocks what a script reads back)' : '';
+    return { value: `${shorten(code)}…${note}`, raw: varies ? 'randomised' : code, randomised: varies || altered,
+      varies, integrity, stable: !varies };
   }),
   webgl: safe(async () => {
     const gl = webglContext();

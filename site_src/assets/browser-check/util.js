@@ -96,6 +96,21 @@ export function groupDifferences(different) {
   };
 }
 
+// What a canvas gave back when a known colour was drawn on it: 'exact' (the same values), 'blank' (all zero, so the
+// reading is blocked) or 'altered' (something differs, as when a browser adds noise). `data` is RGBA, 4 values a pixel.
+export function classifyPixels(data, expected) {
+  let blank = true;
+  let exact = true;
+  for (let i = 0; i < data.length; i += 4) {
+    for (let c = 0; c < 4; c++) {
+      if (data[i + c] !== 0) blank = false;
+      if (data[i + c] !== expected[c]) exact = false;
+    }
+  }
+  if (data.length === 0) return 'altered';
+  return exact ? 'exact' : blank ? 'blank' : 'altered';
+}
+
 export function plural(n, one, many) {
   return `${n} ${n === 1 ? one : many}`;
 }

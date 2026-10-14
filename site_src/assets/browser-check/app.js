@@ -76,7 +76,8 @@ async function readAll() {
 // Signs that the browser is trying to hide or disturb a detail (what a fingerprinting defence does).
 function defences(by) {
   const signs = [];
-  if (by.canvas.randomised) signs.push('drawing noise');
+  if (by.canvas.varies) signs.push('drawing noise');
+  else if (by.canvas.randomised) signs.push('canvas pixels altered or blocked');
   if (/^Hidden by/.test(by['webgl-renderer'].value)) signs.push('graphics card name hidden');
   if (/^Not available/.test(by.webgl.value)) signs.push('3D drawing not available');
   if (by.fonts.value.startsWith('0 of')) signs.push('no fonts detectable');
@@ -146,7 +147,7 @@ async function render(results) {
       missing ? `${plural(missing, 'more was', 'more were')} not available in this browser.` : 'All of them were available.',
       detailList(results)),
     tile('Signs of fingerprint defences', signs.length ? String(signs.length) : 'None seen',
-      signs.length ? `Seen: ${signs.join(', ')}.` : 'Nothing suggests that your browser hides or disturbs these details.'),
+      signs.length ? `Seen: ${signs.join(', ')}.` : 'None of the signs we check were seen: drawing noise, altered or blocked pixels, a hidden graphics card name, no 3D drawing, no detectable fonts. It is not a guarantee.'),
     tile('Ad filter in the browser', by['ad-filter'].hidden ? 'Detected' : 'Not detected',
       'Checks whether a block of the kind ad filters hide was hidden. It makes no request, so it cannot tell whether trackers are blocked on the network: for that, use the test below.'),
     tile('Privacy signals', by['privacy-signals'].on ? 'On' : 'Off',
