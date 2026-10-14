@@ -1,5 +1,6 @@
 """Developer dashboard (traceguard.ops and the /ops routes of traceguard.admin): data, alerts and the few actions."""
 import json
+from pathlib import Path
 import threading
 import urllib.error
 import urllib.request
@@ -334,3 +335,28 @@ def test_a_direct_admin_link_is_not_measured_and_a_demo_is_never_direct(tmp_path
     assert called == ["https://example.org/"]
     by = {l["code"]: l for l in L.load_links(path)}
     assert "direct" not in by["show"] and by["show"]["demo"] is True
+
+
+def test_big_moves_are_one_clear_alert_with_both_scan_dates(data):
+    texts = [a["text"] for a in ops.build_alerts(state(data), NOW) if "Cambios bruscos" in a["text"]]
+    assert len(texts) == 1
+    assert "2026-10-04" in texts[0] and "2026-10-09" in texts[0] and "News A 50→10" in texts[0]
+    assert "banner de consentimiento" in texts[0]
+
+
+def test_drafts_that_are_only_published_by_hand_raise_an_alert_even_without_the_review_switch(data):
+    drafts = [{"kind": "anuncio", "posted": False, "stale": False}, {"kind": "alerta de cambio", "posted": False, "stale": False},
+              {"kind": "hilo semanal", "posted": False, "stale": False}, {"kind": "anuncio", "posted": True, "stale": False},
+              {"kind": "post de gancho", "posted": False, "stale": True}]
+    s = state(data)
+    s["drafts"] = drafts
+    waiting = [a["text"] for a in ops.build_alerts(s, NOW) if "esperan tu decisión" in a["text"]]
+    assert len(waiting) == 1 and waiting[0].startswith("2 borrador(es) de alerta de cambio, anuncio")
+    s["drafts"] = [{"kind": "hilo semanal", "posted": False, "stale": False}]
+    assert not any("esperan" in a["text"] for a in ops.build_alerts(s, NOW))  # the weekly thread publishes itself
+
+
+def test_the_drafts_section_of_the_page_is_collapsed_and_remembered():
+    page = (Path(ops.__file__).parent / "ops_page.html").read_text(encoding="utf-8")
+    assert '<details class="card fold" id="sec-borradores">' in page and 'id="drafts-count"' in page
+    assert "'sec-borradores'" in page and "<details class=\"card fold\" id=\"sec-borradores\" open" not in page

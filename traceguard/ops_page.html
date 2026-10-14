@@ -101,7 +101,8 @@
     <p><button id="adm-links-publish">Publicar enlaces (commit + subir + republicar la web)</button> <span class="muted" id="adm-publish-note"></span></p>
   </details>
 
-  <section class="card"><h2>Borradores</h2><div id="drafts"><span class="muted">Cargando…</span></div></section>
+  <details class="card fold" id="sec-borradores"><summary><h2>Borradores <span class="muted" id="drafts-count"></span></h2></summary>
+    <div id="drafts"><span class="muted">Cargando…</span></div></details>
 
   <div class="grid">
     <section class="card"><h2>Última medición</h2><div id="scan"></div></section>
@@ -169,8 +170,8 @@
     document.getElementById('notes-count').textContent = '(' + active + (active === 1 ? ' nota' : ' notas') + ')';
   }
   function initFolds() {
-    // Pizarra and admin tools start closed; the panel remembers what you opened in this browser.
-    ['sec-pizarra', 'sec-admin'].forEach(function (id) {
+    // Pizarra, drafts and admin tools start closed; the panel remembers what you opened in this browser.
+    ['sec-pizarra', 'sec-admin', 'sec-borradores'].forEach(function (id) {
       var d = document.getElementById(id), key = 'tw-open-' + id;
       try { if (localStorage.getItem(key) === '1') d.open = true; } catch (e) { /* storage unavailable */ }
       d.addEventListener('toggle', function () { try { localStorage.setItem(key, d.open ? '1' : '0'); } catch (e) { /* ignore */ } });
@@ -237,6 +238,11 @@
       }
       return box;
     }) : [note('No hay borradores en tu copia local. Con la revisión encendida, el escaneo deja aquí el borrador; pulsa «Actualizar datos» para verlo.')]);
+    var waitingDrafts = s.drafts.filter(function (d) { return !d.posted && !d.stale; }).length;
+    var draftsCount = document.getElementById('drafts-count');
+    draftsCount.textContent = waitingDrafts ? '(' + waitingDrafts + (waitingDrafts === 1 ? ' sin publicar' : ' sin publicar') + ' · ' + s.drafts.length + ' en total)'
+      : (s.drafts.length ? '(ninguno sin publicar · ' + s.drafts.length + ' en total)' : '(ninguno)');
+    draftsCount.className = waitingDrafts ? 'pill media' : 'muted';
 
     var sc = s.scan;
     fill('scan', !sc.available ? [note('No hay datos en data/runs.')] : [

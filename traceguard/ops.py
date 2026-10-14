@@ -35,6 +35,7 @@ SWING = 30            # a change of this many tracking services between two scan
 MIN_SHARE = 0.6       # below this share of measured sites the weekly thread is not drafted
 STALE_DAYS = 9        # a weekly scan older than this means the schedule did not run
 USABLE = ("high", "medium")
+MANUAL_KINDS = ("alerta de cambio", "post de gancho", "anuncio")  # drafts that are only ever published by hand
 NOTES_FILE = Path("notas_desarrollador/pizarra.json")  # private: the folder is in .gitignore
 MAX_NOTE = 4000
 MAX_NOTES = 500
@@ -257,8 +258,11 @@ def build_alerts(state: dict, now: datetime | None = None) -> list[dict]:
                 add("media", f"El último escaneo tiene {age} días: el calendario no se ha ejecutado.")
         except ValueError:
             pass
-        for s in scan["swings"][:5]:
-            add("media", f"{s['name']}: de {s['before']} a {s['after']} servicios ({s['delta']:+d}) entre escaneos. Revisar antes de destacarlo.")
+        if scan["swings"]:
+            moved = ", ".join(f"{s['name']} {s['before']}→{s['after']}" for s in scan["swings"][:5])
+            more = f" (y {len(scan['swings']) - 5} más)" if len(scan["swings"]) > 5 else ""
+            add("media", f"Cambios bruscos de servicios entre el escaneo del {scan.get('previous') or 'anterior'} y el del {scan['date']}: "
+                         f"{moved}{more}. Revisar antes de destacarlos: pueden deberse a un banner de consentimiento o a una medición distinta.")
         if scan["unmeasured"]:
             add("info", f"{len(scan['unmeasured'])} webs sin medir: " + ", ".join(scan["unmeasured"]))
         if scan["low_confidence"]:
@@ -266,10 +270,15 @@ def build_alerts(state: dict, now: datetime | None = None) -> list[dict]:
         age_es = scan.get("spain_age_days")
         if age_es is not None and age_es > 7:
             add("media", f"La medición de España desde tu PC tiene {age_es} días: el post de España no saldrá en el hilo.")
+    waiting = [d for d in state.get("drafts", []) if not d["posted"] and not d["stale"]]
     if variables.get("POST_REVIEW") == "true":
-        waiting = [d for d in state.get("drafts", []) if not d["posted"] and not d["stale"]]
         if waiting:
-            add("alta", f"{len(waiting)} borrador(es) esperan tu aprobación.")
+            add("alta", f"{len(waiting)} borrador(es) esperan tu aprobación. Despliega «Borradores».")
+    else:
+        # alerts, hooks and announcements are never published on their own, whatever the review switch says
+        manual = [d for d in waiting if d.get("kind") in MANUAL_KINDS]
+        if manual:
+            add("media", f"{len(manual)} borrador(es) de {', '.join(sorted({d['kind'] for d in manual}))} esperan tu decisión. Despliega «Borradores».")
     if git.get("available") and git["behind"]:
         add("info", f"Tu copia local va {git['behind']} commit(s) por detrás de GitHub: pulsa «Actualizar datos».")
     if git.get("available") and git["ahead"]:
