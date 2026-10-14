@@ -206,7 +206,7 @@ def test_summary_appears_after_reading_and_grows_with_the_optional_checks(browse
     visit.page.click("#bc-test")
     visit.page.wait_for_function("document.querySelectorAll('#bc-test-out tbody tr').length === 7", timeout=20000)
     text = visit.page.locator("#bc-summary").inner_text()
-    assert "7 of 7 requests" in text and "tracker test has not been run" not in text
+    assert "requests to 7 of 7 advertising and analytics servers were stopped" in text and "tracker test has not been run" not in text
     visit.page.click("#bc-conn")
     visit.page.wait_for_function("document.querySelectorAll('#bc-conn-out .bc-tile').length >= 3", timeout=20000)
     text = visit.page.locator("#bc-summary").inner_text()
@@ -231,3 +231,21 @@ def test_the_first_tile_lists_every_detail_that_was_read_and_each_link_opens_its
     assert visit.page.locator("#bc-intl").get_attribute("open") is not None
     assert visit.page.locator(".bc-entry:visible").count() == visit.page.locator(".bc-entry").count()
     assert [e for e in visit.errors if "Failed to load resource" not in e] == []
+
+
+def test_the_copied_report_includes_the_optional_checks_but_never_the_address(browser, served):
+    visit = Visit(browser, served, outside="abort")
+    visit.page.evaluate("window.__copied = null; navigator.clipboard.writeText = async (t) => { window.__copied = t; }")
+    visit.page.click("#bc-read")
+    visit.page.wait_for_selector("#bc-results:not([hidden])", timeout=15000)
+    visit.page.click("#bc-test")
+    visit.page.wait_for_function("document.querySelectorAll('#bc-test-out tbody tr').length === 7", timeout=20000)
+    visit.page.click("#bc-conn")
+    visit.page.wait_for_function("document.querySelectorAll('#bc-conn-out .bc-tile').length >= 3", timeout=20000)
+    visit.page.click("#bc-copy")
+    visit.page.wait_for_function("window.__copied !== null")
+    text = visit.page.evaluate("window.__copied")
+    assert "Tracker test, servers stopped: 7 of 7" in text
+    assert "Connection check, country of the address: ES" in text
+    assert "203.0.113.9" not in text  # the address returned by the (mocked) service stays out of the report
+    assert "- Observed:" in text

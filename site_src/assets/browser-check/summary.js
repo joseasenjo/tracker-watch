@@ -64,10 +64,10 @@ export function summarise({ by, tracker = null, connection = null, language = ''
     const total = tracker.rows.length;
     const stopped = tracker.rows.filter((r) => r.state === 'blocked').length;
     const answered = tracker.rows.filter((r) => r.state === 'reachable').length;
-    observed.push(`In the tracker test, ${stopped} of ${total} requests to advertising and analytics servers were stopped and ${answered} got an answer.`);
+    observed.push(`In the tracker test, the requests to ${stopped} of ${total} advertising and analytics servers were stopped and ${answered} got an answer.`);
     if (answered > 0) {
-      worth.push('Some requests to advertising or analytics servers got an answer, so nothing stopped them from this page. A blocker that answers with a stand-in file also counts as an answer.');
-      change.push({ id: 'ad-filter', text: 'Use a blocker or a browser with tracking protection, then run the tracker test again to see the difference.' });
+      worth.push('Some of those servers got an answer, so nothing stopped the requests from this page. A blocker that answers with a stand-in file also counts as an answer.');
+      change.push({ id: 'ad-filter', text: 'Try a blocker or a browser with tracking protection, then run the tracker test again.' });
     }
   } else {
     observed.push('The tracker test has not been run, so this summary says nothing about whether trackers are stopped.');
@@ -95,7 +95,9 @@ export function summarise({ by, tracker = null, connection = null, language = ''
 
   const privacyOff = by['privacy-signals'] && !by['privacy-signals'].on;
   if (privacyOff) change.push({ id: 'privacy-signals', text: PICK(ACTIONS, 'privacy-signals') });
-  if (!noise && !hiddenGpu) change.push({ id: 'canvas', text: PICK(ACTIONS, 'canvas') });
+  if (!noise && !hiddenGpu) {
+    change.push({ id: 'canvas', text: 'Pages can read a drawing signature from your browser that stays the same between visits. Brave adds small random noise to it, Tor Browser asks before allowing it, and Firefox can do the same with its fingerprinting protection.' });
+  }
   if (fonts && Number(fonts[1]) >= 25) change.push({ id: 'fonts', text: PICK(ACTIONS, 'fonts') });
 
   return { observed, worth, change: change.slice(0, 3) };

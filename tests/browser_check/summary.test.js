@@ -68,7 +68,7 @@ test('the summary reports the tracker test and the connection check with their l
   };
   const s = summarise({ by: READ, tracker, connection, language: 'es-ES', zone: 'Europe/Madrid' });
   const text = [...s.observed, ...s.worth].join(' ');
-  assert.match(text, /2 of 3 requests .* were stopped and 1 got an answer/);
+  assert.match(text, /requests to 2 of 3 advertising and analytics servers were stopped and 1 got an answer/);
   assert.match(text, /TLSv1\.3 over http\/2/);
   assert.match(text, /The site still sees your address/);
   assert.match(text, /agree \(ES\)/);
@@ -94,4 +94,16 @@ test('a copied report carries the summary but a comparison ignores it', () => {
   assert.match(text, /Summary \(observations, not a verdict\):/);
   assert.match(text, /- Observed: /);
   assert.deepEqual([...parseReport(text).keys()].sort(), ['Combined code', 'Platform']);
+});
+
+test('the change suggestions make sense on their own and the tracker advice is short', () => {
+  const tracker = { ok: true, rows: [{ state: 'reachable' }, { state: 'reachable' }] };
+  const s = summarise({ by: READ, tracker, language: 'es-ES' });
+  const texts = s.change.map((c) => c.text);
+  assert.ok(texts.every((t) => !/^\w+ \w+ small random noise to it/.test(t)), texts.join(' | '));
+  assert.ok(texts.some((t) => /^Pages can read a drawing signature/.test(t)));
+  assert.ok(texts.some((t) => /^Try a blocker or a browser with tracking protection/.test(t)));
+  const worth = s.worth.join(' ');
+  assert.match(worth, /Some of those servers got an answer/);
+  assert.doesNotMatch(texts.join(' '), /nothing stopped/i);
 });

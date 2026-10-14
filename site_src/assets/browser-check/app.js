@@ -96,6 +96,25 @@ function currentSummary() {
     zone: (by.timezone && by.timezone.zone) || '' });
 }
 
+// Results of the optional checks, added to the copied report so that a comparison shows what a blocker changes.
+// Never the address itself: only the country it suggests and what WebRTC showed.
+function reportExtras() {
+  const extras = [];
+  if (trackerResult) {
+    const stopped = trackerResult.rows.filter((r) => r.state === 'blocked').length;
+    extras.push({ title: 'Tracker test, servers stopped', value: `${stopped} of ${trackerResult.rows.length}` });
+  }
+  if (connectionResult && connectionResult.trace) {
+    extras.push({ title: 'Connection check, country of the address', value: connectionResult.trace.loc || 'unknown' },
+      { title: 'Connection check, WebRTC', value: connectionResult.rtc.relation });
+  }
+  return extras;
+}
+
+function fullReport() {
+  return reportText([...(last || []), ...reportExtras()], new Date().toISOString().slice(0, 10), lastCode, currentSummary());
+}
+
 function listNode(items, makeItem) {
   return el('ul', { class: 'bc-summary-list' }, items.map(makeItem));
 }
@@ -207,7 +226,7 @@ $('bc-test').addEventListener('click', onTest);
 $('bc-copy').addEventListener('click', async () => {
   const copy = $('bc-copy');
   try {
-    await navigator.clipboard.writeText(reportText(last || [], new Date().toISOString().slice(0, 10), lastCode, currentSummary()));
+    await navigator.clipboard.writeText(fullReport());
     copy.textContent = 'Copied';
   } catch (error) {
     copy.textContent = 'Could not copy';
@@ -222,7 +241,7 @@ $('bc-compare-btn').addEventListener('click', () => {
     out.textContent = 'Paste a report from another browser or window first.';
     return;
   }
-  const mine = reportText(last || [], new Date().toISOString().slice(0, 10), lastCode);
+  const mine = fullReport();
   const result = compareReports(mine, pasted);
   if (!result.rows.some((r) => r.a !== '(missing)' && r.b !== '(missing)')) {
     out.textContent = 'That text does not look like a report from this page. Use "Copy this report as text" in the other browser.';

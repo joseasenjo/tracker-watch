@@ -164,3 +164,10 @@ test('timezoneExample puts the local clock next to universal time and states the
   assert.match(text, /Your clock now: 12:00\. Universal time: 12:00\./);
   assert.match(text, /Difference: [+-]\d+(:\d\d)? hours\./);
 });
+
+test('extra report lines with a comma in the title are read back and compared', () => {
+  const a = reportText([{ title: 'Tracker test, servers stopped', value: '7 of 7' }], 'd', 'x');
+  const b = reportText([{ title: 'Tracker test, servers stopped', value: '0 of 7' }], 'd', 'x');
+  const diff = compareReports(a, b);
+  assert.deepEqual(diff.different.map((r) => [r.title, r.a, r.b]), [['Tracker test, servers stopped', '7 of 7', '0 of 7']]);
+});
