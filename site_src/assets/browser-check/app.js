@@ -5,7 +5,8 @@ import { ACTIONS } from './actions.js';
 import { BY_ID, CATALOG, GROUPS, WEIGHTS } from './catalog.js';
 import { runConnectionTest } from './connection-test.js';
 import { COLLECTORS } from './collectors.js';
-import { runTrackerTest, VERDICT_TEXT } from './tracker-test.js';
+import { SUMMARY_NOTE, summarise } from './summary.js';
+import { preloadProbe, rowText, runTrackerTest, VERDICT_TEXT } from './tracker-test.js';
 import { combinedCode, compareReports, plural, reportText, shorten, timezoneExample } from './util.js';
 
 function el(tag, attrs = {}, children = []) {
@@ -70,6 +71,36 @@ function defences(by) {
 let first = null;
 let last = null;
 let lastCode = '';
+let trackerResult = null;
+let connectionResult = null;
+
+function currentSummary() {
+  if (!last) return null;
+  const by = Object.fromEntries(last.map((r) => [r.id, r]));
+  return summarise({ by, tracker: trackerResult, connection: connectionResult, language: navigator.language,
+    zone: (by.timezone && by.timezone.zone) || '' });
+}
+
+function listNode(items, makeItem) {
+  return el('ul', { class: 'bc-summary-list' }, items.map(makeItem));
+}
+
+function renderSummary() {
+  const summary = currentSummary();
+  if (!summary) return;
+  const plain = (text) => el('li', { text });
+  const changeItem = (c) => {
+    const li = el('li', { text: c.text + ' ' });
+    if (c.id) li.appendChild(el('a', { href: `#bc-${c.id}`, text: 'See the detail' }));
+    return li;
+  };
+  $('bc-summary-body').replaceChildren(
+    el('h4', { text: 'Observed' }), listNode(summary.observed, plain),
+    el('h4', { text: 'Worth knowing' }), listNode(summary.worth, plain),
+    summary.change.length ? el('h4', { text: 'You could change' }) : null,
+    summary.change.length ? listNode(summary.change, changeItem) : null,
+    el('p', { class: 'small', text: SUMMARY_NOTE }));
+}
 
 async function render(results) {
   const by = Object.fromEntries(results.map((r) => [r.id, r]));
@@ -93,6 +124,7 @@ async function render(results) {
   }
   $('bc-results').hidden = false;
   applySelection();
+  renderSummary();
   return code;
 }
 
@@ -130,14 +162,16 @@ async function onTest() {
   button.disabled = true;
   button.textContent = 'Testing…';
   out.textContent = '';
-  const result = await runTrackerTest({ fetchFn: (url, init) => fetch(url, init), controlUrl: location.href.split('#')[0] });
+  const result = await runTrackerTest({ fetchFn: (url, init) => fetch(url, init), preloadFn: (url, ms) => preloadProbe(url, document, ms),
+    controlUrl: location.href.split('#')[0] });
+  trackerResult = result.ok ? result : null;
+  renderSummary();
   button.disabled = false;
   button.textContent = 'Run the test again';
   if (!result.ok) {
     out.textContent = 'This page could not reach its own server, so nothing can be concluded. Check your connection and try again.';
     return;
   }
-  const state = { reachable: 'reached the server', blocked: 'blocked', timeout: 'no answer in time' };
   out.replaceChildren(
     el('div', { class: 'bc-tiles' }, [
       tile('Blocking tracking ads?', VERDICT_TEXT[result.ads], 'Advertising servers that serve and measure ads.'),
@@ -146,7 +180,7 @@ async function onTest() {
     el('div', { class: 'table-scroll' }, [el('table', { class: 't' }, [
       el('thead', {}, [el('tr', {}, ['Server', 'Run by', 'Result'].map((h) => el('th', { text: h })))]),
       el('tbody', {}, result.rows.map((r) => el('tr', {}, [el('td', { text: r.host }), el('td', { text: r.owner }),
-        el('td', { text: state[r.state] })]))),
+        el('td', { text: rowText(r) })]))),
     ])]),
     el('p', { class: 'small', text: 'The result says whether the request left your browser, not what any company does with data. An extension, a network filter or a browser setting can each cause a block.' }));
 }
@@ -157,7 +191,7 @@ $('bc-test').addEventListener('click', onTest);
 $('bc-copy').addEventListener('click', async () => {
   const copy = $('bc-copy');
   try {
-    await navigator.clipboard.writeText(reportText(last || [], new Date().toISOString().slice(0, 10), lastCode));
+    await navigator.clipboard.writeText(reportText(last || [], new Date().toISOString().slice(0, 10), lastCode, currentSummary()));
     copy.textContent = 'Copied';
   } catch (error) {
     copy.textContent = 'Could not copy';
@@ -198,6 +232,8 @@ $('bc-conn').addEventListener('click', async () => {
   const result = await runConnectionTest({ fetchFn: (url, init) => fetch(url, init), RTC: window.RTCPeerConnection });
   button.disabled = false;
   button.textContent = 'Check again';
+  connectionResult = result;
+  renderSummary();
   const trace = result.trace;
   const rtc = result.rtc;
   const rtcText = !result.rtcAvailable ? 'Not available in this browser'

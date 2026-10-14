@@ -29,10 +29,17 @@ export function detectFonts(candidates, bases, measure) {
 
 // One line per characteristic, ready to copy: "Title: value". A value that spans lines is joined with " / " so that
 // every detail stays on one line and a report can be read back by compareReports.
-export function reportText(results, when, code = '') {
+export function reportText(results, when, code = '', summary = null) {
   const lines = [`Browser check, ${when}. Read locally; nothing was sent anywhere.`];
   if (code) lines.push(`Combined code: ${code}`);
   lines.push('');
+  if (summary) {
+    lines.push('Summary (observations, not a verdict):');
+    for (const [label, items] of [['Observed', summary.observed], ['Worth knowing', summary.worth], ['You could change', (summary.change || []).map((c) => c.text)]]) {
+      for (const item of items) lines.push(`- ${label}: ${item}`);
+    }
+    lines.push('');
+  }
   for (const r of results) lines.push(`${r.title}: ${String(r.value).replace(/\s*\n\s*/g, ' / ')}`);
   return lines.join('\n');
 }
@@ -42,7 +49,7 @@ export function parseReport(text) {
   const map = new Map();
   for (const line of String(text).split('\n')) {
     const at = line.indexOf(': ');
-    if (at > 0 && !line.startsWith('Browser check,')) map.set(line.slice(0, at).trim(), line.slice(at + 2).trim());
+    if (at > 0 && !line.startsWith('Browser check,') && !line.startsWith('- ')) map.set(line.slice(0, at).trim(), line.slice(at + 2).trim());
   }
   return map;
 }

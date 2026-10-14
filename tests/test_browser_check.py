@@ -102,8 +102,8 @@ def _node_major():
 
 @pytest.mark.skipif(_node_major() < 22, reason="Node 22 or newer is needed to run the ES-module tests")
 def test_javascript_unit_tests_pass():
-    done = subprocess.run(["node", "--test", "tests/browser_check/util.test.js"], cwd=ROOT, capture_output=True,
-                          text=True, timeout=120)
+    done = subprocess.run(["node", "--test", "tests/browser_check/util.test.js", "tests/browser_check/summary.test.js"],
+                          cwd=ROOT, capture_output=True, text=True, timeout=120)
     assert done.returncode == 0, done.stdout + done.stderr
 
 

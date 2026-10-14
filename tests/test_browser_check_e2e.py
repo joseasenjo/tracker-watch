@@ -131,9 +131,9 @@ def test_tracker_test_says_blocked_when_every_request_is_refused(browser, served
     visit = Visit(browser, served, outside="abort")
     visit.page.click("#bc-test")
     visit.page.wait_for_function("document.querySelectorAll('#bc-test-out tbody tr').length === 7", timeout=20000)
-    assert sorted(urlparse(u).netloc for u in visit.outside_requests) == sorted(TRACKER_HOSTS)
+    assert sorted(urlparse(u).netloc for u in visit.outside_requests) == sorted(TRACKER_HOSTS * 2)  # two methods per server
     text = visit.page.locator("#bc-test-out").inner_text()
-    assert text.count("Yes, all blocked") == 2 and "reached the server" not in text
+    assert text.count("Yes: every request was stopped") == 2 and "got an answer" not in text
 
 
 def test_tracker_test_says_none_blocked_when_every_request_gets_an_answer(browser, served):
@@ -141,7 +141,7 @@ def test_tracker_test_says_none_blocked_when_every_request_gets_an_answer(browse
     visit.page.click("#bc-test")
     visit.page.wait_for_function("document.querySelectorAll('#bc-test-out tbody tr').length === 7", timeout=20000)
     text = visit.page.locator("#bc-test-out").inner_text()
-    assert text.count("No, none blocked") == 2
+    assert text.count("No request was stopped") == 2 and text.count("got an answer") == 7
 
 
 def test_connection_check_shows_the_address_the_service_returned(browser, served):
@@ -191,3 +191,23 @@ def test_home_page_shows_the_preview_beside_the_title_on_desktop_and_below_the_t
     visit.page.click(".hero-shot")
     visit.page.wait_for_url("**/browser-check.html")
     assert visit.errors == []
+
+
+def test_summary_appears_after_reading_and_grows_with_the_optional_checks(browser, served):
+    visit = Visit(browser, served, outside="abort")
+    visit.page.click("#bc-read")
+    visit.page.wait_for_selector("#bc-results:not([hidden])", timeout=15000)
+    text = visit.page.locator("#bc-summary").inner_text()
+    assert "Observed" in text and "not a security audit and not a verdict" in text
+    assert "tracker test has not been run" in text and "connection check has not been run" in text
+    visit.page.click("#bc-test")
+    visit.page.wait_for_function("document.querySelectorAll('#bc-test-out tbody tr').length === 7", timeout=20000)
+    text = visit.page.locator("#bc-summary").inner_text()
+    assert "7 of 7 requests" in text and "tracker test has not been run" not in text
+    visit.page.click("#bc-conn")
+    visit.page.wait_for_function("document.querySelectorAll('#bc-conn-out .bc-tile').length >= 3", timeout=20000)
+    text = visit.page.locator("#bc-summary").inner_text()
+    assert "TLSv1.3" in text and "connection check has not been run" not in text
+    assert not re.search(r"\b(safe|dangerous|at risk|vulnerable)\b", text, re.I)
+    # the browser logs a line for every request that is cut on purpose; anything else would be a real error
+    assert [e for e in visit.errors if "Failed to load resource" not in e] == []

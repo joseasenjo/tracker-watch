@@ -124,7 +124,7 @@ export const COLLECTORS = {
   timezone: safe(async () => {
     const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const offset = new Date().getTimezoneOffset();
-    return { value: `${zone}, offset ${offset} min from universal time` };
+    return { value: `${zone}, offset ${offset} min from universal time`, zone };
   }),
   screen: safe(async () => ({
     value: `${screen.width}x${screen.height}, colour depth ${screen.colorDepth}, pixel ratio ${window.devicePixelRatio}`,

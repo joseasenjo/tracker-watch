@@ -22,6 +22,11 @@
       <h2>What this shows about your browser</h2>
       <div class="bc-tiles" id="bc-tiles"></div>
 
+      <div class="card bc-summary" id="bc-summary">
+        <h3>Summary of what was observed</h3>
+        <div id="bc-summary-body"></div>
+      </div>
+
       <div class="card bc-code" id="bc-code-box" hidden>
         <h3>Your combined code: <code id="bc-code"></code></h3>
         <p>This is the short code a script could compute from all the stable details below. If two sites computed the same code, they could tell it was the same browser without using a cookie. It is not an identity: it only says that this combination of details is what a script sees right now. Clear your cookies and it stays the same, which is the point of the exercise.</p>
@@ -62,11 +67,11 @@
     </div>
 
     <h2>Are trackers blocked? An optional test</h2>
-    <p>The reading above looks at your browser. This test looks at your protection: it asks for a well-known script from seven advertising and analytics servers and sees whether your browser lets the request through. It is the only part of this site that contacts other companies, so it never runs by itself.</p>
+    <p>The reading above looks at your browser. This test looks at your protection: it asks for a well-known script from seven advertising and analytics servers, in two different ways, and sees whether anything stops the request. It is the only part of this site that contacts other companies, so it never runs by itself.</p>
     <details>
       <summary>What exactly is contacted, and what do they learn?</summary>
-      <p>When you press the button, your browser makes seven requests, one to each of these servers: pagead2.googlesyndication.com, securepubads.g.doubleclick.net, static.ads-twitter.com, bat.bing.com, www.google-analytics.com, connect.facebook.net and sb.scorecardresearch.com. Each one receives what any request carries: your IP address and your browser's user agent. We send no cookies and no referring page. The result stays in this page: it is not stored, and we never receive it. One extra request goes to this site itself, to check that your connection works.</p>
-      <p>A request that never leaves your browser (blocked by an extension, a filter on your network or a browser setting) counts as blocked. A request that gets any answer counts as reached.</p>
+      <p>When you press the button, your browser makes two requests to each of these seven servers (fourteen in all), one as a background request and one as a script preload: pagead2.googlesyndication.com, securepubads.g.doubleclick.net, static.ads-twitter.com, bat.bing.com, www.google-analytics.com, connect.facebook.net and sb.scorecardresearch.com. Each one receives what any request carries: your IP address and your browser's user agent. We send no cookies and no referring page. The scripts are only requested, never run. The result stays in this page: it is not stored, and we never receive it. One extra request goes to this site itself, to check that your connection works.</p>
+      <p>A request that never leaves your browser (stopped by an extension, a filter on your network or a browser setting) counts as stopped. A request that gets any answer counts as answered; a blocker that replies with a stand-in file also counts as an answer, even though the real server was not contacted.</p>
     </details>
     <p class="bc-actions"><button type="button" class="btn" id="bc-test">Run the tracker test</button></p>
     <div id="bc-test-out" role="status"></div>
