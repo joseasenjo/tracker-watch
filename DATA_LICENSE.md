@@ -12,4 +12,5 @@ The data describes what public web pages contacted when loaded without interacti
 and at the time stated in each report. It is provided as is, without any claim about the intent or
 legality of what was measured. See the method page of the site for its limits.
 
-The source code is licensed separately under the MIT licence (see `LICENSE`).
+The source code is licensed separately under the PolyForm Noncommercial License 1.0.0 (see `LICENSE`). Versions
+published up to the tag `last-mit-2026-10-14` were published under the MIT licence (see `LICENSE-MIT-historico`).

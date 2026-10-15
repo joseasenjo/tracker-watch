@@ -92,4 +92,4 @@ The extension collects no personal data, so it sells none, shares none and shows
 Changes to this policy are listed in the repository's history. Questions and reports: open an issue at
 https://github.com/joseasenjo/tracker-watch/issues.
 
-The code is open source (MIT): https://github.com/joseasenjo/tracker-watch/tree/main/extension
+The source code is public and free to read and audit (source available under the PolyForm Noncommercial License 1.0.0; the extension itself is free to use for any purpose): https://github.com/joseasenjo/tracker-watch/tree/main/extension

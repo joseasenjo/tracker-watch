@@ -102,7 +102,7 @@ company does with it. The list is limited and some entries are not verified one 
 
 Credits: EasyList and EasyPrivacy by The EasyList authors (CC BY-SA 3.0); AdGuard cname-trackers (MIT).
 
-Open source (MIT): https://github.com/joseasenjo/tracker-watch/tree/main/extension
+Source available (PolyForm Noncommercial; free to use): https://github.com/joseasenjo/tracker-watch/tree/main/extension
 Privacy policy: https://joseasenjo.github.io/tracker-watch/extension-privacy.html
 
 - Extension logo: icon-128.png

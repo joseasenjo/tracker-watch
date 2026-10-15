@@ -1,6 +1,8 @@
 # Third-party material in Tracker Watch Lens
 
-The extension's own code is MIT (see `LICENSE` at the repository root). It ships the following material
+The extension's own code is source available under the PolyForm Noncommercial License 1.0.0, with free use for end
+users (see `LICENSE` at the repository root; versions up to the tag `last-mit-2026-10-14` were MIT). The material
+below keeps its own licence and is not covered by that licence. It ships the following material
 from other sources:
 
 ## Public Suffix List — `data/psl.json`
@@ -25,7 +27,7 @@ from other sources:
   sites are left out. Used by the optional "extended" clean mode, off by default.
 - Licence: EasyList offers GPL-3.0-or-later or CC BY-SA 3.0; this conversion is used and shared under
   **CC BY-SA 3.0** (https://creativecommons.org/licenses/by-sa/3.0/), credit "The EasyList authors". The converted
-  file is an adaptation and keeps that licence; the extension's own code remains MIT.
+  file is an adaptation and keeps that licence; the extension's own code keeps the licence in `LICENSE`.
 
 ## EasyList (network and element hiding rules) — `rules/easylist.json`, `data/cosmetic.json`
 
