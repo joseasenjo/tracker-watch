@@ -578,6 +578,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("unmeasured.html", out / "unmeasured.html", page="unmeasured")
     render("method.html", out / "method.html", page="method")
     render("privacy.html", out / "privacy.html", page="privacy")
+    render("subscribe.html", out / "subscribe.html", page="subscribe")
     render("about.html", out / "about.html", page="about")
     render("contact.html", out / "contact.html", page="contact")
     render("shortlinks.html", out / "shortlinks.html", page="shortlinks")

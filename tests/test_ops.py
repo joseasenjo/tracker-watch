@@ -360,3 +360,12 @@ def test_the_drafts_section_of_the_page_is_collapsed_and_remembered():
     page = (Path(ops.__file__).parent / "ops_page.html").read_text(encoding="utf-8")
     assert '<details class="card fold" id="sec-borradores">' in page and 'id="drafts-count"' in page
     assert "'sec-borradores'" in page and "<details class=\"card fold\" id=\"sec-borradores\" open" not in page
+
+
+def test_the_mail_section_of_the_page_lists_subscribers_and_approves_digests():
+    page = (Path(ops.__file__).parent / "ops_page.html").read_text(encoding="utf-8")
+    assert '<details class="card fold" id="sec-correo">' in page and "'sec-correo'" in page
+    for api in ("/api/ops/subscriber'", "/api/ops/subscribers/sync", "/api/ops/digest"):
+        assert api in page
+    assert "Aprobar y enviar" in page and "Enviarme una prueba" in page and "Sincronizar con GitHub" in page
+    assert "id=\"sec-correo\" open" not in page

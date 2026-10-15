@@ -298,3 +298,35 @@ def test_pushing_the_list_to_the_secret_sends_it_on_stdin_and_prints_no_address(
     assert command[:4] == ["gh", "secret", "set", "SUBSCRIBERS_JSON"] and "ana@example.org" in kwargs["input"]
     assert "@" not in capsys.readouterr().out
     assert subscribers_cli.main(["--file", str(tmp_path / "none.json"), "push-secret"], runner=runner) == 1
+
+
+# --- the offer of services and the test message -----------------------------------------------------------------------
+
+def test_every_digest_ends_with_the_offer_of_audit_analysis_and_automation_and_says_so_in_the_footer():
+    _, body = digest.build_digest({"date": "2026-10-12", "posts": ["One."]}, "weekly", site_url="https://site.example/",
+                                  sign="TW", cta=digest.cta_text({"CONTACT_EMAIL": "contact@example.org"}))
+    assert "security review" in body and "automation" in body and "write to contact@example.org" in body
+    assert body.index("write to contact@example.org") < body.index("\n--\n")  # the offer comes before the footer
+    assert "audit, analysis and automation services" in body  # the footer tells people it may be mentioned
+    assert "custom offer" in digest.cta_text({"DIGEST_CTA": "custom offer", "CONTACT_EMAIL": "c@example.org"})
+    assert "the address above" in digest.cta_text({})
+
+
+def test_a_test_message_goes_only_to_the_owner_marked_and_leaves_no_mark(tmp_path):
+    folder = draft_folder(tmp_path, posted=False)  # a test needs no publication, no list and no switch
+    env = {k: v for k, v in SMTP_ENV.items() if k != "DIGEST_ENABLED"}
+    mailing.SENDERS["smtp"] = lambda e: mailing.SmtpSender(e, smtp=FakeSMTP, sleep=lambda s: None)
+    try:
+        code, lines = digest.run(folder, env, test=True, subscribers=people())
+    finally:
+        mailing.SENDERS["smtp"] = mailing.SmtpSender
+    sent = FakeSMTP.instances[0].sent
+    assert code == 0 and len(sent) == 1 and str(sent[0]["To"]) == "contact@example.org"
+    assert str(sent[0]["Subject"]).startswith("[TEST] [Tracker Watch]") and not (folder / digest.MARKER).exists()
+    assert "c***@example.org" in lines[0] and "contact@example.org" not in "\n".join(lines)
+
+
+def test_a_test_message_needs_a_contact_address_and_a_configured_sender(tmp_path):
+    folder = draft_folder(tmp_path)
+    assert digest.run(folder, {k: v for k, v in SMTP_ENV.items() if k != "CONTACT_EMAIL"}, test=True)[0] == 3
+    assert digest.run(folder, {"CONTACT_EMAIL": "contact@example.org"}, test=True)[0] == 3

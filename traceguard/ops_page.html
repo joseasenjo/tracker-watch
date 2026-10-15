@@ -104,6 +104,23 @@
   <details class="card fold" id="sec-borradores"><summary><h2>Borradores <span class="muted" id="drafts-count"></span></h2></summary>
     <div id="drafts"><span class="muted">Cargando…</span></div></details>
 
+  <details class="card fold" id="sec-correo"><summary><h2>Correo y suscriptores <span class="muted" id="mail-count"></span></h2></summary>
+    <h3>Resúmenes pendientes de tu aprobación</h3>
+    <p class="muted">Tras cada publicación en Bluesky, el mismo texto puede ir por correo a los suscriptores confirmados. Sale solo cuando lo apruebas aquí (o si enciendes DIGEST_AUTO). Envía GitHub, con sus secretos: desde este panel solo viaja el nombre de la carpeta, nunca una dirección.</p>
+    <div id="digests"><span class="muted">Cargando…</span></div>
+    <h3>Suscriptores <span class="muted" id="subs-summary"></span></h3>
+    <p class="muted" id="subs-sync"></p>
+    <div id="subs"></div>
+    <h3>Añadir a alguien que lo ha pedido</h3>
+    <p class="muted">Alguien te escribe pidiendo recibirlo (desde la página «Weekly email» de la web). Lo apuntas aquí como pendiente, le pides confirmación con «Pedir confirmación» (se abre tu correo con el mensaje escrito) y, cuando responde, pulsas «Confirmar». Su respuesta es la prueba de su consentimiento: anota cómo lo pidió.</p>
+    <div style="display:grid;gap:8px;max-width:560px">
+      <input id="sub-email" type="email" placeholder="correo@ejemplo.com" autocomplete="off" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+      <input id="sub-note" type="text" maxlength="300" placeholder="Cómo lo pidió (por ejemplo: escribió desde la web el 16-10)" style="font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)">
+      <label class="muted"><input type="checkbox" id="sub-interest"> También pidió una revisión de rastreo para su organización</label>
+      <div><button class="primary" id="sub-add">Añadir como pendiente</button></div>
+    </div>
+  </details>
+
   <div class="grid">
     <section class="card"><h2>Última medición</h2><div id="scan"></div></section>
     <section class="card"><h2>Bluesky</h2><div id="bot"></div></section>
@@ -169,9 +186,90 @@
     var active = notesState.filter(function (n) { return !n.archived; }).length;
     document.getElementById('notes-count').textContent = '(' + active + (active === 1 ? ' nota' : ' notas') + ')';
   }
+
+  var CONFIRM_BODY = 'Hello,\n\nYou asked to receive the Tracker Watch weekly update by email. To confirm, just reply to this message with the word CONFIRM.\n\nIf it was not you, ignore this message and you will receive nothing.\n\nThanks,\nTracker Watch';
+  function renderMail(s) {
+    var subs = s.subscribers || { entries: [], counts: {}, synced: true, has_list: false };
+    var counts = subs.counts || {};
+    var digests = s.digests || [];
+    var vars = (s.github && s.github.variables) || {};
+    var waiting = digests.filter(function (d) { return d.recipients > 0; }).length;
+    var summary = document.getElementById('mail-count');
+    summary.textContent = '(' + (waiting ? waiting + (waiting === 1 ? ' resumen' : ' resúmenes') + ' por aprobar · ' : '') +
+      (counts.confirmed || 0) + ' suscriptores' + (counts.pending ? ' · ' + counts.pending + ' por confirmar' : '') + ')';
+    summary.className = (waiting || counts.pending) ? 'pill media' : 'muted';
+
+    fill('digests', digests.length ? digests.map(function (d) {
+      var enabled = vars.DIGEST_ENABLED === 'true';
+      var kids = [el('div', {}, [el('b', { text: d.kind + ' · ' + d.date + ' ' }),
+        el('span', { class: 'pill media', text: d.recipients + ' destinatarios' })]),
+        el('div', { class: 'muted', text: 'Asunto: ' + d.subject }),
+        el('details', {}, [el('summary', { text: 'Ver el correo tal como saldría' }),
+          el('pre', { style: 'white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px', text: d.body })])];
+      if (!enabled) kids.push(el('div', { class: 'muted', text: 'Aviso: DIGEST_ENABLED está apagado (Interruptores): hasta que lo enciendas, aprobar no enviará nada. La prueba sí funciona.' }));
+      kids.push(el('div', { style: 'display:flex;gap:6px;flex-wrap:wrap;margin-top:6px' }, [
+        el('button', { class: 'primary', text: 'Aprobar y enviar a ' + d.recipients, onclick: function (e) {
+          if (!d.recipients) { toast('No hay suscriptores confirmados.'); return; }
+          if (!confirm('Enviar este resumen por correo a ' + d.recipients + ' suscriptor(es) confirmado(s)? No se puede deshacer.')) return;
+          post('/api/ops/digest', { folder: d.folder }, e.target).then(function () { toast('Aprobado: GitHub está enviando. Mira «Ejecuciones recientes».'); setTimeout(load, 5000); });
+        } }),
+        el('button', { text: 'Enviarme una prueba', onclick: function (e) {
+          post('/api/ops/digest', { folder: d.folder, test: true }, e.target).then(function () { toast('Prueba pedida: te llegará solo a ti en un minuto.'); setTimeout(load, 5000); });
+        } })]));
+      return el('div', { class: 'row', style: 'display:block' }, kids);
+    }) : [note('Ningún resumen espera: o ya se enviaron, o aún no se ha publicado nada nuevo (pulsa «Actualizar datos»).')]);
+
+    document.getElementById('subs-summary').textContent = '(' + (counts.confirmed || 0) + ' confirmados · ' + (counts.pending || 0) + ' pendientes · ' + (counts.unsubscribed || 0) + ' bajas)';
+    var syncLine = document.getElementById('subs-sync');
+    syncLine.textContent = '';
+    if (subs.error) {
+      syncLine.appendChild(el('span', { class: 'pill alta', text: 'error' }));
+      syncLine.appendChild(document.createTextNode(' ' + subs.error));
+    } else if (!subs.has_list) {
+      syncLine.textContent = 'Todavía no hay lista. Se crea al añadir a la primera persona.';
+    } else {
+      syncLine.appendChild(el('span', { class: 'pill ' + (subs.synced ? 'on' : 'media'), text: subs.synced ? 'sincronizada' : 'sin sincronizar' }));
+      syncLine.appendChild(document.createTextNode(subs.synced ? ' GitHub tiene esta misma lista. ' : ' GitHub aún no tiene los últimos cambios: sin sincronizar, los envíos no los verán. '));
+      syncLine.appendChild(el('button', { text: 'Sincronizar con GitHub', onclick: function (e) {
+        post('/api/ops/subscribers/sync', {}, e.target).then(function () { toast('Lista copiada al secreto de GitHub.'); load(); });
+      } }));
+    }
+    var statusPill = { pending: ['media', 'pendiente'], confirmed: ['on', 'confirmado'], unsubscribed: ['off', 'de baja'] };
+    fill('subs', (subs.entries || []).length ? subs.entries.map(function (p) {
+      var st = statusPill[p.status] || ['off', p.status];
+      var info = el('div', { style: 'flex:1;min-width:0;overflow-wrap:anywhere' }, [
+        el('b', { text: p.email + ' ' }), el('span', { class: 'pill ' + st[0], text: st[1] }),
+        p.interest ? el('span', { class: 'pill info', text: 'revisión' }) : null,
+        el('div', { class: 'muted', text: (p.consent || 'sin nota') + ' · pidió: ' + (p.asked || '?') + (p.confirmed ? ' · confirmó: ' + p.confirmed : '') + (p.unsubscribed ? ' · baja: ' + p.unsubscribed : '') })]);
+      var actions = [];
+      var act = function (action, label, text) {
+        return el('button', { text: label, onclick: function (e) {
+          if (!confirm(text)) return;
+          post('/api/ops/subscriber', { action: action, email: p.email }, e.target).then(function () { toast('Hecho.'); load(); });
+        } });
+      };
+      if (p.status === 'pending') {
+        actions.push(el('a', { href: 'mailto:' + p.email + '?subject=' + encodeURIComponent('Please confirm your subscription to Tracker Watch Weekly') + '&body=' + encodeURIComponent(CONFIRM_BODY), text: 'Pedir confirmación' }));
+        actions.push(act('confirm', 'Confirmar', 'Confirmar a ' + p.email + '? Hazlo solo si ya te respondió.'));
+      }
+      if (p.status !== 'unsubscribed') actions.push(act('remove', 'Dar de baja', 'Dar de baja a ' + p.email + '? Dejará de recibir correos.'));
+      return el('div', { class: 'row', style: 'align-items:flex-start' }, [info, el('div', { style: 'display:flex;gap:10px;flex-wrap:wrap;align-items:center' }, actions)]);
+    }) : [note('Aún no hay nadie apuntado.')]);
+  }
+  function initMail() {
+    document.getElementById('sub-add').addEventListener('click', function (e) {
+      var email = document.getElementById('sub-email').value.trim();
+      var how = document.getElementById('sub-note').value.trim();
+      if (!email || !how) { toast('Pon el correo y cómo lo pidió.'); return; }
+      post('/api/ops/subscriber', { action: 'add', email: email, note: how, interest: document.getElementById('sub-interest').checked }, e.target).then(function () {
+        document.getElementById('sub-email').value = ''; document.getElementById('sub-note').value = '';
+        document.getElementById('sub-interest').checked = false; toast('Añadido como pendiente.'); load();
+      });
+    });
+  }
   function initFolds() {
     // Pizarra, drafts and admin tools start closed; the panel remembers what you opened in this browser.
-    ['sec-pizarra', 'sec-admin', 'sec-borradores'].forEach(function (id) {
+    ['sec-pizarra', 'sec-admin', 'sec-borradores', 'sec-correo'].forEach(function (id) {
       var d = document.getElementById(id), key = 'tw-open-' + id;
       try { if (localStorage.getItem(key) === '1') d.open = true; } catch (e) { /* storage unavailable */ }
       d.addEventListener('toggle', function () { try { localStorage.setItem(key, d.open ? '1' : '0'); } catch (e) { /* ignore */ } });
@@ -243,6 +341,7 @@
     draftsCount.textContent = waitingDrafts ? '(' + waitingDrafts + (waitingDrafts === 1 ? ' sin publicar' : ' sin publicar') + ' · ' + s.drafts.length + ' en total)'
       : (s.drafts.length ? '(ninguno sin publicar · ' + s.drafts.length + ' en total)' : '(ninguno)');
     draftsCount.className = waitingDrafts ? 'pill media' : 'muted';
+    renderMail(s);
 
     var sc = s.scan;
     fill('scan', !sc.available ? [note('No hay datos en data/runs.')] : [
@@ -381,6 +480,7 @@
   }
   document.getElementById('refresh').onclick = load;
   initFolds();
+  initMail();
   initNotes();
   initAdminTools();
   fetch('/api/token').then(function (r) { return r.json(); }).then(function (t) { token = t.token; load(); });

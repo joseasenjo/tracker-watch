@@ -58,8 +58,8 @@ jobs:
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
         run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -- '-midweek$' | sort | tail -1)" --platform bluesky --send --skip-if-published
 
-      - name: Email the digest to the subscribers (off unless DIGEST_ENABLED is "true")
-        if: ${{ vars.POST_REVIEW != 'true' && vars.DIGEST_ENABLED == 'true' }}
+      - name: Email the digest automatically (only if DIGEST_ENABLED and DIGEST_AUTO are "true"; otherwise it waits for your approval)
+        if: ${{ vars.POST_REVIEW != 'true' && vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' }}
         continue-on-error: true   # an email problem never undoes or fails a publication
         env:
           SUBSCRIBERS_JSON: ${{ secrets.SUBSCRIBERS_JSON }}
@@ -73,6 +73,7 @@ jobs:
           DIGEST_SENDER: ${{ vars.DIGEST_SENDER }}
           DIGEST_KINDS: ${{ vars.DIGEST_KINDS }}
           DIGEST_SIGNATURE: ${{ vars.DIGEST_SIGNATURE }}
+          DIGEST_CTA: ${{ vars.DIGEST_CTA }}
           DIGEST_ENABLED: ${{ vars.DIGEST_ENABLED }}
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
         run: python -m traceguard.digest "data/drafts/$(ls data/drafts | grep -- '-midweek$' | sort | tail -1)" --send

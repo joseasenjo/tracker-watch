@@ -33,6 +33,9 @@ DEFAULT_KINDS = ("weekly", "midweek")
 LABELS = {"weekly": "Weekly check", "midweek": "Midweek update", "alert": "Notable change",
           "hook": "Most-tracked outlet", "announce": "Announcement"}
 MARKER = "digest.sent.json"
+DEFAULT_CTA = ("If your organisation needs a tracker and consent audit of its websites, a security review or an "
+               "automation, reply to this email or write to {contact}. I am the developer: tell me what you need and "
+               "we will see how I can help.")
 
 
 def kind_of(folder_name: str) -> str:
@@ -64,8 +67,16 @@ def clean_post(text: str) -> str:
     return _BLUESKY_ONLY.sub("", text).rstrip()
 
 
-def build_digest(draft: dict, kind: str, *, site_url: str, sign: str, discussion_url: str = "") -> tuple[str, str]:
-    """(subject, body) in plain text. The footer is not optional: it is part of every digest."""
+def cta_text(env: Mapping[str, str]) -> str:
+    """The closing offer of services. DIGEST_CTA replaces it; an empty DIGEST_CTA is ignored (the footer says it exists)."""
+    custom = (env.get("DIGEST_CTA") or "").strip()
+    contact = (env.get("CONTACT_EMAIL") or "").strip() or "the address above"
+    return custom or DEFAULT_CTA.format(contact=contact)
+
+
+def build_digest(draft: dict, kind: str, *, site_url: str, sign: str, discussion_url: str = "",
+                 cta: str = "") -> tuple[str, str]:
+    """(subject, body) in plain text. The offer and the footer are not optional: they are part of every digest."""
     date_text = str(draft.get("date", "")).strip()
     label = LABELS.get(kind, "Update")
     lines = [f"{label}, {date_text}", ""]
@@ -74,8 +85,11 @@ def build_digest(draft: dict, kind: str, *, site_url: str, sign: str, discussion
     lines.append(f"Full results and method: {site_url}")
     if discussion_url:
         lines.append(f"On Bluesky: {discussion_url}")
+    if cta:
+        lines += ["", cta]
     lines += ["", "--",
-              "You receive this because you asked to be kept informed about Tracker Watch and confirmed your address.",
+              "You receive this because you asked to be kept informed about Tracker Watch, which may include a mention "
+              "of the developer's audit, analysis and automation services, and you confirmed your address.",
               "To stop, reply with the word UNSUBSCRIBE and you will be removed; no reason needed.",
               sign,
               "This email has no tracking: no images, no pixels, no wrapped links."]
@@ -109,8 +123,25 @@ def from_address(env: Mapping[str, str]) -> str:
     return (env.get("CONTACT_EMAIL") or "news@example.invalid").strip()
 
 
+def run_test(draft: dict, kind: str, env: Mapping[str, str], sender_name: str) -> tuple[int, list[str]]:
+    """One message to CONTACT_EMAIL only, marked [TEST]. Needs no subscribers, leaves no mark, and sends no one else."""
+    contact = (env.get("CONTACT_EMAIL") or "").strip()
+    try:
+        owner = mailing.validate_email(contact)
+        sender = mailing.make_sender(sender_name or env.get("DIGEST_SENDER") or "smtp", env)
+    except mailing.MailingError as exc:
+        return 3, [f"test not sent: {exc}"]
+    subject, body = build_digest(draft, kind, site_url=env.get("SITE_URL") or SITE_URL, sign=signature(env), cta=cta_text(env))
+    message = mailing.build_message(subject="[TEST] " + subject, body=body, to=owner, sender=from_address(env),
+                                    unsubscribe_to=contact)
+    result = sender.send_batch([message])
+    lines = [f"{sender.name}: test message, {result.sent} sent, {result.failed} failed (only to {mailing.mask(owner)})"] + result.errors
+    return (0 if result.failed == 0 and result.sent else 1), lines
+
+
 def run(folder: Path | str, env: Mapping[str, str], *, send: bool = False, segment: str = "all", sender_name: str = "",
-        again: bool = False, subscribers: list[dict] | None = None, now: datetime | None = None) -> tuple[int, list[str]]:
+        again: bool = False, subscribers: list[dict] | None = None, now: datetime | None = None,
+        test: bool = False) -> tuple[int, list[str]]:
     """Returns (exit code, log lines). The lines never contain an address."""
     folder = Path(folder)
     draft_path = folder / "bluesky.json"
@@ -118,6 +149,8 @@ def run(folder: Path | str, env: Mapping[str, str], *, send: bool = False, segme
         return 2, [f"no draft in {folder}"]
     draft = json.loads(draft_path.read_text(encoding="utf-8"))
     kind = kind_of(folder.name)
+    if test:
+        return run_test(draft, kind, env, sender_name)
     if kind not in allowed_kinds(env):
         return 0, [f"not sent: digests of kind '{kind}' are not enabled (DIGEST_KINDS)"]
     state = published_state(folder)
@@ -141,7 +174,7 @@ def run(folder: Path | str, env: Mapping[str, str], *, send: bool = False, segme
     if state and state.get("posts"):
         discussion = state["posts"][0].get("url", "") or ""
     subject, body = build_digest(draft, kind, site_url=env.get("SITE_URL") or SITE_URL, sign=signature(env),
-                                 discussion_url=discussion)
+                                 discussion_url=discussion, cta=cta_text(env))
     try:
         sender = mailing.make_sender("dryrun" if not send else (sender_name or env.get("DIGEST_SENDER") or "smtp"), env)
     except mailing.MailingError as exc:
@@ -166,9 +199,10 @@ def main(argv: list[str] | None = None, env: Mapping[str, str] | None = None) ->
     parser.add_argument("--segment", choices=mailing.SEGMENTS, default="all")
     parser.add_argument("--sender", default="", help="sending back end (default: DIGEST_SENDER or smtp)")
     parser.add_argument("--again", action="store_true", help="send even if this digest already went out")
+    parser.add_argument("--test", action="store_true", help="send ONE test message to CONTACT_EMAIL only (no list, no mark)")
     args = parser.parse_args(argv)
     code, lines = run(args.folder, os.environ if env is None else env, send=args.send, segment=args.segment,
-                      sender_name=args.sender, again=args.again)
+                      sender_name=args.sender, again=args.again, test=args.test)
     print("\n".join(lines), file=sys.stderr if code else sys.stdout)
     return code
 

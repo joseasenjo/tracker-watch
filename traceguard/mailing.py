@@ -24,7 +24,7 @@ from email.message import EmailMessage
 from pathlib import Path
 from typing import Callable, Mapping, Protocol
 
-from .notify import mask
+from .notify import mask  # noqa: F401  (re-exported: the one way to show an address)
 
 STORE = Path("data/private/subscribers.json")  # never committed: data/private/ is in .gitignore
 STATUSES = ("pending", "confirmed", "unsubscribed")

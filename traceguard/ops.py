@@ -20,12 +20,16 @@ from datetime import date as _date, datetime, timezone
 from pathlib import Path
 from typing import Callable
 
+from . import digest as digest_module, mailing
+
 DEFAULT_REPO = "joseasenjo/tracker-watch"
 BOT_ACTOR = "trackerwatch.bsky.social"
 SWITCHES = {
     "POST_ENABLED": "Publicar en Bluesky (apagado: no se publica nada)",
     "POST_REVIEW": "Pedir mi aprobación antes de publicar (encendido: solo se genera el borrador)",
     "PUBLISH_SITE": "Publicar la web en GitHub Pages tras cada escaneo",
+    "DIGEST_ENABLED": "Resúmenes por correo a los suscriptores (apagado: no se envía ninguno)",
+    "DIGEST_AUTO": "Enviar el resumen solo, tras publicar (apagado: solo cuando tú lo apruebas en el panel)",
 }
 WORKFLOWS = {"weekly-scan.yml": "Escaneo semanal + hilo", "post-midweek.yml": "Post de media semana"}
 SECRETS = ("BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD")
@@ -39,6 +43,7 @@ MANUAL_KINDS = ("alerta de cambio", "post de gancho", "anuncio")  # drafts that 
 NOTES_FILE = Path("notas_desarrollador/pizarra.json")  # private: the folder is in .gitignore
 MAX_NOTE = 4000
 MAX_NOTES = 500
+SYNC_MARK = Path("data/private/.synced")  # the hash of the list last copied to GitHub, never the list itself
 
 
 class OpsError(ValueError):
@@ -279,6 +284,16 @@ def build_alerts(state: dict, now: datetime | None = None) -> list[dict]:
         manual = [d for d in waiting if d.get("kind") in MANUAL_KINDS]
         if manual:
             add("media", f"{len(manual)} borrador(es) de {', '.join(sorted({d['kind'] for d in manual}))} esperan tu decisión. Despliega «Borradores».")
+    subscribers = state.get("subscribers") or {}
+    counts = subscribers.get("counts") or {}
+    waiting_digests = [d for d in state.get("digests", []) if d.get("recipients")]
+    if waiting_digests:
+        add("media", f"{len(waiting_digests)} resumen(es) por correo esperan tu aprobación "
+                     f"({waiting_digests[0]['recipients']} suscriptor(es) confirmado(s)). Despliega «Correo y suscriptores».")
+    if counts.get("pending"):
+        add("media", f"{counts['pending']} persona(s) pidieron suscribirse y esperan que las confirmes. Despliega «Correo y suscriptores».")
+    if subscribers.get("has_list") and not subscribers.get("synced"):
+        add("info", "La lista de suscriptores de este ordenador no está sincronizada con GitHub: pulsa «Sincronizar con GitHub».")
     if git.get("available") and git["behind"]:
         add("info", f"Tu copia local va {git['behind']} commit(s) por detrás de GitHub: pulsa «Actualizar datos».")
     if git.get("available") and git["ahead"]:
@@ -293,12 +308,15 @@ def build_alerts(state: dict, now: datetime | None = None) -> list[dict]:
 
 def get_status(repo: str = DEFAULT_REPO, *, runner: Callable = subprocess.run, http_get: Callable | None = None,
                runs_dir="data/runs", sites_file="data/sites.json", spain_dir="data/extra/local-windows-spain",
-               drafts_dir="data/drafts", now: datetime | None = None) -> dict:
+               drafts_dir="data/drafts", now: datetime | None = None, subscribers_file=mailing.STORE,
+               sync_mark=SYNC_MARK) -> dict:
     http_get = http_get or urllib_get  # looked up at call time
     state = {"github": github_state(repo, runner), "scan": scan_summary(runs_dir, sites_file, spain_dir),
              "drafts": pending_drafts(drafts_dir), "bot": bot_state(http_get), "site": site_state(http_get),
              "git": git_state(runner), "notes": load_notes(), "switches": SWITCHES, "workflows": WORKFLOWS, "secrets_needed": list(SECRETS),
              "schedule": "Escaneo e hilo: lunes 07:00 UTC · Post corto: miércoles 08:00 UTC"}
+    state["subscribers"] = subscribers_state(subscribers_file, sync_mark)
+    state["digests"] = digest_candidates(drafts_dir, (state["github"] or {}).get("variables") or {}, subscribers_file)
     state["alerts"] = build_alerts(state, now)
     return state
 
@@ -512,3 +530,128 @@ def publish_links(repo: str = DEFAULT_REPO, runner: Callable = subprocess.run, c
     _run(runner, ["gh", "workflow", "run", "publish-site.yml", "-R", repo])
     steps.append("web en proceso de republicación (unos 3 a 5 minutos)")
     return steps
+
+
+# --- email digest: subscribers and approvals ------------------------------------------------------------------------
+
+DIGEST_MAX_AGE_DAYS = 14
+_STATUS_ORDER = {"pending": 0, "confirmed": 1, "unsubscribed": 2}
+
+
+def _list_hash(path: Path) -> str:
+    import hashlib
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+
+
+def subscribers_state(path: Path | str = mailing.STORE, mark: Path | str = SYNC_MARK) -> dict:
+    """The private list for the panel: entries (pending first), counts and whether GitHub has this exact list."""
+    path, mark = Path(path), Path(mark)
+    try:
+        subs = mailing.load_subscribers({}, path)
+    except (mailing.MailingError, ValueError) as exc:
+        return {"entries": [], "counts": {}, "synced": False, "has_list": path.exists(), "error": f"la lista no se puede leer: {exc}"}
+    counts = {s: sum(1 for x in subs if x["status"] == s) for s in mailing.STATUSES}
+    synced = path.exists() and mark.exists() and mark.read_text(encoding="utf-8").strip() == _list_hash(path)
+    entries = [{k: s.get(k) for k in ("email", "status", "source", "consent", "asked", "confirmed", "unsubscribed",
+                                       "interest", "language")} for s in
+               sorted(subs, key=lambda s: (_STATUS_ORDER[s["status"]], s["email"]))]
+    return {"entries": entries, "counts": counts, "synced": synced, "has_list": path.exists()}
+
+
+def change_subscriber(action: str, email: str, *, note: str = "", interest: bool = False, language: str = "en",
+                      path: Path | str = mailing.STORE) -> dict:
+    """add (pending), confirm or remove one person. The list stays on this computer until it is synced."""
+    path = Path(path)
+    try:
+        subs = mailing.load_subscribers({}, path)
+        if action == "add":
+            subs = mailing.add(subs, email, source="mailto", note=note, interest=interest, language=language or "en")
+        elif action == "confirm":
+            subs = mailing.confirm(subs, email)
+        elif action == "remove":
+            subs = mailing.unsubscribe(subs, email)
+        else:
+            raise OpsError("acción desconocida")
+        mailing.save_subscribers(subs, path)
+    except (mailing.MailingError, ValueError) as exc:
+        raise OpsError(str(exc)) from exc
+    return subscribers_state(path)
+
+
+def sync_subscribers(repo: str = DEFAULT_REPO, runner: Callable = subprocess.run, path: Path | str = mailing.STORE,
+                     mark: Path | str = SYNC_MARK) -> dict:
+    """Copy the whole list into the repository secret SUBSCRIBERS_JSON (the only place GitHub reads it from)."""
+    path, mark = Path(path), Path(mark)
+    if not path.exists():
+        mailing.save_subscribers([], path)
+    body = path.read_text(encoding="utf-8")
+    if len(body.encode("utf-8")) > 40_000:
+        raise OpsError("la lista ya no cabe en un secreto de GitHub (48 KB): hace falta otro almacén")
+    try:
+        done = runner(["gh", "secret", "set", "SUBSCRIBERS_JSON", "-R", repo], input=body, text=True, capture_output=True,
+                      encoding="utf-8", timeout=60)
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise OpsError(f"gh no responde: {exc}") from exc
+    if done.returncode != 0:
+        raise OpsError("no se pudo actualizar el secreto (¿gh tiene la sesión iniciada?)")
+    mark.write_text(_list_hash(path) + "\n", encoding="utf-8")
+    return subscribers_state(path, mark)
+
+
+def digest_candidates(drafts_dir: Path | str = "data/drafts", variables: dict | None = None,
+                      subs_path: Path | str = mailing.STORE, today: _date | None = None) -> list[dict]:
+    """Published drafts whose email digest has not gone out yet: what waits for the owner's approval."""
+    base, today, rows = Path(drafts_dir), today or _date.today(), []
+    env = dict(variables or {})
+    if not base.is_dir():
+        return rows
+    try:
+        confirmed = len(mailing.recipients(mailing.load_subscribers({}, subs_path)))
+    except (mailing.MailingError, ValueError):
+        confirmed = 0
+    kinds = digest_module.allowed_kinds(env)
+    for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce)?", p.name)),
+                         reverse=True):
+        kind = digest_module.kind_of(folder.name)
+        state = digest_module.published_state(folder)
+        draft_file = folder / "bluesky.json"
+        if kind not in kinds or not draft_file.exists() or not (state and state.get("complete")) or digest_module.already_sent(folder):
+            continue
+        try:
+            draft = json.loads(draft_file.read_text(encoding="utf-8"))
+            if (today - _date.fromisoformat(str(draft.get("date")))).days > DIGEST_MAX_AGE_DAYS:
+                continue
+        except ValueError:
+            continue
+        discussion = (state.get("posts") or [{}])[0].get("url", "") or ""
+        subject, body = digest_module.build_digest(draft, kind, site_url=SITE_URL, sign=digest_module.signature(env),
+                                                   discussion_url=discussion, cta=digest_module.cta_text(env))
+        rows.append({"folder": f"data/drafts/{folder.name}", "kind": kind, "date": draft.get("date"), "subject": subject,
+                     "body": body, "recipients": confirmed})
+    return rows[:6]
+
+
+def approve_digest(folder: str, repo: str = DEFAULT_REPO, runner: Callable = subprocess.run, *, test: bool = False,
+                   drafts_dir: Path | str = "data/drafts", subs_path: Path | str = mailing.STORE,
+                   mark: Path | str = SYNC_MARK, today: _date | None = None) -> None:
+    """Start the send-digest workflow for one published draft. Nothing is sent from here: GitHub sends, with its secrets.
+    The folder name is the only thing passed on; no address ever travels in the request."""
+    if not DRAFT_RE.fullmatch(folder or ""):
+        raise OpsError("carpeta de borrador no válida")
+    name = folder.rsplit("/", 1)[-1]
+    if not (Path(drafts_dir) / name / "bluesky.json").exists():
+        raise OpsError("ese borrador no está en tu copia local: pulsa «Actualizar datos»")
+    if not test:
+        variables = {v["name"]: v["value"] for v in _gh_json(runner, ["variable", "list", "-R", repo, "--json", "name,value"])}
+        waiting = {row["folder"] for row in digest_candidates(drafts_dir, variables, subs_path, today)}
+        if folder not in waiting:
+            raise OpsError("ese resumen no está pendiente: no se ha publicado, ya se envió o es de un tipo que no se envía")
+        state = subscribers_state(subs_path, mark)
+        if not state["counts"].get("confirmed"):
+            raise OpsError("no hay suscriptores confirmados")
+        if not state["synced"]:
+            raise OpsError("la lista local no está sincronizada con GitHub: pulsa «Sincronizar con GitHub» primero")
+        if (variables.get("DIGEST_ENABLED") or "").strip().lower() != "true":
+            raise OpsError("el interruptor DIGEST_ENABLED está apagado: enciéndelo en «Interruptores»")
+    _run(runner, ["gh", "workflow", "run", "send-digest.yml", "-R", repo, "-f", f"folder={folder}",
+                  "-f", f"mode={'test' if test else 'send'}"])

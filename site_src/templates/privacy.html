@@ -14,11 +14,21 @@
     <h2>Requests: analyses and short links</h2>
     <p>If you ask for an analysis or a short link, you do it through a <b>public GitHub issue</b>, processed automatically by GitHub Actions. The issue, your GitHub account name and the address you enter are visible on GitHub and governed by GitHub's terms. We use the account name and its age only to apply usage limits. Analysis results stay in the issue. A short link is stored in the repository (code, destination, date and a summary of what we measured) and published on this site. This website itself still sets no cookies and collects nothing.</p>
 
-    <h2>Email</h2>
+    <h2 id="weekly-email">Weekly email (optional)</h2>
     {% if subscribe_url %}
     <p>If you subscribe, you do so on a page hosted by <b>{{ subscribe_host }}</b>. Your address is handled by that service under its own terms, not by this website. You can unsubscribe at any time from any email you receive.</p>
     {% elif contact_email %}
-    <p>There is no automatic email subscription yet, and this website itself collects no email addresses. If you write to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> to be told when a weekly summary is available, we receive your address in that message and use it only to answer you and to tell you when the summary exists.</p>
+    <p>You get the weekly email only if you ask for it: the <a href="{{ root }}subscribe.html">Weekly email</a> page has a ready-made message to send to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>. Details:</p>
+    <ul>
+      <li><b>Who is responsible:</b> Jose Luis Asenjo Tornero, contact <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.</li>
+      <li><b>What is kept:</b> your email address, when and how you asked, whether you said you are interested in a review for your organisation, and your language. Nothing else. The emails carry no tracking: no images, no pixels, no wrapped links.</li>
+      <li><b>Why:</b> to send you the weekly update (the same text published on Bluesky after each weekly check) and the short midweek update. The emails may end with an offer of the developer's audit, analysis and automation services; that is part of what you agree to when you ask.</li>
+      <li><b>Legal basis:</b> your consent. You give it by asking and by confirming: we reply asking you to confirm, and you confirm by replying. You can withdraw it at any time by replying UNSUBSCRIBE to any email; it is honoured at once.</li>
+      <li><b>Where:</b> a private list kept by the developer and one private, encrypted GitHub secret that the sending workflow reads. The list is never in the public repository or on this website. The emails are sent through a mail provider (Google's Gmail service), which therefore handles them; its servers may be outside the European Union.</li>
+      <li><b>How long:</b> until you unsubscribe. After that only your address and the date are kept, so that you are not added again by mistake.</li>
+      <li><b>Sharing:</b> your data is never shared, sold or used for anything else.</li>
+      <li><b>Your rights:</b> access, correction, deletion, restriction, objection and portability: write to the contact address. You can also complain to the Spanish data protection authority (AEPD, <a href="https://www.aepd.es" rel="noopener">aepd.es</a>).</li>
+    </ul>
     {% else %}
     <p>There is no email subscription yet, and this website collects no email addresses.</p>
     {% endif %}

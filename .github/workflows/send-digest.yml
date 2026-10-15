@@ -1,0 +1,83 @@
+# Sends the email digest of one PUBLISHED draft to the confirmed subscribers, or one test message to the owner.
+# Started by hand or from the developer dashboard ("Aprobar y enviar" / "Enviarme una prueba"). Only the folder name is
+# passed in: addresses are read from the secret SUBSCRIBERS_JSON, never from a request or from the repository.
+# mode "send" needs the repository variable DIGEST_ENABLED = "true"; mode "test" writes only to CONTACT_EMAIL.
+# A digest that already went out is never sent again (digest.sent.json in the draft folder: a date and a count).
+name: send-digest
+
+on:
+  workflow_dispatch:
+    inputs:
+      folder:
+        description: "Draft folder, e.g. data/drafts/2026-10-12"
+        required: true
+      mode:
+        description: "send = to the subscribers, test = one message to the owner"
+        type: choice
+        options: [send, test]
+        default: send
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-scan   # never at the same time as a run that commits to the repository
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check the folder name
+        env:
+          FOLDER: ${{ github.event.inputs.folder }}
+        run: |
+          echo "$FOLDER" | grep -Eq '^data/drafts/[0-9]{4}-[0-9]{2}-[0-9]{2}(-midweek|-alert|-hook|-announce)?$' || { echo "bad folder name"; exit 1; }
+
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send
+        env:
+          SUBSCRIBERS_JSON: ${{ secrets.SUBSCRIBERS_JSON }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          DIGEST_MAIL_USER: ${{ secrets.DIGEST_MAIL_USER }}
+          DIGEST_MAIL_PASSWORD: ${{ secrets.DIGEST_MAIL_PASSWORD }}
+          DIGEST_SENDER: ${{ vars.DIGEST_SENDER }}
+          DIGEST_KINDS: ${{ vars.DIGEST_KINDS }}
+          DIGEST_SIGNATURE: ${{ vars.DIGEST_SIGNATURE }}
+          DIGEST_CTA: ${{ vars.DIGEST_CTA }}
+          DIGEST_ENABLED: ${{ vars.DIGEST_ENABLED }}
+          CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+          FOLDER: ${{ github.event.inputs.folder }}
+          MODE: ${{ github.event.inputs.mode }}
+        run: |
+          if [ "$MODE" = "test" ]; then
+            python -m traceguard.digest "$FOLDER" --test
+          else
+            python -m traceguard.digest "$FOLDER" --send
+          fi
+
+      - name: Record that it was sent (so it is never sent twice)
+        if: ${{ always() && github.event.inputs.mode == 'send' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/drafts
+          git diff --cached --quiet || git commit -m "digest: sent $(date -u +%F)"
+          git pull --rebase --autostash
+          git push

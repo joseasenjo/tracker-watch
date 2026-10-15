@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Weekly email{% endblock %}
+{% block description %}A short email after each weekly check of the third-party trackers on news sites, only if you ask for it. You can leave at any time.{% endblock %}
+{% block content %}
+{% set subject = 'Subscribe to Tracker Watch Weekly' %}
+{% set body %}Hello,
+
+I would like to receive the Tracker Watch weekly update by email. I understand that it may mention the developer's audit, analysis and automation services, and that I can unsubscribe at any time by replying UNSUBSCRIBE.
+
+(Optional, delete this line if it does not apply) I am also interested in a tracking review for my organisation.{% endset %}
+<section>
+  <div class="wrap narrow">
+    <h1>Weekly email</h1>
+    <p class="sub">A short email after each weekly check, only if you ask for it. No account, no tracking, and you can leave at any time.</p>
+
+    <h2>What you get</h2>
+    <ul>
+      <li>The weekly summary: the same text we publish on Bluesky after each Monday check (counts of the third-party tracking services contacted by the news sites we follow, what changed, and the method).</li>
+      <li>A short update on Wednesdays, when there is something to say.</li>
+      <li>At the end, a line from the developer: if your organisation needs a tracking and consent audit of its websites, a security review or an automation, you can write back and talk it through. It is an offer, never a requirement.</li>
+    </ul>
+
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><b>Ask</b><p class="small">Press the button below: your email app opens with a short message already written. Send it.</p></div>
+      <div class="step"><b>Confirm</b><p class="small">We reply asking you to confirm that you want it. You confirm by replying. Nothing is sent before that.</p></div>
+      <div class="step"><b>Receive, or leave</b><p class="small">You get the email after each published check. To stop, reply <b>UNSUBSCRIBE</b> to any of them: you are removed at once.</p></div>
+    </div>
+
+    {% if subscribe_url %}
+    <p><a class="btn" href="{{ subscribe_url }}" rel="noopener">Subscribe</a></p>
+    <p class="small">The signup page is hosted by {{ subscribe_host }}; this site never sees your address.</p>
+    {% elif contact_email %}
+    <p><a class="btn" href="mailto:{{ contact_email }}?subject={{ subject|urlencode }}&amp;body={{ body|urlencode }}">Ask for the weekly email</a></p>
+    <p class="small">If the button does not open your email app, write to <b>{{ contact_email }}</b> with the subject “{{ subject }}”.</p>
+    {% else %}
+    <p class="note">The weekly email is not available yet.</p>
+    {% endif %}
+
+    <h2>Your data, in short</h2>
+    <p>We keep your address, when and how you asked, whether you are interested in a review for your organisation, and your language. We use it only to send you this email. It is never shared or sold, it is not on this website or in the public repository, and the emails contain no tracking: no images, no pixels, no wrapped links. The full details, including who is responsible and your rights, are in the <a href="{{ root }}privacy.html#weekly-email">privacy page</a>.</p>
+    <p class="small">The data comes from public pages measured automatically: counts, not verdicts. See the <a href="{{ root }}method.html">method and its limits</a>.</p>
+  </div>
+</section>
+{% endblock %}

@@ -282,18 +282,42 @@ def test_subscribe_button_is_disabled_without_a_url_and_active_with_one(built, t
     assert "https://github.com/x/y" in (out2 / "privacy.html").read_text(encoding="utf-8")
 
 
-def test_email_card_points_to_the_contact_address_when_there_is_no_subscription_service(built, tmp_path):
+def test_the_email_card_leads_to_the_subscription_page_and_the_page_has_a_ready_made_request(built, tmp_path):
     plain = (built[1] / "index.html").read_text(encoding="utf-8")
-    assert "A weekly summary by email is not available yet." in plain and "mailto:" not in plain.split("Follow the weekly results")[1].split("Raw data")[0]
+    assert "A weekly summary by email is not available yet." in plain  # no contact address configured: nothing to offer
     out = tmp_path / "site_mail"
     build_site(tmp_path / "runs", out, contact_email="dev@example.org")
-    html = (out / "index.html").read_text(encoding="utf-8")
-    card = html.split("Follow the weekly results")[1].split("Raw data")[0]
-    assert 'href="mailto:dev@example.org?subject=Weekly%20summary%20by%20email"' in card and "Write to us" in card
-    assert "Coming soon" not in card and "Not available yet" not in card
-    privacy = (out / "privacy.html").read_text(encoding="utf-8")
-    assert "mailto:dev@example.org" in privacy and "use it only to answer you" in privacy
+    card = (out / "index.html").read_text(encoding="utf-8").split("Follow the weekly results")[1].split("Raw data")[0]
+    assert 'href="subscribe.html">Subscribe</a>' in card and "mailto:" not in card and "Coming soon" not in card
+    page = (out / "subscribe.html").read_text(encoding="utf-8")
+    assert 'href="mailto:dev@example.org?subject=Subscribe%20to%20Tracker%20Watch%20Weekly&amp;body=' in page
+    assert "UNSUBSCRIBE" in page and "security review" in page and "privacy.html#weekly-email" in page
+    assert "audit%2C%20analysis%20and%20automation%20services" in page  # the request itself says what the person accepts
+    assert "tracking" in page and "no pixels" in page
+    assert 'href="subscribe.html">Weekly email</a>' in (out / "index.html").read_text(encoding="utf-8")  # in the footer
 
+
+def test_the_privacy_page_says_who_is_responsible_what_is_kept_and_how_to_leave(built, tmp_path):
+    out = tmp_path / "site_privacy"
+    build_site(tmp_path / "runs", out, contact_email="dev@example.org")
+    privacy = (out / "privacy.html").read_text(encoding="utf-8")
+    section = privacy.split('id="weekly-email"')[1].split("<h2>Data we publish</h2>")[0]
+    for needle in ("Who is responsible", "Jose Luis Asenjo Tornero", "What is kept", "Legal basis", "your consent", "UNSUBSCRIBE",
+                   "How long", "never shared, sold", "Your rights", "AEPD", "Gmail"):
+        assert needle in section, needle
+    assert "dev@example.org" in section
+
+
+def test_the_subscription_page_without_a_contact_address_offers_nothing(built):
+    assert "The weekly email is not available yet." in (built[1] / "subscribe.html").read_text(encoding="utf-8")
+    assert "Ask for the weekly email" not in (built[1] / "subscribe.html").read_text(encoding="utf-8")
+
+
+def test_a_hosted_signup_page_replaces_the_mail_request(built, tmp_path):
+    out = tmp_path / "site_hosted"
+    build_site(tmp_path / "runs", out, contact_email="dev@example.org", subscribe_url="https://news.example/signup")
+    page = (out / "subscribe.html").read_text(encoding="utf-8")
+    assert 'href="https://news.example/signup"' in page and "Ask for the weekly email" not in page
 
 def test_subscribe_url_must_be_https(built, tmp_path):
     with pytest.raises(ValueError):
