@@ -54,6 +54,26 @@ jobs:
           FOLDER: ${{ github.event.inputs.folder }}
         run: python -m traceguard.publish "$FOLDER" --platform bluesky --send
 
+      - name: Email the digest to the subscribers (off unless DIGEST_ENABLED is "true"; only the kinds in DIGEST_KINDS)
+        if: ${{ vars.DIGEST_ENABLED == 'true' }}
+        continue-on-error: true   # an email problem never undoes or fails a publication
+        env:
+          SUBSCRIBERS_JSON: ${{ secrets.SUBSCRIBERS_JSON }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          DIGEST_MAIL_USER: ${{ secrets.DIGEST_MAIL_USER }}
+          DIGEST_MAIL_PASSWORD: ${{ secrets.DIGEST_MAIL_PASSWORD }}
+          DIGEST_SENDER: ${{ vars.DIGEST_SENDER }}
+          DIGEST_KINDS: ${{ vars.DIGEST_KINDS }}
+          DIGEST_SIGNATURE: ${{ vars.DIGEST_SIGNATURE }}
+          DIGEST_ENABLED: ${{ vars.DIGEST_ENABLED }}
+          CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+          FOLDER: ${{ github.event.inputs.folder }}
+        run: python -m traceguard.digest "$FOLDER" --send
+
       - name: Record what was posted (so a re-run never repeats it)
         if: ${{ always() }}
         run: |

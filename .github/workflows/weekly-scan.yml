@@ -151,6 +151,25 @@ jobs:
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
         run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --platform bluesky --send
 
+      - name: Email the digest to the subscribers (off unless DIGEST_ENABLED is "true")
+        if: ${{ vars.POST_REVIEW != 'true' && vars.DIGEST_ENABLED == 'true' }}
+        continue-on-error: true   # an email problem never undoes or fails a publication
+        env:
+          SUBSCRIBERS_JSON: ${{ secrets.SUBSCRIBERS_JSON }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          DIGEST_MAIL_USER: ${{ secrets.DIGEST_MAIL_USER }}
+          DIGEST_MAIL_PASSWORD: ${{ secrets.DIGEST_MAIL_PASSWORD }}
+          DIGEST_SENDER: ${{ vars.DIGEST_SENDER }}
+          DIGEST_KINDS: ${{ vars.DIGEST_KINDS }}
+          DIGEST_SIGNATURE: ${{ vars.DIGEST_SIGNATURE }}
+          DIGEST_ENABLED: ${{ vars.DIGEST_ENABLED }}
+          CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+        run: python -m traceguard.digest "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --send
+
       - name: Record what was posted (so a re-run never repeats it)
         if: ${{ always() }}
         run: |
