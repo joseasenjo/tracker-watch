@@ -33,7 +33,7 @@ I would like to receive the Tracker Watch weekly update by email. I understand t
     <p><a class="btn" href="{{ subscribe_url }}" rel="noopener">Subscribe</a></p>
     <p class="small">The signup page is hosted by {{ subscribe_host }}; this site never sees your address.</p>
     {% elif form_key and contact_email %}
-    <form id="weekly-form" class="signup" action="https://api.web3forms.com/submit" method="POST">
+    <form id="weekly-form" class="signup" novalidate action="https://api.web3forms.com/submit" method="POST">
       <input type="hidden" name="access_key" value="{{ form_key }}">
       <input type="hidden" name="subject" value="Subscribe to Tracker Watch Weekly">
       <input type="hidden" name="from_name" value="Tracker Watch website">
@@ -51,18 +51,38 @@ I would like to receive the Tracker Watch weekly update by email. I understand t
     (function () {
       var form = document.getElementById('weekly-form'), out = document.getElementById('wf-status');
       if (!form || !window.fetch) return;
+      var field = document.getElementById('wf-email'), KEY = 'tw-weekly-asked';
+      var VALID = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      function say(text, bad) { out.textContent = text; out.className = bad ? 'small wf-bad' : 'small'; }
+      function fingerprint(text) {  // only a hash is kept in this browser, never the address
+        if (!window.crypto || !crypto.subtle) return Promise.resolve(text.length + ':' + text.charCodeAt(0));
+        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (b) {
+          return Array.prototype.map.call(new Uint8Array(b), function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+        });
+      }
+      function asked() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
+      function remember(h) { try { var l = asked(); l.push(h); localStorage.setItem(KEY, JSON.stringify(l.slice(-20))); } catch (e) { /* storage unavailable */ } }
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+        var mail = field.value.trim().toLowerCase();
+        if (!VALID.test(mail)) {
+          say(mail.indexOf('@') < 0 ? 'Please check your email address: it needs an @, for example name@example.com.' : 'Please check your email address: it does not look complete, for example name@example.com.', true);
+          field.focus(); return;
+        }
+        if (!form.elements.consent.checked) { say('Please tick the box to confirm that you want the weekly email.', true); return; }
         var btn = form.querySelector('button[type=submit]');
-        btn.disabled = true; out.textContent = 'Sending…';
-        fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) })
-          .then(function (r) { return r.json(); })
-          .then(function (d) {
-            if (d && d.success) { form.reset(); out.textContent = 'Your email has been sent. We will reply to you shortly to confirm your request; nothing is sent to you before you do.'; }
-            else { throw new Error('rejected'); }
-          })
-          .catch(function () { out.textContent = 'It could not be sent. Please try again later{% if contact_email %} or write to {{ contact_email }}{% endif %}.'; })
-          .then(function () { btn.disabled = false; });
+        btn.disabled = true; say('Sending…');
+        fingerprint(mail).then(function (h) {
+          if (asked().indexOf(h) >= 0) { say('You have already sent a request with this address. We will reply to you shortly; there is no need to send it again.', true); btn.disabled = false; return; }
+          return fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+              if (d && d.success) { remember(h); form.reset(); say('Your email has been sent. We will reply to you shortly to confirm your request; nothing is sent to you before you do.'); }
+              else { throw new Error('rejected'); }
+            })
+            .catch(function () { say('It could not be sent. Please try again later{% if contact_email %} or write to {{ contact_email }}{% endif %}.', true); })
+            .then(function () { btn.disabled = false; });
+        });
       });
     })();
     </script>

@@ -297,6 +297,8 @@ def test_the_email_card_leads_to_the_subscription_page_and_the_page_has_a_form(b
     assert "audit, analysis and automation services" in page  # the checkbox says what the person accepts
     assert "tracking" in page and "no pixels" in page
     assert "nothing is loaded from it before" in page  # the page itself makes no request to the provider
+    assert "novalidate" in page and "it needs an @" in page and "already sent a request with this address" in page  # friendly alerts
+    assert "Your email has been sent." in page
     assert 'href="subscribe.html">Weekly email</a>' in (out / "index.html").read_text(encoding="utf-8")  # in the footer
 
 
