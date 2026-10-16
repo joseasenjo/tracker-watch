@@ -70,6 +70,16 @@ def test_the_lifecycle_pending_confirmed_and_unsubscribed():
     assert subs[0]["status"] == "unsubscribed" and mailing.recipients(subs) == []
 
 
+def test_adding_someone_already_on_the_list_is_refused_and_changes_nothing():
+    confirmed = mailing.confirm(mailing.add([], "ana@example.org", source="mailto", note="asked by email", today=TODAY), "ana@example.org", today=TODAY)
+    with pytest.raises(mailing.MailingError, match="already subscribed and confirmed"):
+        mailing.add(confirmed, "ANA@example.org", source="mailto", note="a second time", today=TODAY)
+    assert confirmed[0]["status"] == "confirmed" and confirmed[0]["consent"] == "asked by email"  # the proof of consent is untouched
+    pending = mailing.add([], "dan@example.org", source="mailto", note="asked", today=TODAY)
+    with pytest.raises(mailing.MailingError, match="waiting for confirmation"):
+        mailing.add(pending, "dan@example.org", source="mailto", note="again", today=TODAY)
+
+
 def test_an_unknown_address_that_unsubscribes_is_remembered_and_asking_again_starts_over():
     subs = mailing.unsubscribe([], "eve@example.org", today=TODAY)
     assert subs[0]["status"] == "unsubscribed"

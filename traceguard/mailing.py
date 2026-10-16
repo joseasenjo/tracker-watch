@@ -94,8 +94,11 @@ def add(subscribers: list[dict], email: str, *, source: str, note: str, interest
     index = _find(result, email)
     if index is None:
         result.append(entry)
-    else:
+    elif result[index]["status"] == "unsubscribed":
         result[index] = {**result[index], **entry, "status": "pending"}  # asking again after leaving starts over
+    else:  # already on the list: never demote a confirmed person or overwrite the record of their consent
+        label = "already subscribed and confirmed" if result[index]["status"] == "confirmed" else "already on the list, waiting for confirmation"
+        raise MailingError(f"{mask(email)} is {label}")
     return result
 
 
