@@ -58,7 +58,7 @@ I would like to receive the Tracker Watch weekly update by email. I understand t
         fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) })
           .then(function (r) { return r.json(); })
           .then(function (d) {
-            if (d && d.success) { form.reset(); out.textContent = 'Thank you. We will reply to your address asking you to confirm; nothing is sent before you do.'; }
+            if (d && d.success) { form.reset(); out.textContent = 'Your email has been sent. We will reply to you shortly to confirm your request; nothing is sent to you before you do.'; }
             else { throw new Error('rejected'); }
           })
           .catch(function () { out.textContent = 'It could not be sent. Please try again later{% if contact_email %} or write to {{ contact_email }}{% endif %}.'; })
