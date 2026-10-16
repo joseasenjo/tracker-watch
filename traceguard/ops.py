@@ -7,6 +7,7 @@ function so it can be tested without a network.
 """
 from __future__ import annotations
 
+import html
 import json
 import os
 import re
@@ -24,6 +25,9 @@ from . import digest as digest_module, mailing
 
 DEFAULT_REPO = "joseasenjo/tracker-watch"
 BOT_ACTOR = "trackerwatch.bsky.social"
+MASTODON_HOST = "mastodon.social"
+MASTODON_USER = "trackerwatch"
+MASTODON_PROFILE = f"https://{MASTODON_HOST}/@{MASTODON_USER}"
 SWITCHES = {
     "POST_ENABLED": "Publicar en Bluesky (apagado: no se publica nada)",
     "POST_REVIEW": "Pedir mi aprobación antes de publicar (encendido: solo se genera el borrador)",
@@ -225,6 +229,27 @@ def bot_state(http_get: Callable, actor: str = BOT_ACTOR) -> dict:
             "recent": posts}
 
 
+def mastodon_state(http_get: Callable, host: str = MASTODON_HOST, user: str = MASTODON_USER) -> dict:
+    """The public face of the Mastodon account: counts and recent posts, read from the public API (no login)."""
+    try:
+        status, account = http_get(f"https://{host}/api/v1/accounts/lookup?acct={user}")
+        if status != 200 or not isinstance(account, dict) or not account.get("id"):
+            return {"available": False, "profile": f"https://{host}/@{user}"}
+        status, items = http_get(f"https://{host}/api/v1/accounts/{account['id']}/statuses?limit=8&exclude_replies=true&exclude_reblogs=true")
+        recent = []
+        for item in (items if status == 200 and isinstance(items, list) else []):
+            text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", item.get("content", "")))).strip()
+            recent.append({"text": text, "at": item.get("created_at", ""), "url": item.get("url", ""),
+                           "likes": item.get("favourites_count", 0), "reposts": item.get("reblogs_count", 0),
+                           "replies": item.get("replies_count", 0)})
+        return {"available": True, "profile": account.get("url") or f"https://{host}/@{user}", "handle": f"@{user}@{host}",
+                "followers": account.get("followers_count"), "follows": account.get("following_count"),
+                "posts_count": account.get("statuses_count"), "bot": bool(account.get("bot")),
+                "discoverable": bool(account.get("discoverable")), "last_post": account.get("last_status_at"), "recent": recent}
+    except (OSError, ValueError, KeyError, TypeError):
+        return {"available": False, "profile": f"https://{host}/@{user}"}
+
+
 def site_state(http_get: Callable) -> dict:
     status, _ = http_get(SITE_URL)
     return {"url": SITE_URL, "status": status, "up": status == 200}
@@ -313,6 +338,9 @@ def build_alerts(state: dict, now: datetime | None = None) -> list[dict]:
         add("media", f"{len(gh['issues'])} incidencia(s) abiertas en GitHub (correcciones y réplicas de medios entran por aquí).")
     if bot.get("available") and not bot.get("bot_label"):
         add("media", "La cuenta de Bluesky no lleva la etiqueta «bot».")
+    mastodon = state.get("mastodon") or {}
+    if mastodon.get("available") and not mastodon.get("bot"):
+        add("media", "La cuenta de Mastodon no está marcada como automatizada (Editar perfil, «Cuenta automatizada»).")
     order = {"alta": 0, "media": 1, "info": 2}
     return sorted(alerts, key=lambda a: order[a["level"]])
 
@@ -323,7 +351,7 @@ def get_status(repo: str = DEFAULT_REPO, *, runner: Callable = subprocess.run, h
                sync_mark=SYNC_MARK) -> dict:
     http_get = http_get or urllib_get  # looked up at call time
     state = {"github": github_state(repo, runner), "scan": scan_summary(runs_dir, sites_file, spain_dir),
-             "drafts": pending_drafts(drafts_dir), "bot": bot_state(http_get), "site": site_state(http_get),
+             "drafts": pending_drafts(drafts_dir), "bot": bot_state(http_get), "mastodon": mastodon_state(http_get), "site": site_state(http_get),
              "git": git_state(runner), "notes": load_notes(), "switches": SWITCHES, "workflows": WORKFLOWS, "secrets_needed": list(SECRETS),
              "schedule": "Escaneo e hilo: lunes 07:00 UTC · Post corto: miércoles 08:00 UTC"}
     state["subscribers"] = subscribers_state(subscribers_file, sync_mark)

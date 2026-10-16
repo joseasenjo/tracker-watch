@@ -121,10 +121,15 @@
     </div>
   </details>
 
-  <div class="grid">
-    <section class="card"><h2>Última medición</h2><div id="scan"></div></section>
-    <section class="card"><h2>Bluesky</h2><div id="bot"></div></section>
-  </div>
+  <section class="card"><h2>Última medición</h2><div id="scan"></div></section>
+
+  <details class="card fold" id="sec-bluesky"><summary><h2>Bluesky <span class="muted" id="bluesky-count"></span></h2></summary>
+    <p class="muted"><a href="https://bsky.app/profile/trackerwatch.bsky.social" target="_blank" rel="noopener">bsky.app/profile/trackerwatch.bsky.social</a></p>
+    <div id="bot"></div></details>
+
+  <details class="card fold" id="sec-mastodon"><summary><h2>Mastodon <span class="muted" id="mastodon-count"></span></h2></summary>
+    <p class="muted">Cuenta: <a href="https://mastodon.social/@trackerwatch" target="_blank" rel="noopener">mastodon.social/@trackerwatch</a> (@trackerwatch@mastodon.social). Datos públicos, leídos sin iniciar sesión.</p>
+    <div id="mastodon"><span class="muted">Cargando…</span></div></details>
 
   <div class="grid">
     <section class="card"><h2>Ejecuciones recientes</h2><div class="scroll" id="runs"></div></section>
@@ -269,7 +274,7 @@
   }
   function initFolds() {
     // Pizarra, drafts and admin tools start closed; the panel remembers what you opened in this browser.
-    ['sec-pizarra', 'sec-admin', 'sec-borradores', 'sec-correo'].forEach(function (id) {
+    ['sec-pizarra', 'sec-admin', 'sec-borradores', 'sec-correo', 'sec-bluesky', 'sec-mastodon'].forEach(function (id) {
       var d = document.getElementById(id), key = 'tw-open-' + id;
       try { if (localStorage.getItem(key) === '1') d.open = true; } catch (e) { /* storage unavailable */ }
       d.addEventListener('toggle', function () { try { localStorage.setItem(key, d.open ? '1' : '0'); } catch (e) { /* ignore */ } });
@@ -369,6 +374,15 @@
       note(b.bot_label ? 'Etiqueta «bot»: puesta.' : 'Etiqueta «bot»: NO puesta.'),
       el('div', { class: 'scroll' }, [table(['Fecha', 'Texto', '♥', '↻', '💬'], b.recent.map(function (p) {
         return [when(p.at), p.text.length > 90 ? p.text.slice(0, 90) + '…' : p.text, p.likes, p.reposts, p.replies]; }))]) ]);
+
+    document.getElementById('bluesky-count').textContent = b.available ? '(' + b.followers + ' seguidores · ' + b.posts_count + ' publicaciones)' : '';
+    var m = s.mastodon || { available: false };
+    document.getElementById('mastodon-count').textContent = m.available ? '(' + m.followers + ' seguidores · ' + m.posts_count + ' publicaciones)' : '';
+    fill('mastodon', !m.available ? [note('No se pudo leer Mastodon ahora mismo.')] : [
+      el('div', { class: 'counters' }, [counter(m.followers, 'seguidores'), counter(m.posts_count, 'publicaciones'), counter(m.follows, 'siguiendo')]),
+      note((m.bot ? 'Cuenta automatizada: marcada.' : 'Cuenta automatizada: NO marcada.') + ' ' + (m.discoverable ? 'Visible en el descubrimiento.' : 'No aparece en el descubrimiento.')),
+      m.recent.length ? el('div', { class: 'scroll' }, [table(['Fecha', 'Texto', '★', '↻', '💬'], m.recent.map(function (p) {
+        return [when(p.at), p.text.length > 90 ? p.text.slice(0, 90) + '…' : p.text, p.likes, p.reposts, p.replies]; }))]) : note('Todavía no hay publicaciones.') ]);
 
     fill('runs', (s.github.runs || []).length ? [table(['Workflow', 'Estado', 'Inicio', ''], s.github.runs.map(function (r) {
       return [r.workflow, r.status === 'completed' ? r.conclusion : r.status, when(r.created), el('a', { href: r.url, target: '_blank', rel: 'noopener', text: 'ver' })]; }))]

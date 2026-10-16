@@ -168,6 +168,35 @@ def test_a_mastodon_only_draft_is_listed_and_the_page_has_the_mastodon_button(tm
     assert "Aprobar y publicar en Mastodon" in page and "platform: 'mastodon'" in page
 
 
+def test_mastodon_state_reads_the_public_account_and_posts_without_a_login():
+    seen = []
+
+    def fake(url):
+        seen.append(url)
+        if "accounts/lookup" in url:
+            return 200, {"id": "42", "url": "https://mastodon.social/@trackerwatch", "followers_count": 7, "following_count": 3,
+                         "statuses_count": 1, "bot": True, "discoverable": True, "last_status_at": "2026-10-16"}
+        return 200, [{"content": "<p>Hello <b>world</b> &amp; all</p>", "created_at": "2026-10-16T18:51:12Z", "url": "https://x/1",
+                      "favourites_count": 2, "reblogs_count": 1, "replies_count": 0}]
+
+    state = ops.mastodon_state(fake)
+    assert state["available"] and state["followers"] == 7 and state["posts_count"] == 1 and state["bot"] and state["discoverable"]
+    assert state["recent"][0]["text"] == "Hello world & all" and state["recent"][0]["likes"] == 2
+    assert state["handle"] == "@trackerwatch@mastodon.social" and all(u.startswith("https://mastodon.social/") for u in seen)
+    assert ops.mastodon_state(lambda url: (404, None))["available"] is False
+    assert ops.mastodon_state(lambda url: (200, "not json"))["available"] is False
+    unmarked = {"mastodon": {"available": True, "bot": False}}
+    assert any("Mastodon" in a["text"] for a in ops.build_alerts(unmarked, NOW))
+
+
+def test_the_bluesky_and_mastodon_cards_are_collapsed_and_independent():
+    page = (Path(ops.__file__).parent / "ops_page.html").read_text(encoding="utf-8")
+    for card in ("sec-bluesky", "sec-mastodon"):
+        assert f'<details class="card fold" id="{card}">' in page and f"'{card}'" in page
+        assert f'id="{card}" open' not in page
+    assert "mastodon.social/@trackerwatch" in page and 'id="mastodon"' in page
+
+
 def test_bot_state_reads_the_public_profile_and_recent_posts():
     def fake(url):
         if "getProfile" in url:
