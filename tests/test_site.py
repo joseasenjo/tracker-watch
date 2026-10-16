@@ -282,7 +282,7 @@ def test_subscribe_button_is_disabled_without_a_url_and_active_with_one(built, t
     assert "https://github.com/x/y" in (out2 / "privacy.html").read_text(encoding="utf-8")
 
 
-def test_the_email_card_leads_to_the_subscription_page_and_the_page_has_a_ready_made_request(built, tmp_path):
+def test_the_email_card_leads_to_the_subscription_page_and_the_page_has_a_form(built, tmp_path):
     plain = (built[1] / "index.html").read_text(encoding="utf-8")
     assert "A weekly summary by email is not available yet." in plain  # no contact address configured: nothing to offer
     out = tmp_path / "site_mail"
@@ -290,10 +290,13 @@ def test_the_email_card_leads_to_the_subscription_page_and_the_page_has_a_ready_
     card = (out / "index.html").read_text(encoding="utf-8").split("Follow the weekly results")[1].split("Raw data")[0]
     assert 'href="subscribe.html">Subscribe</a>' in card and "mailto:" not in card and "Coming soon" not in card
     page = (out / "subscribe.html").read_text(encoding="utf-8")
-    assert 'href="mailto:dev@example.org?subject=Subscribe%20to%20Tracker%20Watch%20Weekly&amp;body=' in page
+    assert 'action="https://api.web3forms.com/submit"' in page and 'name="access_key"' in page and 'type="email" name="email" required' in page
+    assert 'name="consent" value="yes" required' in page and 'name="botcheck"' in page  # consent box is mandatory; spam trap present
+    assert "mailto:dev@example.org" not in page.split("<form")[0] and "Write to <b>dev@example.org</b>" in page  # plain-email alternative
     assert "UNSUBSCRIBE" in page and "security review" in page and "privacy.html#weekly-email" in page
-    assert "audit%2C%20analysis%20and%20automation%20services" in page  # the request itself says what the person accepts
+    assert "audit, analysis and automation services" in page  # the checkbox says what the person accepts
     assert "tracking" in page and "no pixels" in page
+    assert "nothing is loaded from it before" in page  # the page itself makes no request to the provider
     assert 'href="subscribe.html">Weekly email</a>' in (out / "index.html").read_text(encoding="utf-8")  # in the footer
 
 
@@ -303,7 +306,7 @@ def test_the_privacy_page_says_who_is_responsible_what_is_kept_and_how_to_leave(
     privacy = (out / "privacy.html").read_text(encoding="utf-8")
     section = privacy.split('id="weekly-email"')[1].split("<h2>Data we publish</h2>")[0]
     for needle in ("Who is responsible", "Jose Luis Asenjo Tornero", "What is kept", "Legal basis", "your consent", "UNSUBSCRIBE",
-                   "How long", "never shared, sold", "Your rights", "AEPD", "Gmail"):
+                   "How long", "never shared, sold", "Your rights", "AEPD", "Gmail", "Web3Forms", "The form:"):
         assert needle in section, needle
     assert "dev@example.org" in section
 

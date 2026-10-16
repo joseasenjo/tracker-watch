@@ -2,6 +2,8 @@
 {% block title %}Weekly email{% endblock %}
 {% block description %}A short email after each weekly check of the third-party trackers on news sites, only if you ask for it. You can leave at any time.{% endblock %}
 {% block content %}
+{# The form is sent through Web3Forms (web3forms.com), which forwards it to the contact address. The access key is public by design. Empty it to fall back to the mail link. #}
+{% set form_key = '65172403-622d-4839-92ec-4b27257c1cf6' %}
 {% set subject = 'Subscribe to Tracker Watch Weekly' %}
 {% set body %}Hello,
 
@@ -22,7 +24,7 @@ I would like to receive the Tracker Watch weekly update by email. I understand t
 
     <h2>How it works</h2>
     <div class="steps">
-      <div class="step"><b>Ask</b><p class="small">Press the button below: your email app opens with a short message already written. Send it.</p></div>
+      <div class="step"><b>Ask</b><p class="small">Fill in your address below and tick the box. Nothing else is needed.</p></div>
       <div class="step"><b>Confirm</b><p class="small">We reply asking you to confirm that you want it. You confirm by replying. Nothing is sent before that.</p></div>
       <div class="step"><b>Receive, or leave</b><p class="small">You get the email after each published check. To stop, reply <b>UNSUBSCRIBE</b> to any of them: you are removed at once.</p></div>
     </div>
@@ -30,6 +32,41 @@ I would like to receive the Tracker Watch weekly update by email. I understand t
     {% if subscribe_url %}
     <p><a class="btn" href="{{ subscribe_url }}" rel="noopener">Subscribe</a></p>
     <p class="small">The signup page is hosted by {{ subscribe_host }}; this site never sees your address.</p>
+    {% elif form_key and contact_email %}
+    <form id="weekly-form" class="signup" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="{{ form_key }}">
+      <input type="hidden" name="subject" value="Subscribe to Tracker Watch Weekly">
+      <input type="hidden" name="from_name" value="Tracker Watch website">
+      <input type="hidden" name="message" value="Request for the Tracker Watch weekly email, sent from the subscribe page. The person ticked the consent box.">
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p><label for="wf-email"><b>Your email address</b></label><br>
+        <input id="wf-email" type="email" name="email" required autocomplete="email" maxlength="200" placeholder="you@example.com"></p>
+      <p><label><input type="checkbox" name="consent" value="yes" required> I want to receive the Tracker Watch weekly email. I understand it may mention the developer's audit, analysis and automation services, and that I can unsubscribe at any time by replying UNSUBSCRIBE.</label></p>
+      <p><label><input type="checkbox" name="interest" value="yes"> I am also interested in a tracking review for my organisation (optional).</label></p>
+      <p><button class="btn" type="submit">Ask for the weekly email</button></p>
+      <p id="wf-status" class="small" role="status" aria-live="polite"></p>
+      <p class="small">When you press the button, your address goes to Web3Forms, the service that delivers this form to the developer; nothing is loaded from it before. Details in the <a href="{{ root }}privacy.html#weekly-email">privacy page</a>.</p>
+    </form>
+    <script>
+    (function () {
+      var form = document.getElementById('weekly-form'), out = document.getElementById('wf-status');
+      if (!form || !window.fetch) return;
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type=submit]');
+        btn.disabled = true; out.textContent = 'Sending…';
+        fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d && d.success) { form.reset(); out.textContent = 'Thank you. We will reply to your address asking you to confirm; nothing is sent before you do.'; }
+            else { throw new Error('rejected'); }
+          })
+          .catch(function () { out.textContent = 'It could not be sent. Please try again later{% if contact_email %} or write to {{ contact_email }}{% endif %}.'; })
+          .then(function () { btn.disabled = false; });
+      });
+    })();
+    </script>
+    {% if contact_email %}<p class="small">Prefer email? Write to <b>{{ contact_email }}</b> with the subject “{{ subject }}”.</p>{% endif %}
     {% elif contact_email %}
     <p><a class="btn" href="mailto:{{ contact_email }}?subject={{ subject|urlencode }}&amp;body={{ body|urlencode }}">Ask for the weekly email</a></p>
     <p class="small">If the button does not open your email app, write to <b>{{ contact_email }}</b> with the subject “{{ subject }}”.</p>
