@@ -150,14 +150,17 @@ def pending_drafts(drafts_dir: Path | str, today: _date | None = None) -> list[d
     for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce)?", p.name)),
                          reverse=True):
         draft_file = folder / "bluesky.json"
-        if not draft_file.exists():
+        has_mastodon = (folder / "mastodon.json").exists()
+        if not draft_file.exists() and not has_mastodon:
             continue
         try:
-            draft = json.loads(draft_file.read_text(encoding="utf-8"))
+            draft = json.loads((draft_file if draft_file.exists() else folder / "mastodon.json").read_text(encoding="utf-8"))
         except ValueError:
             continue
         state_file = folder / "bluesky.posted.json"
-        posted = state_file.exists() and bool(json.loads(state_file.read_text(encoding="utf-8")).get("complete"))
+        posted = (state_file.exists() and bool(json.loads(state_file.read_text(encoding="utf-8")).get("complete"))) or \
+            (not draft_file.exists() and _thread_complete(folder / "mastodon.posted.json"))
+        mastodon_posted = _thread_complete(folder / "mastodon.posted.json")
         try:
             age = (today - _date.fromisoformat(str(draft.get("date")))).days
         except ValueError:
@@ -167,8 +170,16 @@ def pending_drafts(drafts_dir: Path | str, today: _date | None = None) -> list[d
                                  "post de gancho" if folder.name.endswith("hook") else
                                  "anuncio" if folder.name.endswith("announce") else "hilo semanal"),
                      "date": draft.get("date"), "posts": draft.get("posts", []), "image": bool(draft.get("image")),
-                     "posted": posted, "age_days": age, "stale": age is not None and age > 14})
+                     "posted": posted, "age_days": age, "stale": age is not None and age > 14,
+                     "bluesky": draft_file.exists(), "mastodon": has_mastodon, "mastodon_posted": mastodon_posted})
     return rows[:12]
+
+
+def _thread_complete(state_file: Path) -> bool:
+    try:
+        return state_file.exists() and bool(json.loads(state_file.read_text(encoding="utf-8")).get("complete"))
+    except ValueError:
+        return False
 
 
 # --- GitHub and Bluesky -------------------------------------------------------------------------------------------
@@ -399,18 +410,28 @@ def run_workflow(workflow: str, repo: str = DEFAULT_REPO, runner: Callable = sub
 
 
 def approve_draft(folder: str, repo: str = DEFAULT_REPO, runner: Callable = subprocess.run,
-                  drafts_dir: Path | str = "data/drafts") -> None:
+                  drafts_dir: Path | str = "data/drafts", platform: str = "bluesky") -> None:
     if not DRAFT_RE.fullmatch(folder or ""):
         raise OpsError("carpeta de borrador no válida")
+    if platform not in ("bluesky", "mastodon"):
+        raise OpsError("plataforma no válida")
     rows = {d["folder"]: d for d in pending_drafts(drafts_dir)}
     draft = rows.get(folder)
     if not draft:
         raise OpsError("ese borrador no está en tu copia local: pulsa «Actualizar datos»")
-    if draft["posted"]:
+    if platform == "mastodon":
+        if not draft["mastodon"]:
+            raise OpsError("ese borrador no tiene versión para Mastodon")
+        if draft["mastodon_posted"]:
+            raise OpsError("ese borrador ya se publicó en Mastodon")
+    elif draft["posted"]:
         raise OpsError("ese borrador ya se publicó")
     if draft["stale"]:
         raise OpsError("ese borrador tiene más de 14 días: no se publica")
-    _run(runner, ["gh", "workflow", "run", "publish-draft.yml", "-R", repo, "-f", f"folder={folder}"])
+    command = ["gh", "workflow", "run", "publish-draft.yml", "-R", repo, "-f", f"folder={folder}"]
+    if platform == "mastodon":
+        command += ["-f", "platform=mastodon"]
+    _run(runner, command)
 
 
 def pull_data(runner: Callable = subprocess.run, cwd: str = ".") -> str:

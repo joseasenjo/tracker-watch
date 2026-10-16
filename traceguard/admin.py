@@ -188,7 +188,8 @@ class Handler(SimpleHTTPRequestHandler):
                 ops.approve_digest(str(body.get("folder", "")), self.repo, self.runner, test=bool(body.get("test", False)))
                 return self._json(200, {"ok": True})
             if self.path == "/api/ops/approve":
-                ops.approve_draft(str(body.get("folder", "")), self.repo, self.runner)
+                ops.approve_draft(str(body.get("folder", "")), self.repo, self.runner,
+                                  platform=str(body.get("platform", "bluesky")))
                 return self._json(200, {"ok": True})
             return self._json(200, {"ok": True, "output": ops.pull_data(self.runner)})  # /api/ops/pull
         except (ValueError, ops.OpsError) as exc:

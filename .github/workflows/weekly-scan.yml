@@ -133,6 +133,13 @@ jobs:
           python -m traceguard.posts data/runs --platform bluesky --kind alert --report-url "$SITE_URL" || echo "no alert drafted"
           python -m traceguard.posts data/runs --platform bluesky --kind hook --report-url "$SITE_URL" || echo "no hook drafted"
 
+      - name: Draft the same posts for Mastodon (never published automatically, approve them in the dashboard)
+        continue-on-error: true
+        run: |
+          python -m traceguard.posts data/runs --platform mastodon --min-measured 0.6 --report-url "$SITE_URL" || echo "no mastodon thread drafted"
+          python -m traceguard.posts data/runs --platform mastodon --kind alert --report-url "$SITE_URL" || echo "no mastodon alert drafted"
+          python -m traceguard.posts data/runs --platform mastodon --kind hook --report-url "$SITE_URL" || echo "no mastodon hook drafted"
+
       - name: Waiting for your approval (review mode is on)
         if: ${{ vars.POST_REVIEW == 'true' }}
         run: |

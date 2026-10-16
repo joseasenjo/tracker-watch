@@ -328,12 +328,21 @@
       var kids = [el('div', {}, [el('b', { text: d.kind + ' · ' + d.date + ' ' }), state, d.image ? el('span', { class: 'muted', text: ' · con imagen' }) : null])];
       d.posts.forEach(function (p, i) { kids.push(el('blockquote', { text: (i + 1) + '/' + d.posts.length + '  ' + p })); });
       var box = el('div', { class: 'row', style: 'display:block' }, kids);
-      if (!d.posted && !d.stale) {
-        box.appendChild(el('button', { class: 'primary', text: 'Aprobar y publicar', onclick: function (e) {
+      var buttons = [];
+      if (!d.posted && !d.stale && d.bluesky) {
+        buttons.push(el('button', { class: 'primary', text: 'Aprobar y publicar en Bluesky', onclick: function (e) {
           if (!confirm('Publicar este borrador en Bluesky ahora? No se puede deshacer desde aquí.')) return;
           post('/api/ops/approve', { folder: d.folder }, e.target).then(function () { toast('Aprobado: publicando. Mira «Ejecuciones recientes».'); setTimeout(load, 5000); });
         } }));
       }
+      if (d.mastodon && !d.mastodon_posted && !d.stale) {
+        buttons.push(el('button', { text: 'Aprobar y publicar en Mastodon', onclick: function (e) {
+          if (!confirm('Publicar este borrador en Mastodon (@trackerwatch@mastodon.social) ahora? No se puede deshacer desde aquí.')) return;
+          post('/api/ops/approve', { folder: d.folder, platform: 'mastodon' }, e.target).then(function () { toast('Aprobado: publicando en Mastodon. Mira «Ejecuciones recientes».'); setTimeout(load, 5000); });
+        } }));
+      }
+      if (d.mastodon) kids.push(el('div', { class: 'muted', text: 'Mastodon: ' + (d.mastodon_posted ? 'publicado' : 'borrador listo') }));
+      if (buttons.length) box.appendChild(el('div', { style: 'display:flex;gap:6px;flex-wrap:wrap;margin-top:6px' }, buttons));
       return box;
     }) : [note('No hay borradores en tu copia local. Con la revisión encendida, el escaneo deja aquí el borrador; pulsa «Actualizar datos» para verlo.')]);
     var waitingDrafts = s.drafts.filter(function (d) { return !d.posted && !d.stale; }).length;

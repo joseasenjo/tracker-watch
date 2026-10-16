@@ -10,6 +10,11 @@ on:
       folder:
         description: "Draft folder, e.g. data/drafts/2026-10-12 or data/drafts/2026-10-14-midweek"
         required: true
+      platform:
+        description: "Where to publish (the draft file <platform>.json must exist in the folder)"
+        type: choice
+        options: [bluesky, mastodon, both]
+        default: bluesky
 
 permissions:
   contents: write
@@ -41,10 +46,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Publish on Bluesky
+      - name: Publish
         env:
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          MASTODON_URL: ${{ vars.MASTODON_URL }}
+          MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          PLATFORM: ${{ github.event.inputs.platform || 'bluesky' }}
           MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
           MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
@@ -52,10 +60,10 @@ jobs:
           MAIL_FROM: ${{ vars.MAIL_FROM }}
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
           FOLDER: ${{ github.event.inputs.folder }}
-        run: python -m traceguard.publish "$FOLDER" --platform bluesky --send
+        run: python -m traceguard.publish "$FOLDER" --platform "$PLATFORM" --send
 
       - name: Email the digest automatically (only if DIGEST_ENABLED and DIGEST_AUTO are "true"; only the kinds in DIGEST_KINDS)
-        if: ${{ vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' }}
+        if: ${{ vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' && github.event.inputs.platform != 'mastodon' }}
         continue-on-error: true   # an email problem never undoes or fails a publication
         env:
           SUBSCRIBERS_JSON: ${{ secrets.SUBSCRIBERS_JSON }}

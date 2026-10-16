@@ -128,6 +128,46 @@ def test_approving_checks_the_folder_the_state_and_the_age(tmp_path):
     assert calls == [["gh", "workflow", "run", "publish-draft.yml", "-R", "o/r", "-f", f"folder=data/drafts/{today}"]]
 
 
+def test_mastodon_drafts_are_listed_and_approved_separately_from_bluesky(tmp_path):
+    drafts, today = tmp_path / "drafts", date.today().isoformat()
+    for name, mastodon, bluesky_posted, mastodon_posted in ((today, True, True, False), (today + "-midweek", False, False, False),
+                                                              (today + "-hook", True, False, True)):
+        folder = drafts / name
+        folder.mkdir(parents=True)
+        (folder / "bluesky.json").write_text(json.dumps({"date": today, "posts": ["hello"]}), encoding="utf-8")
+        if mastodon:
+            (folder / "mastodon.json").write_text(json.dumps({"date": today, "posts": ["hello"]}), encoding="utf-8")
+        if bluesky_posted:
+            (folder / "bluesky.posted.json").write_text(json.dumps({"complete": True}), encoding="utf-8")
+        if mastodon_posted:
+            (folder / "mastodon.posted.json").write_text(json.dumps({"complete": True}), encoding="utf-8")
+    rows = {d["folder"]: d for d in ops.pending_drafts(drafts)}
+    assert rows[f"data/drafts/{today}"]["mastodon"] and not rows[f"data/drafts/{today}"]["mastodon_posted"]
+    assert not rows[f"data/drafts/{today}-midweek"]["mastodon"]
+    assert rows[f"data/drafts/{today}-hook"]["mastodon_posted"]
+    calls = []
+    runner = lambda cmd, **kw: calls.append(cmd) or SimpleNamespace(returncode=0, stdout="", stderr="")
+    ops.approve_draft(f"data/drafts/{today}", "o/r", runner, drafts, platform="mastodon")  # Bluesky is done, Mastodon is not
+    assert calls == [["gh", "workflow", "run", "publish-draft.yml", "-R", "o/r", "-f", f"folder=data/drafts/{today}", "-f", "platform=mastodon"]]
+    with pytest.raises(ops.OpsError):
+        ops.approve_draft(f"data/drafts/{today}-midweek", "o/r", runner, drafts, platform="mastodon")  # no Mastodon version
+    with pytest.raises(ops.OpsError):
+        ops.approve_draft(f"data/drafts/{today}-hook", "o/r", runner, drafts, platform="mastodon")  # already published there
+    with pytest.raises(ops.OpsError):
+        ops.approve_draft(f"data/drafts/{today}", "o/r", runner, drafts, platform="twitter")
+    assert len(calls) == 1
+
+
+def test_a_mastodon_only_draft_is_listed_and_the_page_has_the_mastodon_button(tmp_path):
+    folder = tmp_path / "drafts" / date.today().isoformat()
+    folder.mkdir(parents=True)
+    (folder / "mastodon.json").write_text(json.dumps({"date": date.today().isoformat(), "posts": ["hi"]}), encoding="utf-8")
+    rows = ops.pending_drafts(tmp_path / "drafts")
+    assert len(rows) == 1 and rows[0]["mastodon"] and not rows[0]["bluesky"] and not rows[0]["posted"]
+    page = (Path(ops.__file__).parent / "ops_page.html").read_text(encoding="utf-8")
+    assert "Aprobar y publicar en Mastodon" in page and "platform: 'mastodon'" in page
+
+
 def test_bot_state_reads_the_public_profile_and_recent_posts():
     def fake(url):
         if "getProfile" in url:
