@@ -69,6 +69,16 @@ def test_the_message_names_the_kind_the_date_and_every_post():
     assert "mid-week post" in midweek["Subject"]
 
 
+def test_a_mastodon_publication_gets_its_own_notice_with_the_link_to_the_post():
+    config = mail_config(MAIL)
+    state = {"posts": [{"id": "9", "url": "https://mastodon.social/@trackerwatch/9"}], "finished_at": "2026-10-19T09:05:00Z"}
+    message = build_message({"date": "2026-10-19", "posts": ["Hello from Mastodon"]}, "mastodon", state, "data/drafts/2026-10-19", config)
+    assert message["Subject"] == "[Tracker Watch] Published on Mastodon: weekly thread 2026-10-19"
+    body = message.get_content()
+    assert "is now published on Mastodon" in body and "https://mastodon.social/@trackerwatch/9" in body and "Hello from Mastodon" in body
+    assert "Bluesky" not in message["Subject"] and "mail-pass-789" not in str(message)
+
+
 def test_it_sends_over_an_encrypted_connection_and_never_prints_the_password():
     reset()
     line = notify_published(DRAFT, "bluesky", STATE, "data/drafts/2026-10-12", MAIL, smtp=FakeSMTP)

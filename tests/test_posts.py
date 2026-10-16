@@ -270,3 +270,36 @@ def test_midweek_keeps_automated_post_and_drops_a_company_before_dropping_it():
     short = [_with_services(report("News A", 1), "Alpha")]
     (small,) = posts_module.build_midweek("2026-10-14", short, platform="bluesky", report_url="u")
     assert small.endswith("Automated post. #privacy #adtech #GDPR")
+
+
+def test_max_chars_keeps_mastodon_posts_inside_the_bluesky_limit(tmp_path, monkeypatch):
+    monkeypatch.setitem(posts_module.LIMITS, "mastodon", 500)  # restored after the test: main() lowers it at run time
+    reports = [report(f"News {c}", 9 - i) for i, c in enumerate("ABCDEF")]
+    folder = tmp_path / "runs" / "2026-10-11"
+    folder.mkdir(parents=True)
+    for i, r in enumerate(reports):
+        (folder / f"{i}.json").write_text(json.dumps(r), encoding="utf-8")
+    assert main([str(tmp_path / "runs"), "--platform", "mastodon", "--kind", "hook", "--max-chars", "300",
+                 "--out", str(tmp_path / "d")]) == 0
+    saved = json.loads((tmp_path / "d" / "2026-10-11-hook" / "mastodon.json").read_text(encoding="utf-8"))
+    assert saved["platform"] == "mastodon" and all(len(p) <= 300 for p in saved["posts"])
+    assert posts_module.LIMITS["mastodon"] == 300
+    # asking for more than the platform allows never raises its limit
+    main([str(tmp_path / "runs"), "--platform", "mastodon", "--kind", "hook", "--max-chars", "9999", "--out", str(tmp_path / "d2")])
+    assert posts_module.LIMITS["mastodon"] == 300
+
+
+def test_the_scheduled_workflows_publish_on_mastodon_after_bluesky_and_never_fail_bluesky_for_it():
+    import yaml
+    from pathlib import Path
+    for name in ("weekly-scan", "post-midweek"):
+        text = Path(f".github/workflows/{name}.yml").read_text(encoding="utf-8")
+        steps = [s for job in yaml.safe_load(text)["jobs"].values() for s in job["steps"]]
+        names = [s.get("name", "") for s in steps]
+        bluesky = next(i for i, n in enumerate(names) if n.startswith("Publish on Bluesky"))
+        mastodon = next(i for i, n in enumerate(names) if n.startswith("Publish on Mastodon"))
+        assert mastodon > bluesky
+        step = steps[mastodon]
+        assert step["continue-on-error"] is True and "MASTODON_ENABLED == 'true'" in step["if"] and "POST_REVIEW != 'true'" in step["if"]
+        assert "--platform mastodon --send" in step["run"] and step["env"]["MASTODON_TOKEN"] == "${{ secrets.MASTODON_TOKEN }}"
+        assert "--max-chars 300" in text  # the Mastodon drafts are written inside Bluesky's limit

@@ -343,6 +343,9 @@ def main(argv: list[str] | None = None) -> int:
                         help="reports of the Spanish group measured from Spain (left out if missing or too old)")
     parser.add_argument("--out", default="data/drafts", help="where draft files are written")
     parser.add_argument("--no-image", action="store_true", help="do not draw the chart image")
+    parser.add_argument("--max-chars", type=int, default=0, metavar="N",
+                        help="write every post within N characters (never above the platform limit); the workflows pass 300 "
+                             "for Mastodon so that both accounts publish the same text, inside Bluesky's limit")
     parser.add_argument("--dry-run", action="store_true", help="print the draft and write nothing (no image either)")
     parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
                         help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
@@ -353,6 +356,8 @@ def main(argv: list[str] | None = None) -> int:
                              "last measurement (written to <date>-alert); hook: one post on the most-tracked outlet of the "
                              "week (written to <date>-hook). Alerts and hooks are never published automatically")
     args = parser.parse_args(argv)
+    if args.max_chars:
+        LIMITS[args.platform] = min(LIMITS[args.platform], args.max_chars)  # the builders read the limit at call time
 
     date, reports = load_latest_reports(args.runs_dir)
     if args.kind == "midweek":

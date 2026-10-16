@@ -40,9 +40,9 @@ jobs:
       - name: Draft the post
         run: python -m traceguard.posts data/runs --platform bluesky --kind midweek --report-url "$SITE_URL"
 
-      - name: Draft the same post for Mastodon (never published automatically, approve it in the dashboard)
+      - name: Draft the same post for Mastodon (same limit as Bluesky)
         continue-on-error: true
-        run: python -m traceguard.posts data/runs --platform mastodon --kind midweek --report-url "$SITE_URL" || echo "no mastodon post drafted"
+        run: python -m traceguard.posts data/runs --platform mastodon --max-chars 300 --kind midweek --report-url "$SITE_URL" || echo "no mastodon post drafted"
 
       - name: Waiting for your approval (review mode is on)
         if: ${{ vars.POST_REVIEW == 'true' }}
@@ -61,6 +61,20 @@ jobs:
           MAIL_FROM: ${{ vars.MAIL_FROM }}
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
         run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -- '-midweek$' | sort | tail -1)" --platform bluesky --send --skip-if-published
+
+      - name: Publish on Mastodon (same text as Bluesky, only if MASTODON_ENABLED is "true")
+        if: ${{ vars.POST_REVIEW != 'true' && vars.MASTODON_ENABLED == 'true' }}
+        continue-on-error: true   # a Mastodon problem never undoes or fails the Bluesky publication
+        env:
+          MASTODON_URL: ${{ vars.MASTODON_URL }}
+          MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -- '-midweek$' | sort | tail -1)" --platform mastodon --send --skip-if-published
 
       - name: Email the digest automatically (only if DIGEST_ENABLED and DIGEST_AUTO are "true"; otherwise it waits for your approval)
         if: ${{ vars.POST_REVIEW != 'true' && vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' }}
