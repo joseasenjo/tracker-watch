@@ -294,3 +294,19 @@ def test_hashtags_get_facets_with_byte_ranges():
     assert [f["features"][0]["tag"] for f in facets] == ["privacy", "adtech"]
     raw = text.encode("utf-8")
     assert raw[facets[0]["index"]["byteStart"]:facets[0]["index"]["byteEnd"]] == b"#privacy"
+
+
+def test_a_key_salt_gives_a_republished_draft_a_new_mastodon_key(tmp_path):
+    runs = iter(range(10))
+
+    def keys_for(salt):
+        server = FakeServer()
+        path = write_draft(tmp_path / f"d{next(runs)}", "mastodon")
+        draft = load_draft(path, "mastodon", today=TODAY)
+        if salt:
+            draft["key_salt"] = salt
+        client = Mastodon(server, "https://masto.example", "tok-secret-456", sleep=lambda _s: None)
+        publish_thread(client, draft, path, load_state(state_path(path), draft), log=lambda *_: None)
+        return [c[2]["Idempotency-Key"] for c in server.calls if c[1].endswith("/api/v1/statuses")]
+    plain, salted = keys_for(""), keys_for("redo-1")
+    assert plain == keys_for("") and not set(plain) & set(salted)

@@ -346,7 +346,8 @@ def publish_thread(client, draft: dict, draft_path: Path, state: dict, *, log=pr
             result = client.post(text, reply=reply, image=image, alt=alt)
         else:
             media_id = client.upload_image(image_bytes, alt) if index == 0 and image_bytes else None
-            key = hashlib.sha256(f"{draft['date']}|{platform}|{index}|{text}".encode("utf-8")).hexdigest()
+            salt = f"|{draft['key_salt']}" if draft.get("key_salt") else ""  # Mastodon remembers a key for about an hour: a draft republished after a deletion needs a new one
+            key = hashlib.sha256(f"{draft['date']}|{platform}|{index}|{text}{salt}".encode("utf-8")).hexdigest()
             result = client.post(text, reply_to=previous["id"] if previous else None, media_id=media_id, key=key)
         state["posts"].append(result)
         save_state(path, state)  # recorded at once: a failure later in the thread loses nothing
