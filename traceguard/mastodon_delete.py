@@ -32,9 +32,9 @@ def delete_status(client: Mastodon, status_id: str, expect: str, log=print) -> b
         raise PublishError("the status id must be digits only")
     if not expect.strip():
         raise PublishError("say how the post text starts (--expect), so the wrong post cannot be deleted")
-    status, headers, raw = client.http("GET", f"{client.base}/api/v1/statuses/{status_id}", headers=client._headers())
+    status, headers, raw = client.http("GET", f"{client.base}/api/v1/statuses/{status_id}", headers={})  # public read: the token only writes
     found = json.loads(_check(status, raw, "read status", headers))
-    # The token's scopes do not include reading the profile, so "whose is it" is not asked: the server itself refuses to
+    # The token's scopes only allow writing (no profile, no reading), so "whose is it" is not asked: the server itself refuses to
     # delete a status that is not the token owner's, and the text must match what the maintainer expects.
     text = plain(str(found.get("content", "")))
     if not text.startswith(expect):
