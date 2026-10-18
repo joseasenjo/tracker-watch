@@ -153,3 +153,19 @@ def test_the_test_command_reports_missing_and_broken_settings_without_the_secret
     monkeypatch.setattr(notify, "send", lambda config, message, **kw: sent.append(message))
     assert notify.main(["test"], env=MAIL) == 0 and sent[0]["Subject"].endswith("Test of the publication notice")
     assert "o***@example.com" in capsys.readouterr().out
+
+
+def test_a_failed_workflow_gets_a_notice_with_the_log_link_and_nothing_secret(capsys, monkeypatch):
+    from traceguard import notify
+    env = dict(MAIL, FAILED_WORKFLOW="weekly-scan", FAILED_RUN_URL="https://github.com/o/r/actions/runs/1",
+               FAILED_EVENT="schedule", FAILED_AT="2026-10-19T07:00:11Z")
+    sent = []
+    monkeypatch.setattr(notify, "send", lambda config, message, **kw: sent.append(message))
+    assert notify.main(["failure"], env=env) == 0
+    assert sent[0]["Subject"] == "[Tracker Watch] FAILED: weekly-scan" and sent[0]["To"] == "owner@example.com"
+    body = sent[0].get_content()
+    assert "https://github.com/o/r/actions/runs/1" in body and "mail-pass-789" not in body
+    assert notify.main(["failure"], env={}) == 1 and "not configured" in capsys.readouterr().err
+    hostile = dict(env, FAILED_WORKFLOW="x\r\nBcc: attacker@example.org")
+    notify.main(["failure"], env=hostile)
+    assert "\n" not in sent[1]["Subject"] and "Bcc" not in sent[1].keys()

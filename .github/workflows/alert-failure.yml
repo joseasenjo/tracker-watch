@@ -1,0 +1,36 @@
+# Emails the owner when the weekly scan, the mid-week post or the digest sender ends in failure, with a link to the log.
+# It only reads what GitHub says about the finished run (name, address, start time) and repeats nothing by itself.
+# Needs the same mail settings as the publication notice; without them it does nothing and says so in its log.
+name: alert-failure
+
+on:
+  workflow_run:
+    workflows: [weekly-scan, post-midweek, send-digest]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  alert:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Send the failure notice
+        env:
+          FAILED_WORKFLOW: ${{ github.event.workflow_run.name }}
+          FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
+          FAILED_EVENT: ${{ github.event.workflow_run.event }}
+          FAILED_AT: ${{ github.event.workflow_run.run_started_at }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify failure

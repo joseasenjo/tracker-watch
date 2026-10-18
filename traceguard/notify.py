@@ -97,16 +97,44 @@ def notify_published(draft: dict, platform: str, state: dict, draft_path: Path |
     return f"email notice sent to {mask(config['to'])}"
 
 
+def build_failure_message(env, config: dict) -> EmailMessage:
+    """The notice for a scheduled workflow that failed. The values come from the environment, never from a command line."""
+    def clean(name: str, limit: int = 200) -> str:
+        return " ".join((env.get(name) or "?").split())[:limit]
+    workflow, url = clean("FAILED_WORKFLOW", 80), clean("FAILED_RUN_URL")
+    message = EmailMessage()
+    message["Subject"] = f"[Tracker Watch] FAILED: {workflow}"
+    message["From"], message["To"] = config["sender"], config["to"]
+    message.set_content("\n".join([
+        f"The workflow '{workflow}' ({clean('FAILED_EVENT', 40)}) ended with an error.",
+        f"Started: {clean('FAILED_AT', 40)}", "", f"Log: {url}", "",
+        "Nothing has been repeated automatically. Open the log, read the first red step, and start the workflow again by hand "
+        "(Actions -> the workflow -> Run workflow) once the cause is fixed.", "",
+        "This notice comes from the Tracker Watch failure watcher."]))
+    return message
+
+
 def main(argv: list[str] | None = None, env=None) -> int:
-    """`python -m traceguard.notify test`: send a test message with the current settings, to check them."""
+    """`python -m traceguard.notify test` sends a test message; `failure` reports a failed workflow (details in the environment)."""
     import os
     import sys
     args = list(sys.argv[1:] if argv is None else argv)
-    if args != ["test"]:
-        print("usage: python -m traceguard.notify test", file=sys.stderr)
+    if args not in (["test"], ["failure"]):
+        print("usage: python -m traceguard.notify test|failure", file=sys.stderr)
         return 2
     env = os.environ if env is None else env
     config = mail_config(env)
+    if args == ["failure"]:
+        if config is None:
+            print("not configured: no failure notice sent", file=sys.stderr)
+            return 1
+        try:
+            send(config, build_failure_message(env, config))
+        except Exception as exc:
+            print(f"failure notice NOT sent ({type(exc).__name__})", file=sys.stderr)
+            return 1
+        print(f"failure notice sent to {mask(config['to'])}")
+        return 0
     if config is None:
         print("not configured: set MAIL_SMTP_HOST, MAIL_USER, MAIL_PASSWORD and NOTIFY_EMAIL (or CONTACT_EMAIL)", file=sys.stderr)
         return 1

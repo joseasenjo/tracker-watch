@@ -21,6 +21,15 @@ from .classify import Classifier, TrackerList, registrable_domain
 from .report import build_report
 from .safety import HostGuard, Resolver, check_target, system_resolver
 
+def _playwright_version() -> str:
+    """The driver that ran the scan, recorded in every report: a change in it can move the numbers on its own."""
+    try:
+        from importlib import metadata
+        return metadata.version("playwright")
+    except Exception:  # a report is never lost for want of a version string
+        return "unknown"
+
+
 NAVIGATION_TIMEOUT_MS = 30_000
 BLOCKED_STATUSES = (401, 403, 429, 503)
 
@@ -340,7 +349,7 @@ def scan_site(url: str, *, name: str | None = None, first_party_domains: Iterabl
 
     measurement = {
         "vantage": vantage, "locale": locale, "timezone": timezone, "user_agent": user_agent,
-        "browser": f"chromium {browser_version}", "passes": passes, "observe_seconds": observe_seconds,
+        "browser": f"chromium {browser_version}", "playwright": _playwright_version(), "passes": passes, "observe_seconds": observe_seconds,
         "min_requests": min_requests, "pause_seconds": pause_seconds,
         "interaction": ("consent:" + "+".join(consent_modes)) if consent_modes else "none",
         "tracker_list": tracker_list.source,
