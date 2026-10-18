@@ -43,11 +43,17 @@ One JSON report per site is written to `data/runs/<UTC date>/<site>.json`.
 ```bash
 python -m traceguard.diff data/runs                                   # week-over-week changes (stable ones only)
 python -m traceguard.posts data/runs --platform bluesky --dry-run     # draft thread, never publishes
+python -m traceguard.posts data/runs --platform mastodon --max-chars 300 --dry-run   # same text for Mastodon, inside Bluesky's limit
+python -m traceguard.publish data/drafts/2026-10-12 --platform both   # dry run; --send publishes (the workflows do it after each scan)
 python -m traceguard.site data/runs --out site --dashboard dashboard_local   # static site (English) + local Spanish dashboard
 python -m traceguard.ondemand --help                                  # one-address analysis requested through an issue
 python -m traceguard.community check data/community                   # validate community-contributed origins
 python -m traceguard.community add my-scan/2026-10-05 --slug brazil-home --label Brazil --contributor handle
 ```
+
+## Automatic publishing
+
+After each weekly scan (Mondays) and mid-week (Wednesdays), the GitHub workflows publish the same text on Bluesky and, right after, on Mastodon, inside Bluesky's 300-character limit. Mastodon is switched on with the repository variable `MASTODON_ENABLED` and never blocks the Bluesky post if it fails. Credentials live only in repository secrets. Alerts, hooks and announcements are drafts that are published by hand. The optional weekly email to subscribers is described in `docs/EMAIL_DIGEST.md`.
 
 ## Two separate tests (never part of the weekly ranking)
 
@@ -124,6 +130,5 @@ This tool is meant for measuring public pages as an ordinary visitor would load 
 
 - A larger, licensed classification list.
 - Running the two separate tests on a schedule, from more than one origin.
-- Publishing drafts to Bluesky and Mastodon (drafts are generated; posting is not implemented).
 - Live analysis of any address without a GitHub issue (needs a server); today it runs through issues and is not instant.
 - A page per company with sourced descriptions (phase 2 of the explanations; phase 1 is the category glossary).

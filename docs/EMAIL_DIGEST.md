@@ -46,15 +46,17 @@ safeguards and the workflows stay as they are. A hosted email service with an AP
 
 ## Day to day (developer dashboard, card "Correo y suscriptores")
 
-1. **Someone asks** from the site's *Weekly email* page: their mail app opens with a prefilled message (consent wording,
-   mention of the developer's services, how to leave). It reaches `CONTACT_EMAIL`.
+1. **Someone asks** on the site's *Weekly email* page with a short form (address, a mandatory consent box that mentions the developer's
+   services and how to leave, and an optional interest box). It is delivered by Web3Forms to `CONTACT_EMAIL`; the page also
+   offers a plain email address as an alternative. Only a hash of the address is kept in the visitor's browser, to warn about a repeated request.
 2. **You add them as pending** in the dashboard (how they asked goes in the note), press *Pedir confirmación* (your mail
    app opens with the confirmation request ready) and, when they reply CONFIRM, press *Confirmar*. Their reply is the proof.
 3. **Sync** (*Sincronizar con GitHub*) copies the private list into the secret `SUBSCRIBERS_JSON`. The card shows whether
    GitHub has the same list; approving is refused while it does not.
 4. **After each publication** the digest waits in the card. *Enviarme una prueba* sends one `[TEST]` message to you only;
    *Aprobar y enviar* runs the workflow `send-digest.yml` (mode `send`). Only the folder name leaves the dashboard.
-5. `DIGEST_AUTO=true` (with `DIGEST_ENABLED=true`) skips the approval and sends right after publishing. Leave it off to approve each one.
+5. `DIGEST_AUTO=true` (with `DIGEST_ENABLED=true`) skips the approval and sends right after publishing (it is on since 15-10-2026; today the only confirmed subscriber is the owner). Switch it off in the dashboard to approve each one.
+   Adding someone who is already confirmed or pending is refused, so a consent record is never overwritten.
 6. Unsubscribe requests (reply `UNSUBSCRIBE`) are applied with *Dar de baja*, then sync again.
 
 Every email ends with the developer's offer (tracker and consent audit, security review, automation); change the wording with `DIGEST_CTA`.
