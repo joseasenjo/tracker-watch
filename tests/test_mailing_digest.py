@@ -215,6 +215,16 @@ def test_the_digest_has_the_posts_the_way_to_leave_and_no_tracking():
     assert "<img" not in body.lower() and "utm_" not in body and "pixel" not in body.lower().replace("no pixels", "")
 
 
+def test_the_unsubscribe_line_is_visible_before_the_separator_and_the_three_links_are_there():
+    _, body = digest.build_digest({"date": "2026-10-12", "posts": ["One."]}, "weekly", site_url="https://site.example/",
+                                  sign="TW", cta="Offer.")
+    visible = body.split("\n--\n")[0]
+    assert "reply with the word UNSUBSCRIBE" in visible
+    assert "https://site.example/go/check/" in visible and "https://site.example/go/lens/" in visible
+    assert "https://mastodon.social/@trackerwatch" in visible
+    assert "<" not in visible  # plain links, nothing wrapped
+
+
 def test_what_only_makes_sense_on_bluesky_is_left_out_of_the_email():
     assert digest.clean_post("Weekly check: 41 of 48 sites. Thread below. Automated post. #privacy #adtech #GDPR") == \
         "Weekly check: 41 of 48 sites."
