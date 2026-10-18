@@ -29,7 +29,7 @@ env:
 
 jobs:
   scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
@@ -88,7 +88,7 @@ jobs:
   deploy:
     needs: scan
     if: ${{ vars.PUBLISH_SITE == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     concurrency:
       group: pages   # shared with publish-site.yml: only one publication at a time
       cancel-in-progress: false
@@ -106,7 +106,7 @@ jobs:
   post:
     needs: deploy
     if: ${{ vars.POST_ENABLED == 'true' && vars.PUBLISH_SITE == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
