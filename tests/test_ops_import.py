@@ -57,3 +57,24 @@ def test_importing_the_same_person_twice_is_refused_and_keeps_the_first_record(t
         ops.import_web_request(NOTICE, path=store, today=date(2026, 10, 19))
     [entry] = mailing.load_subscribers({}, store)
     assert entry["asked"] == "2026-10-18"
+
+
+REAL_NOTICE = """Hello,
+
+A new form has been submitted on your website. Details below.
+
+
+Message
+Request for the Tracker Watch weekly email, sent from the subscribe page. The person ticked the consent box.
+Email
+prueba-claude@example.org
+Consent
+yes
+"""
+
+
+def test_the_notice_exactly_as_web3forms_sent_it_on_2026_10_18_is_read(tmp_path):
+    assert ops.parse_web_request(REAL_NOTICE) == {"email": "prueba-claude@example.org", "consent": True, "interest": False}
+    assert ops.parse_web_request(REAL_NOTICE + "Interest\nyes\n")["interest"] is True
+    with pytest.raises(ops.OpsError, match="consentimiento"):
+        ops.parse_web_request(REAL_NOTICE.replace("Consent\nyes\n", ""))
