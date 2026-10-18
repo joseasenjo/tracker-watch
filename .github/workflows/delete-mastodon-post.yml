@@ -1,0 +1,42 @@
+# Deletes ONE post of the Mastodon account, started by hand and only on the maintainer's explicit request. It refuses
+# unless the post belongs to the account and its text starts with the text given in "expect". Needs the secret
+# MASTODON_TOKEN and the variable MASTODON_URL. It changes nothing in the repository.
+name: delete-mastodon-post
+
+on:
+  workflow_dispatch:
+    inputs:
+      status_id:
+        description: "Post id: the number at the end of the post address"
+        required: true
+      expect:
+        description: "How the post text starts (safety check)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  delete:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Delete the post
+        env:
+          MASTODON_URL: ${{ vars.MASTODON_URL }}
+          MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          STATUS_ID: ${{ github.event.inputs.status_id }}
+          EXPECT: ${{ github.event.inputs.expect }}
+        run: python -m traceguard.mastodon_delete "$STATUS_ID" --expect "$EXPECT"
