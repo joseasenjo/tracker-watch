@@ -124,7 +124,7 @@
       <div class="fact"><b>{{ scan_started[:10] }}</b><span>scan ran {{ scan_started[11:] }} to {{ scan_finished[11:] }}</span></div>
       <div class="fact"><b>{{ passes }}×{{ observe }} s</b><span>passes × observation window, no clicks, no consent</span></div>
       <div class="fact"><b>{{ vantage }}</b><span>measured from (banners and redirects vary by country)</span></div>
-      <div class="fact"><b>v{{ tool_version }}</b><span>tool version · {{ browser }}</span></div>
+      <div class="fact"><b>v{{ tool_version }}</b><span>tool version · {{ browser }}{% if playwright %} · Playwright {{ playwright }}{% endif %}</span></div>
       <div class="fact"><b>{{ tracker_count }}</b><span>entries in the classification list</span></div>
     </div>
     <p class="small">Every figure can be traced to a raw report. <a href="{{ root }}method.html">Method and limits</a> · <a href="{{ root }}companies.html">Which companies reach the most sites</a> · <a href="{{ root }}data/latest.csv">Download the table (CSV)</a> · <a href="{{ root }}method.html#data">All downloads</a> · <a href="{{ root }}about.html">About and corrections</a></p>

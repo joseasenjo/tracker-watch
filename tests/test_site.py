@@ -123,6 +123,19 @@ def test_last_scan_time_and_measurement_details_are_shown(built):
     assert "Last scan: <b>2026-10-04 10:00 UTC</b>" in (out / "method.html").read_text(encoding="utf-8")
 
 
+def test_the_playwright_version_is_shown_only_when_the_report_has_it(built, tmp_path):
+    _, out, ctx = built
+    assert ctx["playwright"] == "" and "Playwright" not in (out / "index.html").read_text(encoding="utf-8")
+    report = ok_report(tracking=3, vantage="github-actions-us")
+    report["measurement"]["playwright"] = "1.63.0"
+    write(tmp_path / "w", "2026-10-11", {"a": report})
+    out2 = tmp_path / "w" / "site"
+    ctx2 = build_site(tmp_path / "w" / "runs", out2, base_url="https://example.org/tw/")
+    assert ctx2["playwright"] == "1.63.0"
+    assert "Playwright 1.63.0" in (out2 / "index.html").read_text(encoding="utf-8")
+    assert "Playwright 1.63.0" in (out2 / "method.html").read_text(encoding="utf-8")
+
+
 def without_credit(html: str) -> str:
     """The page without the author's credit block, which is always published (the user's decision, 2026-10-07)."""
     return re.sub(r'<div class="credit">.*?</div>', "", html, flags=re.S)

@@ -6,7 +6,7 @@
     <h1>Method and limits</h1>
     <p class="sub">What we measure, how, and what the numbers do not say.</p>
     <div class="steps">
-      <div class="step"><h3>Measure</h3><p>A real Chromium browser loads each page, makes no clicks and gives no consent, and records every request for {{ observe }} seconds. This is repeated {{ passes }} times in fresh browser sessions, and we report the median.</p></div>
+      <div class="step"><h3>Measure</h3><p>A real Chromium browser loads each page, makes no clicks and gives no consent, and records every request for {{ observe }} seconds. This is repeated {{ passes }} times in fresh browser sessions, and we report the median. The versions of the tool, of Chromium and of Playwright (the driver that controls it) are shown on the home page and stored in every report{% if playwright %}; the latest scan used {{ browser }} with Playwright {{ playwright }}{% endif %}, because a new version of either can move the numbers on its own.</p></div>
       <div class="step"><h3>Classify</h3><p>A request is third party when its registered domain differs from the site's own (plus the outlet's declared own domains). Hosts are then matched against the list below.</p></div>
       <div class="step"><h3>Compare</h3><p>Each week is compared with the previous one, only if both were measured under the same conditions, and only changes seen in most passes count.</p></div>
     </div>

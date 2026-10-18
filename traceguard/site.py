@@ -306,6 +306,7 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
         "scan_started": stamps[0].astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "scan_finished": stamps[-1].astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "tool_version": first["tool"]["version"], "browser": measurement.get("browser", "unknown"),
+        "playwright": measurement.get("playwright", ""),
         "user_agent": measurement.get("user_agent", ""), "locale": measurement.get("locale", ""),
         "timezone": measurement.get("timezone", ""),
     }
