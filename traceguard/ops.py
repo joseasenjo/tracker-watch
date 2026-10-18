@@ -675,7 +675,8 @@ def digest_candidates(drafts_dir: Path | str = "data/drafts", variables: dict | 
             continue
         discussion = (state.get("posts") or [{}])[0].get("url", "") or ""
         subject, body = digest_module.build_digest(draft, kind, site_url=SITE_URL, sign=digest_module.signature(env),
-                                                   discussion_url=discussion, cta=digest_module.cta_text(env))
+                                                   discussion_url=discussion, cta=digest_module.cta_text(env),
+                                                   mastodon_post_url=digest_module.post_url(folder, "mastodon"))
         rows.append({"folder": f"data/drafts/{folder.name}", "kind": kind, "date": draft.get("date"), "subject": subject,
                      "body": body, "recipients": confirmed})
     return rows[:6]

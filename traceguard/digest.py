@@ -75,25 +75,41 @@ def cta_text(env: Mapping[str, str]) -> str:
     return custom or DEFAULT_CTA.format(contact=contact)
 
 
+def post_url(folder: Path, platform: str) -> str:
+    """Link to the first post of a published thread on one network ('' when it was not published there)."""
+    path = folder / f"{platform}.posted.json"
+    try:
+        state = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    if not state.get("complete"):
+        return ""
+    return (state.get("posts") or [{}])[0].get("url", "") or ""
+
+
 def build_digest(draft: dict, kind: str, *, site_url: str, sign: str, discussion_url: str = "",
-                 cta: str = "") -> tuple[str, str]:
-    """(subject, body) in plain text. The offer and the footer are not optional: they are part of every digest."""
+                 cta: str = "", mastodon_post_url: str = "") -> tuple[str, str]:
+    """(subject, body) in plain text. The offer and the footer are not optional: they are part of every digest.
+    The subject already names the kind and the date, so the body starts with the posts themselves."""
     date_text = str(draft.get("date", "")).strip()
     label = LABELS.get(kind, "Update")
-    lines = [f"{label}, {date_text}", ""]
-    for post in draft.get("posts", []):
-        lines += [clean_post(post), ""]
-    lines.append(f"Full results and method: {site_url}")
-    if discussion_url:
-        lines.append(f"On Bluesky: {discussion_url}")
+    posts = [clean_post(post) for post in draft.get("posts", [])]
+    lines: list[str] = []
+    for post in posts:
+        lines += [post, ""]
+    if not any(site_url.rstrip("/") in post for post in posts):  # the post usually carries the link already
+        lines += [f"Full results and method: {site_url}", ""]
+    for name, url in (("Bluesky", discussion_url), ("Mastodon", mastodon_post_url)):
+        if url:
+            lines.append(f"Read it on {name}: {url}")
+    if lines and lines[-1] != "":
+        lines.append("")
     if cta:
-        lines += ["", cta]
+        lines += [cta, ""]
     base = site_url.rstrip("/") + "/"
-    lines += ["",
-              f"Browser check, see what your browser reveals: {base}go/check/",
-              f"Tracker Watch Lens, the free browser extension: {base}go/lens/",
-              f"Tracker Watch on Mastodon: {MASTODON_URL}",
-              "",
+    lines += [f"Browser check, see what your browser reveals: {base}go/check/", "",
+              f"Tracker Watch Lens, the free browser extension: {base}go/lens/", "",
+              f"Tracker Watch on Mastodon: <{MASTODON_URL}>", "",
               "To stop receiving these emails, reply with the word UNSUBSCRIBE."]
     lines += ["", "--",
               "You receive this because you asked to be kept informed about Tracker Watch, which may include a mention "
@@ -182,7 +198,8 @@ def run(folder: Path | str, env: Mapping[str, str], *, send: bool = False, segme
     if state and state.get("posts"):
         discussion = state["posts"][0].get("url", "") or ""
     subject, body = build_digest(draft, kind, site_url=env.get("SITE_URL") or SITE_URL, sign=signature(env),
-                                 discussion_url=discussion, cta=cta_text(env))
+                                 discussion_url=discussion, cta=cta_text(env),
+                                 mastodon_post_url=post_url(folder, "mastodon"))
     try:
         sender = mailing.make_sender("dryrun" if not send else (sender_name or env.get("DIGEST_SENDER") or "smtp"), env)
     except mailing.MailingError as exc:

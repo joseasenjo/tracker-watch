@@ -222,7 +222,28 @@ def test_the_unsubscribe_line_is_visible_before_the_separator_and_the_three_link
     assert "reply with the word UNSUBSCRIBE" in visible
     assert "https://site.example/go/check/" in visible and "https://site.example/go/lens/" in visible
     assert "https://mastodon.social/@trackerwatch" in visible
-    assert "<" not in visible  # plain links, nothing wrapped
+    assert "<https://mastodon.social/@trackerwatch>" in visible  # angle brackets make mail apps link the @
+
+
+def test_the_body_does_not_repeat_the_subject_or_the_link_the_post_already_has():
+    posts = ["Midweek. Data: https://site.example/"]
+    subject, body = digest.build_digest({"date": "2026-10-12", "posts": posts}, "midweek", site_url="https://site.example/", sign="TW")
+    assert subject.endswith("Midweek update, 2026-10-12") and "Midweek update, 2026-10-12" not in body
+    assert body.count("https://site.example/\n") == 1 and "Full results and method" not in body
+    _, plain = digest.build_digest({"date": "2026-10-12", "posts": ["No link here."]}, "midweek", site_url="https://site.example/", sign="TW")
+    assert "Full results and method: https://site.example/" in plain
+
+
+def test_the_digest_links_both_networks_when_both_were_published(tmp_path):
+    (tmp_path / "bluesky.posted.json").write_text('{"complete": true, "posts": [{"url": "https://bsky.app/p/1"}]}', encoding="utf-8")
+    (tmp_path / "mastodon.posted.json").write_text('{"complete": true, "posts": [{"url": "https://mastodon.social/@trackerwatch/1"}]}', encoding="utf-8")
+    assert digest.post_url(tmp_path, "mastodon") == "https://mastodon.social/@trackerwatch/1"
+    assert digest.post_url(tmp_path, "nowhere") == ""
+    _, body = digest.build_digest({"date": "2026-10-12", "posts": ["One."]}, "weekly", site_url="https://site.example/", sign="TW",
+                                  discussion_url=digest.post_url(tmp_path, "bluesky"), mastodon_post_url=digest.post_url(tmp_path, "mastodon"))
+    assert "Read it on Bluesky: https://bsky.app/p/1" in body and "Read it on Mastodon: https://mastodon.social/@trackerwatch/1" in body
+    (tmp_path / "mastodon.posted.json").write_text('{"complete": false, "posts": [{"url": "https://x/1"}]}', encoding="utf-8")
+    assert digest.post_url(tmp_path, "mastodon") == ""  # a cut thread is not linked
 
 
 def test_what_only_makes_sense_on_bluesky_is_left_out_of_the_email():
