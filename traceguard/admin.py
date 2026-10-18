@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import secrets
 import subprocess
 import sys
@@ -34,7 +35,7 @@ MAX_BODY = 20_000
 OPS_PAGE = Path(__file__).with_name("ops_page.html")
 OPS_POST = ("/api/ops/switch", "/api/ops/run", "/api/ops/approve", "/api/ops/pull", "/api/ops/note",
             "/api/ops/scan", "/api/ops/link", "/api/ops/link/remove", "/api/ops/links/publish",
-            "/api/ops/subscriber", "/api/ops/subscribers/sync", "/api/ops/digest")
+            "/api/ops/subscriber", "/api/ops/subscriber/import", "/api/ops/subscribers/sync", "/api/ops/digest")
 
 
 def recent_requests(repo: str, runner: Callable = subprocess.run, now: datetime | None = None) -> dict:
@@ -182,6 +183,11 @@ class Handler(SimpleHTTPRequestHandler):
                                               note=str(body.get("note", "")), interest=bool(body.get("interest", False)),
                                               language=str(body.get("language", "en")))
                 return self._json(200, {"ok": True, "subscribers": state})
+            if self.path == "/api/ops/subscriber/import":
+                own = tuple(a.strip() for a in os.environ.get("TW_OWN_EMAILS", "").split(",") if a.strip())  # optional, never from the browser
+                done = ops.import_web_request(str(body.get("text", "")), own=own)
+                return self._json(200, {"ok": True, "email": ops.mailing.mask(done["email"]), "interest": done["interest"],
+                                        "subscribers": done["subscribers"]})
             if self.path == "/api/ops/subscribers/sync":
                 return self._json(200, {"ok": True, "subscribers": ops.sync_subscribers(self.repo, self.runner)})
             if self.path == "/api/ops/digest":

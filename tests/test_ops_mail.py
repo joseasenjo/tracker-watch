@@ -175,11 +175,12 @@ def test_the_dashboard_warns_about_waiting_digests_pending_people_and_an_unsynce
 
 
 def test_the_new_routes_need_the_token_and_refuse_nonsense(admin):  # noqa: F811
-    for path in ("/api/ops/subscriber", "/api/ops/subscribers/sync", "/api/ops/digest"):
+    for path in ("/api/ops/subscriber", "/api/ops/subscriber/import", "/api/ops/subscribers/sync", "/api/ops/digest"):
         status, _ = call(admin.base + path, {"action": "add"}, {"Content-Type": "application/json"})
         assert status == 403
     token = json.loads(call(admin.base + "/api/token")[1])["token"]
     headers = {"Content-Type": "application/json", "X-Admin-Token": token}
     assert call(admin.base + "/api/ops/subscriber", {"action": "explode", "email": "ok@example.org"}, headers)[0] == 400
     assert call(admin.base + "/api/ops/digest", {"folder": "../../x"}, headers)[0] == 400
+    assert call(admin.base + "/api/ops/subscriber/import", {"text": "nothing useful here"}, headers)[0] == 400  # writes nothing
     assert any(name for name in ops.SWITCHES if name == "DIGEST_ENABLED")

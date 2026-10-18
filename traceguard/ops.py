@@ -628,6 +628,52 @@ def change_subscriber(action: str, email: str, *, note: str = "", interest: bool
     return subscribers_state(path)
 
 
+_ADDRESS_RE = re.compile(r"[A-Za-z0-9._%+'-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
+_TICKED = r"\W{0,8}(?:yes|on|true|checked|1)\b"
+OWNER_ADDRESSES = ("asenjo.jose@hotmail.com",)  # the public contact: it is in the notice's header, never the person's
+
+
+def parse_web_request(text: str, own: tuple[str, ...] = ()) -> dict:
+    """Read the notice that Web3Forms emails for a request made on the subscribe page.
+
+    Returns {email, consent, interest}. It refuses what cannot be trusted: no single address, no ticked consent box (the
+    form requires it, but anyone can post to the form's address directly), or the hidden trap field filled in (a robot).
+    `own` lists the owner's addresses, which appear in the notice header and are never the person's."""
+    text = text or ""
+    skip = {a.strip().lower() for a in (*OWNER_ADDRESSES, *own) if a}
+    found = []
+    for match in _ADDRESS_RE.finditer(text):
+        address = match.group(0).strip(".'-").lower()
+        domain = address.rpartition("@")[2]
+        if address in skip or domain == "web3forms.com" or domain.endswith(".web3forms.com"):
+            continue
+        if address not in found:
+            found.append(address)
+    if not found:
+        raise OpsError("no encuentro ninguna dirección de correo en el texto pegado")
+    labelled = [m.group(1).lower() for m in re.finditer(r"(?im)^\W*e-?mail\W{0,8}(" + _ADDRESS_RE.pattern + ")", text)]
+    labelled = [a for a in labelled if a in found]
+    chosen = labelled[0] if len(set(labelled)) == 1 else (found[0] if len(found) == 1 else None)
+    if chosen is None:
+        raise OpsError("hay varias direcciones y no sé cuál es la de la persona: " + ", ".join(found[:4]))
+    if re.search(r"(?i)\bbotcheck" + _TICKED, text):
+        raise OpsError("el campo trampa (botcheck) está marcado: parece un robot; no se añade")
+    if not re.search(r"(?i)\bconsent" + _TICKED, text):
+        raise OpsError("no veo la casilla de consentimiento marcada («consent: yes») en el aviso; no se añade")
+    return {"email": chosen, "consent": True, "interest": bool(re.search(r"(?i)\binterest" + _TICKED, text))}
+
+
+def import_web_request(text: str, *, own: tuple[str, ...] = (), path: Path | str = mailing.STORE,
+                       today: _date | None = None) -> dict:
+    """Add the person of a pasted Web3Forms notice as pending. Nothing is sent and nobody is confirmed: asking for the
+    confirmation and the person's reply stay as they were."""
+    found = parse_web_request(text, own)
+    day = (today or _date.today()).isoformat()
+    note = f"Subscribe page form, consent box ticked, received {day}"
+    state = change_subscriber("add", found["email"], note=note, interest=found["interest"], language="en", path=path)
+    return {"email": found["email"], "interest": found["interest"], "subscribers": state}
+
+
 def sync_subscribers(repo: str = DEFAULT_REPO, runner: Callable = subprocess.run, path: Path | str = mailing.STORE,
                      mark: Path | str = SYNC_MARK) -> dict:
     """Copy the whole list into the repository secret SUBSCRIBERS_JSON (the only place GitHub reads it from)."""

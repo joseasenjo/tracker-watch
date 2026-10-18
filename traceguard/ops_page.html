@@ -111,6 +111,12 @@
     <h3>Suscriptores <span class="muted" id="subs-summary"></span></h3>
     <p class="muted" id="subs-sync"></p>
     <div id="subs"></div>
+    <h3>Pegar el aviso de una solicitud de la web</h3>
+    <p class="muted">Cuando llegue a tu correo el aviso «Subscribe to Tracker Watch Weekly», copia todo el texto y pégalo aquí: el panel saca el correo, comprueba que la casilla de consentimiento está marcada (y que no es un robot) y lo deja como <b>pendiente</b>. Después sigues como siempre: «Pedir confirmación» y, cuando responda, «Confirmar». No se envía nada desde aquí.</p>
+    <div style="display:grid;gap:8px;max-width:560px">
+      <textarea id="sub-paste" rows="5" maxlength="8000" placeholder="Pega aquí el correo de Web3Forms…" style="font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)"></textarea>
+      <div><button class="primary" id="sub-import">Leer y añadir como pendiente</button></div>
+    </div>
     <h3>Añadir a alguien que lo ha pedido</h3>
     <p class="muted">Alguien te escribe pidiendo recibirlo (desde la página «Weekly email» de la web). Lo apuntas aquí como pendiente, le pides confirmación con «Pedir confirmación» (se abre tu correo con el mensaje escrito) y, cuando responde, pulsas «Confirmar». Su respuesta es la prueba de su consentimiento: anota cómo lo pidió.</p>
     <div style="display:grid;gap:8px;max-width:560px">
@@ -315,6 +321,14 @@
     }) : [note('Aún no hay nadie apuntado.')]);
   }
   function initMail() {
+    document.getElementById('sub-import').addEventListener('click', function (e) {
+      var text = document.getElementById('sub-paste').value;
+      if (!text.trim()) { toast('Pega primero el texto del aviso.'); return; }
+      post('/api/ops/subscriber/import', { text: text }, e.target).then(function (d) {
+        document.getElementById('sub-paste').value = '';
+        toast('Añadido como pendiente: ' + d.email + (d.interest ? ' (también pidió la revisión de rastreo)' : '')); load();
+      });
+    });
     document.getElementById('sub-add').addEventListener('click', function (e) {
       var email = document.getElementById('sub-email').value.trim();
       var how = document.getElementById('sub-note').value.trim();
