@@ -1,7 +1,7 @@
 """Delete one of the account's own Mastodon posts, on the maintainer's explicit request.
 
-Deliberately narrow, like bsky_delete: it deletes a single status of the account the token belongs to (it first asks the
-server who that is and refuses a post of anyone else), and only if the status text starts with the text the maintainer
+Deliberately narrow, like bsky_delete: it deletes a single status of the account the token belongs to (the server refuses
+anyone else's), and only if the status text starts with the text the maintainer
 expects. Run from the delete-mastodon-post workflow, which has the Mastodon secrets; nothing is read from or written to
 the repository.
 
@@ -32,12 +32,10 @@ def delete_status(client: Mastodon, status_id: str, expect: str, log=print) -> b
         raise PublishError("the status id must be digits only")
     if not expect.strip():
         raise PublishError("say how the post text starts (--expect), so the wrong post cannot be deleted")
-    status, headers, raw = client.http("GET", f"{client.base}/api/v1/accounts/verify_credentials", headers=client._headers())
-    me = str(json.loads(_check(status, raw, "who am I", headers))["id"])
     status, headers, raw = client.http("GET", f"{client.base}/api/v1/statuses/{status_id}", headers=client._headers())
     found = json.loads(_check(status, raw, "read status", headers))
-    if str(found.get("account", {}).get("id")) != me:
-        raise PublishError(f"the status {status_id} is not from this account; nothing was deleted")
+    # The token's scopes do not include reading the profile, so "whose is it" is not asked: the server itself refuses to
+    # delete a status that is not the token owner's, and the text must match what the maintainer expects.
     text = plain(str(found.get("content", "")))
     if not text.startswith(expect):
         raise PublishError(f"the status {status_id} does not start with the expected text; nothing was deleted")

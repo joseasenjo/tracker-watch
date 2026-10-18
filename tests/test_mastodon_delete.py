@@ -12,8 +12,6 @@ class FakeHttp:
 
     def __call__(self, method, url, headers=None, data=None):
         self.calls.append((method, url))
-        if url.endswith("verify_credentials"):
-            return 200, {}, json.dumps({"id": self.owner}).encode()
         if method == "GET":
             return 200, {}, json.dumps({"account": {"id": self.status_owner}, "content": self.content}).encode()
         return 200, {}, b"{}"
@@ -33,11 +31,11 @@ def test_deletes_only_its_own_status_when_the_text_matches():
     assert deletes(http) == [("DELETE", "https://mastodon.example/api/v1/statuses/117463023118125488")]
 
 
-def test_refuses_another_accounts_status_or_a_different_text():
-    for http, expect in ((FakeHttp(status_owner="2"), "Cookies"), (FakeHttp(), "Something else")):
-        with pytest.raises(PublishError):
-            mastodon_delete.delete_status(client(http), "117463023118125488", expect, log=lambda *_: None)
-        assert not deletes(http)
+def test_refuses_a_different_text_and_deletes_nothing():
+    http = FakeHttp()
+    with pytest.raises(PublishError):
+        mastodon_delete.delete_status(client(http), "117463023118125488", "Something else", log=lambda *_: None)
+    assert not deletes(http)
 
 
 @pytest.mark.parametrize("status_id", ["", "abc", "12/../3", "1 2"])
