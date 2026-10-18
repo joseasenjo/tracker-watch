@@ -96,7 +96,7 @@ def _env() -> Environment:
     env.filters["span"] = span
     # Version tag for the assets: browsers keep an old style sheet or script unless the address changes.
     digest = hashlib.sha256()
-    for name in ("style.css", "site.js", "result.js", *sorted(p.relative_to(SRC / "assets").as_posix()
+    for name in ("style.css", "site.js", "result.js", "analytics.js", *sorted(p.relative_to(SRC / "assets").as_posix()
                                                               for p in (SRC / "assets" / "browser-check").glob("*.js"))):
         asset = SRC / "assets" / name
         if asset.exists():
@@ -334,6 +334,17 @@ def _feed(ctx: dict, base_url: str) -> str:
             f"<lastBuildDate>{now}</lastBuildDate>{''.join(items)}</channel></rss>")
 
 
+def _check_analytics_url(url: str | None) -> str:
+    """The address of the temporary visit counter, or '' when it is not configured (then the pages carry no counter)."""
+    url = (url or "").strip().rstrip("/")
+    if not url:
+        return ""
+    parts = urlsplit(url)
+    if parts.scheme != "https" or not parts.hostname or parts.query or parts.fragment:
+        raise ValueError("the analytics URL must be a plain https:// address")
+    return url
+
+
 def _check_subscribe_url(url: str | None) -> tuple[str, str]:
     """Return (url, host) for a hosted email-signup page, or ('', '') when none is configured."""
     url = (url or "").strip()
@@ -530,7 +541,7 @@ def demo_cards(ctx: dict, own_host: str = "") -> list[dict]:
 
 
 def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | None = None,
-               base_url: str = "https://example.org/tracker-watch/", subscribe_url: str | None = None,
+               base_url: str = "https://example.org/tracker-watch/", subscribe_url: str | None = None, analytics_url: str | None = None,
                repo_url: str | None = None, contact_email: str | None = None, linkedin_url: str | None = None,
                author: str | None = None, next_scan: str | None = None, share_cards: bool = False,
                extra_dir: Path | str | None = None, links_file: Path | str | None = None,
@@ -545,6 +556,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     ctx["share_origins_image"], ctx["share_origins_alt"] = "", origins_alt_text(ctx)
     ctx["site_base"] = base
     ctx["subscribe_url"], ctx["subscribe_host"] = _check_subscribe_url(subscribe_url)
+    ctx["analytics_url"] = _check_analytics_url(analytics_url)
     ctx["repo_url"] = (repo_url or "").strip()
     ctx.update(_check_contact(contact_email, linkedin_url, author, next_scan))
     out = Path(out_dir)
@@ -632,6 +644,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", default="site", help="public site folder (default site)")
     parser.add_argument("--sites-file", default="data/sites.json", help="gives each site its country and type")
     parser.add_argument("--base-url", default="https://example.org/tracker-watch/", help="used in the RSS feed")
+    parser.add_argument("--analytics-url", default="", help="https address of the temporary visit counter (analytics/); empty: the pages carry no counter")
     parser.add_argument("--subscribe-url", default="", help="https page of a hosted email service; empty keeps the button disabled")
     parser.add_argument("--repo-url", default="", help="public repository URL, shown as the contact point on the privacy page")
     parser.add_argument("--contact-email", default="", help="public contact for corrections (use a dedicated address)")
@@ -650,7 +663,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     sites_file = args.sites_file if Path(args.sites_file).exists() else None
     ctx = build_site(args.runs_dir, args.out, sites_file=sites_file, base_url=args.base_url,
-                     subscribe_url=args.subscribe_url, repo_url=args.repo_url, contact_email=args.contact_email,
+                     subscribe_url=args.subscribe_url, analytics_url=args.analytics_url, repo_url=args.repo_url, contact_email=args.contact_email,
                      linkedin_url=args.linkedin_url, author=args.author, next_scan=args.next_scan,
                      share_cards=args.share_cards, extra_dir=args.extra_dir, links_file=args.links_file,
                      community_dir=args.community_dir, consent_dir=args.consent_dir,

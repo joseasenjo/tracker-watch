@@ -107,7 +107,7 @@ def build_failure_message(env, config: dict) -> EmailMessage:
     message["From"], message["To"] = config["sender"], config["to"]
     message.set_content("\n".join([
         f"The workflow '{workflow}' ({clean('FAILED_EVENT', 40)}) ended with an error.",
-        f"Started: {clean('FAILED_AT', 40)}", "", f"Log: {url}", "",
+        *([f"Started: {clean('FAILED_AT', 40)}"] if (env.get("FAILED_AT") or "").strip() else []), "", f"Log: {url}", "",
         "Nothing has been repeated automatically. Open the log, read the first red step, and start the workflow again by hand "
         "(Actions -> the workflow -> Run workflow) once the cause is fixed.", "",
         "This notice comes from the Tracker Watch failure watcher."]))

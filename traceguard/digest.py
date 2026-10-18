@@ -29,7 +29,6 @@ from typing import Mapping
 from . import mailing
 
 SITE_URL = "https://joseasenjo.github.io/tracker-watch/"
-MASTODON_URL = "https://mastodon.social/@trackerwatch"
 DEFAULT_KINDS =("weekly", "midweek")
 LABELS = {"weekly": "Weekly check", "midweek": "Midweek update", "alert": "Notable change",
           "hook": "Most-tracked outlet", "announce": "Announcement"}
@@ -109,7 +108,7 @@ def build_digest(draft: dict, kind: str, *, site_url: str, sign: str, discussion
     base = site_url.rstrip("/") + "/"
     lines += [f"Browser check, see what your browser reveals: {base}go/check/", "",
               f"Tracker Watch Lens, the free browser extension: {base}go/lens/", "",
-              f"Tracker Watch on Mastodon: <{MASTODON_URL}>", "",
+              f"Tracker Watch on Mastodon: {base}go/mastodon/", "",
               "To stop receiving these emails, reply with the word UNSUBSCRIBE."]
     lines += ["", "--",
               "You receive this because you asked to be kept informed about Tracker Watch, which may include a mention "

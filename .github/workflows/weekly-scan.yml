@@ -67,7 +67,7 @@ jobs:
       - name: Build site
         run: >
           python -m traceguard.site data/runs --out site --sites-file data/sites.json
-          --base-url "$SITE_URL" --subscribe-url "${{ vars.SUBSCRIBE_URL }}"
+          --base-url "$SITE_URL" --subscribe-url "${{ vars.SUBSCRIBE_URL }}" --analytics-url "${{ vars.ANALYTICS_URL }}"
           --repo-url "$REPO_URL" --share-cards
           --contact-email "${{ vars.CONTACT_EMAIL }}" --linkedin-url "${{ vars.LINKEDIN_URL }}"
           --author "${{ vars.AUTHOR_NAME }}" --next-scan "${{ vars.NEXT_SCAN }}"
@@ -159,8 +159,9 @@ jobs:
         run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --platform bluesky --send
 
       - name: Publish on Mastodon (same text as Bluesky, only if MASTODON_ENABLED is "true")
+        id: mastodon
         if: ${{ vars.POST_REVIEW != 'true' && vars.MASTODON_ENABLED == 'true' }}
-        continue-on-error: true   # a Mastodon problem never undoes or fails the Bluesky publication
+        continue-on-error: true   # a Mastodon problem never undoes or fails the Bluesky publication (the step after the digest emails it)
         env:
           MASTODON_URL: ${{ vars.MASTODON_URL }}
           MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
@@ -173,6 +174,7 @@ jobs:
         run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --platform mastodon --send --skip-if-published
 
       - name: Email the digest automatically (only if DIGEST_ENABLED and DIGEST_AUTO are "true"; otherwise it waits for your approval)
+        id: digest
         if: ${{ vars.POST_REVIEW != 'true' && vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' }}
         continue-on-error: true   # an email problem never undoes or fails a publication
         env:
@@ -191,6 +193,20 @@ jobs:
           DIGEST_ENABLED: ${{ vars.DIGEST_ENABLED }}
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
         run: python -m traceguard.digest "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --send
+
+      - name: Warn by email about a step that failed without stopping the run (Mastodon or the digest)
+        if: ${{ always() && (steps.mastodon.outcome == 'failure' || steps.digest.outcome == 'failure') }}
+        env:
+          FAILED_WORKFLOW: weekly-scan, ${{ steps.mastodon.outcome == 'failure' && 'Mastodon step' || '' }} ${{ steps.digest.outcome == 'failure' && 'digest step' || '' }}
+          FAILED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FAILED_EVENT: ${{ github.event_name }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify failure
 
       - name: Record what was posted (so a re-run never repeats it)
         if: ${{ always() }}

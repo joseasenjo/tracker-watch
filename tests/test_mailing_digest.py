@@ -221,8 +221,7 @@ def test_the_unsubscribe_line_is_visible_before_the_separator_and_the_three_link
     visible = body.split("\n--\n")[0]
     assert "reply with the word UNSUBSCRIBE" in visible
     assert "https://site.example/go/check/" in visible and "https://site.example/go/lens/" in visible
-    assert "https://mastodon.social/@trackerwatch" in visible
-    assert "<https://mastodon.social/@trackerwatch>" in visible  # angle brackets make mail apps link the @
+    assert "https://site.example/go/mastodon/" in visible  # a short link on the site: plain, always clickable
 
 
 def test_the_body_does_not_repeat_the_subject_or_the_link_the_post_already_has():

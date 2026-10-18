@@ -169,3 +169,16 @@ def test_a_failed_workflow_gets_a_notice_with_the_log_link_and_nothing_secret(ca
     hostile = dict(env, FAILED_WORKFLOW="x\r\nBcc: attacker@example.org")
     notify.main(["failure"], env=hostile)
     assert "\n" not in sent[1]["Subject"] and "Bcc" not in sent[1].keys()
+
+
+def test_the_scheduled_posting_workflows_email_a_failed_mastodon_or_digest_step():
+    import pathlib
+    import yaml
+    for name in ("weekly-scan", "post-midweek"):
+        steps = next(j for j in yaml.safe_load(pathlib.Path(f".github/workflows/{name}.yml").read_text(encoding="utf-8"))["jobs"].values()
+                     if any(s.get("id") == "mastodon" for s in j["steps"]))["steps"]
+        ids = [s.get("id") for s in steps]
+        assert "mastodon" in ids and "digest" in ids
+        warn = next(s for s in steps if "failure" in str(s.get("run", "")) or s.get("name", "").startswith("Warn by email"))
+        assert "steps.mastodon.outcome == 'failure'" in warn["if"] and "steps.digest.outcome == 'failure'" in warn["if"]
+        assert steps.index(warn) > ids.index("digest")

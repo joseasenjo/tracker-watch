@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{{ root }}assets/style.css?v={{ asset_v }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site_name }}" href="{{ root }}feed.xml">
   {% block head %}{% endblock %}
+  {% if analytics_url %}<script type="module" src="{{ root }}assets/analytics.js?v={{ asset_v }}" data-endpoint="{{ analytics_url }}/e"></script>{% endif %}
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -75,6 +76,7 @@
       <a href="{{ root }}privacy.html">Privacy</a>
       <a href="{{ root }}subscribe.html">Weekly email</a>
       <a href="{{ root }}feed.xml">RSS</a>
+      <a href="https://mastodon.social/@trackerwatch" rel="me noopener">Mastodon</a>
     </nav>
     <div class="credit">
     <p>Designed by jlasenjo</p>
