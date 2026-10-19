@@ -31,6 +31,7 @@ MASTODON_PROFILE = f"https://{MASTODON_HOST}/@{MASTODON_USER}"
 SWITCHES = {
     "POST_ENABLED": "Publicar en Bluesky (apagado: no se publica nada)",
     "POST_REVIEW": "Pedir mi aprobación antes de publicar (encendido: solo se genera el borrador)",
+    "ALERTS_AUTO": "Publicar solos la alerta de cambio y el gancho de la semana, sin tu aprobación (apagado: solo cuando los apruebas)",
     "MASTODON_ENABLED": "Publicar también en Mastodon, el mismo texto que en Bluesky (apagado: solo Bluesky)",
     "PUBLISH_SITE": "Publicar la web en GitHub Pages tras cada escaneo",
     "DIGEST_ENABLED": "Resúmenes por correo a los suscriptores (apagado: no se envía ninguno)",

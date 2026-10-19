@@ -52,3 +52,17 @@ def test_a_post_that_does_not_go_out_always_emails_why():
         assert "POST_REVIEW == 'true'" in conditions and "MASTODON_ENABLED != 'true'" in conditions  # review mode, Mastodon off
         off = jobs["post-off"]
         assert "POST_ENABLED" in off["if"] and any(s.get("run", "").strip() == "python -m traceguard.notify not-published" for s in off["steps"])
+
+
+def test_the_alert_and_the_hook_post_on_their_own_only_when_the_switch_is_on_and_a_failure_warns():
+    import yaml
+    from traceguard import ops
+    assert "ALERTS_AUTO" in ops.SWITCHES
+    steps = yaml.safe_load((ROOT / ".github/workflows/weekly-scan.yml").read_text(encoding="utf-8"))["jobs"]["post"]["steps"]
+    auto = next(s for s in steps if s.get("id") == "alerts")
+    assert "vars.ALERTS_AUTO == 'true'" in auto["if"] and "vars.POST_REVIEW != 'true'" in auto["if"]
+    assert auto.get("continue-on-error") is True  # never undoes or fails the weekly thread
+    assert "--skip-if-published" in auto["run"] and "alert hook" in auto["run"]
+    warn = next(s for s in steps if s.get("name", "").startswith("Warn by email about a step"))
+    assert "steps.alerts.outcome == 'failure'" in warn["if"]
+    assert steps.index(auto) > [s.get("id") for s in steps].index("mastodon")  # after the weekly thread

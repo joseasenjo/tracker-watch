@@ -208,6 +208,35 @@ jobs:
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
         run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --platform mastodon --send --skip-if-published
 
+      - name: Publish the alert and the hook post on their own (only if ALERTS_AUTO is "true"; otherwise they wait for your approval)
+        id: alerts
+        if: ${{ vars.POST_REVIEW != 'true' && vars.ALERTS_AUTO == 'true' }}
+        continue-on-error: true   # an alert problem never undoes or fails the weekly thread (the warning step below emails it)
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          MASTODON_ENABLED: ${{ vars.MASTODON_ENABLED }}
+          MASTODON_URL: ${{ vars.MASTODON_URL }}
+          MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: |
+          base="$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)"
+          failed=0
+          for kind in alert hook; do
+            folder="data/drafts/${base}-${kind}"
+            if [ ! -d "$folder" ]; then echo "no $kind post this week"; continue; fi
+            python -m traceguard.publish "$folder" --platform bluesky --send --skip-if-published || failed=1
+            if [ "$MASTODON_ENABLED" = "true" ]; then
+              python -m traceguard.publish "$folder" --platform mastodon --send --skip-if-published || failed=1
+            fi
+          done
+          exit $failed
+
       - name: Email that Mastodon was not published (switched off)
         if: ${{ vars.POST_REVIEW != 'true' && vars.MASTODON_ENABLED != 'true' }}
         env:
@@ -243,9 +272,9 @@ jobs:
         run: python -m traceguard.digest "data/drafts/$(ls data/drafts | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' | sort | tail -1)" --send
 
       - name: Warn by email about a step that failed without stopping the run (Mastodon or the digest)
-        if: ${{ always() && (steps.mastodon.outcome == 'failure' || steps.digest.outcome == 'failure') }}
+        if: ${{ always() && (steps.mastodon.outcome == 'failure' || steps.digest.outcome == 'failure' || steps.alerts.outcome == 'failure') }}
         env:
-          FAILED_WORKFLOW: weekly-scan, ${{ steps.mastodon.outcome == 'failure' && 'Mastodon step' || '' }} ${{ steps.digest.outcome == 'failure' && 'digest step' || '' }}
+          FAILED_WORKFLOW: weekly-scan, ${{ steps.mastodon.outcome == 'failure' && 'Mastodon step' || '' }} ${{ steps.digest.outcome == 'failure' && 'digest step' || '' }} ${{ steps.alerts.outcome == 'failure' && 'alert/hook step' || '' }}
           FAILED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           FAILED_EVENT: ${{ github.event_name }}
           MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
