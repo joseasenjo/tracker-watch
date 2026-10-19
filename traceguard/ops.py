@@ -609,13 +609,13 @@ def subscribers_state(path: Path | str = mailing.STORE, mark: Path | str = SYNC_
 
 
 def change_subscriber(action: str, email: str, *, note: str = "", interest: bool = False, language: str = "en",
-                      path: Path | str = mailing.STORE) -> dict:
+                      path: Path | str = mailing.STORE, today: _date | None = None) -> dict:
     """add (pending), confirm or remove one person. The list stays on this computer until it is synced."""
     path = Path(path)
     try:
         subs = mailing.load_subscribers({}, path)
         if action == "add":
-            subs = mailing.add(subs, email, source="mailto", note=note, interest=interest, language=language or "en")
+            subs = mailing.add(subs, email, source="mailto", note=note, interest=interest, language=language or "en", today=today)
         elif action == "confirm":
             subs = mailing.confirm(subs, email)
         elif action == "remove":
@@ -670,7 +670,7 @@ def import_web_request(text: str, *, own: tuple[str, ...] = (), path: Path | str
     found = parse_web_request(text, own)
     day = (today or _date.today()).isoformat()
     note = f"Subscribe page form, consent box ticked, received {day}"
-    state = change_subscriber("add", found["email"], note=note, interest=found["interest"], language="en", path=path)
+    state = change_subscriber("add", found["email"], note=note, interest=found["interest"], language="en", path=path, today=today)
     return {"email": found["email"], "interest": found["interest"], "subscribers": state}
 
 
