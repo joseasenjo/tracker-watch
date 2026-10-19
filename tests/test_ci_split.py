@@ -40,3 +40,15 @@ def test_the_weekly_scan_stops_only_for_the_engine_and_warns_for_the_rest():
     assert not any(r.strip() == "python -m pytest tests -q" for r in runs)  # no step left that stops on everything
     post = yaml.safe_load((ROOT / ".github/workflows/weekly-scan.yml").read_text(encoding="utf-8"))["jobs"]["post"]["steps"]
     assert any("pytest tests -q -m publishing" in s.get("run", "") for s in post)
+
+
+def test_a_post_that_does_not_go_out_always_emails_why():
+    import yaml
+    for name in ("weekly-scan", "post-midweek"):
+        jobs = yaml.safe_load((ROOT / f".github/workflows/{name}.yml").read_text(encoding="utf-8"))["jobs"]
+        steps = jobs["post"]["steps"]
+        notices = [s for s in steps if s.get("run", "").strip() == "python -m traceguard.notify not-published"]
+        conditions = " ".join(s["if"] for s in notices)
+        assert "POST_REVIEW == 'true'" in conditions and "MASTODON_ENABLED != 'true'" in conditions  # review mode, Mastodon off
+        off = jobs["post-off"]
+        assert "POST_ENABLED" in off["if"] and any(s.get("run", "").strip() == "python -m traceguard.notify not-published" for s in off["steps"])

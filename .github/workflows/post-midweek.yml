@@ -49,6 +49,19 @@ jobs:
         run: |
           echo "Draft ready, NOT published. Approve it in the developer dashboard or run publish-draft." >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Email that nothing was published (review mode is on)
+        if: ${{ vars.POST_REVIEW == 'true' }}
+        env:
+          NOT_PUBLISHED_PLATFORM: bluesky,mastodon
+          NOT_PUBLISHED_REASON: "review mode is on (POST_REVIEW): the draft waits for your approval in the dashboard"
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify not-published
+
       - name: Publish on Bluesky
         if: ${{ vars.POST_REVIEW != 'true' }}
         env:
@@ -76,6 +89,19 @@ jobs:
           MAIL_FROM: ${{ vars.MAIL_FROM }}
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
         run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -- '-midweek$' | sort | tail -1)" --platform mastodon --send --skip-if-published
+
+      - name: Email that Mastodon was not published (switched off)
+        if: ${{ vars.POST_REVIEW != 'true' && vars.MASTODON_ENABLED != 'true' }}
+        env:
+          NOT_PUBLISHED_PLATFORM: mastodon
+          NOT_PUBLISHED_REASON: "Mastodon publishing is switched off (MASTODON_ENABLED is not true)"
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify not-published
 
       - name: Email the digest automatically (only if DIGEST_ENABLED and DIGEST_AUTO are "true"; otherwise it waits for your approval)
         id: digest
@@ -121,3 +147,25 @@ jobs:
           git diff --cached --quiet || git commit -m "posts: midweek $(date -u +%F)"
           git pull --rebase --autostash
           git push
+
+  post-off:
+    # When posting is switched off (POST_ENABLED or PUBLISH_SITE), say so by email: silence must never mean "it worked".
+    if: ${{ !(vars.POST_ENABLED == 'true' && vars.PUBLISH_SITE == 'true') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Email that nothing was published (posting is switched off)
+        env:
+          NOT_PUBLISHED_PLATFORM: bluesky,mastodon
+          NOT_PUBLISHED_REASON: "posting is switched off (POST_ENABLED or PUBLISH_SITE is not true), so the job that posts did not run"
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify not-published

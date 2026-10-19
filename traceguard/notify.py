@@ -97,6 +97,53 @@ def notify_published(draft: dict, platform: str, state: dict, draft_path: Path |
     return f"email notice sent to {mask(config['to'])}"
 
 
+def _kind(folder_name: str) -> str:
+    folder_name = folder_name.rstrip("/")
+    return ("mid-week post" if folder_name.endswith("-midweek") else "alert post" if folder_name.endswith("-alert") else
+            "hook post" if folder_name.endswith("-hook") else "announcement post" if folder_name.endswith("-announce") else
+            "weekly thread" if folder_name else "post")
+
+
+def build_not_published_message(platform: str, reason: str, folder_name: str, config: dict, *, date: str = "",
+                                posts_out: int = 0, total: int = 0, skipped: bool = False, secrets=()) -> EmailMessage:
+    """The notice for a post that did NOT go out, so silence never means 'it worked'. `skipped` = left out on purpose
+    (switch off, review mode, already published); otherwise it failed and needs attention. Secrets never appear in it."""
+    name = PLATFORM_NAMES.get(platform, platform)
+    text = " ".join(str(reason).split())[:400]
+    for secret in secrets:
+        if secret and len(secret) >= 6:
+            text = text.replace(secret, "***")
+    kind = _kind(folder_name)
+    message = EmailMessage()
+    message["Subject"] = f"[Tracker Watch] NOT published on {name} ({'skipped' if skipped else 'FAILED'}): {kind} {date}".strip()
+    message["From"], message["To"] = config["sender"], config["to"]
+    lines = [f"The {kind}{' of ' + date if date else ''} was NOT published on {name}.", "",
+             f"Status: {'left out on purpose, nothing to do unless you wanted it published' if skipped else 'FAILED, it needs your attention'}",
+             f"Why: {text}"]
+    if total:
+        lines.append(f"Posts already out: {posts_out} of {total}" + ("" if not posts_out else " (the rest can be resumed: run publish-draft again)"))
+    lines += ["", "To publish it by hand: Actions -> publish-draft -> Run workflow (the folder, and the platform)." if not skipped else
+              "To publish it anyway: fix the cause (a switch, review mode) and run publish-draft by hand.", "",
+              "This notice comes from the Tracker Watch publisher."]
+    message.set_content("\n".join(lines))
+    return message
+
+
+def notify_not_published(platform: str, reason: str, folder_name: str, env, *, date: str = "", posts_out: int = 0, total: int = 0,
+                         skipped: bool = False, smtp=smtplib.SMTP, smtp_ssl=smtplib.SMTP_SSL) -> str:
+    """Send the 'not published' notice if mail is configured. One line for the log; never raises."""
+    config = mail_config(env)
+    if config is None:
+        return "no email notice (MAIL_SMTP_HOST, MAIL_USER, MAIL_PASSWORD and NOTIFY_EMAIL are not all set)"
+    secrets = [env.get(n) for n in ("BLUESKY_APP_PASSWORD", "MASTODON_TOKEN", "MAIL_PASSWORD")]
+    try:
+        send(config, build_not_published_message(platform, reason, folder_name, config, date=date, posts_out=posts_out,
+                                                 total=total, skipped=skipped, secrets=secrets), smtp=smtp, smtp_ssl=smtp_ssl)
+    except Exception as exc:
+        return f"'not published' email NOT sent ({type(exc).__name__})"
+    return f"'not published' email sent to {mask(config['to'])}"
+
+
 def build_failure_message(env, config: dict) -> EmailMessage:
     """The notice for a scheduled workflow that failed. The values come from the environment, never from a command line."""
     def clean(name: str, limit: int = 200) -> str:
@@ -119,11 +166,20 @@ def main(argv: list[str] | None = None, env=None) -> int:
     import os
     import sys
     args = list(sys.argv[1:] if argv is None else argv)
-    if args not in (["test"], ["failure"]):
-        print("usage: python -m traceguard.notify test|failure", file=sys.stderr)
+    if args not in (["test"], ["failure"], ["not-published"]):
+        print("usage: python -m traceguard.notify test|failure|not-published", file=sys.stderr)
         return 2
     env = os.environ if env is None else env
     config = mail_config(env)
+    if args == ["not-published"]:  # a post left out on purpose by the workflow itself (details in the environment)
+        platforms = [p.strip() for p in (env.get("NOT_PUBLISHED_PLATFORM") or "").split(",") if p.strip() in PLATFORM_NAMES]
+        if not platforms or not (env.get("NOT_PUBLISHED_REASON") or "").strip():
+            print("NOT_PUBLISHED_PLATFORM (bluesky, mastodon) and NOT_PUBLISHED_REASON are needed", file=sys.stderr)
+            return 2
+        for platform in platforms:
+            print(notify_not_published(platform, env["NOT_PUBLISHED_REASON"], env.get("NOT_PUBLISHED_FOLDER") or "", env,
+                                       date=env.get("NOT_PUBLISHED_DATE") or "", skipped=True))
+        return 0
     if args == ["failure"]:
         if config is None:
             print("not configured: no failure notice sent", file=sys.stderr)

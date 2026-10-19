@@ -33,7 +33,7 @@ import uuid
 from datetime import date as _date, datetime, timezone
 from pathlib import Path
 
-from .notify import notify_published
+from .notify import notify_not_published, notify_published
 from .posts import LIMITS
 
 BLUESKY_SERVICE = "https://bsky.social"
@@ -370,6 +370,13 @@ def make_client(platform: str, env, http):
     return Mastodon(http, env["MASTODON_URL"], env["MASTODON_TOKEN"])
 
 
+def _tell_not_published(platform, reason, folder, draft, state, env, smtp, smtp_ssl, *, skipped: bool) -> str:
+    """Email that this post did not go out (failed or skipped), with how far a thread got. Never raises."""
+    out = len((state or {}).get("posts", []))
+    return notify_not_published(platform, reason, folder.name, env, date=str((draft or {}).get("date", "")), posts_out=out,
+                                total=len((draft or {}).get("posts", [])), skipped=skipped, smtp=smtp, smtp_ssl=smtp_ssl)
+
+
 def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _date | None = None,
          smtp=None, smtp_ssl=None) -> int:
     parser = argparse.ArgumentParser(prog="traceguard.publish", description=__doc__,
@@ -406,6 +413,7 @@ def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _d
     failed = False
     for platform in platforms:
         draft_path = folder / f"{platform}.json"
+        draft, state = None, None
         try:
             draft = load_draft(draft_path, platform, today=today, max_age_days=args.max_age_days)
             state = load_state(state_path(draft_path), draft)
@@ -426,9 +434,13 @@ def main(argv: list[str] | None = None, *, env=None, http=urllib_http, today: _d
                 print(f"[{platform}] NOT PUBLISHED: {exc}", file=sys.stderr)
             else:
                 print(f"[{platform}] SKIPPED: {exc}")
+            if args.send:  # silence must never mean "it worked": say it was not sent again, and why
+                print(f"[{platform}] {_tell_not_published(platform, exc, folder, draft, state, env, smtp, smtp_ssl, skipped=args.skip_if_published)}")
         except PublishError as exc:
             failed = True
             print(f"[{platform}] NOT PUBLISHED: {exc}", file=sys.stderr)
+            if args.send:
+                print(f"[{platform}] {_tell_not_published(platform, exc, folder, draft, state, env, smtp, smtp_ssl, skipped=False)}")
     return 1 if failed else 0
 
 

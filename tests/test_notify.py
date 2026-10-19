@@ -118,10 +118,10 @@ def test_a_publication_sends_one_notice_and_a_broken_mail_server_does_not_fail_i
     out = capsys.readouterr().out
     assert "email notice sent to o***@example.com" in out and len(FakeSMTP.sent) == 1
     assert "mail-pass-789" not in out and "app-pass-123" not in out
-    # a repeat publishes nothing, so it sends nothing
+    # a repeat publishes nothing, and says so: silence must never mean "it worked"
     main([str(tmp_path / "d"), "--platform", "bluesky", "--send", "--skip-if-published"], env={**BSKY_ENV, **MAIL},
          http=server, today=TODAY, smtp=FakeSMTP)
-    assert len(FakeSMTP.sent) == 1
+    assert len(FakeSMTP.sent) == 2 and "NOT published on Bluesky (skipped)" in FakeSMTP.sent[1]["Subject"]
     # broken mail server on a new draft: the publication still succeeds
     reset()
     FakeSMTP.fail = True
@@ -182,3 +182,35 @@ def test_the_scheduled_posting_workflows_email_a_failed_mastodon_or_digest_step(
         warn = next(s for s in steps if "failure" in str(s.get("run", "")) or s.get("name", "").startswith("Warn by email"))
         assert "steps.mastodon.outcome == 'failure'" in warn["if"] and "steps.digest.outcome == 'failure'" in warn["if"]
         assert steps.index(warn) > ids.index("digest")
+
+
+def test_a_failed_publication_emails_that_it_was_not_published_and_why(tmp_path, capsys):
+    reset()
+    write_draft(tmp_path / "d", "bluesky")
+    assert main([str(tmp_path / "d"), "--platform", "bluesky", "--send"], env=MAIL, http=FakeServer(), today=TODAY, smtp=FakeSMTP) == 1
+    [mail] = FakeSMTP.sent
+    assert mail["Subject"].startswith("[Tracker Watch] NOT published on Bluesky (FAILED)")
+    body = mail.get_content()
+    assert "missing environment variable" in body and "needs your attention" in body and "mail-pass-789" not in body
+
+
+def test_the_not_published_notice_hides_secrets_and_tells_how_far_a_thread_got():
+    from traceguard.notify import build_not_published_message
+    config = mail_config(MAIL)
+    message = build_not_published_message("mastodon", "HTTP 500 token tok-secret-456 rejected", "2026-10-12", config, date="2026-10-12",
+                                          posts_out=2, total=5, secrets=("tok-secret-456",))
+    body = message.get_content()
+    assert "tok-secret-456" not in body and "***" in body and "Posts already out: 2 of 5" in body
+    assert message["Subject"].startswith("[Tracker Watch] NOT published on Mastodon (FAILED): weekly thread")
+
+
+def test_the_workflow_can_say_a_post_was_left_out_on_purpose(monkeypatch, capsys):
+    from traceguard import notify
+    sent = []
+    monkeypatch.setattr(notify, "send", lambda config, message, **kw: sent.append(message))
+    env = dict(MAIL, NOT_PUBLISHED_PLATFORM="bluesky,mastodon", NOT_PUBLISHED_REASON="review mode is on", NOT_PUBLISHED_FOLDER="2026-10-19")
+    assert notify.main(["not-published"], env=env) == 0
+    assert [m["Subject"] for m in sent] == ["[Tracker Watch] NOT published on Bluesky (skipped): weekly thread",
+                                            "[Tracker Watch] NOT published on Mastodon (skipped): weekly thread"]
+    assert "left out on purpose" in sent[0].get_content() and "review mode is on" in sent[0].get_content()
+    assert notify.main(["not-published"], env=MAIL) == 2
