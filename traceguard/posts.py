@@ -74,12 +74,18 @@ def _headline(date: str, reports: list[dict], top: int, tags: str = "") -> str:
     return f"{text} {tags}" if tags else text
 
 
+def _some(items: list[dict]) -> str:
+    """Two examples and how many more there are: a site that dropped 52 services must not read as if it dropped 2."""
+    names = ", ".join(s["service"] for s in items[:2])
+    return f"{names} (+{len(items) - 2} more)" if len(items) > 2 else names
+
+
 def _change_line(d: dict) -> str:
     bits = []
     if d["added_tracking_services"]:
-        bits.append("added " + ", ".join(s["service"] for s in d["added_tracking_services"][:2]))
+        bits.append("added " + _some(d["added_tracking_services"]))
     if d["removed_tracking_services"]:
-        bits.append("dropped " + ", ".join(s["service"] for s in d["removed_tracking_services"][:2]))
+        bits.append("dropped " + _some(d["removed_tracking_services"]))
     return f"{d['site']}: {'; '.join(bits)}"
 
 

@@ -303,3 +303,11 @@ def test_the_scheduled_workflows_publish_on_mastodon_after_bluesky_and_never_fai
         assert step["continue-on-error"] is True and "MASTODON_ENABLED == 'true'" in step["if"] and "POST_REVIEW != 'true'" in step["if"]
         assert "--platform mastodon --send" in step["run"] and step["env"]["MASTODON_TOKEN"] == "${{ secrets.MASTODON_TOKEN }}"
         assert "--max-chars 300" in text  # the Mastodon drafts are written inside Bluesky's limit
+
+
+def test_a_change_line_says_how_many_more_services_changed_than_the_two_it_names():
+    from traceguard.posts import _change_line
+    few = {"site": "A", "added_tracking_services": [{"service": "x.com"}], "removed_tracking_services": [{"service": "a.com"}, {"service": "b.com"}]}
+    assert _change_line(few) == "A: added x.com; dropped a.com, b.com"
+    many = {"site": "BBC News", "added_tracking_services": [], "removed_tracking_services": [{"service": f"s{i}.com"} for i in range(52)]}
+    assert _change_line(many) == "BBC News: dropped s0.com, s1.com (+50 more)"
