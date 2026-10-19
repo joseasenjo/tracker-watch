@@ -1,0 +1,2862 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-19T16:13:30+00:00",
+  "site": {
+    "name": "Los Angeles Times",
+    "url": "https://www.latimes.com",
+    "first_party_domains": [
+      "latimes.com"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 3,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.latimes.com/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 61,
+      "third_party_domains": 4,
+      "tracking_requests": 2,
+      "total_bytes": 1730095,
+      "third_party_bytes": 1023892,
+      "tracking_bytes": 195137,
+      "tracking_services": 1,
+      "third_party_cookies": 0,
+      "cookies_total": 2,
+      "storage_items": 2
+    },
+    "third_party_domains": [
+      {
+        "domain": "brightspotcdn.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "californiatimes.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "confiant-integrations.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "speedcurve.com",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "confiant-integrations.net",
+        "entity": "Confiant",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "latimes.com",
+        "party": "first",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "speedcurve.com",
+        "party": "third",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 61 requests to 4 third-party domains (median of 3 passes).",
+      "evidence": {
+        "requests": 61,
+        "domains": 4
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 1.7 MB transferred in that window (compressed responses that finished loading), 1.0 MB (59%) came from third-party domains, 195 kB of it from services classified as tracking (2 requests).",
+      "evidence": {
+        "total_bytes": 1730095,
+        "third_party_bytes": 1023892,
+        "tracking_bytes": 195137,
+        "tracking_requests": 2
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "1 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: confiant-integrations.net (Confiant, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.latimes.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 70,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.latimes.com/",
+          "host": "www.latimes.com",
+          "bytes": 197735,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 125,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/9238-2835010f.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 7147,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 127,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/videoCore-4b310054.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 6503,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 140,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/3891-3b48ee07.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 204177,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 141,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/8105-79b88202.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 21612,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 142,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/gvp-1b50d444.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 8778,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 287,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/Core.min.60dbcc4b3c0fd7dd384a342bec231ccd.gz.js",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 57203,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 380,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/meteringjs/latspot.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 43476,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 381,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/reg/tribune/latspot.min.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 38693,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 393,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.confiant-integrations.net/GfBGK_P3Adzw1hvTTkQjebew6Z4/gpt_and_prebid/config.js",
+          "host": "cdn.confiant-integrations.net",
+          "bytes": 67009,
+          "domain": "confiant-integrations.net",
+          "party": "third",
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 394,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/modalityjs/latest.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 3692,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 395,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/newsletter-campaign-manager/latest.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 8129,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 415,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.speedcurve.com/js/lux.js",
+          "host": "cdn.speedcurve.com",
+          "bytes": 12664,
+          "domain": "speedcurve.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 600,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/Bootstrap.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 86724,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 601,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/styles-section.min.993d55271f414ff1c4e1985ac11e3d4f.gz.css",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11676,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 602,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Medium.0af2a448f6d58f8dd85f039eba38b50f.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14766,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 603,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6dffdcd/2147483647/strip/true/crop/8457x5638+0+0/resize/840x560!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 24773,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 604,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9b844af/2147483647/strip/true/crop/3023x2015+563+0/resize/840x560!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 54593,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 605,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.latimes.com/styleguide/assets/icon-play-circle-outline-14x14-333333.svg",
+          "host": "www.latimes.com",
+          "bytes": 2516,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 605,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-Regular.woff2",
+          "host": "www.latimes.com",
+          "bytes": 52992,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 606,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-SemiBold.woff2",
+          "host": "www.latimes.com",
+          "bytes": 52329,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 606,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Bold.0173e1397f3e876c231fe162dd06864a.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14609,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 607,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/KisFBDisplay-Bold.4046c096f268453d9b0ff36ff067feec.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 32344,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 607,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothicCond-Black.296bb6689af9a44513ffcc30e4f20962.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 20149,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 608,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/a78b389/2147483647/strip/true/crop/1200x1200+0+0/resize/568x568!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 59923,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 608,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5700e21/2147483647/strip/true/crop/7739x5159+0+1/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 9847,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 609,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/805e5d2/2147483647/strip/true/crop/6016x4011+0+1/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14744,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 610,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5b72323/2147483647/strip/true/crop/4875x3250+0+855/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8022,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 610,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/a2818f4/2147483647/strip/true/crop/3476x2317+12+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 4954,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 611,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/c2c4942/2147483647/strip/true/crop/4266x2844+398+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 12838,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 611,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/e355504/2147483647/strip/true/crop/4863x3242+0+61/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 22768,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 612,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1f3f199/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10358,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 612,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6cac6d0/2147483647/strip/true/crop/3840x2560+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 25328,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 613,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5418b3f/2147483647/strip/true/crop/664x664+0+0/resize/180x180!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 4563,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 614,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/81604d8/2147483647/strip/true/crop/3315x2210+0+70/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 18384,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 614,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/659c5ad/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 40040,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 615,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/de63084/2147483647/strip/true/crop/2592x1728+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 20288,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 615,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9f8405c/2147483647/strip/true/crop/5400x3600+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11481,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 618,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/53f8bff/2147483647/strip/true/crop/3955x2637+0+279/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 16735,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 619,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/4a4fc34/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 9672,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 619,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5cd0518/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 6898,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 620,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/75f50b6/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8500,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 743,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/ba83707/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 5924,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 744,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9031339/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 6762,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 744,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5ce6065/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 7639,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 744,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/d142e53/2147483647/strip/true/crop/1624x1083+0+3/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10701,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 745,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6f05719/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8503,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 745,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1258017/2147483647/strip/true/crop/5637x3758+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 15064,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 745,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/e3e83a4/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8493,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 746,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1a73285/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8309,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 746,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/76d769c/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11412,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 747,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/95e761b/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 5247,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 749,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/styles-gvp.min.f2e5ec689d52a75cafeb65d6b5d0b912.gz.css",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 16678,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 749,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Regular.0c532721f81fc3dc5537f4f33e2023d8.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14249,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 749,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-CondensedBold.woff2",
+          "host": "www.latimes.com",
+          "bytes": 53363,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 751,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/grapheneCarousels-5f7317da.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 4025,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 817,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edge.platform.latimes.com/v1/personalize",
+          "host": "edge.platform.latimes.com",
+          "bytes": 1029,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 819,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.confiant-integrations.net/gptprebidnative/202610151417/wrap.js",
+          "host": "cdn.confiant-integrations.net",
+          "bytes": 128128,
+          "domain": "confiant-integrations.net",
+          "party": "third",
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 833,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/serverComponent.php",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1410,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 833,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://activate.platform.californiatimes.com/privacy/v1/b/b.rnc",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 106,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 858,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/ae2f04f/2147483647/strip/true/crop/720x1279+0+1/resize/320x568!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 22445,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1023,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/66/dc/917df586414785989c0371fbf0aa/logo-full-black-min.svg",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10681,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1270,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/2e02e02a49e811e08d3e4f79cddfbc81.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 9145,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1270,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/314e4d20652a950406d56fd4ffe55762.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2868,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1271,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/404e7bee10f8b1667b4e3baa88bee262.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1030,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1271,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/573eb29aa9b63fb2388ac24c96d23581.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1167,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1272,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/656aa5f298ffeebaadf7fc92b8f6bf96.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 806,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1272,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/46a2e22250eaf67ced8f47da08dd62ec.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1142,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1273,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/ca293bf4281cf1ced5ec4a0c041dea79.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1074,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1273,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/febe6c8fb5c6f8613a723f73aa2fcef8.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2688,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1274,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/efb566f8e779eedebdd1aa5e8074e473.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1043,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1274,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/f10f870c361f816038275db7231fed94.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1378,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/04c4418fa2e236f00f904b29ae08c969.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1317,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/be2c3366410a685c5f7ae09b38b6770b.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2824,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1276,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/1e752b71fdd1b84446d24cb0b17e54b6.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1232,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1276,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/b0c7da248e2dc92659f0eb563c79c248.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 12531,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "lux_uid",
+          "domain": "latimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "c_sId",
+          "domain": "latimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 2,
+        "session": 0
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "speedcurve.com",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "latimes.com",
+          "party": "first"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.latimes.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 33,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.latimes.com/",
+          "host": "www.latimes.com",
+          "bytes": 197751,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 100,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/9238-2835010f.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 7147,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 100,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/videoCore-4b310054.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 6504,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 115,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/3891-3b48ee07.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 204175,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 115,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/8105-79b88202.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 21613,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 116,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/gvp-1b50d444.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 8780,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 116,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/Core.min.60dbcc4b3c0fd7dd384a342bec231ccd.gz.js",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 57202,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 117,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/meteringjs/latspot.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 43474,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 118,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/reg/tribune/latspot.min.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 38693,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 118,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.confiant-integrations.net/GfBGK_P3Adzw1hvTTkQjebew6Z4/gpt_and_prebid/config.js",
+          "host": "cdn.confiant-integrations.net",
+          "bytes": 67166,
+          "domain": "confiant-integrations.net",
+          "party": "third",
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 119,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/modalityjs/latest.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 3692,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 120,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/newsletter-campaign-manager/latest.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 8129,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 120,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.speedcurve.com/js/lux.js",
+          "host": "cdn.speedcurve.com",
+          "bytes": 12664,
+          "domain": "speedcurve.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 121,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/Bootstrap.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 86725,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 121,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/styles-section.min.993d55271f414ff1c4e1985ac11e3d4f.gz.css",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11677,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 125,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Medium.0af2a448f6d58f8dd85f039eba38b50f.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14922,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 131,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6dffdcd/2147483647/strip/true/crop/8457x5638+0+0/resize/840x560!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 24773,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 132,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9b844af/2147483647/strip/true/crop/3023x2015+563+0/resize/840x560!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 54592,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 178,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.latimes.com/styleguide/assets/icon-play-circle-outline-14x14-333333.svg",
+          "host": "www.latimes.com",
+          "bytes": 2518,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 178,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-Regular.woff2",
+          "host": "www.latimes.com",
+          "bytes": 52992,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 179,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-SemiBold.woff2",
+          "host": "www.latimes.com",
+          "bytes": 52328,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 179,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Bold.0173e1397f3e876c231fe162dd06864a.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14767,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 183,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/KisFBDisplay-Bold.4046c096f268453d9b0ff36ff067feec.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 32514,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 183,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothicCond-Black.296bb6689af9a44513ffcc30e4f20962.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 20314,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 184,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/a78b389/2147483647/strip/true/crop/1200x1200+0+0/resize/568x568!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 59931,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 184,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5700e21/2147483647/strip/true/crop/7739x5159+0+1/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 9845,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 187,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/805e5d2/2147483647/strip/true/crop/6016x4011+0+1/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14744,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 187,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5b72323/2147483647/strip/true/crop/4875x3250+0+855/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8023,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 188,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/a2818f4/2147483647/strip/true/crop/3476x2317+12+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 4953,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 189,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/c2c4942/2147483647/strip/true/crop/4266x2844+398+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 12838,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 189,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/e355504/2147483647/strip/true/crop/4863x3242+0+61/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 22767,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 190,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1f3f199/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10357,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 190,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6cac6d0/2147483647/strip/true/crop/3840x2560+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 25328,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 191,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5418b3f/2147483647/strip/true/crop/664x664+0+0/resize/180x180!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 4563,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 191,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/81604d8/2147483647/strip/true/crop/3315x2210+0+70/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 18384,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 192,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/659c5ad/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 40041,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 196,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/de63084/2147483647/strip/true/crop/2592x1728+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 20288,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 197,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9f8405c/2147483647/strip/true/crop/5400x3600+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11481,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 197,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/53f8bff/2147483647/strip/true/crop/3955x2637+0+279/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 16735,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 201,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/4a4fc34/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 9675,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 202,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5cd0518/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 6899,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 202,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/75f50b6/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8550,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 205,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/ba83707/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 5977,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 206,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9031339/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 6815,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 206,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5ce6065/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 7692,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 207,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/d142e53/2147483647/strip/true/crop/1624x1083+0+3/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10768,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 207,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6f05719/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8553,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1258017/2147483647/strip/true/crop/5637x3758+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 15132,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 209,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/e3e83a4/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8492,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 209,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1a73285/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8308,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 209,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/76d769c/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11410,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 210,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/95e761b/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 5245,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 274,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/styles-gvp.min.f2e5ec689d52a75cafeb65d6b5d0b912.gz.css",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 16678,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 337,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Regular.0c532721f81fc3dc5537f4f33e2023d8.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14250,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 337,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-CondensedBold.woff2",
+          "host": "www.latimes.com",
+          "bytes": 53364,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 343,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edge.platform.latimes.com/v1/personalize",
+          "host": "edge.platform.latimes.com",
+          "bytes": 1032,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 381,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/serverComponent.php",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1404,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 382,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://activate.platform.californiatimes.com/privacy/v1/b/b.rnc",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 106,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 432,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/ae2f04f/2147483647/strip/true/crop/720x1279+0+1/resize/320x568!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 22444,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 446,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.confiant-integrations.net/gptprebidnative/202610151417/wrap.js",
+          "host": "cdn.confiant-integrations.net",
+          "bytes": 128128,
+          "domain": "confiant-integrations.net",
+          "party": "third",
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 486,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/grapheneCarousels-5f7317da.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 4025,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 573,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/66/dc/917df586414785989c0371fbf0aa/logo-full-black-min.svg",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10679,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 831,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/2e02e02a49e811e08d3e4f79cddfbc81.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 9143,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 831,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/314e4d20652a950406d56fd4ffe55762.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2868,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 832,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/404e7bee10f8b1667b4e3baa88bee262.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1030,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 832,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/573eb29aa9b63fb2388ac24c96d23581.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1167,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 832,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/656aa5f298ffeebaadf7fc92b8f6bf96.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 806,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 833,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/46a2e22250eaf67ced8f47da08dd62ec.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1140,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 833,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/ca293bf4281cf1ced5ec4a0c041dea79.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1073,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 834,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/febe6c8fb5c6f8613a723f73aa2fcef8.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2688,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 834,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/efb566f8e779eedebdd1aa5e8074e473.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1044,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 835,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/f10f870c361f816038275db7231fed94.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1379,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 835,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/04c4418fa2e236f00f904b29ae08c969.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1319,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 836,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/be2c3366410a685c5f7ae09b38b6770b.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2826,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 836,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/1e752b71fdd1b84446d24cb0b17e54b6.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1233,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 837,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/b0c7da248e2dc92659f0eb563c79c248.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 12529,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2875,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://activate.platform.californiatimes.com/privacy/v1/b/b.rnc",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 106,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "lux_uid",
+          "domain": "latimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "c_sId",
+          "domain": "latimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 2,
+        "session": 0
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "speedcurve.com",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "latimes.com",
+          "party": "first"
+        }
+      ]
+    },
+    {
+      "pass": 3,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.latimes.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 29,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.latimes.com/",
+          "host": "www.latimes.com",
+          "bytes": 197741,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 91,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/9238-2835010f.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 7148,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 92,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/videoCore-4b310054.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 6502,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 104,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/3891-3b48ee07.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 204175,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 105,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/8105-79b88202.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 21613,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 105,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/gvp-1b50d444.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 8779,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 106,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/Core.min.60dbcc4b3c0fd7dd384a342bec231ccd.gz.js",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 57203,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 107,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/meteringjs/latspot.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 43475,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 107,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/reg/tribune/latspot.min.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 38693,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 108,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.confiant-integrations.net/GfBGK_P3Adzw1hvTTkQjebew6Z4/gpt_and_prebid/config.js",
+          "host": "cdn.confiant-integrations.net",
+          "bytes": 67009,
+          "domain": "confiant-integrations.net",
+          "party": "third",
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 108,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/modalityjs/latest.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 3693,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 109,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://libs.platform.latimes.com/newsletter-campaign-manager/latest.js",
+          "host": "libs.platform.latimes.com",
+          "bytes": 8128,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 109,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.speedcurve.com/js/lux.js",
+          "host": "cdn.speedcurve.com",
+          "bytes": 12664,
+          "domain": "speedcurve.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 110,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/Bootstrap.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 86725,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 110,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/styles-section.min.993d55271f414ff1c4e1985ac11e3d4f.gz.css",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11675,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 115,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Medium.0af2a448f6d58f8dd85f039eba38b50f.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14924,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 120,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6dffdcd/2147483647/strip/true/crop/8457x5638+0+0/resize/840x560!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 24774,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 121,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9b844af/2147483647/strip/true/crop/3023x2015+563+0/resize/840x560!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 54593,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 155,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.latimes.com/styleguide/assets/icon-play-circle-outline-14x14-333333.svg",
+          "host": "www.latimes.com",
+          "bytes": 2516,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 156,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-Regular.woff2",
+          "host": "www.latimes.com",
+          "bytes": 52991,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 156,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-SemiBold.woff2",
+          "host": "www.latimes.com",
+          "bytes": 52328,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 157,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Bold.0173e1397f3e876c231fe162dd06864a.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14766,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 161,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/KisFBDisplay-Bold.4046c096f268453d9b0ff36ff067feec.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 32513,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 164,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothicCond-Black.296bb6689af9a44513ffcc30e4f20962.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 20315,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 165,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/a78b389/2147483647/strip/true/crop/1200x1200+0+0/resize/568x568!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 59931,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 165,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5700e21/2147483647/strip/true/crop/7739x5159+0+1/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 9847,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 166,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/805e5d2/2147483647/strip/true/crop/6016x4011+0+1/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14746,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 166,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5b72323/2147483647/strip/true/crop/4875x3250+0+855/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8021,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 167,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/a2818f4/2147483647/strip/true/crop/3476x2317+12+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 4953,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 167,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/c2c4942/2147483647/strip/true/crop/4266x2844+398+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 12837,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 171,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/e355504/2147483647/strip/true/crop/4863x3242+0+61/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 22769,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 172,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1f3f199/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10357,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 172,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6cac6d0/2147483647/strip/true/crop/3840x2560+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 25328,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 173,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5418b3f/2147483647/strip/true/crop/664x664+0+0/resize/180x180!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 4565,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 197,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/81604d8/2147483647/strip/true/crop/3315x2210+0+70/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 18316,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 198,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/659c5ad/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 39951,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 202,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/de63084/2147483647/strip/true/crop/2592x1728+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 20213,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 203,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9f8405c/2147483647/strip/true/crop/5400x3600+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11413,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 203,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/53f8bff/2147483647/strip/true/crop/3955x2637+0+279/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 16666,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 204,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/4a4fc34/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 9616,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 204,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5cd0518/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 6845,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 205,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/75f50b6/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8499,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 205,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/ba83707/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 5924,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 206,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/9031339/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 6762,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 206,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/5ce6065/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 7639,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 207,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/d142e53/2147483647/strip/true/crop/1624x1083+0+3/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10701,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 207,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/6f05719/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8505,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1258017/2147483647/strip/true/crop/5637x3758+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 15063,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/e3e83a4/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8492,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/1a73285/2147483647/strip/true/crop/1623x1082+1+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 8309,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 209,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/76d769c/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 11412,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 210,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/95e761b/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 5247,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 285,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/styles-gvp.min.f2e5ec689d52a75cafeb65d6b5d0b912.gz.css",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 16678,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 294,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edge.platform.latimes.com/v1/personalize",
+          "host": "edge.platform.latimes.com",
+          "bytes": 1031,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 347,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://ca-times.brightspotcdn.com/resource/0000016e-6bb5-d505-abef-fbb7e4420000/styleguide/assets/BentonGothic-Regular.0c532721f81fc3dc5537f4f33e2023d8.woff2",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 14250,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 347,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.latimes.com/styleguide/assets/ProximaNova-CondensedBold.woff2",
+          "host": "www.latimes.com",
+          "bytes": 53366,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 383,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/serverComponent.php",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1410,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 384,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://activate.platform.californiatimes.com/privacy/v1/b/b.rnc",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 106,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 426,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/dims4/default/ae2f04f/2147483647/strip/true/crop/720x1279+0+1/resize/320x568!/format/webp/quality/75/",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 22443,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 431,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://ca-times.brightspotcdn.com/66/dc/917df586414785989c0371fbf0aa/logo-full-black-min.svg",
+          "host": "ca-times.brightspotcdn.com",
+          "bytes": 10683,
+          "domain": "brightspotcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 447,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.confiant-integrations.net/gptprebidnative/202610151417/wrap.js",
+          "host": "cdn.confiant-integrations.net",
+          "bytes": 127882,
+          "domain": "confiant-integrations.net",
+          "party": "third",
+          "tracker": {
+            "service": "confiant-integrations.net",
+            "entity": "Confiant",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 578,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.latimes.com/styleguide/grapheneCarousels-5f7317da.bundle.js",
+          "host": "www.latimes.com",
+          "bytes": 4024,
+          "domain": "latimes.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 779,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/2e02e02a49e811e08d3e4f79cddfbc81.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 9144,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 780,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/314e4d20652a950406d56fd4ffe55762.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2868,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 780,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/404e7bee10f8b1667b4e3baa88bee262.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1030,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 781,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/573eb29aa9b63fb2388ac24c96d23581.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1168,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 781,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/656aa5f298ffeebaadf7fc92b8f6bf96.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 806,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 782,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/46a2e22250eaf67ced8f47da08dd62ec.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1141,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 782,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/ca293bf4281cf1ced5ec4a0c041dea79.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1073,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 782,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/febe6c8fb5c6f8613a723f73aa2fcef8.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2688,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 783,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/efb566f8e779eedebdd1aa5e8074e473.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1043,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 783,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/f10f870c361f816038275db7231fed94.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1379,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 784,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/04c4418fa2e236f00f904b29ae08c969.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1317,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 784,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/be2c3366410a685c5f7ae09b38b6770b.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 2825,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 785,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/1e752b71fdd1b84446d24cb0b17e54b6.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 1233,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 785,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://activate.platform.californiatimes.com/caltimes/latimes/code/b0c7da248e2dc92659f0eb563c79c248.js",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 12531,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2877,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://activate.platform.californiatimes.com/privacy/v1/b/b.rnc",
+          "host": "activate.platform.californiatimes.com",
+          "bytes": 106,
+          "domain": "californiatimes.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "lux_uid",
+          "domain": "latimes.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "c_sId",
+          "domain": "latimes.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 2,
+        "session": 0
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "speedcurve.com",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "latimes.com",
+          "party": "first"
+        }
+      ]
+    }
+  ]
+}
