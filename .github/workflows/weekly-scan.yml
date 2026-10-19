@@ -42,8 +42,27 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
 
-      - name: Unit tests
-        run: python -m pytest tests -q
+      - name: Tests of the measurement engine (a failure here stops the scan - wrong numbers must not be published)
+        run: python -m pytest tests -q -m engine
+
+      - name: All other tests (a failure warns by email but does not stop the scan)
+        id: othertests
+        continue-on-error: true
+        run: python -m pytest tests -q -m "not engine"
+
+      - name: Warn by email that some other tests failed (the scan went on)
+        if: ${{ steps.othertests.outcome == 'failure' }}
+        env:
+          FAILED_WORKFLOW: weekly-scan, some non-engine tests failed but the scan went on
+          FAILED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FAILED_EVENT: ${{ github.event_name }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify failure
 
       - name: Install Chromium
         run: python -m playwright install --with-deps chromium
@@ -120,8 +139,11 @@ jobs:
 
       - name: Install dependencies and Chromium
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
           python -m playwright install --with-deps chromium
+
+      - name: Tests of the posting code (a failure here stops the posting - a bug could duplicate or misplace a post)
+        run: python -m pytest tests -q -m publishing
 
       - name: Draft the thread (stops if too few sites were measured well)
         run: >
