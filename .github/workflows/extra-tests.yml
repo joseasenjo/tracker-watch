@@ -89,8 +89,7 @@ jobs:
           mkdir -p data/consent data/protected
           git add data/consent data/protected
           git diff --cached --quiet || git commit -m "extra tests: $(date -u +%F)"
-          git pull --rebase --autostash
-          git push
+          bash scripts/push_with_retry.sh
 
       - name: Publish the site again after a monthly run (so the protection page shows the new figures)
         if: ${{ steps.gate.outputs.go == 'true' && (github.event_name == 'schedule') }}

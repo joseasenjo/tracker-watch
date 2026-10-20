@@ -132,3 +132,42 @@ def test_the_data_release_has_a_dry_run_that_publishes_nothing():
     steps = data["jobs"]["release"]["steps"]
     publish = next(s for s in steps if s.get("name", "").startswith("Publish the release"))
     assert "dry_run != 'true'" in publish["if"]
+
+
+def test_every_workflow_that_commits_pushes_with_retry_so_a_lost_race_cannot_lose_a_run():
+    import re
+    for path in sorted((ROOT / ".github/workflows").glob("*.yml")):
+        text = path.read_text(encoding="utf-8")
+        bare = [line.strip() for line in text.splitlines() if re.fullmatch(r"\s*git push\s*", line)]
+        assert not bare, f"{path.name} still has a bare git push"
+    assert "push_with_retry.sh" in (ROOT / ".github/workflows/weekly-scan.yml").read_text(encoding="utf-8")
+
+
+def test_the_push_script_rebases_on_a_competing_push_and_gives_up_loudly(tmp_path):
+    import shutil
+    import subprocess
+    import pytest
+    if shutil.which("bash") is None or shutil.which("git") is None:
+        pytest.skip("needs bash and git")
+    probe = subprocess.run(["bash", "--version"], capture_output=True, text=True, timeout=60)
+    if probe.returncode != 0 or "GNU bash" not in probe.stdout:  # on Windows "bash" can be the WSL stub, not a shell
+        pytest.skip("no working bash")
+    def run(*args, cwd):
+        return subprocess.run(args, cwd=cwd, capture_output=True, text=True, timeout=120)
+    remote = tmp_path / "remote.git"
+    run("git", "init", "--bare", "-b", "main", str(remote), cwd=tmp_path)
+    for name in ("a", "b"):
+        run("git", "clone", str(remote), str(tmp_path / name), cwd=tmp_path)
+        run("git", "config", "user.email", "t@example.org", cwd=tmp_path / name)
+        run("git", "config", "user.name", "t", cwd=tmp_path / name)
+    (tmp_path / "a" / "one.txt").write_text("1", encoding="utf-8")
+    run("git", "add", "-A", cwd=tmp_path / "a"); run("git", "commit", "-m", "one", cwd=tmp_path / "a"); run("git", "push", "origin", "main", cwd=tmp_path / "a")
+    run("git", "pull", "origin", "main", cwd=tmp_path / "b")
+    (tmp_path / "a" / "two.txt").write_text("2", encoding="utf-8")  # somebody else pushes first ...
+    run("git", "add", "-A", cwd=tmp_path / "a"); run("git", "commit", "-m", "two", cwd=tmp_path / "a"); run("git", "push", "origin", "main", cwd=tmp_path / "a")
+    (tmp_path / "b" / "three.txt").write_text("3", encoding="utf-8")  # ... and this clone is behind: a plain push would be refused
+    run("git", "add", "-A", cwd=tmp_path / "b"); run("git", "commit", "-m", "three", cwd=tmp_path / "b")
+    assert run("git", "push", "origin", "main", cwd=tmp_path / "b").returncode != 0
+    done = run("bash", str(ROOT / "scripts" / "push_with_retry.sh"), cwd=tmp_path / "b")
+    assert done.returncode == 0, done.stderr
+    assert run("git", "ls-tree", "-r", "--name-only", "main", cwd=remote).stdout.split() == ["one.txt", "three.txt", "two.txt"]

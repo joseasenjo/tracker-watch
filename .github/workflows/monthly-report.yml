@@ -54,8 +54,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/trends
           git diff --cached --quiet || git commit -m "trends: $(date -u +%F)"
-          git pull --rebase --autostash
-          git push
+          bash scripts/push_with_retry.sh
 
       - name: Draft the monthly post
         run: python -m traceguard.posts data/runs --platform bluesky --kind monthly --report-url "$SITE_URL"
@@ -169,8 +168,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/drafts
           git diff --cached --quiet || git commit -m "posts: monthly $(date -u +%F)"
-          git pull --rebase --autostash
-          git push
+          bash scripts/push_with_retry.sh
 
   post-off:
     # When posting is switched off (POST_ENABLED or PUBLISH_SITE), say so by email: silence must never mean "it worked".
