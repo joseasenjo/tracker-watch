@@ -1,0 +1,5160 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-20T19:46:13+00:00",
+  "site": {
+    "name": "Frankfurter Allgemeine (FAZ)",
+    "url": "https://www.faz.net",
+    "first_party_domains": [
+      "faz.net"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 2,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json",
+    "blocklist": {
+      "name": "EasyPrivacy",
+      "url": "https://easylist.to/easylist/easyprivacy.txt",
+      "sha256": "fcedd905770273678d587deb69f56eb4054d4b4aab7526cae57f05b916c97be4",
+      "rules_total": 56339,
+      "rules_applied": 47222,
+      "rules_skipped": 9117,
+      "subset": "domain rules (||host^) with party and resource-type options only"
+    }
+  },
+  "summary": {
+    "passes_total": 2,
+    "passes_ok": 2,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.faz.net/aktuell/",
+    "navigation_redirects": [
+      {
+        "from": "https://www.faz.net/",
+        "to": "https://www.faz.net/aktuell/",
+        "status": 301
+      }
+    ],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 21,
+      "third_party_domains": 6,
+      "tracking_requests": 0,
+      "total_bytes": 3198338,
+      "third_party_bytes": 576178,
+      "tracking_bytes": 0,
+      "tracking_services": 0,
+      "third_party_cookies": 0,
+      "cookies_total": 5,
+      "storage_items": 17
+    },
+    "third_party_domains": [
+      {
+        "domain": "adobedtm.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "dpa-infocom.net",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "jsdelivr.net",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "storifyme.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "storifyme.xyz",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "typekit.net",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "adobedtm.com",
+        "entity": "Adobe",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "faz.net",
+        "party": "first",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "jsdelivr.net",
+        "party": "third",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0,
+    "protection": {
+      "blocked_requests": 4,
+      "blocked_domains": [
+        "cleverpush.com",
+        "ebxcdn.com",
+        "typekit.net"
+      ]
+    }
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 21 requests to 6 third-party domains (median of 2 passes).",
+      "evidence": {
+        "requests": 21,
+        "domains": 6
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 3.2 MB transferred in that window (compressed responses that finished loading), 576 kB (18%) came from third-party domains, 0 B of it from services classified as tracking (0 requests).",
+      "evidence": {
+        "total_bytes": 3198338,
+        "third_party_bytes": 576178,
+        "tracking_bytes": 0,
+        "tracking_requests": 0
+      }
+    },
+    {
+      "code": "NAVIGATION_REDIRECTS",
+      "severity": "info",
+      "text": "The address redirected 1 time(s): https://www.faz.net/ -> https://www.faz.net/aktuell/",
+      "evidence": {
+        "redirects": [
+          {
+            "from": "https://www.faz.net/",
+            "to": "https://www.faz.net/aktuell/",
+            "status": 301
+          }
+        ]
+      }
+    },
+    {
+      "code": "PROTECTION_LIST_APPLIED",
+      "severity": "info",
+      "text": "With the EasyPrivacy filter list applied (domain rules only, 47222 rules), 4 requests were blocked. The page still made 21 requests to 6 third-party domains, including 0 tracking services in our list.",
+      "evidence": {
+        "blocked_requests": 4,
+        "blocked_domains": [
+          "cleverpush.com",
+          "ebxcdn.com",
+          "typekit.net"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.faz.net/aktuell/",
+      "navigation_redirects": [
+        {
+          "from": "https://www.faz.net/",
+          "to": "https://www.faz.net/aktuell/",
+          "status": 301
+        }
+      ],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 187,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.faz.net/",
+          "host": "www.faz.net",
+          "bytes": 0,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 536,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://applets.ebxcdn.com/ebx.js",
+          "host": "applets.ebxcdn.com",
+          "blocked_by_list": true,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 802,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/faz-snackswidget.min.js",
+          "host": "snacks.faz.net",
+          "bytes": 1781,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 918,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/launch-b62c4c37ed74.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 185060,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 919,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/js/adobe/atarget.js",
+          "host": "www.faz.net",
+          "bytes": 38,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 919,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.faz.net/_nuxt/spritemap.BcllJj0J.svg",
+          "host": "www.faz.net",
+          "bytes": 68720,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 920,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/MGFdXgsf.js",
+          "host": "www.faz.net",
+          "bytes": 41227,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1041,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w1200/fa00a5ff3340/w6144h2765x0y260/202610/687c9903-8d5d-449f-b775-739794c96094/die-berliner-parteianfuehrer.webp",
+          "host": "media0.faz.net",
+          "bytes": 46375,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1042,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/716c47b8159f/w3561h2003x0y206/202501/43601.0.776947412/ohne-energie-geht-hier-nichts.webp",
+          "host": "media0.faz.net",
+          "bytes": 14170,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1043,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/633f1ab32855/w6000h3375x0y125/202610/43601.0.2776873887/sorgt-fuer-aerger-nicht-jeder.webp",
+          "host": "media0.faz.net",
+          "bytes": 22366,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1045,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/0914d73b1bfe/w3091h1739x0y221/202610/db86e24a-8f5c-441f-bc9b-005d61b3f7f7/die-dortmunder-mannschaft.webp",
+          "host": "media0.faz.net",
+          "bytes": 23840,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1131,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/mm-css/mm-dm.css",
+          "host": "dynamic.faz.net",
+          "bytes": 2277,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1132,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/suche/widget/widget.wc.js",
+          "host": "www.faz.net",
+          "bytes": 454478,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1134,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/5ead1791.css",
+          "host": "snacks.faz.net",
+          "bytes": 1151,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1134,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/fsw-CV1gbxPM.js",
+          "host": "snacks.faz.net",
+          "bytes": 5157,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1135,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/shared-components-Dt7iO4FI.css",
+          "host": "snacks.faz.net",
+          "bytes": 9588,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1157,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+          "host": "cdn.jsdelivr.net",
+          "bytes": 4911,
+          "domain": "jsdelivr.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1158,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+          "host": "cdn.jsdelivr.net",
+          "bytes": 44434,
+          "domain": "jsdelivr.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1201,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static.cleverpush.com/channel/loader/v3LddGcmHMyc4wNxg.js",
+          "host": "static.cleverpush.com",
+          "blocked_by_list": true,
+          "domain": "cleverpush.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1242,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.storifyme.xyz/static/web-components/storifyme-elements.min.js",
+          "host": "cdn.storifyme.xyz",
+          "bytes": 433,
+          "domain": "storifyme.xyz",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1307,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://core.dpa-infocom.net/js/dpa.js",
+          "host": "core.dpa-infocom.net",
+          "bytes": 4164,
+          "domain": "dpa-infocom.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1308,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.faz.net/_nuxt/spritemap.BcllJj0J.svg",
+          "host": "www.faz.net",
+          "bytes": 68720,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1308,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1309,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 122281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1310,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/97f652557f0e/w3024h1701x0y415/202610/9d6cb5c9-a54d-48c3-90b7-7677b32a8b7a/paris-reinigung-der.webp",
+          "host": "media0.faz.net",
+          "bytes": 13304,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1310,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/70b5fd2ca591/w4896h2754x0y255/202610/43601.0.2777358995/feuer-bei-einer-demonstration.webp",
+          "host": "media0.faz.net",
+          "bytes": 14941,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1311,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/19bb687bdf5a/w1920h1080x0y0/202610/43601.0.2765633584/das-rathaus-von-limoges-nach.webp",
+          "host": "media0.faz.net",
+          "bytes": 28843,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1313,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin-ext_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 84864,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1314,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/a984a86774d4/w4957h2788x0y775/202610/43601.0.2638042089/profitierte-von-der-verteilung.webp",
+          "host": "media0.faz.net",
+          "bytes": 21298,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1314,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/0d6480dd8bf3/w4673h2629x0y167/202604/43601.0.1984076460/marion-horn-ist.webp",
+          "host": "media0.faz.net",
+          "bytes": 7047,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1315,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/bda85192cec4/w4489h2525x0y136/202610/ffd68948-66e9-4cb3-85b4-e5c51ff1a31f/atletico-madrid-s-argentine.webp",
+          "host": "media0.faz.net",
+          "bytes": 16246,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1316,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/739c54415291/w438h438x277y99/201907/1.6281631/julia-loehr.webp",
+          "host": "media0.faz.net",
+          "bytes": 1831,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1317,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/5e39a5be6768/w426h426x271y132/201311/1.2906941/susanne-kusicke.webp",
+          "host": "media0.faz.net",
+          "bytes": 1775,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1317,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/a038a1ea5898/w667h667x0y92/201108/1.1126579/michaela-seiser.webp",
+          "host": "media0.faz.net",
+          "bytes": 1031,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1318,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/b0a2a04968a9/w1830h1830x598y194/201311/1.2906553/michael-hanfeld.webp",
+          "host": "media0.faz.net",
+          "bytes": 1329,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1319,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/7a53a36a216a/w873h873x64y193/201311/1.2906331/manfred-schaefers.webp",
+          "host": "media0.faz.net",
+          "bytes": 1247,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1319,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/13d13097e4db/w1000h1000x0y155/201311/1.2906562/christian-geyer.webp",
+          "host": "media0.faz.net",
+          "bytes": 1020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1320,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/hePW80VL.js",
+          "host": "www.faz.net",
+          "bytes": 461,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1321,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DHQT8H_h.js",
+          "host": "www.faz.net",
+          "bytes": 18924,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1322,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D3SsybNF.js",
+          "host": "www.faz.net",
+          "bytes": 32103,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1322,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CjclePJq.js",
+          "host": "www.faz.net",
+          "bytes": 13821,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1323,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CoEqblDl.js",
+          "host": "www.faz.net",
+          "bytes": 35640,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1324,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BdTgv_Md.js",
+          "host": "www.faz.net",
+          "bytes": 5559,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1325,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CtT0-S4g.js",
+          "host": "www.faz.net",
+          "bytes": 776,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1325,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BjHcjteF.js",
+          "host": "www.faz.net",
+          "bytes": 2967,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1328,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/nVL3XafE.js",
+          "host": "www.faz.net",
+          "bytes": 1583,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1329,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BLqkW3u9.js",
+          "host": "www.faz.net",
+          "bytes": 9016,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1329,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/C-943w0X.js",
+          "host": "www.faz.net",
+          "bytes": 1405,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1330,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DT59jUxE.js",
+          "host": "www.faz.net",
+          "bytes": 25886,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1331,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BLF3Q9r_.js",
+          "host": "www.faz.net",
+          "bytes": 3698,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1331,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/YisaUivd.js",
+          "host": "www.faz.net",
+          "bytes": 243,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1332,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D5ESNcoh.js",
+          "host": "www.faz.net",
+          "bytes": 2436,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1333,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B8-w2aJO.js",
+          "host": "www.faz.net",
+          "bytes": 1278,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1334,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B_NXbaat.js",
+          "host": "www.faz.net",
+          "bytes": 276,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1334,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CJCp2EKE.js",
+          "host": "www.faz.net",
+          "bytes": 7074,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1335,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/WRAiZCc1.js",
+          "host": "www.faz.net",
+          "bytes": 782,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1336,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/y6VAqEL6.js",
+          "host": "www.faz.net",
+          "bytes": 2732,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1336,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Dgq22uoq.js",
+          "host": "www.faz.net",
+          "bytes": 2312,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1337,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/POd_ZyVZ.js",
+          "host": "www.faz.net",
+          "bytes": 338,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1338,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B-IsN7dk.js",
+          "host": "www.faz.net",
+          "bytes": 1656,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1338,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CbWvRXkF.js",
+          "host": "www.faz.net",
+          "bytes": 362,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1339,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CqmngzYx.js",
+          "host": "www.faz.net",
+          "bytes": 461,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1340,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BOY-W3dW.js",
+          "host": "www.faz.net",
+          "bytes": 2114,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1341,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BDNMzG2s.js",
+          "host": "www.faz.net",
+          "bytes": 142,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1341,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/9zH0Oq4J2.js",
+          "host": "www.faz.net",
+          "bytes": 295,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1342,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CUXI7drw2.js",
+          "host": "www.faz.net",
+          "bytes": 364,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1343,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BBfJjPJ_2.js",
+          "host": "www.faz.net",
+          "bytes": 451,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1343,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CfS1xl1k2.js",
+          "host": "www.faz.net",
+          "bytes": 281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1344,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CgrK2oAN2.js",
+          "host": "www.faz.net",
+          "bytes": 1379,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1345,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CKHEp-li2.js",
+          "host": "www.faz.net",
+          "bytes": 249,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1346,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BVm-XFbh2.js",
+          "host": "www.faz.net",
+          "bytes": 873,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1353,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/shared-components-BXvn1v_v.js",
+          "host": "snacks.faz.net",
+          "bytes": 90450,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1354,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/shared-utils-CZTdeS5o.js",
+          "host": "snacks.faz.net",
+          "bytes": 22141,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1355,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-content-DBAq718Q.js",
+          "host": "snacks.faz.net",
+          "bytes": 6336,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1470,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CzJASj_a.js",
+          "host": "www.faz.net",
+          "bytes": 470,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1498,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BubU-ler.js",
+          "host": "www.faz.net",
+          "bytes": 934,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1499,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/rolldown-runtime-QTnfLwEv.js",
+          "host": "snacks.faz.net",
+          "bytes": 1073,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1500,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/teDHa_bJ.js",
+          "host": "www.faz.net",
+          "bytes": 475,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1556,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.faz.net/suche/api/search-data",
+          "host": "www.faz.net",
+          "bytes": 25488,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1557,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B2m1b6dC.js",
+          "host": "www.faz.net",
+          "bytes": 273,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1558,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CInlMTpr.js",
+          "host": "www.faz.net",
+          "bytes": 958,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1559,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/zL1IGvF2.js",
+          "host": "www.faz.net",
+          "bytes": 567,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1559,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D_aP11gJ2.js",
+          "host": "www.faz.net",
+          "bytes": 218,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1618,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 1181,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1626,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 24784,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1713,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 39409,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1718,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 3999,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1720,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 26870,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1721,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 4484,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1726,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/QwD7BJ4l.js",
+          "host": "www.faz.net",
+          "bytes": 338,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1737,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/071310498bd8/w3000h1687x0y4/202609/43601.0.2550434575/der-neue-star-der-demokraten.webp",
+          "host": "media0.faz.net",
+          "bytes": 15480,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1738,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/da2eac05fb20/w1602h901x144y0/202610/a74a33c3-36e1-423d-bfe8-4c129c1b3ca9/o4u1vyctyytd.webp",
+          "host": "media0.faz.net",
+          "bytes": 22043,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1738,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/60f5cac29597/w4782h2690x0y249/202610/43601.0.2763962158/ring-frei-fuer-den-wahlkampf.webp",
+          "host": "media0.faz.net",
+          "bytes": 15391,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1754,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-content-BbgvtpOn.css",
+          "host": "snacks.faz.net",
+          "bytes": 4002,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1798,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1798,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 122281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1903,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://c77.cdn.storifyme.com/static/web-components/storifyme-elements-v2.min.js",
+          "host": "c77.cdn.storifyme.com",
+          "bytes": 48567,
+          "domain": "storifyme.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1904,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DinimINy2.js",
+          "host": "www.faz.net",
+          "bytes": 213,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2009,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/IconBase.udIjdT2u.css",
+          "host": "www.faz.net",
+          "bytes": 100,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2009,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Wrapper.C2pwFBrU.css",
+          "host": "www.faz.net",
+          "bytes": 151,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2011,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/CatchUp.D_QThIzs.css",
+          "host": "www.faz.net",
+          "bytes": 188,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2012,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Footer.BlRuW1W2.css",
+          "host": "www.faz.net",
+          "bytes": 136,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2013,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/swiper.DZsIPZ2V.css",
+          "host": "www.faz.net",
+          "bytes": 1183,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2015,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/navigation.BU0CWMeB.css",
+          "host": "www.faz.net",
+          "bytes": 1560,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2016,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/ServiceBar.CkAeTJpO.css",
+          "host": "www.faz.net",
+          "bytes": 321,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2017,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/SiteWrapper.BMRIG0E-.css",
+          "host": "www.faz.net",
+          "bytes": 167,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2019,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/FPlus.JWUFalhe.css",
+          "host": "www.faz.net",
+          "bytes": 174,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2020,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Paragraph.DUx067gV.css",
+          "host": "www.faz.net",
+          "bytes": 198,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2021,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Label.BtAvSF1d.css",
+          "host": "www.faz.net",
+          "bytes": 290,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2022,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/pagination.Cwcfm6fu.css",
+          "host": "www.faz.net",
+          "bytes": 416,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2022,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/CircledCaret.B4JuEKlk.css",
+          "host": "www.faz.net",
+          "bytes": 207,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2023,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/ModuleSlots.CWzRaJLL.css",
+          "host": "www.faz.net",
+          "bytes": 263,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2057,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://storifyme.xyz/widgets/faz-5746000/widget/custom/8746",
+          "host": "storifyme.xyz",
+          "bytes": 4370,
+          "domain": "storifyme.xyz",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2060,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CH0cZ9Da.js",
+          "host": "www.faz.net",
+          "bytes": 3292,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2189,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DBT4fylu.js",
+          "host": "www.faz.net",
+          "bytes": 3419,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2192,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DImg0rNg.js",
+          "host": "www.faz.net",
+          "bytes": 512,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2193,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/C1V3HKOn.js",
+          "host": "www.faz.net",
+          "bytes": 1149,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2194,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/RMuPkwyS.js",
+          "host": "www.faz.net",
+          "bytes": 477,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2194,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D-YfDJZ3.js",
+          "host": "www.faz.net",
+          "bytes": 294,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2223,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CYwT-_vD2.js",
+          "host": "www.faz.net",
+          "bytes": 911,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2224,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B5GwHreL2.js",
+          "host": "www.faz.net",
+          "bytes": 12829,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2225,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DdVRbLjy2.js",
+          "host": "www.faz.net",
+          "bytes": 2453,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2226,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B3gqkc3W2.js",
+          "host": "www.faz.net",
+          "bytes": 5701,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2226,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/C17ihSQh.js",
+          "host": "www.faz.net",
+          "bytes": 1187,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2227,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Bch3AUTr.js",
+          "host": "www.faz.net",
+          "bytes": 125,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2228,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/4kjqe4Eb.js",
+          "host": "www.faz.net",
+          "bytes": 5148,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2229,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BP0tVDZw.js",
+          "host": "www.faz.net",
+          "bytes": 408,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2229,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/KdYBbDf_.js",
+          "host": "www.faz.net",
+          "bytes": 21195,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2258,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Gq2N5Rbb.js",
+          "host": "www.faz.net",
+          "bytes": 26542,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2259,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CLoSwXWL.js",
+          "host": "www.faz.net",
+          "bytes": 182,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2269,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DwEyO8-U2.js",
+          "host": "www.faz.net",
+          "bytes": 671,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2272,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/FFTnOI7D2.js",
+          "host": "www.faz.net",
+          "bytes": 937,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2273,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/7FItAJcZ2.js",
+          "host": "www.faz.net",
+          "bytes": 376,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2274,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Bno6hVLd2.js",
+          "host": "www.faz.net",
+          "bytes": 300,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2275,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/trAPOgUG2.js",
+          "host": "www.faz.net",
+          "bytes": 1377,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2276,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Blz5YzkN.js",
+          "host": "www.faz.net",
+          "bytes": 110937,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2276,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BghW0T7O.js",
+          "host": "www.faz.net",
+          "bytes": 1711,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2277,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DYvN6Abe.js",
+          "host": "www.faz.net",
+          "bytes": 6770,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2278,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DatiATQK2.js",
+          "host": "www.faz.net",
+          "bytes": 539,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2279,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/7FTuEX2l.js",
+          "host": "www.faz.net",
+          "bytes": 1466,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2279,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BVZlRNtw.js",
+          "host": "www.faz.net",
+          "bytes": 1177,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2280,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Bm4EqhcY.js",
+          "host": "www.faz.net",
+          "bytes": 452,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2281,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DYEsTYa2.js",
+          "host": "www.faz.net",
+          "bytes": 5271,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2282,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CwJ-oU1M.js",
+          "host": "www.faz.net",
+          "bytes": 493,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2282,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/qXE0b_YS.js",
+          "host": "www.faz.net",
+          "bytes": 2092,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2283,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/HaAr0ung.js",
+          "host": "www.faz.net",
+          "bytes": 13543,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2284,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D35IWHpd.js",
+          "host": "www.faz.net",
+          "bytes": 322,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2312,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BleHbTMT2.js",
+          "host": "www.faz.net",
+          "bytes": 758,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2313,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DidltKDT2.js",
+          "host": "www.faz.net",
+          "bytes": 283,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2321,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DezQks9d2.js",
+          "host": "www.faz.net",
+          "bytes": 169,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2324,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Y446DIzj2.js",
+          "host": "www.faz.net",
+          "bytes": 200,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2326,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/iRT_9D3g2.js",
+          "host": "www.faz.net",
+          "bytes": 492,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2327,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CjJHfRcK2.js",
+          "host": "www.faz.net",
+          "bytes": 435,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2361,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BwQgw0Va2.js",
+          "host": "www.faz.net",
+          "bytes": 1404,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2711,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://storifyme.xyz/widgets/faz-5746000/widget/custom/8746",
+          "host": "storifyme.xyz",
+          "bytes": 3865,
+          "domain": "storifyme.xyz",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2712,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.faz.net/suche/api/search-data",
+          "host": "www.faz.net",
+          "bytes": 25487,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2719,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 1181,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2720,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 24784,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2776,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 39409,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2777,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 3999,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2789,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 26870,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2790,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 4484,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2835,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2835,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 122281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2847,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3166,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/auth",
+          "host": "connector.faz.net",
+          "bytes": 346,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3169,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/iq/cdn_iqdfaz/live/iqadcontroller.js.gz",
+          "host": "www.faz.net",
+          "bytes": 82625,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3209,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent.faz.net/wrapperMessagingWithoutDetection.js",
+          "host": "consent.faz.net",
+          "bytes": 55442,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3211,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-reading-DzhiIIDp.js",
+          "host": "snacks.faz.net",
+          "bytes": 7851,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3212,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-account-D4812jR4.js",
+          "host": "snacks.faz.net",
+          "bytes": 6714,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3214,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-account-0Qw01VBr.css",
+          "host": "snacks.faz.net",
+          "bytes": 2577,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3216,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-reading-TVzHxRdE.css",
+          "host": "snacks.faz.net",
+          "bytes": 2676,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3277,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/mms/v2/get_site_data",
+          "host": "consent.faz.net",
+          "bytes": 688,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3282,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-account-0Qw01VBr.css",
+          "host": "snacks.faz.net",
+          "bytes": 2553,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3283,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-reading-TVzHxRdE.css",
+          "host": "snacks.faz.net",
+          "bytes": 2654,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3301,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC4f1f1ead488d40a2b77a858e5e2f1f41-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 2402,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3301,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC1fa3514f81ae41c789fbe9d62364b4c7-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 513,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 3304,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/onboarding_v3-C2z73mbC.js",
+          "host": "snacks.faz.net",
+          "bytes": 4660,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3305,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/onboarding_v3-2IN6m61n.css",
+          "host": "snacks.faz.net",
+          "bytes": 1503,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3306,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/consent/tcfv2/vendor-list/latest-version",
+          "host": "consent.faz.net",
+          "bytes": 815,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3321,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/onboarding_v3-2IN6m61n.css",
+          "host": "snacks.faz.net",
+          "bytes": 1477,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3323,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/wrapper/tcfv2/v2/gdpr/native-message/new-user",
+          "host": "consent.faz.net",
+          "bytes": 8678,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3323,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/mein/user",
+          "host": "connector.faz.net",
+          "bytes": 347,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3499,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/consent/tcfv2/consent/v2/data-pipeline/pv-data",
+          "host": "consent.faz.net",
+          "bytes": 1535,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3508,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://consent.faz.net/index.html",
+          "host": "consent.faz.net",
+          "bytes": 2413,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3524,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://consent.faz.net/Notice.9cce2.css",
+          "host": "consent.faz.net",
+          "bytes": 7058,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3525,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent.faz.net/polyfills.01516.js",
+          "host": "consent.faz.net",
+          "bytes": 2482,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3526,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent.faz.net/Notice.fcfb9.js",
+          "host": "consent.faz.net",
+          "bytes": 97484,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3541,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/filterslider_v3-BopKfDFn.js",
+          "host": "snacks.faz.net",
+          "bytes": 4707,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3543,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-interactive-1MBQOS0o.js",
+          "host": "snacks.faz.net",
+          "bytes": 7094,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3544,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-interactive-DjnHZ3BT.css",
+          "host": "snacks.faz.net",
+          "bytes": 2716,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3546,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/filterslider_v3-DKRJNHTI.css",
+          "host": "snacks.faz.net",
+          "bytes": 1306,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3568,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-interactive-DjnHZ3BT.css",
+          "host": "snacks.faz.net",
+          "bytes": 2693,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3569,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/filterslider_v3-DKRJNHTI.css",
+          "host": "snacks.faz.net",
+          "bytes": 1283,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3573,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/mein/user",
+          "host": "connector.faz.net",
+          "bytes": 346,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3573,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/snacks/filter/getFilter",
+          "host": "connector.faz.net",
+          "bytes": 3702,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3622,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent.faz.net/consent/tcfv2/vendor-list/categories",
+          "host": "consent.faz.net",
+          "bytes": 2251,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3707,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://use.typekit.net/rcr2ert.css",
+          "host": "use.typekit.net",
+          "bytes": 1159,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3708,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/consent/styles.css",
+          "host": "dynamic.faz.net",
+          "bytes": 5385,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3709,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent.faz.net/consent/tcfv2/vendor-list/categories",
+          "host": "consent.faz.net",
+          "bytes": 2345,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3710,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://consent.faz.net/270b1804ded10442dc27e9e0098bb1f3.svg",
+          "host": "consent.faz.net",
+          "bytes": 1294,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3747,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://p.typekit.net/p.css",
+          "host": "p.typekit.net",
+          "blocked_by_list": true,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3767,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://p.typekit.net/p.css",
+          "host": "p.typekit.net",
+          "blocked_by_list": true,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3786,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dynamic.faz.net/red/consent/FAZ-Initial_Blau_RGB.svg",
+          "host": "dynamic.faz.net",
+          "bytes": 1792,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3787,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/c411b3/00000000000000007735de91/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54433,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3789,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/346587/0000000000000000774d56fa/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54880,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3790,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/457df2/0000000000000000774d56f5/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54004,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3791,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/7741ba/0000000000000000774d56f7/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54121,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3798,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/38fd21/0000000000000000774d56f2/30/l",
+          "host": "use.typekit.net",
+          "bytes": 53909,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5324,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC205d376dc39f4465a763ba9655c9a2fc-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 487,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 5343,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC300fbd193a184a2385d8694f04d813a0-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 622,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 7344,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RCd9b3263a303d43e4a3cd84a1d1699807-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 2200,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 7356,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RCab7d995496834575a30cce5ec058ac60-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 1077,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 7370,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC94511c4ed47c439caaa47e263aa3d667-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 567,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_sp_v1_ss",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_sp_v1_p",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_sp_v1_data",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "faz_consent_state",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        },
+        {
+          "name": "consentUUID",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 9,
+        "session": 8
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "faz.net",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "jsdelivr.net",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.faz.net/aktuell/",
+      "navigation_redirects": [
+        {
+          "from": "https://www.faz.net/",
+          "to": "https://www.faz.net/aktuell/",
+          "status": 301
+        }
+      ],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 38,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.faz.net/",
+          "host": "www.faz.net",
+          "bytes": 0,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 293,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://applets.ebxcdn.com/ebx.js",
+          "host": "applets.ebxcdn.com",
+          "blocked_by_list": true,
+          "domain": "ebxcdn.com",
+          "party": "third",
+          "tracker": {
+            "service": "ebxcdn.com",
+            "entity": "Unidentified operator",
+            "category": "analytics"
+          }
+        },
+        {
+          "t_ms": 294,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/faz-snackswidget.min.js",
+          "host": "snacks.faz.net",
+          "bytes": 1779,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 294,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/launch-b62c4c37ed74.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 185060,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 295,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/js/adobe/atarget.js",
+          "host": "www.faz.net",
+          "bytes": 38,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 307,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.faz.net/_nuxt/spritemap.BcllJj0J.svg",
+          "host": "www.faz.net",
+          "bytes": 68720,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 307,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/MGFdXgsf.js",
+          "host": "www.faz.net",
+          "bytes": 41227,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 315,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w1200/fa00a5ff3340/w6144h2765x0y260/202610/687c9903-8d5d-449f-b775-739794c96094/die-berliner-parteianfuehrer.webp",
+          "host": "media0.faz.net",
+          "bytes": 46375,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 316,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/716c47b8159f/w3561h2003x0y206/202501/43601.0.776947412/ohne-energie-geht-hier-nichts.webp",
+          "host": "media0.faz.net",
+          "bytes": 14170,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 318,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/633f1ab32855/w6000h3375x0y125/202610/43601.0.2776873887/sorgt-fuer-aerger-nicht-jeder.webp",
+          "host": "media0.faz.net",
+          "bytes": 22366,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 318,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/0914d73b1bfe/w3091h1739x0y221/202610/db86e24a-8f5c-441f-bc9b-005d61b3f7f7/die-dortmunder-mannschaft.webp",
+          "host": "media0.faz.net",
+          "bytes": 23840,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 319,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/fsw-CV1gbxPM.js",
+          "host": "snacks.faz.net",
+          "bytes": 5157,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 320,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/shared-components-Dt7iO4FI.css",
+          "host": "snacks.faz.net",
+          "bytes": 9591,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 321,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/5ead1791.css",
+          "host": "snacks.faz.net",
+          "bytes": 1150,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 324,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/mm-css/mm-dm.css",
+          "host": "dynamic.faz.net",
+          "bytes": 2277,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 329,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/suche/widget/widget.wc.js",
+          "host": "www.faz.net",
+          "bytes": 454478,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 342,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://static.cleverpush.com/channel/loader/v3LddGcmHMyc4wNxg.js",
+          "host": "static.cleverpush.com",
+          "blocked_by_list": true,
+          "domain": "cleverpush.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 343,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.storifyme.xyz/static/web-components/storifyme-elements.min.js",
+          "host": "cdn.storifyme.xyz",
+          "bytes": 433,
+          "domain": "storifyme.xyz",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 344,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://core.dpa-infocom.net/js/dpa.js",
+          "host": "core.dpa-infocom.net",
+          "bytes": 4168,
+          "domain": "dpa-infocom.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 348,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://www.faz.net/_nuxt/spritemap.BcllJj0J.svg",
+          "host": "www.faz.net",
+          "bytes": 68720,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 404,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 406,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 122281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 407,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/shared-components-BXvn1v_v.js",
+          "host": "snacks.faz.net",
+          "bytes": 90451,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 408,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/shared-utils-CZTdeS5o.js",
+          "host": "snacks.faz.net",
+          "bytes": 22142,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 408,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-content-DBAq718Q.js",
+          "host": "snacks.faz.net",
+          "bytes": 6338,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 420,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+          "host": "cdn.jsdelivr.net",
+          "bytes": 4535,
+          "domain": "jsdelivr.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 421,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+          "host": "cdn.jsdelivr.net",
+          "bytes": 44821,
+          "domain": "jsdelivr.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 566,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin-ext_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 84864,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 567,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/97f652557f0e/w3024h1701x0y415/202610/9d6cb5c9-a54d-48c3-90b7-7677b32a8b7a/paris-reinigung-der.webp",
+          "host": "media0.faz.net",
+          "bytes": 13304,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 568,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/70b5fd2ca591/w4896h2754x0y255/202610/43601.0.2777358995/feuer-bei-einer-demonstration.webp",
+          "host": "media0.faz.net",
+          "bytes": 14941,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 569,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/19bb687bdf5a/w1920h1080x0y0/202610/43601.0.2765633584/das-rathaus-von-limoges-nach.webp",
+          "host": "media0.faz.net",
+          "bytes": 28843,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 570,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/a984a86774d4/w4957h2788x0y775/202610/43601.0.2638042089/profitierte-von-der-verteilung.webp",
+          "host": "media0.faz.net",
+          "bytes": 21302,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 571,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/0d6480dd8bf3/w4673h2629x0y167/202604/43601.0.1984076460/marion-horn-ist.webp",
+          "host": "media0.faz.net",
+          "bytes": 7047,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 571,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/bda85192cec4/w4489h2525x0y136/202610/ffd68948-66e9-4cb3-85b4-e5c51ff1a31f/atletico-madrid-s-argentine.webp",
+          "host": "media0.faz.net",
+          "bytes": 16239,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 572,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/739c54415291/w438h438x277y99/201907/1.6281631/julia-loehr.webp",
+          "host": "media0.faz.net",
+          "bytes": 1826,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 573,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/5e39a5be6768/w426h426x271y132/201311/1.2906941/susanne-kusicke.webp",
+          "host": "media0.faz.net",
+          "bytes": 1778,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 574,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/a038a1ea5898/w667h667x0y92/201108/1.1126579/michaela-seiser.webp",
+          "host": "media0.faz.net",
+          "bytes": 1034,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 575,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/b0a2a04968a9/w1830h1830x598y194/201311/1.2906553/michael-hanfeld.webp",
+          "host": "media0.faz.net",
+          "bytes": 1329,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 576,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/7a53a36a216a/w873h873x64y193/201311/1.2906331/manfred-schaefers.webp",
+          "host": "media0.faz.net",
+          "bytes": 1254,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 576,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w50/13d13097e4db/w1000h1000x0y155/201311/1.2906562/christian-geyer.webp",
+          "host": "media0.faz.net",
+          "bytes": 1023,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 578,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/hePW80VL.js",
+          "host": "www.faz.net",
+          "bytes": 466,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 579,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DHQT8H_h.js",
+          "host": "www.faz.net",
+          "bytes": 18924,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 580,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D3SsybNF.js",
+          "host": "www.faz.net",
+          "bytes": 32113,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 581,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CjclePJq.js",
+          "host": "www.faz.net",
+          "bytes": 13826,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 581,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CoEqblDl.js",
+          "host": "www.faz.net",
+          "bytes": 35629,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 583,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BdTgv_Md.js",
+          "host": "www.faz.net",
+          "bytes": 5547,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 583,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CtT0-S4g.js",
+          "host": "www.faz.net",
+          "bytes": 762,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 584,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BjHcjteF.js",
+          "host": "www.faz.net",
+          "bytes": 2953,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 585,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/nVL3XafE.js",
+          "host": "www.faz.net",
+          "bytes": 1575,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 586,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BLqkW3u9.js",
+          "host": "www.faz.net",
+          "bytes": 9016,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 587,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/C-943w0X.js",
+          "host": "www.faz.net",
+          "bytes": 1405,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 588,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DT59jUxE.js",
+          "host": "www.faz.net",
+          "bytes": 25886,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 588,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BLF3Q9r_.js",
+          "host": "www.faz.net",
+          "bytes": 3698,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 590,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/YisaUivd.js",
+          "host": "www.faz.net",
+          "bytes": 244,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 591,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D5ESNcoh.js",
+          "host": "www.faz.net",
+          "bytes": 2436,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 591,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B8-w2aJO.js",
+          "host": "www.faz.net",
+          "bytes": 1278,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 592,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B_NXbaat.js",
+          "host": "www.faz.net",
+          "bytes": 276,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 593,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CJCp2EKE.js",
+          "host": "www.faz.net",
+          "bytes": 7074,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 594,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/WRAiZCc1.js",
+          "host": "www.faz.net",
+          "bytes": 782,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 594,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/y6VAqEL6.js",
+          "host": "www.faz.net",
+          "bytes": 2732,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 595,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Dgq22uoq.js",
+          "host": "www.faz.net",
+          "bytes": 2312,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 596,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/POd_ZyVZ.js",
+          "host": "www.faz.net",
+          "bytes": 338,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 597,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B-IsN7dk.js",
+          "host": "www.faz.net",
+          "bytes": 1656,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 598,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CbWvRXkF.js",
+          "host": "www.faz.net",
+          "bytes": 362,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 598,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CqmngzYx.js",
+          "host": "www.faz.net",
+          "bytes": 461,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 600,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BOY-W3dW.js",
+          "host": "www.faz.net",
+          "bytes": 2114,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 600,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BDNMzG2s.js",
+          "host": "www.faz.net",
+          "bytes": 142,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 601,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/9zH0Oq4J2.js",
+          "host": "www.faz.net",
+          "bytes": 295,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 603,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CUXI7drw2.js",
+          "host": "www.faz.net",
+          "bytes": 364,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 604,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BBfJjPJ_2.js",
+          "host": "www.faz.net",
+          "bytes": 451,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 605,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CfS1xl1k2.js",
+          "host": "www.faz.net",
+          "bytes": 281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 606,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CgrK2oAN2.js",
+          "host": "www.faz.net",
+          "bytes": 1379,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 607,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CKHEp-li2.js",
+          "host": "www.faz.net",
+          "bytes": 249,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 607,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BVm-XFbh2.js",
+          "host": "www.faz.net",
+          "bytes": 873,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 667,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/rolldown-runtime-QTnfLwEv.js",
+          "host": "snacks.faz.net",
+          "bytes": 1074,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 761,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.faz.net/suche/api/search-data",
+          "host": "www.faz.net",
+          "bytes": 25488,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 794,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 1181,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 802,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B2m1b6dC.js",
+          "host": "www.faz.net",
+          "bytes": 273,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 804,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 24784,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 808,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CzJASj_a.js",
+          "host": "www.faz.net",
+          "bytes": 470,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 810,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BubU-ler.js",
+          "host": "www.faz.net",
+          "bytes": 933,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 812,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/zL1IGvF2.js",
+          "host": "www.faz.net",
+          "bytes": 566,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 820,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CInlMTpr.js",
+          "host": "www.faz.net",
+          "bytes": 957,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 823,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/teDHa_bJ.js",
+          "host": "www.faz.net",
+          "bytes": 474,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 824,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D_aP11gJ2.js",
+          "host": "www.faz.net",
+          "bytes": 217,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 858,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 39409,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 859,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 3999,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 885,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 26870,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 888,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 4484,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 946,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-content-BbgvtpOn.css",
+          "host": "snacks.faz.net",
+          "bytes": 4002,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 954,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 986,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/071310498bd8/w3000h1687x0y4/202609/43601.0.2550434575/der-neue-star-der-demokraten.webp",
+          "host": "media0.faz.net",
+          "bytes": 15479,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 987,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/da2eac05fb20/w1602h901x144y0/202610/a74a33c3-36e1-423d-bfe8-4c129c1b3ca9/o4u1vyctyytd.webp",
+          "host": "media0.faz.net",
+          "bytes": 22042,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 989,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media0.faz.net/image/w400/60f5cac29597/w4782h2690x0y249/202610/43601.0.2763962158/ring-frei-fuer-den-wahlkampf.webp",
+          "host": "media0.faz.net",
+          "bytes": 15390,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1006,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1007,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 122281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1041,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/QwD7BJ4l.js",
+          "host": "www.faz.net",
+          "bytes": 337,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1054,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://c77.cdn.storifyme.com/static/web-components/storifyme-elements-v2.min.js",
+          "host": "c77.cdn.storifyme.com",
+          "bytes": 48567,
+          "domain": "storifyme.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1112,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DinimINy2.js",
+          "host": "www.faz.net",
+          "bytes": 213,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1228,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/IconBase.udIjdT2u.css",
+          "host": "www.faz.net",
+          "bytes": 100,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1229,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Wrapper.C2pwFBrU.css",
+          "host": "www.faz.net",
+          "bytes": 151,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1230,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/CatchUp.D_QThIzs.css",
+          "host": "www.faz.net",
+          "bytes": 183,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1231,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Footer.BlRuW1W2.css",
+          "host": "www.faz.net",
+          "bytes": 136,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1232,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/swiper.DZsIPZ2V.css",
+          "host": "www.faz.net",
+          "bytes": 1183,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1233,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/navigation.BU0CWMeB.css",
+          "host": "www.faz.net",
+          "bytes": 1560,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1233,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/ServiceBar.CkAeTJpO.css",
+          "host": "www.faz.net",
+          "bytes": 320,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1234,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/SiteWrapper.BMRIG0E-.css",
+          "host": "www.faz.net",
+          "bytes": 167,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1235,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/FPlus.JWUFalhe.css",
+          "host": "www.faz.net",
+          "bytes": 170,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1235,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Paragraph.DUx067gV.css",
+          "host": "www.faz.net",
+          "bytes": 205,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1236,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/Label.BtAvSF1d.css",
+          "host": "www.faz.net",
+          "bytes": 284,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1236,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/pagination.Cwcfm6fu.css",
+          "host": "www.faz.net",
+          "bytes": 419,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1237,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/CircledCaret.B4JuEKlk.css",
+          "host": "www.faz.net",
+          "bytes": 209,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1238,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.faz.net/_nuxt/ModuleSlots.CWzRaJLL.css",
+          "host": "www.faz.net",
+          "bytes": 266,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1242,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://storifyme.xyz/widgets/faz-5746000/widget/custom/8746",
+          "host": "storifyme.xyz",
+          "bytes": 4371,
+          "domain": "storifyme.xyz",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1275,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CH0cZ9Da.js",
+          "host": "www.faz.net",
+          "bytes": 3294,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1290,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DBT4fylu.js",
+          "host": "www.faz.net",
+          "bytes": 3420,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1309,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DImg0rNg.js",
+          "host": "www.faz.net",
+          "bytes": 512,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1310,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/C1V3HKOn.js",
+          "host": "www.faz.net",
+          "bytes": 1150,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1311,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/RMuPkwyS.js",
+          "host": "www.faz.net",
+          "bytes": 478,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1312,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D-YfDJZ3.js",
+          "host": "www.faz.net",
+          "bytes": 295,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1400,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CYwT-_vD2.js",
+          "host": "www.faz.net",
+          "bytes": 912,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1401,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B5GwHreL2.js",
+          "host": "www.faz.net",
+          "bytes": 12830,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1402,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DdVRbLjy2.js",
+          "host": "www.faz.net",
+          "bytes": 2454,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1403,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/B3gqkc3W2.js",
+          "host": "www.faz.net",
+          "bytes": 5702,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1403,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/C17ihSQh.js",
+          "host": "www.faz.net",
+          "bytes": 1188,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1404,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Bch3AUTr.js",
+          "host": "www.faz.net",
+          "bytes": 126,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1405,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/4kjqe4Eb.js",
+          "host": "www.faz.net",
+          "bytes": 5149,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1406,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BP0tVDZw.js",
+          "host": "www.faz.net",
+          "bytes": 409,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1407,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/KdYBbDf_.js",
+          "host": "www.faz.net",
+          "bytes": 21196,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1467,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Gq2N5Rbb.js",
+          "host": "www.faz.net",
+          "bytes": 26543,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1468,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CLoSwXWL.js",
+          "host": "www.faz.net",
+          "bytes": 184,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1469,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/FFTnOI7D2.js",
+          "host": "www.faz.net",
+          "bytes": 937,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1470,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/7FItAJcZ2.js",
+          "host": "www.faz.net",
+          "bytes": 376,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1471,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DwEyO8-U2.js",
+          "host": "www.faz.net",
+          "bytes": 672,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1472,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Bno6hVLd2.js",
+          "host": "www.faz.net",
+          "bytes": 301,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1473,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/trAPOgUG2.js",
+          "host": "www.faz.net",
+          "bytes": 1377,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1474,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Blz5YzkN.js",
+          "host": "www.faz.net",
+          "bytes": 110937,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1475,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BghW0T7O.js",
+          "host": "www.faz.net",
+          "bytes": 1711,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1475,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DYvN6Abe.js",
+          "host": "www.faz.net",
+          "bytes": 6770,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1476,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DatiATQK2.js",
+          "host": "www.faz.net",
+          "bytes": 539,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1477,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/7FTuEX2l.js",
+          "host": "www.faz.net",
+          "bytes": 1466,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1478,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BVZlRNtw.js",
+          "host": "www.faz.net",
+          "bytes": 1176,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1478,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Bm4EqhcY.js",
+          "host": "www.faz.net",
+          "bytes": 452,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1479,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DYEsTYa2.js",
+          "host": "www.faz.net",
+          "bytes": 5270,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1480,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CwJ-oU1M.js",
+          "host": "www.faz.net",
+          "bytes": 493,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1481,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/qXE0b_YS.js",
+          "host": "www.faz.net",
+          "bytes": 2092,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1481,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/HaAr0ung.js",
+          "host": "www.faz.net",
+          "bytes": 13542,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1482,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/D35IWHpd.js",
+          "host": "www.faz.net",
+          "bytes": 322,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1521,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DidltKDT2.js",
+          "host": "www.faz.net",
+          "bytes": 283,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1523,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BleHbTMT2.js",
+          "host": "www.faz.net",
+          "bytes": 758,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1536,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/DezQks9d2.js",
+          "host": "www.faz.net",
+          "bytes": 169,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1537,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/Y446DIzj2.js",
+          "host": "www.faz.net",
+          "bytes": 200,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1537,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/iRT_9D3g2.js",
+          "host": "www.faz.net",
+          "bytes": 492,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1556,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/CjJHfRcK2.js",
+          "host": "www.faz.net",
+          "bytes": 435,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1572,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/_nuxt/BwQgw0Va2.js",
+          "host": "www.faz.net",
+          "bytes": 1404,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1918,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://storifyme.xyz/widgets/faz-5746000/widget/custom/8746",
+          "host": "storifyme.xyz",
+          "bytes": 3885,
+          "domain": "storifyme.xyz",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1918,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.faz.net/suche/api/search-data",
+          "host": "www.faz.net",
+          "bytes": 25492,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1924,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 1181,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1925,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/index.html",
+          "host": "dynamic.faz.net",
+          "bytes": 24784,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1975,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 26870,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1976,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/spieleslider/release/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 4484,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1981,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/app.js",
+          "host": "dynamic.faz.net",
+          "bytes": 39409,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1983,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/2025/newsletterslider/stage/assets/style.css",
+          "host": "dynamic.faz.net",
+          "bytes": 3999,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2082,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2147,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/auth",
+          "host": "connector.faz.net",
+          "bytes": 347,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2228,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-sans-3-v15_latin_normal_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 29020,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2229,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://dynamic.faz.net/fonts/source-serif-4-v8_latin_normal_opsz_200-900.woff2",
+          "host": "dynamic.faz.net",
+          "bytes": 122281,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2238,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.faz.net/iq/cdn_iqdfaz/live/iqadcontroller.js.gz",
+          "host": "www.faz.net",
+          "bytes": 82625,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2239,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent.faz.net/wrapperMessagingWithoutDetection.js",
+          "host": "consent.faz.net",
+          "bytes": 55434,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2242,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-reading-DzhiIIDp.js",
+          "host": "snacks.faz.net",
+          "bytes": 7856,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2244,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-account-D4812jR4.js",
+          "host": "snacks.faz.net",
+          "bytes": 6716,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2245,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-account-0Qw01VBr.css",
+          "host": "snacks.faz.net",
+          "bytes": 2578,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2246,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-reading-TVzHxRdE.css",
+          "host": "snacks.faz.net",
+          "bytes": 2676,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2332,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/mms/v2/get_site_data",
+          "host": "consent.faz.net",
+          "bytes": 697,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2381,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-account-0Qw01VBr.css",
+          "host": "snacks.faz.net",
+          "bytes": 2554,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2382,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-reading-TVzHxRdE.css",
+          "host": "snacks.faz.net",
+          "bytes": 2652,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2392,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/consent/tcfv2/vendor-list/latest-version",
+          "host": "consent.faz.net",
+          "bytes": 814,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2401,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/onboarding_v3-C2z73mbC.js",
+          "host": "snacks.faz.net",
+          "bytes": 4661,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2402,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/onboarding_v3-2IN6m61n.css",
+          "host": "snacks.faz.net",
+          "bytes": 1504,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2433,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/wrapper/tcfv2/v2/gdpr/native-message/new-user",
+          "host": "consent.faz.net",
+          "bytes": 8693,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2441,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/onboarding_v3-2IN6m61n.css",
+          "host": "snacks.faz.net",
+          "bytes": 1477,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2442,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/mein/user",
+          "host": "connector.faz.net",
+          "bytes": 346,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2464,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://consent.faz.net/consent/tcfv2/consent/v2/data-pipeline/pv-data",
+          "host": "consent.faz.net",
+          "bytes": 1538,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2475,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://consent.faz.net/index.html",
+          "host": "consent.faz.net",
+          "bytes": 2413,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2489,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://consent.faz.net/Notice.9cce2.css",
+          "host": "consent.faz.net",
+          "bytes": 7050,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2490,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent.faz.net/polyfills.01516.js",
+          "host": "consent.faz.net",
+          "bytes": 2476,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2491,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://consent.faz.net/Notice.fcfb9.js",
+          "host": "consent.faz.net",
+          "bytes": 97476,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2518,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/filterslider_v3-BopKfDFn.js",
+          "host": "snacks.faz.net",
+          "bytes": 4708,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2519,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://snacks.faz.net/assets/widgets-interactive-1MBQOS0o.js",
+          "host": "snacks.faz.net",
+          "bytes": 7094,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2520,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-interactive-DjnHZ3BT.css",
+          "host": "snacks.faz.net",
+          "bytes": 2718,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2521,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/filterslider_v3-DKRJNHTI.css",
+          "host": "snacks.faz.net",
+          "bytes": 1308,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2543,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/widgets-interactive-DjnHZ3BT.css",
+          "host": "snacks.faz.net",
+          "bytes": 2693,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2544,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://snacks.faz.net/assets/filterslider_v3-DKRJNHTI.css",
+          "host": "snacks.faz.net",
+          "bytes": 1283,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2547,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/mein/user",
+          "host": "connector.faz.net",
+          "bytes": 346,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2548,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://connector.faz.net/api/v1/snacks/filter/getFilter",
+          "host": "connector.faz.net",
+          "bytes": 3702,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2580,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC4f1f1ead488d40a2b77a858e5e2f1f41-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 2402,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2581,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC1fa3514f81ae41c789fbe9d62364b4c7-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 513,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2603,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent.faz.net/consent/tcfv2/vendor-list/categories",
+          "host": "consent.faz.net",
+          "bytes": 2251,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2638,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://use.typekit.net/rcr2ert.css",
+          "host": "use.typekit.net",
+          "bytes": 1159,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2638,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://dynamic.faz.net/red/consent/styles.css",
+          "host": "dynamic.faz.net",
+          "bytes": 5385,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2639,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://consent.faz.net/consent/tcfv2/vendor-list/categories",
+          "host": "consent.faz.net",
+          "bytes": 2348,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2640,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://consent.faz.net/270b1804ded10442dc27e9e0098bb1f3.svg",
+          "host": "consent.faz.net",
+          "bytes": 1286,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2702,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://p.typekit.net/p.css",
+          "host": "p.typekit.net",
+          "blocked_by_list": true,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2788,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://p.typekit.net/p.css",
+          "host": "p.typekit.net",
+          "blocked_by_list": true,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2797,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://dynamic.faz.net/red/consent/FAZ-Initial_Blau_RGB.svg",
+          "host": "dynamic.faz.net",
+          "bytes": 1792,
+          "domain": "faz.net",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2798,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/c411b3/00000000000000007735de91/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54433,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2799,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/346587/0000000000000000774d56fa/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54881,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2800,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/457df2/0000000000000000774d56f5/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54005,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2801,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/7741ba/0000000000000000774d56f7/30/l",
+          "host": "use.typekit.net",
+          "bytes": 54122,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2809,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://use.typekit.net/af/38fd21/0000000000000000774d56f2/30/l",
+          "host": "use.typekit.net",
+          "bytes": 53910,
+          "domain": "typekit.net",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4676,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC205d376dc39f4465a763ba9655c9a2fc-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 487,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 4686,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC300fbd193a184a2385d8694f04d813a0-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 622,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 6687,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RCd9b3263a303d43e4a3cd84a1d1699807-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 2200,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 6699,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RCab7d995496834575a30cce5ec058ac60-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 1077,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 6716,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/101b76c36d9a/299bb2761e13/bcca078a91de/RC94511c4ed47c439caaa47e263aa3d667-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 567,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "_sp_v1_ss",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_sp_v1_p",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_sp_v1_data",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "consentUUID",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "faz_consent_state",
+          "domain": "faz.net",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 9,
+        "session": 8
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "faz.net",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "jsdelivr.net",
+          "party": "third"
+        }
+      ]
+    }
+  ]
+}

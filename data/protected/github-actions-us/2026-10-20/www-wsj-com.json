@@ -1,0 +1,150 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-20T19:36:39+00:00",
+  "site": {
+    "name": "The Wall Street Journal",
+    "url": "https://www.wsj.com",
+    "first_party_domains": [
+      "dowjones.com",
+      "wsj.com"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 2,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json",
+    "blocklist": {
+      "name": "EasyPrivacy",
+      "url": "https://easylist.to/easylist/easyprivacy.txt",
+      "sha256": "fcedd905770273678d587deb69f56eb4054d4b4aab7526cae57f05b916c97be4",
+      "rules_total": 56339,
+      "rules_applied": 47222,
+      "rules_skipped": 9117,
+      "subset": "domain rules (||host^) with party and resource-type options only"
+    }
+  },
+  "summary": {
+    "passes_total": 2,
+    "passes_ok": 0,
+    "status": "blocked",
+    "http_status": 401,
+    "error": null,
+    "final_url": "https://www.wsj.com/",
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "MEASUREMENT_BLOCKED",
+      "severity": "info",
+      "text": "The site did not serve the page to the automated browser (HTTP 401). No further measurements were taken.",
+      "evidence": {
+        "http_status": 401
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "blocked",
+      "http_status": 401,
+      "error": null,
+      "final_url": "https://www.wsj.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 61,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.wsj.com/",
+          "host": "www.wsj.com",
+          "bytes": 1532
+        },
+        {
+          "t_ms": 166,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ct.captcha-delivery.com/c.js",
+          "host": "ct.captcha-delivery.com",
+          "bytes": 4831
+        },
+        {
+          "t_ms": 304,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://geo.captcha-delivery.com/captcha/",
+          "host": "geo.captcha-delivery.com"
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": []
+    },
+    {
+      "pass": 2,
+      "status": "blocked",
+      "http_status": 401,
+      "error": null,
+      "final_url": "https://www.wsj.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 38,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.wsj.com/",
+          "host": "www.wsj.com",
+          "bytes": 1539
+        },
+        {
+          "t_ms": 86,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ct.captcha-delivery.com/c.js",
+          "host": "ct.captcha-delivery.com",
+          "bytes": 4830
+        },
+        {
+          "t_ms": 106,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://geo.captcha-delivery.com/captcha/",
+          "host": "geo.captcha-delivery.com"
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": []
+    }
+  ]
+}

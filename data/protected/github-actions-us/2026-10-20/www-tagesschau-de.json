@@ -1,0 +1,1483 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-20T19:47:52+00:00",
+  "site": {
+    "name": "Tagesschau",
+    "url": "https://www.tagesschau.de",
+    "first_party_domains": [
+      "tagesschau.de"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 2,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json",
+    "blocklist": {
+      "name": "EasyPrivacy",
+      "url": "https://easylist.to/easylist/easyprivacy.txt",
+      "sha256": "fcedd905770273678d587deb69f56eb4054d4b4aab7526cae57f05b916c97be4",
+      "rules_total": 56339,
+      "rules_applied": 47222,
+      "rules_skipped": 9117,
+      "subset": "domain rules (||host^) with party and resource-type options only"
+    }
+  },
+  "summary": {
+    "passes_total": 2,
+    "passes_ok": 2,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.tagesschau.de/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "absent"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 5,
+      "third_party_domains": 2,
+      "tracking_requests": 0,
+      "total_bytes": 2128277,
+      "third_party_bytes": 280395,
+      "tracking_bytes": 0,
+      "tracking_services": 0,
+      "third_party_cookies": 0,
+      "cookies_total": 3,
+      "storage_items": 4
+    },
+    "third_party_domains": [
+      {
+        "domain": "h-cdn.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "ndr.de",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "services": [],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "tagesschau.de",
+        "party": "first",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0,
+    "protection": {
+      "blocked_requests": 2,
+      "blocked_domains": [
+        "pa-cd.com"
+      ]
+    }
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 5 requests to 2 third-party domains (median of 2 passes).",
+      "evidence": {
+        "requests": 5,
+        "domains": 2
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 2.1 MB transferred in that window (compressed responses that finished loading), 280 kB (13%) came from third-party domains, 0 B of it from services classified as tracking (0 requests).",
+      "evidence": {
+        "total_bytes": 2128277,
+        "third_party_bytes": 280395,
+        "tracking_bytes": 0,
+        "tracking_requests": 0
+      }
+    },
+    {
+      "code": "NO_CSP",
+      "severity": "info",
+      "text": "The main document response did not include a Content-Security-Policy header or meta tag.",
+      "evidence": {}
+    },
+    {
+      "code": "PROTECTION_LIST_APPLIED",
+      "severity": "info",
+      "text": "With the EasyPrivacy filter list applied (domain rules only, 47222 rules), 2 requests were blocked. The page still made 5 requests to 2 third-party domains, including 0 tracking services in our list.",
+      "evidence": {
+        "blocked_requests": 2,
+        "blocked_domains": [
+          "pa-cd.com"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.tagesschau.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 60,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.tagesschau.de/",
+          "host": "www.tagesschau.de",
+          "bytes": 121692,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 560,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-4_SemiLight.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 115905,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 561,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-6_SemiBold.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 116536,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 562,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-4_SemiLightItalic.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 120661,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 563,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-6_SemiBoldItalic.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 121682,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 564,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.tagesschau.de/resources/assets/css/main-33bf51501d29011f9098.css",
+          "host": "www.tagesschau.de",
+          "bytes": 78852,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 564,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/ts/smartbanner/smartbanner.min.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3509,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 565,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.tagesschau.de/resources/assets/js/ts/smartbanner/smartbanner.min.css",
+          "host": "www.tagesschau.de",
+          "bytes": 1250,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1230,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/e3b75c2d-b112-432a-83f5-76fe3731ec11/AAABoVpMfic/AAABnSSvdEs/16x7/bruecke-ukraine-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 69444,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1410,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://player.h-cdn.com/loader.js",
+          "host": "player.h-cdn.com",
+          "bytes": 4867,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1411,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/modern-106c0b036a27fc5757fe.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 195679,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1412,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.tagesschau.de/resources/assets/icon/ts_watermark_white.svg",
+          "host": "www.tagesschau.de",
+          "bytes": 6929,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1413,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.tagesschau.de/resources/assets/icon/icon-ard-external-link--fill-emotional-100.svg",
+          "host": "www.tagesschau.de",
+          "bytes": 935,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1414,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/470bd8f8-aa98-476d-ae88-dd71f84774b3/AAABoVnONxw/AAABnSSvdEs/16x7/vereiste-kueste-groenland-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 118004,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1415,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/2aca0bba-f512-4a64-9749-d04d4f7215ae/AAABoLB65dA/AAABnSSvrFg/16x9-big/spd-logo-128.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 29116,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1416,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/8e2226d1-a744-4eec-957e-5f6474f08741/AAABoVl-pPY/AAABnSSvrFg/16x9-big/rbb-archivbild-vanessa-emde-die-linke-kommt-im-berliner-abgeordnetenhaus-zu-einer-fraktionssitzung-ihrer-partei-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 27932,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1580,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ndr.de/image/cd244441-0bfa-46d9-a4e2-8fefb1838398/AAABoVmtc6M/AAABnSSvsdE/16x9-small/mvfoto-9348.webp",
+          "host": "images.ndr.de",
+          "bytes": 12799,
+          "domain": "ndr.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1582,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/680fddbf-16c5-4c9b-9a24-073ac8b82fff/AAABoVmZ51A/AAABnSSvrFg/16x9-big/arztpraxis-anmeldung-102.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 29905,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1582,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/1c8eaff8-f873-49fb-a010-08ca94412aae/AAABoVprdlY/AAABnSSvrFg/16x9-big/auto-auspuff-abgase-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 17275,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1584,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/34bdf3ab-eb37-47e9-919f-757bf9202752/AAABoVm1u2g/AAABnSSvdEs/16x7/id-buzz-102.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 56469,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1726,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/66-f012e35fb9ee7cef3764.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 282383,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1727,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/939-11281475c533c08b6ae1.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 8703,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1728,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/584-f6c38c59455409fb78a3.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 1893,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1729,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/905-0c2792d74d8c9b59f6f5.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3280,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1731,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/833-eda0341ebbdce5fadb2f.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 24732,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1733,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/863-b7492cc3eda2fc687b16.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 4687,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1733,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/232-8997b549b61d188cbc0f.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 4333,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1735,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/18-e10cec460bf4eed27206.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3563,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1736,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/164-5f64f3032cb81157c69e.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 628,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1738,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/406-e56ef21a4e9952f44df8.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 29958,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1739,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/393-6c64a696c1873fd0b33c.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 6508,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1740,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/974-11b20ec89fcd2865069d.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3203,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1741,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/834-d1a80f784a1d8ca3070a.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 5696,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1751,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/797-1cd3d5945509a6e8a480.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 5323,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1753,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/620-fd91c3b747b1833a24b1.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 786,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1755,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/914-94f09ea2e470585dffe0.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 8243,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1767,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/11-e79b0c5d109c2a7707fa.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 2329,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2069,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.tagesschau.de/json/headerapp",
+          "host": "www.tagesschau.de",
+          "bytes": 3060,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2182,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sso.tagesschau.de/sso/token",
+          "host": "sso.tagesschau.de",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2184,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/f9a09bc3-df59-40ce-82e8-b0a840399430/AAABoVqSPN4/AAABnSSvsdE/16x9-small/sendungsbild-1814640.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 25840,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2186,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/c214d4a5-dd5f-457e-8001-af98082b5e3e/AAABoVohmZc/AAABnSSvsdE/16x9-small/gastarbeiter-110.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 28815,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2187,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/4eef9697-3ec7-4d4e-b2a7-3ca972a42b30/AAABoVmM628/AAABnSSvsdE/16x9-small/passagiere-flughafen-122.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 32599,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2188,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/9380ef5b-41d9-4248-a6fd-ed7fb67649a3/AAABoVocZCM/AAABnSSvsdE/16x9-small/gruppenfoto-invest-in-germany-gipfel-100.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 28589,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2189,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/b09ae9cd-5044-44f6-acbf-3df303d45d3b/AAABoVoch3k/AAABnSSvsdE/16x9-small/selenskyj-1240.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 24119,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2189,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/f1620048-8c4b-4df4-8509-b9b666cf0f6d/AAABoVnptZk/AAABnSSvsdE/16x9-small/verena-schaelter-110.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 25573,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2190,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/9c1c3b57-6e3e-4d49-b41d-29fd20247c73/AAABoVp-scU/AAABnSSvsdE/16x9-small/sendungsbild-1814618.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 24559,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2375,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/vendor/ardplayer/ardplayer-501.448a9f31.chunk.js",
+          "host": "www.tagesschau.de",
+          "bytes": 312,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2451,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/css/assets/b74e170aa0bd484aa75c-ardplayer.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 12654,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2456,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/vendor/ardplayer/ardplayer-501.448a9f31.chunk.js",
+          "host": "www.tagesschau.de",
+          "bytes": 312,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2523,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/vendor/ardplayer/ardplayer-501.448a9f31.chunk.js",
+          "host": "www.tagesschau.de",
+          "bytes": 312,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2690,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/css/assets/5ab8d5b8f2e123f35cc9-ardplayer-audio.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 13414,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2780,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://vqggwrz.pa-cd.com/event",
+          "host": "vqggwrz.pa-cd.com",
+          "blocked_by_list": true,
+          "domain": "pa-cd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2785,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://vqggwrz.pa-cd.com/event",
+          "host": "vqggwrz.pa-cd.com",
+          "blocked_by_list": true,
+          "domain": "pa-cd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 6036,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://player.h-cdn.com/loader.js",
+          "host": "player.h-cdn.com",
+          "bytes": 249976,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 6037,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://player.h-cdn.com/config.js",
+          "host": "player.h-cdn.com",
+          "bytes": 11511,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 6264,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://zagent7.h-cdn.com/cmd/get_links_info",
+          "host": "zagent7.h-cdn.com",
+          "bytes": 1254,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "pa_privacy",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_pcid",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_pctx",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        }
+      ],
+      "storage_items": {
+        "local": 4,
+        "session": 0
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "tagesschau.de",
+          "party": "first"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.tagesschau.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 39,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.tagesschau.de/",
+          "host": "www.tagesschau.de",
+          "bytes": 121655,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 520,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-4_SemiLight.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 115905,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 520,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-6_SemiBold.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 116536,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 521,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-4_SemiLightItalic.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 120661,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 522,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/fonts/TheSansC5s-6_SemiBoldItalic.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 121682,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 522,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.tagesschau.de/resources/assets/css/main-33bf51501d29011f9098.css",
+          "host": "www.tagesschau.de",
+          "bytes": 78852,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 523,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/ts/smartbanner/smartbanner.min.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3237,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 524,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.tagesschau.de/resources/assets/js/ts/smartbanner/smartbanner.min.css",
+          "host": "www.tagesschau.de",
+          "bytes": 1250,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1020,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/e3b75c2d-b112-432a-83f5-76fe3731ec11/AAABoVpMfic/AAABnSSvdEs/16x7/bruecke-ukraine-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 69445,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1022,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://player.h-cdn.com/loader.js",
+          "host": "player.h-cdn.com",
+          "bytes": 4854,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1023,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/modern-106c0b036a27fc5757fe.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 195679,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1070,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.tagesschau.de/resources/assets/icon/ts_watermark_white.svg",
+          "host": "www.tagesschau.de",
+          "bytes": 6929,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1071,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.tagesschau.de/resources/assets/icon/icon-ard-external-link--fill-emotional-100.svg",
+          "host": "www.tagesschau.de",
+          "bytes": 935,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1073,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/470bd8f8-aa98-476d-ae88-dd71f84774b3/AAABoVnONxw/AAABnSSvdEs/16x7/vereiste-kueste-groenland-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 118005,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1075,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/2aca0bba-f512-4a64-9749-d04d4f7215ae/AAABoLB65dA/AAABnSSvrFg/16x9-big/spd-logo-128.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 29116,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1076,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/8e2226d1-a744-4eec-957e-5f6474f08741/AAABoVl-pPY/AAABnSSvrFg/16x9-big/rbb-archivbild-vanessa-emde-die-linke-kommt-im-berliner-abgeordnetenhaus-zu-einer-fraktionssitzung-ihrer-partei-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 27931,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1077,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.ndr.de/image/cd244441-0bfa-46d9-a4e2-8fefb1838398/AAABoVmtc6M/AAABnSSvsdE/16x9-small/mvfoto-9348.webp",
+          "host": "images.ndr.de",
+          "bytes": 12800,
+          "domain": "ndr.de",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1078,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/680fddbf-16c5-4c9b-9a24-073ac8b82fff/AAABoVmZ51A/AAABnSSvrFg/16x9-big/arztpraxis-anmeldung-102.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 29905,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1079,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/1c8eaff8-f873-49fb-a010-08ca94412aae/AAABoVprdlY/AAABnSSvrFg/16x9-big/auto-auspuff-abgase-100.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 17275,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1080,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/34bdf3ab-eb37-47e9-919f-757bf9202752/AAABoVm1u2g/AAABnSSvdEs/16x7/id-buzz-102.webp",
+          "host": "images.tagesschau.de",
+          "bytes": 56468,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1296,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/66-f012e35fb9ee7cef3764.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 282383,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1297,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/939-11281475c533c08b6ae1.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 8703,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1307,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/584-f6c38c59455409fb78a3.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 1893,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1310,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/905-0c2792d74d8c9b59f6f5.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3280,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1311,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/833-eda0341ebbdce5fadb2f.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 24732,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1312,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/863-b7492cc3eda2fc687b16.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 4687,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1313,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/232-8997b549b61d188cbc0f.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 4333,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1313,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/18-e10cec460bf4eed27206.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3563,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1316,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/164-5f64f3032cb81157c69e.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 628,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1317,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/406-e56ef21a4e9952f44df8.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 29958,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1318,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/393-6c64a696c1873fd0b33c.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 6508,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1318,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/974-11b20ec89fcd2865069d.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 3203,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1329,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/834-d1a80f784a1d8ca3070a.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 5696,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1331,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/797-1cd3d5945509a6e8a480.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 5323,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1340,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/620-fd91c3b747b1833a24b1.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 786,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1342,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/914-94f09ea2e470585dffe0.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 8243,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1358,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/11-e79b0c5d109c2a7707fa.chunk.bundle.js",
+          "host": "www.tagesschau.de",
+          "bytes": 2329,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1644,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sso.tagesschau.de/sso/token",
+          "host": "sso.tagesschau.de",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1646,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.tagesschau.de/json/headerapp",
+          "host": "www.tagesschau.de",
+          "bytes": 3074,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1739,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/f9a09bc3-df59-40ce-82e8-b0a840399430/AAABoVqSPN4/AAABnSSvsdE/16x9-small/sendungsbild-1814640.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 25840,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1740,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/c214d4a5-dd5f-457e-8001-af98082b5e3e/AAABoVohmZc/AAABnSSvsdE/16x9-small/gastarbeiter-110.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 28815,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1741,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/4eef9697-3ec7-4d4e-b2a7-3ca972a42b30/AAABoVmM628/AAABnSSvsdE/16x9-small/passagiere-flughafen-122.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 32598,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1742,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/9380ef5b-41d9-4248-a6fd-ed7fb67649a3/AAABoVocZCM/AAABnSSvsdE/16x9-small/gruppenfoto-invest-in-germany-gipfel-100.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 28588,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1743,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/b09ae9cd-5044-44f6-acbf-3df303d45d3b/AAABoVoch3k/AAABnSSvsdE/16x9-small/selenskyj-1240.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 24118,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1744,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/f1620048-8c4b-4df4-8509-b9b666cf0f6d/AAABoVnptZk/AAABnSSvsdE/16x9-small/verena-schaelter-110.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 25572,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1745,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://images.tagesschau.de/image/9c1c3b57-6e3e-4d49-b41d-29fd20247c73/AAABoVp-scU/AAABnSSvsdE/16x9-small/sendungsbild-1814618.jpg",
+          "host": "images.tagesschau.de",
+          "bytes": 24559,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1896,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/vendor/ardplayer/ardplayer-501.448a9f31.chunk.js",
+          "host": "www.tagesschau.de",
+          "bytes": 312,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1973,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/css/assets/b74e170aa0bd484aa75c-ardplayer.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 12654,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1981,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/vendor/ardplayer/ardplayer-501.448a9f31.chunk.js",
+          "host": "www.tagesschau.de",
+          "bytes": 312,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2040,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.tagesschau.de/resources/assets/js/vendor/ardplayer/ardplayer-501.448a9f31.chunk.js",
+          "host": "www.tagesschau.de",
+          "bytes": 312,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2208,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.tagesschau.de/resources/assets/css/assets/5ab8d5b8f2e123f35cc9-ardplayer-audio.woff2",
+          "host": "www.tagesschau.de",
+          "bytes": 13414,
+          "domain": "tagesschau.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2217,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://vqggwrz.pa-cd.com/event",
+          "host": "vqggwrz.pa-cd.com",
+          "blocked_by_list": true,
+          "domain": "pa-cd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2255,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://vqggwrz.pa-cd.com/event",
+          "host": "vqggwrz.pa-cd.com",
+          "blocked_by_list": true,
+          "domain": "pa-cd.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5601,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://player.h-cdn.com/loader.js",
+          "host": "player.h-cdn.com",
+          "bytes": 249976,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5602,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://player.h-cdn.com/config.js",
+          "host": "player.h-cdn.com",
+          "bytes": 11511,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 5712,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://zagent7.h-cdn.com/cmd/get_links_info",
+          "host": "zagent7.h-cdn.com",
+          "bytes": 1254,
+          "domain": "h-cdn.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "pa_privacy",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_pcid",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        },
+        {
+          "name": "_pctx",
+          "domain": "tagesschau.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 395
+        }
+      ],
+      "storage_items": {
+        "local": 4,
+        "session": 0
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "tagesschau.de",
+          "party": "first"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1993 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-10-20T19:57:09+00:00",
+  "site": {
+    "name": "Relevo",
+    "url": "https://www.relevo.com",
+    "first_party_domains": [
+      "relevo.com"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 2,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json",
+    "blocklist": {
+      "name": "EasyPrivacy",
+      "url": "https://easylist.to/easylist/easyprivacy.txt",
+      "sha256": "fcedd905770273678d587deb69f56eb4054d4b4aab7526cae57f05b916c97be4",
+      "rules_total": 56339,
+      "rules_applied": 47222,
+      "rules_skipped": 9117,
+      "subset": "domain rules (||host^) with party and resource-type options only"
+    }
+  },
+  "summary": {
+    "passes_total": 2,
+    "passes_ok": 2,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.relevo.com/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": false,
+      "content_security_policy": "absent"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 19,
+      "third_party_domains": 2,
+      "tracking_requests": 0,
+      "total_bytes": 1264979,
+      "third_party_bytes": 239067,
+      "tracking_bytes": 0,
+      "tracking_services": 0,
+      "third_party_cookies": 0,
+      "cookies_total": 2,
+      "storage_items": 0
+    },
+    "third_party_domains": [
+      {
+        "domain": "smlaggr.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "sportmonks.com",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "services": [],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "relevo.com",
+        "party": "first",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0,
+    "protection": {
+      "blocked_requests": 0,
+      "blocked_domains": []
+    }
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 19 requests to 2 third-party domains (median of 2 passes).",
+      "evidence": {
+        "requests": 19,
+        "domains": 2
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 1.3 MB transferred in that window (compressed responses that finished loading), 239 kB (19%) came from third-party domains, 0 B of it from services classified as tracking (0 requests).",
+      "evidence": {
+        "total_bytes": 1264979,
+        "third_party_bytes": 239067,
+        "tracking_bytes": 0,
+        "tracking_requests": 0
+      }
+    },
+    {
+      "code": "NO_HSTS",
+      "severity": "info",
+      "text": "The main document response did not include a Strict-Transport-Security header.",
+      "evidence": {}
+    },
+    {
+      "code": "NO_CSP",
+      "severity": "info",
+      "text": "The main document response did not include a Content-Security-Policy header or meta tag.",
+      "evidence": {}
+    },
+    {
+      "code": "PROTECTION_LIST_APPLIED",
+      "severity": "info",
+      "text": "With the EasyPrivacy filter list applied (domain rules only, 47222 rules), 0 requests were blocked. The page still made 19 requests to 2 third-party domains, including 0 tracking services in our list.",
+      "evidence": {
+        "blocked_requests": 0,
+        "blocked_domains": []
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.relevo.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 62,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.relevo.com/",
+          "host": "www.relevo.com",
+          "bytes": 49520,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 641,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/modules/redesign/bio-search.css",
+          "host": "www.relevo.com",
+          "bytes": 826,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 643,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/minified/atf-index-redesign.css",
+          "host": "www.relevo.com",
+          "bytes": 9262,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 644,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/minified/style-index-redesign.css",
+          "host": "www.relevo.com",
+          "bytes": 10147,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 644,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/previa-psg-barcelona-champions-2026-2027-1024x576.jpg",
+          "host": "www.relevo.com",
+          "bytes": 61050,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 708,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/relevo-logo-purple.svg",
+          "host": "www.relevo.com",
+          "bytes": 1289,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 757,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/functions.js",
+          "host": "www.relevo.com",
+          "bytes": 15445,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 758,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/elfsight-font-guard.js",
+          "host": "www.relevo.com",
+          "bytes": 1724,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 808,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/elfsight-icon-size.js",
+          "host": "www.relevo.com",
+          "bytes": 1342,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 810,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/elfsight-lazy-loader.js",
+          "host": "www.relevo.com",
+          "bytes": 2140,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 841,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/hp-news-tabs.js",
+          "host": "www.relevo.com",
+          "bytes": 942,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 848,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/quick-nav-slider.js",
+          "host": "www.relevo.com",
+          "bytes": 1825,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 873,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/plugins/sml-live-scores/public/js/live.js",
+          "host": "www.relevo.com",
+          "bytes": 13045,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 916,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/relevo-iso-purple.svg",
+          "host": "www.relevo.com",
+          "bytes": 795,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 951,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/league-logos/laliga-v2.png",
+          "host": "www.relevo.com",
+          "bytes": 1906,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 985,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/league-logos/champions-league.png",
+          "host": "www.relevo.com",
+          "bytes": 5228,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1022,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/league-logos/uefa-europa-league.png",
+          "host": "www.relevo.com",
+          "bytes": 4334,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1068,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/relevo-logo.svg",
+          "host": "www.relevo.com",
+          "bytes": 1324,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1099,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/redesign-ds.js",
+          "host": "www.relevo.com",
+          "bytes": 12136,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1133,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/bio-search.js",
+          "host": "www.relevo.com",
+          "bytes": 1524,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1355,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/15/591.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 26533,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1356,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/19/83.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 12687,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1357,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/9/9.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 10468,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1358,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/13/781.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 10276,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1359,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/8/8.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 5812,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1360,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/21/3477.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 7042,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1360,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/23/3319.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 25994,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1362,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/12/7980.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 6735,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1363,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/21/597.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 8161,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1364,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/4/1668.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 8268,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1364,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/12/652.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 25002,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1365,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/10/682.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 8670,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1366,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/5/37.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 6693,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1366,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/17/2417.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 17628,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1367,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/25/138649.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 31787,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1368,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/4/68.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 11111,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1369,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/24/88.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 11342,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1369,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/24/216.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 4880,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1370,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/stuttgart-rival-atletico-madrid-champions-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 40366,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1372,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Madison-Square-Garden-New-York-Knicks-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 53304,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1372,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Jose-Mourinho-Entrenamiento-Real-Madrid-Previa-Leipzig-Champions-League-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2121,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1373,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Dejan-Bodiroga-Presidente-EuroLiga-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2489,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1374,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Alex-Palou-Espana-Chip-Ganassi-Racing-Honda-Campeon-IndyCar-2026-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 3044,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1375,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Messi-Neymar-Barcelona-PSG-2017-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2737,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1375,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Hugo-Gonzalez-Boston-Celtics-NBA-pretemporada-scaled-1-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2436,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1376,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Stephen-Curry-Golden-State-Warriors-NBA-2026-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 32809,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1377,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Justin-Gaethje-Ilia-Topuria-UFC-Freedom-250-Casa-Blanca-Washington-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 10945,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1378,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Arturo-Coello-Agustin-Tapia-Andrea-Ustero-Prieto-Ari-Sanchez-Fallada-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 25388,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1379,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Quintana-Froome-Contador-Tour-de-France-2015-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 36516,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1379,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Gran-Premio-Barein-Sepang-Malasia-2026-scaled-1-768x512.jpg",
+          "host": "www.relevo.com",
+          "bytes": 77384,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1380,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Carlos-Sainz-Lucas-Cruz-Rally-Dakar-2026-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 15019,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1381,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/balon-de-oro-70-anos-historia-gala-londres-2026-16-9-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 15369,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1382,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Netflix-Logo-Mando-TV-Mundial-Futbol-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 7035,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1382,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Casco-NFL-Cincinnati-Bengals-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 15870,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1383,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2024/06/lamine-yamal-espana-R435uq28FULKDsxN40PERDI-1200x648@Relevo-300x162.jpg",
+          "host": "www.relevo.com",
+          "bytes": 11826,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1384,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/morata-expulsado-leganes-crisis-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 38868,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1385,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/atletico-madrid-metropolitano-obras-final-champions-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 21762,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1386,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Albert-Celades-Cadiz-CF-destituido-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 12156,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1387,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Real-Madrid-Sevilla-Bernabeu-Polemica-Arbitraje-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 44940,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1387,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/desastre-equipos-italianos-primeras-dos-jornadas-champions-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 20217,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1388,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/brighton-revelacion-premier-league-2026-2027-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 55705,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1389,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/F1-Bandera-Azul-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 56464,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1390,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Fernando-Alonso-Scuderia-Ferrari-F138-V8-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 11483,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1390,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Neumaticos-Pirelli-F1-Gran-Premio-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 14430,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1391,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Pit-Lane-Marina-Bay-Singapor-F1-2026-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 57969,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1391,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Circuito-Marina-Bay-Gran-Premio-Singapur-Noche-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 54477,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1392,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Paul-Kagame-Presidente-Ruanda-Aficionado-F1-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 47552,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1393,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/paris-saint-germain.png",
+          "host": "www.relevo.com",
+          "bytes": 3932,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1394,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/barcelona.png",
+          "host": "www.relevo.com",
+          "bytes": 3089,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1394,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/liverpool.png",
+          "host": "www.relevo.com",
+          "bytes": 4960,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1395,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/villarreal.png",
+          "host": "www.relevo.com",
+          "bytes": 6031,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1396,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/stuttgart.png",
+          "host": "www.relevo.com",
+          "bytes": 4519,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1396,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/atletico-madrid.png",
+          "host": "www.relevo.com",
+          "bytes": 2358,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1397,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/national-teams/spain.png",
+          "host": "www.relevo.com",
+          "bytes": 3204,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1398,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/crests/football/national/finlandia.png",
+          "host": "www.relevo.com",
+          "bytes": 4674,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1400,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+          "host": "www.relevo.com",
+          "bytes": 0,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1468,
+          "method": "GET",
+          "resource_type": "eventsource",
+          "url": "https://smlaggr.com/.well-known/mercure",
+          "host": "smlaggr.com",
+          "domain": "smlaggr.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1574,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.relevo.com/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.6469791765771093:1792522837:abC5QYO-NmEGsz0ZVXx8Ve4VBWFDQZv4Ev4vVZJ72B8/a4da964fcf03ebb6",
+          "host": "www.relevo.com",
+          "bytes": 1241,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6806,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.relevo.com/sml-live-scores/v1/ticker/homepage",
+          "host": "www.relevo.com",
+          "bytes": 2811,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 11805,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.relevo.com/sml-live-scores/v1/ticker/homepage",
+          "host": "www.relevo.com",
+          "bytes": 2586,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "cf_clearance",
+          "domain": "relevo.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "relevo.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        }
+      ],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "relevo.com",
+          "party": "first"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.relevo.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "absent"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 36,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.relevo.com/",
+          "host": "www.relevo.com",
+          "bytes": 49518,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 404,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/modules/redesign/bio-search.css",
+          "host": "www.relevo.com",
+          "bytes": 761,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 405,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/minified/atf-index-redesign.css",
+          "host": "www.relevo.com",
+          "bytes": 9234,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 406,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/minified/style-index-redesign.css",
+          "host": "www.relevo.com",
+          "bytes": 10216,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 407,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/previa-psg-barcelona-champions-2026-2027-1024x576.jpg",
+          "host": "www.relevo.com",
+          "bytes": 61059,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 477,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/relevo-logo-purple.svg",
+          "host": "www.relevo.com",
+          "bytes": 1268,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 478,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/relevo-iso-purple.svg",
+          "host": "www.relevo.com",
+          "bytes": 820,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 543,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/15/591.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 26750,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 544,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/19/83.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 12680,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 544,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/9/9.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 10459,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 545,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/13/781.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 10058,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 546,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/8/8.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 5693,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 547,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/21/3477.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 7046,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 547,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/23/3319.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 25985,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 548,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/12/7980.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 6652,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 549,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/21/597.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 8157,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 550,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/4/1668.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 8444,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 550,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/12/652.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 24917,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 551,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/10/682.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 8668,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 552,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/5/37.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 6722,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 552,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/17/2417.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 17510,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 553,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/25/138649.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 31995,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 554,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/4/68.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 11109,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 554,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/24/88.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 11346,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 555,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.sportmonks.com/images/soccer/teams/24/216.png",
+          "host": "cdn.sportmonks.com",
+          "bytes": 4876,
+          "domain": "sportmonks.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 556,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/stuttgart-rival-atletico-madrid-champions-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 40370,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 557,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Madison-Square-Garden-New-York-Knicks-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 53333,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 557,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Jose-Mourinho-Entrenamiento-Real-Madrid-Previa-Leipzig-Champions-League-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2070,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 558,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Dejan-Bodiroga-Presidente-EuroLiga-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2405,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 559,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Alex-Palou-Espana-Chip-Ganassi-Racing-Honda-Campeon-IndyCar-2026-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 3089,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 560,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Messi-Neymar-Barcelona-PSG-2017-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2768,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 561,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Hugo-Gonzalez-Boston-Celtics-NBA-pretemporada-scaled-1-64x64.jpg",
+          "host": "www.relevo.com",
+          "bytes": 2421,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 562,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Stephen-Curry-Golden-State-Warriors-NBA-2026-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 32847,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 562,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Justin-Gaethje-Ilia-Topuria-UFC-Freedom-250-Casa-Blanca-Washington-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 10976,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 563,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Arturo-Coello-Agustin-Tapia-Andrea-Ustero-Prieto-Ari-Sanchez-Fallada-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 25396,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 565,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Quintana-Froome-Contador-Tour-de-France-2015-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 36550,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 566,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Gran-Premio-Barein-Sepang-Malasia-2026-scaled-1-768x512.jpg",
+          "host": "www.relevo.com",
+          "bytes": 77306,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 569,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Carlos-Sainz-Lucas-Cruz-Rally-Dakar-2026-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 15037,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 570,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/balon-de-oro-70-anos-historia-gala-londres-2026-16-9-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 15414,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 571,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Netflix-Logo-Mando-TV-Mundial-Futbol-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 7040,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 572,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Casco-NFL-Cincinnati-Bengals-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 22866,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 577,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2024/06/lamine-yamal-espana-R435uq28FULKDsxN40PERDI-1200x648@Relevo-300x162.jpg",
+          "host": "www.relevo.com",
+          "bytes": 11856,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 578,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/morata-expulsado-leganes-crisis-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 38920,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 579,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/atletico-madrid-metropolitano-obras-final-champions-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 21777,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 580,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Albert-Celades-Cadiz-CF-destituido-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 12137,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 583,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Real-Madrid-Sevilla-Bernabeu-Polemica-Arbitraje-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 44924,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 584,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/desastre-equipos-italianos-primeras-dos-jornadas-champions-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 20232,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 585,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/brighton-revelacion-premier-league-2026-2027-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 55756,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 585,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/F1-Bandera-Azul-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 56438,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 586,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Fernando-Alonso-Scuderia-Ferrari-F138-V8-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 11454,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 588,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Neumaticos-Pirelli-F1-Gran-Premio-300x169.jpg",
+          "host": "www.relevo.com",
+          "bytes": 14344,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 589,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/09/Pit-Lane-Marina-Bay-Singapor-F1-2026-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 58095,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 590,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Circuito-Marina-Bay-Gran-Premio-Singapur-Noche-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 54447,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 591,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/uploads/2026/10/Paul-Kagame-Presidente-Ruanda-Aficionado-F1-570x320.jpg",
+          "host": "www.relevo.com",
+          "bytes": 47525,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 593,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/league-logos/laliga-v2.png",
+          "host": "www.relevo.com",
+          "bytes": 1830,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 593,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/league-logos/champions-league.png",
+          "host": "www.relevo.com",
+          "bytes": 5203,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 594,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/img/league-logos/uefa-europa-league.png",
+          "host": "www.relevo.com",
+          "bytes": 4368,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 619,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/relevo-logo.svg",
+          "host": "www.relevo.com",
+          "bytes": 1295,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 620,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/redesign-ds.js",
+          "host": "www.relevo.com",
+          "bytes": 12185,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 620,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/bio-search.js",
+          "host": "www.relevo.com",
+          "bytes": 1553,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 621,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/functions.js",
+          "host": "www.relevo.com",
+          "bytes": 15427,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 622,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/elfsight-font-guard.js",
+          "host": "www.relevo.com",
+          "bytes": 1698,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 623,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/elfsight-icon-size.js",
+          "host": "www.relevo.com",
+          "bytes": 1383,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 624,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/elfsight-lazy-loader.js",
+          "host": "www.relevo.com",
+          "bytes": 2038,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 624,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/hp-news-tabs.js",
+          "host": "www.relevo.com",
+          "bytes": 995,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 625,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/js/quick-nav-slider.js",
+          "host": "www.relevo.com",
+          "bytes": 1837,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 626,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/wp-content/plugins/sml-live-scores/public/js/live.js",
+          "host": "www.relevo.com",
+          "bytes": 13047,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 731,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/paris-saint-germain.png",
+          "host": "www.relevo.com",
+          "bytes": 3935,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 732,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/barcelona.png",
+          "host": "www.relevo.com",
+          "bytes": 3084,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 733,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/liverpool.png",
+          "host": "www.relevo.com",
+          "bytes": 4883,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 733,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/villarreal.png",
+          "host": "www.relevo.com",
+          "bytes": 6034,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 734,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/stuttgart.png",
+          "host": "www.relevo.com",
+          "bytes": 4505,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 735,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/teams-logos/atletico-madrid.png",
+          "host": "www.relevo.com",
+          "bytes": 2316,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 736,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/national-teams/spain.png",
+          "host": "www.relevo.com",
+          "bytes": 3267,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 736,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.relevo.com/wp-content/themes/relevo/images/crests/football/national/finlandia.png",
+          "host": "www.relevo.com",
+          "bytes": 4651,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 760,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.relevo.com/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+          "host": "www.relevo.com",
+          "bytes": 0,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 763,
+          "method": "GET",
+          "resource_type": "eventsource",
+          "url": "https://smlaggr.com/.well-known/mercure",
+          "host": "smlaggr.com",
+          "domain": "smlaggr.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 896,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.relevo.com/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.6469791765771093:1792522837:abC5QYO-NmEGsz0ZVXx8Ve4VBWFDQZv4Ev4vVZJ72B8/a4da96b73ae61bdc",
+          "host": "www.relevo.com",
+          "bytes": 1231,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 6093,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.relevo.com/sml-live-scores/v1/ticker/homepage",
+          "host": "www.relevo.com",
+          "bytes": 2804,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 11092,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.relevo.com/sml-live-scores/v1/ticker/homepage",
+          "host": "www.relevo.com",
+          "bytes": 2524,
+          "domain": "relevo.com",
+          "party": "first",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "cf_clearance",
+          "domain": "relevo.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__cf_bm",
+          "domain": "relevo.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 0
+        }
+      ],
+      "storage_items": {
+        "local": 0,
+        "session": 0
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "relevo.com",
+          "party": "first"
+        }
+      ]
+    }
+  ]
+}
