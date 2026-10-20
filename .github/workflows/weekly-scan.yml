@@ -13,6 +13,9 @@ on:
       passes:
         description: "Passes per site"
         default: "3"
+      publish:
+        description: "false = a test run: everything runs and the drafts are made, but nothing is posted on any network"
+        default: "true"
 
 permissions:
   contents: write
@@ -163,15 +166,15 @@ jobs:
           python -m traceguard.posts data/runs --platform mastodon --max-chars 300 --kind hook --report-url "$SITE_URL" || echo "no mastodon hook drafted"
 
       - name: Waiting for your approval (review mode is on)
-        if: ${{ vars.POST_REVIEW == 'true' }}
+        if: ${{ (vars.POST_REVIEW == 'true' || github.event.inputs.publish == 'false') }}
         run: |
           echo "Draft ready, NOT published. Approve it in the developer dashboard or run publish-draft." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Email that nothing was published (review mode is on)
-        if: ${{ vars.POST_REVIEW == 'true' }}
+        if: ${{ (vars.POST_REVIEW == 'true' || github.event.inputs.publish == 'false') }}
         env:
           NOT_PUBLISHED_PLATFORM: bluesky,mastodon
-          NOT_PUBLISHED_REASON: "review mode is on (POST_REVIEW): the draft waits for your approval in the dashboard"
+          NOT_PUBLISHED_REASON: "review mode is on (POST_REVIEW) or this is a test run (publish=false): the draft waits for your approval in the dashboard"
           MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
           MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
@@ -181,7 +184,7 @@ jobs:
         run: python -m traceguard.notify not-published
 
       - name: Publish on Bluesky
-        if: ${{ vars.POST_REVIEW != 'true' }}
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' }}
         env:
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
@@ -195,7 +198,7 @@ jobs:
 
       - name: Publish on Mastodon (same text as Bluesky, only if MASTODON_ENABLED is "true")
         id: mastodon
-        if: ${{ vars.POST_REVIEW != 'true' && vars.MASTODON_ENABLED == 'true' }}
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' && vars.MASTODON_ENABLED == 'true' }}
         continue-on-error: true   # a Mastodon problem never undoes or fails the Bluesky publication (the step after the digest emails it)
         env:
           MASTODON_URL: ${{ vars.MASTODON_URL }}
@@ -210,7 +213,7 @@ jobs:
 
       - name: Publish the alert and the hook post on their own (only if ALERTS_AUTO is "true"; otherwise they wait for your approval)
         id: alerts
-        if: ${{ vars.POST_REVIEW != 'true' && vars.ALERTS_AUTO == 'true' }}
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' && vars.ALERTS_AUTO == 'true' }}
         continue-on-error: true   # an alert problem never undoes or fails the weekly thread (the warning step below emails it)
         env:
           BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
@@ -238,7 +241,7 @@ jobs:
           exit $failed
 
       - name: Email that Mastodon was not published (switched off)
-        if: ${{ vars.POST_REVIEW != 'true' && vars.MASTODON_ENABLED != 'true' }}
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' && vars.MASTODON_ENABLED != 'true' }}
         env:
           NOT_PUBLISHED_PLATFORM: mastodon
           NOT_PUBLISHED_REASON: "Mastodon publishing is switched off (MASTODON_ENABLED is not true)"
@@ -252,7 +255,7 @@ jobs:
 
       - name: Email the digest automatically (only if DIGEST_ENABLED and DIGEST_AUTO are "true"; otherwise it waits for your approval)
         id: digest
-        if: ${{ vars.POST_REVIEW != 'true' && vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' }}
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' && vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' }}
         continue-on-error: true   # an email problem never undoes or fails a publication
         env:
           SUBSCRIBERS_JSON: ${{ secrets.SUBSCRIBERS_JSON }}

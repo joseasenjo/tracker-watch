@@ -76,3 +76,16 @@ def test_every_github_action_is_pinned_to_a_commit_with_its_version_in_a_comment
             if re.match(r"^\s*-?\s*uses:", line):
                 assert pinned.match(line), f"{path.name}:{number} is not pinned by commit: {line.strip()}"
     assert (ROOT / ".github/dependabot.yml").exists()  # something tells you when a pinned action has a new release
+
+
+def test_a_test_run_posts_nothing_but_a_scheduled_run_still_posts():
+    import yaml
+    for name in ("weekly-scan", "post-midweek"):
+        text = (ROOT / f".github/workflows/{name}.yml").read_text(encoding="utf-8")
+        data = yaml.safe_load(text)
+        inputs = (data.get("on") or data.get(True))["workflow_dispatch"]["inputs"]
+        assert inputs["publish"]["default"] == "true"  # the schedule, which has no inputs, treats an empty value as "post"
+        for step in data["jobs"]["post"]["steps"]:
+            condition = step.get("if", "")
+            if step.get("run", "").startswith("python -m traceguard.publish") or " --send" in step.get("run", ""):
+                assert "github.event.inputs.publish != 'false'" in condition, step.get("name")
