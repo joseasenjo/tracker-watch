@@ -26,6 +26,29 @@
         <p class="small">A site counts for an operator when at least one of its services in our list was contacted in most passes.</p>
       </div>
 
+      {% set st = company_story %}
+      {% if st %}
+      <div class="card" id="reading">
+        <h3>What this means</h3>
+        <p>On {{ date }}, <b>{{ st.leader }}</b>'s tracking services were contacted on <b>{{ st.sites }} of the {{ st.measured }}</b> sites measured ({{ st.pct }}%), the widest reach of the {{ st.operators }} companies found{% if st.with_any_tracking and st.with_any_tracking != st.measured %}; {{ st.with_any_tracking }} of those {{ st.measured }} sites contacted at least one tracking service of any company{% endif %}.
+          {% if st.next %}Next come {% for n in st.next %}{{ n.entity }} ({{ n.n }}){% if not loop.last %} and {% endif %}{% endfor %}.{% endif %}</p>
+        {% if st.categories %}
+        <p>Behind that number: {{ st.leader }} appears mostly through <b>{{ st.dominant|lower }}</b>:
+          {% for c in st.categories %}{{ c.label|lower }} on {{ c.sites }} site{{ 's' if c.sites != 1 }}{% if not loop.last %}, {% endif %}{% endfor %}.
+          {% if st.services %}The services seen most often are {% for s in st.services %}<code>{{ s.service }}</code> ({{ s.sites }}){% if not loop.last %}, {% endif %}{% endfor %}.{% endif %}
+          {% if st.dominant_key == 'advertising' %}This is consistent with news sites loading the advertising services of the companies that sell their ad space, but this page{% else %}This page{% endif %} counts presence and cannot say why a site loads a service.</p>
+        {% endif %}
+        <p>Concentration index of this scan: <b>{{ st.index }}</b> of 10,000, which means {{ st.reading }}. How it moves over time is on the <a href="{{ root }}trends.html">Trends</a> page, built with the same count as this one.</p>
+        <h4>How to read it</h4>
+        <ul>
+          <li><b>Presence, not volume.</b> “{{ st.leader }} is on {{ st.sites }} sites” says that one of its services was contacted, not how much, nor what it does with the data.</li>
+          <li><b>Figures are minimums.</b> The classification list is limited, and tag managers, consent tools and paywalls are not counted as tracking, so the real presence can only be larger.</li>
+          <li><b>Measured before any consent, from {{ vantage }}.</b> Sites that show their consent banner only to European visitors look worse here than they do to a visitor in Europe.</li>
+          <li><b>Not a market share and not a verdict.</b> The index describes how concentrated the presence on these news sites is. It does not say anything about legality or intent. See the <a href="{{ root }}method.html">method</a>.</li>
+        </ul>
+      </div>
+      {% endif %}
+
       <h2>All operators</h2>
       <div class="table-scroll">
         <table class="t">

@@ -26,7 +26,7 @@ from markupsafe import Markup
 from . import SCHEMA_VERSION
 from .classify import DEFAULT_TRACKER_LIST, TrackerList
 from .community import load_community
-from .entities import horizontal_bars, inferred_entities, reach
+from .entities import horizontal_bars, inferred_entities, leader_story, reach
 from .extended import consent_view, protection_view
 from .filterlist import build as build_filter_lists
 from .bands import band_for, describe as describe_bands
@@ -297,6 +297,7 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
                     for name, info in build_filter_lists(json.loads(DEFAULT_TRACKER_LIST.read_text(encoding="utf-8")),
                                                          date).items()],
         "entities": entities, "entities_chart": horizontal_bars(entities["rows"], entities["measured"]), "trends": trend,
+        "company_story": leader_story(history[date], entities, category_label=category_label),
         "consent": consent, "protection": protection, "stems": {e["stem"] for e in entries},
         "consent_dir": consent_dir if consent_dir is not None else data_root / "consent",
         "protected_dir": protected_dir if protected_dir is not None else data_root / "protected",

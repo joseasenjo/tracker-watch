@@ -52,6 +52,54 @@ def reach(reports: dict[str, dict], meta: dict[str, dict], inferred_only: set[st
     return {"measured": len(measured), "groups": groups, "rows": rows,
             "operators": len(rows), "top": rows[:10]}
 
+SPREAD_BELOW, CONCENTRATED_FROM = 1000, 2500  # a reading aid for the page, not a standard threshold
+
+
+def index_reading(index: int) -> str:
+    """A plain-words reading of the concentration index (see trends.py for what it measures)."""
+    if index < SPREAD_BELOW:
+        return "the presence is spread over many companies: the leaders stand out by reach, not because the rest do not count"
+    if index < CONCENTRATED_FROM:
+        return "the presence is moderately concentrated in a smaller group of companies"
+    return "the presence is concentrated in a few companies"
+
+
+def leader_story(reports: dict[str, dict], entities: dict, *, category_label=lambda c: c, top_services: int = 3) -> dict | None:
+    """What stands behind the number of the company that reaches the most sites: through which services and in which
+    categories, how it compares with the next ones, and the concentration index of the same scan. Everything comes from
+    the reports of one measurement, so the explanation on the page changes with the data. None when no company was seen."""
+    rows = entities["rows"]
+    if not rows:
+        return None
+    from collections import Counter
+    from .trends import concentration
+    leader = rows[0]
+    usable = {stem: r for stem, r in reports.items()
+              if r["summary"]["status"] == "ok" and r["summary"].get("confidence") in USABLE_CONFIDENCE}
+    services: Counter = Counter()
+    categories: Counter = Counter()
+    for site in leader["sites"]:
+        seen = set()
+        for service in usable[site["stem"]]["summary"]["services"]:
+            if service["entity"] == leader["entity"] and service["tracking"] and service["stable"]:
+                services[service["service"]] += 1
+                seen.add(service["category"])
+        categories.update(seen)
+    ranked_categories = sorted(categories.items(), key=lambda kv: (-kv[1], kv[0]))
+    index = concentration(list(reports.values()))["concentration_index"]
+    return {
+        "leader": leader["entity"], "sites": leader["n"], "measured": entities["measured"],
+        "pct": round(100 * leader["n"] / entities["measured"], 1) if entities["measured"] else 0.0,
+        "operators": entities["operators"],
+        "next": [{"entity": r["entity"], "n": r["n"]} for r in rows[1:3]],
+        "with_any_tracking": sum(1 for r in usable.values() if r["summary"]["metrics"]["tracking_services"] > 0),
+        "services": [{"service": name, "sites": n} for name, n in sorted(services.items(), key=lambda kv: (-kv[1], kv[0]))[:top_services]],
+        "categories": [{"key": key, "label": category_label(key), "sites": n} for key, n in ranked_categories],
+        "dominant": category_label(ranked_categories[0][0]) if ranked_categories else "",
+        "dominant_key": ranked_categories[0][0] if ranked_categories else "",
+        "index": index, "reading": index_reading(index), "inferred": bool(leader.get("inferred")),
+    }
+
 
 def inferred_entities(tracker_rows: list[dict]) -> set[str]:
     """Entities whose every entry in the list is marked as inferred (no `evidence`-free entry)."""

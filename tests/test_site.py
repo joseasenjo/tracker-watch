@@ -373,3 +373,20 @@ def test_the_line_chart_leaves_a_gap_for_a_missing_value_and_describes_itself():
     assert svg.count("<circle") == 5 and svg.count("lc-line") == 3  # UK: 2 points, 1 segment; DE: 3 points, 2 segments
     assert 'role="img"' in svg and "UK: 2026-10-05 60 services" in svg
     assert str(line_chart([])) == ""
+
+
+def test_the_companies_page_explains_the_leader_from_the_data_and_agrees_with_trends(built):
+    from traceguard.entities import index_reading, leader_story
+    _, out, ctx = built
+    story = ctx["company_story"]
+    page = (out / "companies.html").read_text(encoding="utf-8")
+    assert story and 'id="reading"' in page and "What this means" in page and "Presence, not volume" in page
+    assert story["leader"] in page and f"{story['sites']} of the {story['measured']}" in page
+    # Companies and Trends count the same thing: the leader and its reach are the same on both pages
+    latest = ctx["trends"]["comparable"][-1]
+    assert (latest["top_company"], latest["top_company_sites"]) == (story["leader"], story["sites"])
+    assert latest["concentration_index"] == story["index"]
+    assert "companies.html#reading" in (out / "trends.html").read_text(encoding="utf-8")
+    assert index_reading(115).startswith("the presence is spread") and index_reading(1500).startswith("the presence is moderately")
+    assert index_reading(4000) == "the presence is concentrated in a few companies"
+    assert leader_story({}, {"rows": [], "measured": 0, "operators": 0}) is None
