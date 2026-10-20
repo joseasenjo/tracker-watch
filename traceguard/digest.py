@@ -29,9 +29,9 @@ from typing import Mapping
 from . import mailing
 
 SITE_URL = "https://joseasenjo.github.io/tracker-watch/"
-DEFAULT_KINDS =("weekly", "midweek")
+DEFAULT_KINDS = ("weekly", "midweek", "monthly")
 LABELS = {"weekly": "Weekly check", "midweek": "Midweek update", "alert": "Notable change",
-          "hook": "Most-tracked outlet", "announce": "Announcement"}
+          "hook": "Most-tracked outlet", "announce": "Announcement", "monthly": "Monthly trends"}
 MARKER = "digest.sent.json"
 DEFAULT_CTA = ("If your organisation needs a tracker and consent audit of its websites, a security review or an "
                "automation, reply to this email or write to {contact}. I am the developer: tell me what you need and "
@@ -39,7 +39,7 @@ DEFAULT_CTA = ("If your organisation needs a tracker and consent audit of its we
 
 
 def kind_of(folder_name: str) -> str:
-    for suffix in ("midweek", "alert", "hook", "announce"):
+    for suffix in ("midweek", "alert", "hook", "announce", "monthly"):
         if folder_name.rstrip("/").endswith("-" + suffix):
             return suffix
     return "weekly"

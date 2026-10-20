@@ -44,7 +44,7 @@ def test_the_weekly_scan_stops_only_for_the_engine_and_warns_for_the_rest():
 
 def test_a_post_that_does_not_go_out_always_emails_why():
     import yaml
-    for name in ("weekly-scan", "post-midweek"):
+    for name in ("weekly-scan", "post-midweek", "monthly-report"):
         jobs = yaml.safe_load((ROOT / f".github/workflows/{name}.yml").read_text(encoding="utf-8"))["jobs"]
         steps = jobs["post"]["steps"]
         notices = [s for s in steps if s.get("run", "").strip() == "python -m traceguard.notify not-published"]
@@ -80,7 +80,7 @@ def test_every_github_action_is_pinned_to_a_commit_with_its_version_in_a_comment
 
 def test_a_test_run_posts_nothing_but_a_scheduled_run_still_posts():
     import yaml
-    for name in ("weekly-scan", "post-midweek"):
+    for name in ("weekly-scan", "post-midweek", "monthly-report"):
         text = (ROOT / f".github/workflows/{name}.yml").read_text(encoding="utf-8")
         data = yaml.safe_load(text)
         inputs = (data.get("on") or data.get(True))["workflow_dispatch"]["inputs"]
@@ -89,3 +89,46 @@ def test_a_test_run_posts_nothing_but_a_scheduled_run_still_posts():
             condition = step.get("if", "")
             if step.get("run", "").startswith("python -m traceguard.publish") or " --send" in step.get("run", ""):
                 assert "github.event.inputs.publish != 'false'" in condition, step.get("name")
+
+
+def test_the_monthly_report_compiles_before_it_drafts_and_never_posts_in_a_test_run():
+    import yaml
+    data = yaml.safe_load((ROOT / ".github/workflows/monthly-report.yml").read_text(encoding="utf-8"))
+    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "0 9 3 * *"}]
+    steps = data["jobs"]["post"]["steps"]
+    runs = [s.get("run", "") for s in steps]
+    compile_at = next(i for i, r in enumerate(runs) if "traceguard.trends" in r)
+    draft_at = next(i for i, r in enumerate(runs) if "--kind monthly" in r)
+    assert any("pytest tests -q -m engine" in r for r in runs[:compile_at]) and compile_at < draft_at
+    assert all("midweek" not in r for r in runs)  # it is its own flow, not a copy that still posts the mid-week text
+
+
+def test_the_data_release_is_never_marked_latest_and_is_created_once_per_month():
+    import yaml
+    text = (ROOT / ".github/workflows/data-release.yml").read_text(encoding="utf-8")
+    assert "--latest=false" in text and 'gh release view "$tag"' in text  # the extension page links to releases/latest/...
+    data = yaml.safe_load(text)
+    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "0 10 4 * *"}]
+
+
+def test_the_monthly_blocking_list_test_runs_only_on_the_first_tuesday_and_never_the_consent_one():
+    import yaml
+    data = yaml.safe_load((ROOT / ".github/workflows/extra-tests.yml").read_text(encoding="utf-8"))
+    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "0 6 * * 2"}]
+    steps = data["jobs"]["run"]["steps"]
+    gate = next(s for s in steps if s.get("id") == "gate")
+    assert "-le 7" in gate["run"]
+    for step in steps[steps.index(gate) + 1:]:
+        assert "steps.gate.outputs.go == 'true'" in step["if"], step.get("name")
+    consent = next(s for s in steps if s.get("name") == "Consent test")
+    assert "github.event_name != 'schedule'" in consent["if"]
+    assert not any(r.strip() == "python -m pytest tests -q" for r in (s.get("run", "") for s in steps))
+
+
+def test_the_data_release_has_a_dry_run_that_publishes_nothing():
+    import yaml
+    data = yaml.safe_load((ROOT / ".github/workflows/data-release.yml").read_text(encoding="utf-8"))
+    assert (data.get("on") or data.get(True))["workflow_dispatch"]["inputs"]["dry_run"]["default"] == "false"
+    steps = data["jobs"]["release"]["steps"]
+    publish = next(s for s in steps if s.get("name", "").startswith("Publish the release"))
+    assert "dry_run != 'true'" in publish["if"]

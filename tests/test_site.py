@@ -355,3 +355,21 @@ def test_empty_runs_dir_is_an_error(tmp_path):
     (tmp_path / "runs").mkdir()
     with pytest.raises(FileNotFoundError):
         build_context(tmp_path / "runs")
+
+
+def test_the_trends_page_and_its_csv_are_built_and_say_what_the_index_is_not(built):
+    _, out, ctx = built
+    page = (out / "trends.html").read_text(encoding="utf-8")
+    assert "Concentration index" in page and "not</b> an economic market share" in page and "Trends" in page
+    assert "data/trends.csv" in page and (out / "data" / "trends.csv").read_text(encoding="utf-8").splitlines()[0].startswith("date,vantage")
+    assert "trends.csv" in json.loads((out / "data" / "index.json").read_text(encoding="utf-8"))["files"]
+    assert ctx["trends"]["series"] and "<svg" in str(ctx["trends"]["chart_medians"])
+
+
+def test_the_line_chart_leaves_a_gap_for_a_missing_value_and_describes_itself():
+    from traceguard.spark import line_chart
+    svg = str(line_chart([("UK", [("2026-10-05", 60), ("2026-10-12", None), ("2026-10-19", 80)]),
+                          ("DE", [("2026-10-05", 1), ("2026-10-12", 1), ("2026-10-19", 2)])], unit=" services"))
+    assert svg.count("<circle") == 5 and svg.count("lc-line") == 3  # UK: 2 points, 1 segment; DE: 3 points, 2 segments
+    assert 'role="img"' in svg and "UK: 2026-10-05 60 services" in svg
+    assert str(line_chart([])) == ""

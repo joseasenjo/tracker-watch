@@ -1,4 +1,7 @@
-# The two separate tests, run on demand. They never touch data/runs (the weekly ranking) and never publish:
+# The two separate tests: on demand, and the blocking-list test also once a month (the first Tuesday, 06:00 UTC, the day
+# after the weekly scan so the two can be paired), which keeps the
+# "how many tracking services does a blocking list stop" figures of the protection page fresh. The monthly run measures
+# only the blocking-list test and republishes the site afterwards. The two separate tests, run on demand. They never touch data/runs (the weekly ranking) and never publish:
 # the next site build picks up data/consent and data/protected.
 #  - consent: press the consent banner's reject / accept button once (from US servers few banners appear;
 #    the same command can be run from a PC in the EU with --vantage local-windows-spain)
@@ -6,6 +9,8 @@
 name: extra-tests
 
 on:
+  schedule:
+    - cron: "0 6 * * 2"   # every Tuesday; the gate step below lets only the first one of the month through
   workflow_dispatch:
     inputs:
       test:
@@ -19,6 +24,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # to start publish-site after the monthly run
 
 concurrency:
   group: weekly-scan   # never at the same time as the weekly scan (both commit to the repository)
@@ -40,24 +46,34 @@ jobs:
           python-version: "3.12"
           cache: pip
 
+      - name: Decide whether to run (a scheduled run goes ahead only on the first Tuesday of the month)
+        id: gate
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" != "schedule" ] || [ "$(date -u +%-d)" -le 7 ]; then echo "go=true" >> "$GITHUB_OUTPUT"; else echo "go=false" >> "$GITHUB_OUTPUT"; echo "not the first Tuesday: nothing to do"; fi
+
       - name: Install dependencies
+        if: ${{ steps.gate.outputs.go == 'true' }}
         run: pip install -r requirements-dev.txt
 
-      - name: Unit tests
-        run: python -m pytest tests -q
+      - name: Tests of the measurement engine (a failure here stops the run)
+        if: ${{ steps.gate.outputs.go == 'true' }}
+        run: python -m pytest tests -q -m engine
 
       - name: Install Chromium
+        if: ${{ steps.gate.outputs.go == 'true' }}
         run: python -m playwright install --with-deps chromium
 
       - name: Consent test
-        if: ${{ github.event.inputs.test != 'blocklist' }}
+        if: ${{ steps.gate.outputs.go == 'true' && (github.event.inputs.test != 'blocklist' && github.event_name != 'schedule') }}
         run: >
           python -m traceguard --sites-file data/sites.json --consent reject,accept
           --passes "${{ github.event.inputs.passes || '2' }}" --vantage "$VANTAGE"
           || echo "some sites could not be measured"
 
       - name: Blocking-list test
-        if: ${{ github.event.inputs.test != 'consent' }}
+        if: ${{ steps.gate.outputs.go == 'true' && (github.event.inputs.test != 'consent') }}
         run: |
           curl -sSfL "$EASYPRIVACY_URL" -o "$RUNNER_TEMP/easyprivacy.txt"
           python -m traceguard --sites-file data/sites.json --blocklist "$RUNNER_TEMP/easyprivacy.txt" \
@@ -66,6 +82,7 @@ jobs:
             || echo "some sites could not be measured"
 
       - name: Commit reports
+        if: ${{ steps.gate.outputs.go == 'true' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -74,3 +91,9 @@ jobs:
           git diff --cached --quiet || git commit -m "extra tests: $(date -u +%F)"
           git pull --rebase --autostash
           git push
+
+      - name: Publish the site again after a monthly run (so the protection page shows the new figures)
+        if: ${{ steps.gate.outputs.go == 'true' && (github.event_name == 'schedule') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publish-site.yml

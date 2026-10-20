@@ -41,7 +41,8 @@ from .limits import DEFAULTS as DEFAULT_LIMITS, LimitsError, load_limits
 from .links import load_links
 from .report import passive_requests
 from .origins import compare as compare_origins, load_extra, paired_bars
-from .spark import sparkline
+from . import trends as trends_module
+from .spark import line_chart, sparkline
 
 SRC = Path(__file__).resolve().parent.parent / "site_src"
 GUIDE = Path(__file__).resolve().parent.parent / "extension" / "GUIDE.md"
@@ -200,6 +201,20 @@ def _entry(stem: str, report: dict, meta: dict, history: dict, date: str, diff: 
     return entry
 
 
+def trends_view(runs_dir: Path | str, meta: dict[str, dict]) -> dict:
+    """The series, the monthly rows and the two charts of the trends page, from the reports alone."""
+    groups = {url.rstrip("/"): e["group"] for url, e in meta.items() if e.get("group")}
+    view = trends_module.summary(runs_dir, groups)
+    same = view["comparable"]
+    view["chart_medians"] = line_chart(  # the four countries first: "All" comes last and gets the dashed style
+        [(g, [(p["date"], p["by_group"].get(g)) for p in same]) for g in trends_module.GROUP_ORDER] +
+        [("All", [(p["date"], p["median_tracking"]) for p in same])], unit=" services")
+    view["chart_leader"] = line_chart(
+        [("Top company", [(p["date"], p["top_company_pct"]) for p in same]),
+         ("Top 3, mean", [(p["date"], p["top3_mean_pct"]) for p in same])], unit="% of sites")
+    return view
+
+
 def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir: Path | str | None = None,
                   community_dir: Path | str | None = None, consent_dir: Path | str | None = None,
                   protected_dir: Path | str | None = None) -> dict:
@@ -254,6 +269,7 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
     baselines = {measurement["vantage"]: history, **extra}  # community origins are never a baseline
     protection = protection_view(protected_dir if protected_dir is not None else data_root / "protected",
                                  baselines, labels, meta)
+    trend = trends_view(runs_dir, meta)
     for e in entries:
         e["consent_rows"] = consent["by_stem"].get(e["stem"], [])
         e["protection_rows"] = protection["by_stem"].get(e["stem"], [])
@@ -280,7 +296,7 @@ def build_context(runs_dir: Path | str, sites_file: str | None = None, extra_dir
         "filters": [{"file": name, **{k: v for k, v in info.items() if k != "text"}}
                     for name, info in build_filter_lists(json.loads(DEFAULT_TRACKER_LIST.read_text(encoding="utf-8")),
                                                          date).items()],
-        "entities": entities, "entities_chart": horizontal_bars(entities["rows"], entities["measured"]),
+        "entities": entities, "entities_chart": horizontal_bars(entities["rows"], entities["measured"]), "trends": trend,
         "consent": consent, "protection": protection, "stems": {e["stem"] for e in entries},
         "consent_dir": consent_dir if consent_dir is not None else data_root / "consent",
         "protected_dir": protected_dir if protected_dir is not None else data_root / "protected",
@@ -449,6 +465,7 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         for r in ctx["entities"]["rows"]:
             writer.writerow([ctx["date"], r["entity"], r["n"], ctx["entities"]["measured"], r["share"],
                              " ".join(r["services"]), " ".join(r["categories"])])
+    trends_module.write_series_csv(ctx["trends"]["series"], data_dir / "trends.csv")
     with (data_dir / "consent.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(CONSENT_COLUMNS)
@@ -496,7 +513,7 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         "name": SITE_NAME, "site": base, "licence": "CC BY 4.0 (credit 'Tracker Watch')",
         "schema_version": SCHEMA_VERSION, "latest_date": ctx["date"], "dates": ctx["dates"], "origins": origins,
         "files": {"latest.csv": "data/latest.csv", "history.csv": "data/history.csv",
-                  "entities.csv": "data/entities.csv", "consent.csv": "data/consent.csv",
+                  "entities.csv": "data/entities.csv", "trends.csv": "data/trends.csv", "consent.csv": "data/consent.csv",
                   "protection.csv": "data/protection.csv", "index.json": "data/index.json",
                   "trackerwatch-verified.txt": "data/trackerwatch-verified.txt",
                   "trackerwatch-full.txt": "data/trackerwatch-full.txt"},
@@ -578,6 +595,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("index.html", out / "index.html", page="index")
     render("origins.html", out / "origins.html", page="origins")
     render("companies.html", out / "companies.html", page="companies")
+    render("trends.html", out / "trends.html", page="trends")
     render("glossary.html", out / "glossary.html", page="glossary")
     render("filters.html", out / "filters.html", page="filters")
     render("protect.html", out / "protect.html", page="protect", guide_html=guide_html())

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Trends{% endblock %}
+{% block head %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Trends in the tracking services contacted by news sites">
+  <meta property="og:description" content="How the number of tracking services before any click, and the reach of the leading companies, change from scan to scan. Counts, not verdicts.">
+{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap">
+    <h1>Trends</h1>
+    <p class="sub">How the figures move from one scan to the next, and how the presence of companies is spread. Only scans taken under the same conditions are compared (same origin, passes and observation window). Counts, not verdicts.</p>
+
+    {% set t = trends %}
+    {% if not t.comparable %}
+      <div class="card">There is not enough data to draw a trend yet.</div>
+    {% else %}
+      {% set last = t.comparable[-1] %}
+      <div class="counters">
+        <div class="counter"><b>{{ t.comparable|length }}</b><span>scans compared, since {{ t.comparable[0].date }}</span></div>
+        <div class="counter"><b>{{ last.median_tracking }}</b><span>median tracking services per site on {{ last.date }} ({{ last.usable }} sites)</span></div>
+        <div class="counter"><b>{{ last.top_company_pct }}%</b><span>of the sites reached by the leading company, {{ last.top_company }}</span></div>
+        <div class="counter"><b>{{ last.concentration_index }}</b><span>concentration index (0 to 10,000)</span></div>
+      </div>
+
+      {% if t.change %}
+      <p>{{ t.change.month }} against {{ t.change.previous }}: the monthly median of tracking services went from {{ t.change.previous_median_tracking }} to {{ t.change.median_tracking }}
+        ({{ '%+.1f'|format(t.change.delta_median) }}) and the concentration index from {{ t.change.previous_concentration_index }} to {{ t.change.concentration_index }}
+        ({{ '%+d'|format(t.change.delta_concentration) }}).</p>
+      {% endif %}
+
+      <div class="card">
+        <h3>Median tracking services per site, by country</h3>
+        {{ t.chart_medians }}
+        <p class="small">Median of the sites measured with high or medium confidence in each country group. The dashed line is every site together.</p>
+      </div>
+
+      <div class="card">
+        <h3>How far the leading companies reach</h3>
+        {{ t.chart_leader }}
+        <p class="small">Share of the measured sites on which the leading company, and the average of the three leading ones, ran a tracking service in every stable pass.</p>
+      </div>
+
+      <h2>Month by month</h2>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr><th>Month</th><th class="num">Scans</th><th class="num">Median</th><th class="num">US</th><th class="num">UK</th><th class="num">DE</th><th class="num">ES</th><th class="num">Concentration</th><th>Leading companies (mean reach)</th></tr></thead>
+          <tbody>
+          {% for m in t.monthly %}
+            <tr><td>{{ m.month }}</td><td class="num">{{ m.scans }}</td><td class="num">{{ m.median_tracking }}</td>
+              {% for g in ['US', 'UK', 'DE', 'ES'] %}<td class="num">{{ m.by_group.get(g, '') }}</td>{% endfor %}
+              <td class="num">{{ m.concentration_index }}</td>
+              <td>{% for l in m.leaders %}{{ l.company }} {{ l.mean_pct_of_sites }}%{% if not loop.last %}; {% endif %}{% endfor %}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Every scan</h2>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr><th>Date</th><th class="num">Sites measured</th><th class="num">Median</th><th class="num">US</th><th class="num">UK</th><th class="num">DE</th><th class="num">ES</th><th>Leading company</th><th class="num">Concentration</th></tr></thead>
+          <tbody>
+          {% for p in t.comparable|reverse %}
+            <tr><td>{{ p.date }}</td><td class="num">{{ p.usable }} of {{ p.sites }}</td><td class="num">{{ p.median_tracking }}</td>
+              {% for g in ['US', 'UK', 'DE', 'ES'] %}<td class="num">{{ p.by_group.get(g, '') }}</td>{% endfor %}
+              <td>{{ p.top_company }} {{ p.top_company_pct }}%</td><td class="num">{{ p.concentration_index }}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p><a class="btn sec" href="{{ root }}data/trends.csv">Download trends.csv</a></p>
+
+      <h2>How to read this</h2>
+      <ul>
+        <li><b>Median per scan:</b> the middle value of the tracking services each site contacted before any click. A scan with fewer sites measured is noted in the table; early scans did not include every country.</li>
+        <li><b>Leading company reach:</b> on how many of the measured sites a company's tracking services ran in every stable pass. It names companies, never outlets.</li>
+        <li><b>Concentration index:</b> for each scan, a company's share is its presences divided by all presences on the measured sites; the index is the sum of the squared shares times 10,000 (the Herfindahl-Hirschman form). 10,000 would be a single company present everywhere; a low number means the presence is spread over many. It describes how concentrated the presence on these news sites is. It is <b>not</b> an economic market share and says nothing about what any company does with the data.</li>
+        <li><b>Limits:</b> all figures come from the same measurement as the rest of the site, from one origin and with a limited classification list, so they are minimums. They do not show intent or legality. See the <a href="{{ root }}method.html">method</a>.</li>
+        {% if t.excluded %}<li>{{ t.excluded }} earlier scan{{ 's' if t.excluded != 1 }} taken under different conditions {{ 'is' if t.excluded == 1 else 'are' }} left out of the comparison and stay in <a href="{{ root }}data/trends.csv">trends.csv</a>.</li>{% endif %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

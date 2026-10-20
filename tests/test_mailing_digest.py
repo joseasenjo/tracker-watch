@@ -200,10 +200,10 @@ def draft_folder(tmp_path, name="2026-10-12", posted=True, posts=("First post.",
     return folder
 
 
-def test_kinds_and_the_default_is_weekly_and_midweek():
-    assert [digest.kind_of(n) for n in ("2026-10-12", "2026-10-14-midweek", "2026-10-12-alert", "2026-10-12-hook", "2026-10-13-announce")] == \
-        ["weekly", "midweek", "alert", "hook", "announce"]
-    assert digest.allowed_kinds({}) == ("weekly", "midweek") and digest.allowed_kinds({"DIGEST_KINDS": "weekly, alert"}) == ("weekly", "alert")
+def test_kinds_and_the_default_is_weekly_midweek_and_monthly():
+    assert [digest.kind_of(n) for n in ("2026-10-12", "2026-10-14-midweek", "2026-10-12-alert", "2026-10-12-hook", "2026-10-13-announce", "2026-11-02-monthly")] == \
+        ["weekly", "midweek", "alert", "hook", "announce", "monthly"]
+    assert digest.allowed_kinds({}) == ("weekly", "midweek", "monthly") and digest.allowed_kinds({"DIGEST_KINDS": "weekly, alert"}) == ("weekly", "alert")
 
 
 def test_the_digest_has_the_posts_the_way_to_leave_and_no_tracking():

@@ -311,3 +311,18 @@ def test_a_change_line_says_how_many_more_services_changed_than_the_two_it_names
     assert _change_line(few) == "A: added x.com; dropped a.com, b.com"
     many = {"site": "BBC News", "added_tracking_services": [], "removed_tracking_services": [{"service": f"s{i}.com"} for i in range(52)]}
     assert _change_line(many) == "BBC News: dropped s0.com, s1.com (+50 more)"
+
+
+def test_the_monthly_post_compares_months_fits_the_limit_and_says_when_it_is_the_first(tmp_path):
+    from traceguard.posts import build_monthly
+    first = {"change": None, "monthly": [{"month": "2026-10", "scans": 4, "median_tracking": 7.8, "concentration_index": 117,
+                                           "leaders": [{"company": "Google", "mean_pct_of_sites": 68.8}]}]}
+    [text] = build_monthly(first, platform="bluesky", report_url="https://site.example/")
+    assert len(text) <= 300 and "first month" in text and "Google reaches 68.8% of the sites" in text and "Automated post." in text
+    second = {"change": {"median_tracking": 9.5, "delta_median": 1.7, "previous": "2026-10"},
+              "monthly": [first["monthly"][0], {**first["monthly"][0], "month": "2026-11", "median_tracking": 9.5}]}
+    [text] = build_monthly(second, platform="bluesky", report_url="https://site.example/")
+    assert "9.5 (+1.7 on 2026-10)" in text and "first month" not in text and "https://site.example/trends.html" in text
+    import pytest
+    with pytest.raises(ValueError):
+        build_monthly({"change": None, "monthly": []}, platform="bluesky", report_url="https://site.example/")

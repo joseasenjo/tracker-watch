@@ -22,7 +22,7 @@ from pathlib import Path
 
 REQUIRED = ("MAIL_SMTP_HOST", "MAIL_USER", "MAIL_PASSWORD")
 PLATFORM_NAMES = {"bluesky": "Bluesky", "mastodon": "Mastodon"}
-WORKFLOW_KINDS = {"weekly-scan": "weekly thread", "post-midweek": "mid-week post"}
+WORKFLOW_KINDS = {"weekly-scan": "weekly thread", "post-midweek": "mid-week post", "monthly-report": "monthly trends post"}
 
 
 def mail_config(env) -> dict | None:
@@ -51,7 +51,8 @@ def build_message(draft: dict, platform: str, state: dict, folder: str, config: 
     kind = ("mid-week post" if folder_name.endswith("-midweek") else
             "alert post" if folder_name.endswith("-alert") else
             "hook post" if folder_name.endswith("-hook") else
-            "announcement post" if folder_name.endswith("-announce") else "weekly thread")
+            "announcement post" if folder_name.endswith("-announce") else
+            "monthly trends post" if folder_name.endswith("-monthly") else "weekly thread")
     name = PLATFORM_NAMES.get(platform, platform)
     posts = state.get("posts", [])
     texts = draft.get("posts", [])
@@ -102,7 +103,7 @@ def _kind(folder_name: str) -> str:
     folder_name = folder_name.rstrip("/")
     return ("mid-week post" if folder_name.endswith("-midweek") else "alert post" if folder_name.endswith("-alert") else
             "hook post" if folder_name.endswith("-hook") else "announcement post" if folder_name.endswith("-announce") else
-            "weekly thread" if folder_name else "post")
+            "monthly trends post" if folder_name.endswith("-monthly") else "weekly thread" if folder_name else "post")
 
 
 def build_not_published_message(platform: str, reason: str, folder_name: str, config: dict, *, date: str = "",

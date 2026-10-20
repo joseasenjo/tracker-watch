@@ -1,0 +1,80 @@
+# Once a month, packs the weekly reports of the previous month with the trends and the lists they were made with, and
+# publishes them as a GitHub release (tag data-YYYY-MM). Once the repository is linked to Zenodo (see
+# docs/DATA_RELEASES.md) Zenodo archives every release and gives it a DOI, so each month's data can be cited.
+# Day 4 at 10:00 UTC, after the monthly report. A month that already has its release is left alone.
+# The release is created with --latest=false ON PURPOSE: the extension page links to releases/latest/download/..., which
+# must keep pointing at the extension and never at a data release.
+name: data-release
+
+on:
+  schedule:
+    - cron: "0 10 4 * *"
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Month to pack, YYYY-MM (empty: the previous month)"
+        default: ""
+      dry_run:
+        description: "true = build the zip and keep it as a workflow file to look at, but publish no release"
+        default: "false"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-scan   # never at the same time as a scan that is committing reports
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Work out the month
+        id: month
+        env:
+          INPUT_MONTH: ${{ github.event.inputs.month }}
+        run: |
+          month="${INPUT_MONTH:-$(date -u -d "$(date -u +%Y-%m-01) -1 day" +%Y-%m)}"
+          echo "month=$month" >> "$GITHUB_OUTPUT"
+
+      - name: Pack the month
+        env:
+          MONTH: ${{ steps.month.outputs.month }}
+        run: python -m traceguard.datarelease "$MONTH" --out dist
+
+      - name: Keep the zip to look at (dry run - no release is published)
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: data-release-dry-run
+          path: dist/
+          retention-days: 3
+
+      - name: Publish the release (once per month)
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MONTH: ${{ steps.month.outputs.month }}
+        run: |
+          tag="data-$MONTH"
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "the release $tag already exists: nothing to do"
+            exit 0
+          fi
+          gh release create "$tag" "dist/tracker-watch-data-$MONTH.zip" dist/SHA256SUMS.txt \
+            --latest=false --target main \
+            --title "Tracker Watch data, $MONTH" \
+            --notes "The weekly measurements of $MONTH with the trends and the lists they were made with. Data under CC BY 4.0, code under PolyForm Noncommercial 1.0.0. Counts, not legal conclusions; the README inside the zip says how to read them. Cite it with the DOI that Zenodo assigns to this release, or with CITATION.cff. Site: https://joseasenjo.github.io/tracker-watch/"

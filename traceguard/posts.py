@@ -218,6 +218,32 @@ def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: 
     raise PostTooLong("the midweek post does not fit the limit")
 
 
+def build_monthly(summary: dict, *, platform: str, report_url: str) -> list[str]:
+    """One post on the trends of the newest month, from trends.summary(). It compares only scans taken under the same
+    conditions and says so when there is no earlier month to compare with. Names companies, never outlets."""
+    rows, change = summary["monthly"], summary["change"]
+    if not rows:
+        raise ValueError("no scan under comparable conditions: nothing to post")
+    month, limit = rows[-1], LIMITS[platform]
+    lead = month["leaders"][0] if month["leaders"] else None
+    link = f"{report_url.rstrip('/')}/trends.html"
+    if change:
+        move = f"median tracking services per site {change['median_tracking']:g} ({change['delta_median']:+.1f} on {change['previous']})"
+    else:
+        move = f"median tracking services per site {month['median_tracking']:g} over {month['scans']} scans (first month)"
+    leader = f" {lead['company']} reaches {lead['mean_pct_of_sites']:g}% of the sites." if lead else ""
+    index = month["concentration_index"]
+    for tail in (f"Concentration index {index} of 10,000 (low = spread over many companies). Counts, not verdicts. {link}",
+                 f"Concentration index {index} of 10,000. Counts, not verdicts. {link}",
+                 f"Concentration index {index}. {link}"):
+        text = f"Monthly trends, {month['month']}: {move}.{leader} {tail}"
+        for tags in ROOT_TAGS[:2] + ("",):
+            candidate = f"{text} {tags}".strip()
+            if len(candidate) <= limit:
+                return [candidate]
+    raise PostTooLong("the monthly post does not fit the limit")
+
+
 def build_hook(date: str, reports: list[dict], *, platform: str, report_url: str) -> list[str]:
     """One standalone post on the single most-tracked outlet of the week (the rule fixed by the maintainer).
     It names an outlet, so it is only ever a draft that a person approves."""
@@ -356,7 +382,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
                         help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
                              "(a broken scan must not become a post)")
-    parser.add_argument("--kind", choices=("weekly", "midweek", "alert", "hook"), default="weekly",
+    parser.add_argument("--kind", choices=("weekly", "midweek", "alert", "hook", "monthly"), default="weekly",
                         help="weekly: the full thread; midweek: one post on the companies reaching the most sites "
                              "(written to <date>-midweek, no image); alert: one post on the biggest swing since the "
                              "last measurement (written to <date>-alert); hook: one post on the most-tracked outlet of the "
@@ -366,6 +392,21 @@ def main(argv: list[str] | None = None) -> int:
         LIMITS[args.platform] = min(LIMITS[args.platform], args.max_chars)  # the builders read the limit at call time
 
     date, reports = load_latest_reports(args.runs_dir)
+    if args.kind == "monthly":  # imported here: trends itself imports this module
+        from . import trends as trends_module
+        posts = build_monthly(trends_module.summary(args.runs_dir, load_groups(args.sites_file)), platform=args.platform,
+                              report_url=args.report_url)
+        markdown = render_markdown(date, args.platform, posts, "", None)
+        print(markdown)
+        if not args.dry_run:
+            out_dir = Path(args.out) / f"{date}-monthly"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / f"{args.platform}.md").write_text(markdown, encoding="utf-8")
+            (out_dir / f"{args.platform}.json").write_text(json.dumps({
+                "date": date, "platform": args.platform, "generated_at": datetime.now(timezone.utc).isoformat(),
+                "status": "draft", "posts": posts, "image": None, "alt_text": ""}, indent=2, ensure_ascii=False),
+                encoding="utf-8")
+        return 0
     if args.kind == "midweek":
         posts = build_midweek(date, reports, platform=args.platform, report_url=args.report_url)
         markdown = render_markdown(date, args.platform, posts, "", None)

@@ -1,0 +1,197 @@
+# Once a month: compiles the trends of the weekly series (data/trends: the series and the monthly rows, which the data
+# release archives), then posts ONE short post on the month's trends on Bluesky and Mastodon with the same text and
+# emails the digest. Day 3 at 09:00 UTC, after the first weekly scan of the month. Everything after the compilation follows
+# the same switches and notices as the mid-week post (POST_ENABLED, MASTODON_ENABLED, POST_REVIEW, DIGEST_*). A test run
+# (publish=false) compiles and drafts but posts nothing.
+name: monthly-report
+
+on:
+  schedule:
+    - cron: "0 9 3 * *"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "false = a test run: the draft is made but nothing is posted on any network"
+        default: "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-scan   # never at the same time as a scan that is committing reports
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+
+jobs:
+  post:
+    if: ${{ vars.POST_ENABLED == 'true' && vars.PUBLISH_SITE == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Tests of the measurement engine (a failure here stops the report)
+        run: python -m pytest tests -q -m engine
+
+      - name: Compile the trends (the series and the monthly rows)
+        run: python -m traceguard.trends data/runs --sites-file data/sites.json --out data/trends
+
+      - name: Keep the compiled trends in the repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/trends
+          git diff --cached --quiet || git commit -m "trends: $(date -u +%F)"
+          git pull --rebase --autostash
+          git push
+
+      - name: Draft the monthly post
+        run: python -m traceguard.posts data/runs --platform bluesky --kind monthly --report-url "$SITE_URL"
+
+      - name: Draft the same post for Mastodon (same limit as Bluesky)
+        continue-on-error: true
+        run: python -m traceguard.posts data/runs --platform mastodon --max-chars 300 --kind monthly --report-url "$SITE_URL" || echo "no mastodon post drafted"
+
+      - name: Waiting for your approval (review mode is on)
+        if: ${{ (vars.POST_REVIEW == 'true' || github.event.inputs.publish == 'false') }}
+        run: |
+          echo "Draft ready, NOT published. Approve it in the developer dashboard or run publish-draft." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Email that nothing was published (review mode is on)
+        if: ${{ (vars.POST_REVIEW == 'true' || github.event.inputs.publish == 'false') }}
+        env:
+          NOT_PUBLISHED_PLATFORM: bluesky,mastodon
+          NOT_PUBLISHED_REASON: "review mode is on (POST_REVIEW) or this is a test run (publish=false): the draft waits for your approval in the dashboard"
+          NOT_PUBLISHED_WORKFLOW: ${{ github.workflow }}
+          NOT_PUBLISHED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify not-published
+
+      - name: Publish on Bluesky
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' }}
+        env:
+          BLUESKY_HANDLE: ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -- '-monthly$' | sort | tail -1)" --platform bluesky --send --skip-if-published
+
+      - name: Publish on Mastodon (same text as Bluesky, only if MASTODON_ENABLED is "true")
+        id: mastodon
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' && vars.MASTODON_ENABLED == 'true' }}
+        continue-on-error: true   # a Mastodon problem never undoes or fails the Bluesky publication (the step after the digest emails it)
+        env:
+          MASTODON_URL: ${{ vars.MASTODON_URL }}
+          MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.publish "data/drafts/$(ls data/drafts | grep -- '-monthly$' | sort | tail -1)" --platform mastodon --send --skip-if-published
+
+      - name: Email that Mastodon was not published (switched off)
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' && vars.MASTODON_ENABLED != 'true' }}
+        env:
+          NOT_PUBLISHED_PLATFORM: mastodon
+          NOT_PUBLISHED_REASON: "Mastodon publishing is switched off (MASTODON_ENABLED is not true)"
+          NOT_PUBLISHED_WORKFLOW: ${{ github.workflow }}
+          NOT_PUBLISHED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify not-published
+
+      - name: Email the digest automatically (only if DIGEST_ENABLED and DIGEST_AUTO are "true"; otherwise it waits for your approval)
+        id: digest
+        if: ${{ vars.POST_REVIEW != 'true' && github.event.inputs.publish != 'false' && vars.DIGEST_ENABLED == 'true' && vars.DIGEST_AUTO == 'true' }}
+        continue-on-error: true   # an email problem never undoes or fails a publication
+        env:
+          SUBSCRIBERS_JSON: ${{ secrets.SUBSCRIBERS_JSON }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          DIGEST_MAIL_USER: ${{ secrets.DIGEST_MAIL_USER }}
+          DIGEST_MAIL_PASSWORD: ${{ secrets.DIGEST_MAIL_PASSWORD }}
+          DIGEST_SENDER: ${{ vars.DIGEST_SENDER }}
+          DIGEST_KINDS: ${{ vars.DIGEST_KINDS }}
+          DIGEST_SIGNATURE: ${{ vars.DIGEST_SIGNATURE }}
+          DIGEST_CTA: ${{ vars.DIGEST_CTA }}
+          DIGEST_ENABLED: ${{ vars.DIGEST_ENABLED }}
+          CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+        run: python -m traceguard.digest "data/drafts/$(ls data/drafts | grep -- '-monthly$' | sort | tail -1)" --send
+
+      - name: Warn by email about a step that failed without stopping the run (Mastodon or the digest)
+        if: ${{ always() && (steps.mastodon.outcome == 'failure' || steps.digest.outcome == 'failure') }}
+        env:
+          FAILED_WORKFLOW: monthly-report, ${{ steps.mastodon.outcome == 'failure' && 'Mastodon step' || '' }} ${{ steps.digest.outcome == 'failure' && 'digest step' || '' }}
+          FAILED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FAILED_EVENT: ${{ github.event_name }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify failure
+
+      - name: Record what was posted (so a re-run never repeats it)
+        if: ${{ always() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/drafts
+          git diff --cached --quiet || git commit -m "posts: monthly $(date -u +%F)"
+          git pull --rebase --autostash
+          git push
+
+  post-off:
+    # When posting is switched off (POST_ENABLED or PUBLISH_SITE), say so by email: silence must never mean "it worked".
+    if: ${{ !(vars.POST_ENABLED == 'true' && vars.PUBLISH_SITE == 'true') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Email that nothing was published (posting is switched off)
+        env:
+          NOT_PUBLISHED_PLATFORM: bluesky,mastodon
+          NOT_PUBLISHED_REASON: "posting is switched off (POST_ENABLED or PUBLISH_SITE is not true), so the job that posts did not run"
+          NOT_PUBLISHED_WORKFLOW: ${{ github.workflow }}
+          NOT_PUBLISHED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.notify not-published
