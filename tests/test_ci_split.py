@@ -66,3 +66,13 @@ def test_the_alert_and_the_hook_post_on_their_own_only_when_the_switch_is_on_and
     warn = next(s for s in steps if s.get("name", "").startswith("Warn by email about a step"))
     assert "steps.alerts.outcome == 'failure'" in warn["if"]
     assert steps.index(auto) > [s.get("id") for s in steps].index("mastodon")  # after the weekly thread
+
+
+def test_every_github_action_is_pinned_to_a_commit_with_its_version_in_a_comment():
+    import re
+    pinned = re.compile(r"^\s*-?\s*uses:\s*[\w./-]+@[0-9a-f]{40}\s+#\s+v\d+\.\d+\.\d+\s*$")
+    for path in sorted((ROOT / ".github/workflows").glob("*.yml")):
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if re.match(r"^\s*-?\s*uses:", line):
+                assert pinned.match(line), f"{path.name}:{number} is not pinned by commit: {line.strip()}"
+    assert (ROOT / ".github/dependabot.yml").exists()  # something tells you when a pinned action has a new release
