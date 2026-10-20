@@ -11,7 +11,7 @@ import argparse
 import json
 import statistics
 import sys
-from datetime import date as _date, datetime, timezone
+from datetime import date as _date, datetime, timedelta, timezone
 from pathlib import Path
 
 from .diff import compare_directories
@@ -218,13 +218,25 @@ def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: 
     raise PostTooLong("the midweek post does not fit the limit")
 
 
-def build_monthly(summary: dict, *, platform: str, report_url: str) -> list[str]:
-    """One post on the trends of the newest month, from trends.summary(). It compares only scans taken under the same
-    conditions and says so when there is no earlier month to compare with. Names companies, never outlets."""
-    rows, change = summary["monthly"], summary["change"]
+def previous_month(today: _date | None = None) -> str:
+    """The last complete calendar month, YYYY-MM (the monthly report talks about a month that is over)."""
+    first = (today or datetime.now(timezone.utc).date()).replace(day=1)
+    return (first - timedelta(days=1)).strftime("%Y-%m")
+
+
+def build_monthly(summary: dict, *, platform: str, report_url: str, month: str | None = None) -> list[str]:
+    """One post on the trends of one month, from trends.summary(): `month` (YYYY-MM) when the data has it, otherwise the
+    newest month. It compares only scans taken under the same conditions, with the month before it, and says so when there
+    is no earlier month to compare with. Names companies, never outlets."""
+    rows = summary["monthly"]
     if not rows:
         raise ValueError("no scan under comparable conditions: nothing to post")
-    month, limit = rows[-1], LIMITS[platform]
+    index = next((i for i, r in enumerate(rows) if r["month"] == month), len(rows) - 1)
+    month, limit = rows[index], LIMITS[platform]
+    change = None
+    if index > 0 and rows[index - 1]["median_tracking"] is not None and month["median_tracking"] is not None:
+        change = {"median_tracking": month["median_tracking"], "previous": rows[index - 1]["month"],
+                  "delta_median": round(month["median_tracking"] - rows[index - 1]["median_tracking"], 1)}
     lead = month["leaders"][0] if month["leaders"] else None
     link = f"{report_url.rstrip('/')}/trends.html"
     if change:
@@ -378,6 +390,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-chars", type=int, default=0, metavar="N",
                         help="write every post within N characters (never above the platform limit); the workflows pass 300 "
                              "for Mastodon so that both accounts publish the same text, inside Bluesky's limit")
+    parser.add_argument("--month", default="", metavar="YYYY-MM",
+                        help="monthly kind only: the month to talk about (default: the last complete month; the newest "
+                             "month with data when that one has none)")
     parser.add_argument("--dry-run", action="store_true", help="print the draft and write nothing (no image either)")
     parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
                         help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
@@ -395,7 +410,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.kind == "monthly":  # imported here: trends itself imports this module
         from . import trends as trends_module
         posts = build_monthly(trends_module.summary(args.runs_dir, load_groups(args.sites_file)), platform=args.platform,
-                              report_url=args.report_url)
+                              report_url=args.report_url, month=args.month or previous_month())
         markdown = render_markdown(date, args.platform, posts, "", None)
         print(markdown)
         if not args.dry_run:

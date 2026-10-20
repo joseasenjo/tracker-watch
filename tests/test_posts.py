@@ -326,3 +326,16 @@ def test_the_monthly_post_compares_months_fits_the_limit_and_says_when_it_is_the
     import pytest
     with pytest.raises(ValueError):
         build_monthly({"change": None, "monthly": []}, platform="bluesky", report_url="https://site.example/")
+
+
+def test_the_monthly_post_talks_about_the_last_complete_month_and_compares_it_with_the_one_before():
+    from datetime import date
+    from traceguard.posts import build_monthly, previous_month
+    assert previous_month(date(2026, 11, 3)) == "2026-10" and previous_month(date(2027, 1, 3)) == "2026-12"
+    row = lambda m, v: {"month": m, "scans": 4, "median_tracking": v, "concentration_index": 117,  # noqa: E731
+                        "leaders": [{"company": "Google", "mean_pct_of_sites": 68.0}]}
+    summary = {"change": None, "monthly": [row("2026-09", 8.0), row("2026-10", 9.0), row("2026-11", 99.0)]}  # November is only starting
+    [text] = build_monthly(summary, platform="bluesky", report_url="https://site.example/", month="2026-10")
+    assert "2026-10: median tracking services per site 9 (+1.0 on 2026-09)" in text and "99" not in text
+    [text] = build_monthly(summary, platform="bluesky", report_url="https://site.example/", month="2026-07")  # no data: the newest month
+    assert "2026-11" in text
