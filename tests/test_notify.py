@@ -214,3 +214,15 @@ def test_the_workflow_can_say_a_post_was_left_out_on_purpose(monkeypatch, capsys
                                             "[Tracker Watch] NOT published on Mastodon (skipped): weekly thread"]
     assert "left out on purpose" in sent[0].get_content() and "review mode is on" in sent[0].get_content()
     assert notify.main(["not-published"], env=MAIL) == 2
+
+
+def test_a_workflow_level_notice_says_which_workflow_and_gives_the_log(monkeypatch):
+    from traceguard import notify
+    sent = []
+    monkeypatch.setattr(notify, "send", lambda config, message, **kw: sent.append(message))
+    env = dict(MAIL, NOT_PUBLISHED_PLATFORM="mastodon", NOT_PUBLISHED_REASON="switched off", NOT_PUBLISHED_WORKFLOW="post-midweek",
+               NOT_PUBLISHED_RUN_URL="https://github.com/o/r/actions/runs/7")
+    assert notify.main(["not-published"], env=env) == 0
+    assert sent[0]["Subject"] == "[Tracker Watch] NOT published on Mastodon (skipped): mid-week post"
+    body = sent[0].get_content()
+    assert "Workflow: post-midweek" in body and "Log: https://github.com/o/r/actions/runs/7" in body

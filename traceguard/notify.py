@@ -22,6 +22,7 @@ from pathlib import Path
 
 REQUIRED = ("MAIL_SMTP_HOST", "MAIL_USER", "MAIL_PASSWORD")
 PLATFORM_NAMES = {"bluesky": "Bluesky", "mastodon": "Mastodon"}
+WORKFLOW_KINDS = {"weekly-scan": "weekly thread", "post-midweek": "mid-week post"}
 
 
 def mail_config(env) -> dict | None:
@@ -105,7 +106,8 @@ def _kind(folder_name: str) -> str:
 
 
 def build_not_published_message(platform: str, reason: str, folder_name: str, config: dict, *, date: str = "",
-                                posts_out: int = 0, total: int = 0, skipped: bool = False, secrets=()) -> EmailMessage:
+                                posts_out: int = 0, total: int = 0, skipped: bool = False, secrets=(), workflow: str = "",
+                                run_url: str = "") -> EmailMessage:
     """The notice for a post that did NOT go out, so silence never means 'it worked'. `skipped` = left out on purpose
     (switch off, review mode, already published); otherwise it failed and needs attention. Secrets never appear in it."""
     name = PLATFORM_NAMES.get(platform, platform)
@@ -114,6 +116,8 @@ def build_not_published_message(platform: str, reason: str, folder_name: str, co
         if secret and len(secret) >= 6:
             text = text.replace(secret, "***")
     kind = _kind(folder_name)
+    if kind == "post" and workflow in WORKFLOW_KINDS:  # no folder (the job did not get as far as a draft): the workflow says which post
+        kind = WORKFLOW_KINDS[workflow]
     message = EmailMessage()
     message["Subject"] = f"[Tracker Watch] NOT published on {name} ({'skipped' if skipped else 'FAILED'}): {kind} {date}".strip()
     message["From"], message["To"] = config["sender"], config["to"]
@@ -122,6 +126,10 @@ def build_not_published_message(platform: str, reason: str, folder_name: str, co
              f"Why: {text}"]
     if total:
         lines.append(f"Posts already out: {posts_out} of {total}" + ("" if not posts_out else " (the rest can be resumed: run publish-draft again)"))
+    if workflow:
+        lines.append(f"Workflow: {' '.join(workflow.split())[:60]}")
+    if run_url:
+        lines.append(f"Log: {' '.join(run_url.split())[:200]}")
     lines += ["", "To publish it by hand: Actions -> publish-draft -> Run workflow (the folder, and the platform)." if not skipped else
               "To publish it anyway: fix the cause (a switch, review mode) and run publish-draft by hand.", "",
               "This notice comes from the Tracker Watch publisher."]
@@ -138,7 +146,8 @@ def notify_not_published(platform: str, reason: str, folder_name: str, env, *, d
     secrets = [env.get(n) for n in ("BLUESKY_APP_PASSWORD", "MASTODON_TOKEN", "MAIL_PASSWORD")]
     try:
         send(config, build_not_published_message(platform, reason, folder_name, config, date=date, posts_out=posts_out,
-                                                 total=total, skipped=skipped, secrets=secrets), smtp=smtp, smtp_ssl=smtp_ssl)
+                                                 total=total, skipped=skipped, secrets=secrets, workflow=env.get("NOT_PUBLISHED_WORKFLOW") or "",
+                                                 run_url=env.get("NOT_PUBLISHED_RUN_URL") or ""), smtp=smtp, smtp_ssl=smtp_ssl)
     except Exception as exc:
         return f"'not published' email NOT sent ({type(exc).__name__})"
     return f"'not published' email sent to {mask(config['to'])}"

@@ -175,6 +175,8 @@ jobs:
         env:
           NOT_PUBLISHED_PLATFORM: bluesky,mastodon
           NOT_PUBLISHED_REASON: "review mode is on (POST_REVIEW) or this is a test run (publish=false): the draft waits for your approval in the dashboard"
+          NOT_PUBLISHED_WORKFLOW: ${{ github.workflow }}
+          NOT_PUBLISHED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
           MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
@@ -245,6 +247,8 @@ jobs:
         env:
           NOT_PUBLISHED_PLATFORM: mastodon
           NOT_PUBLISHED_REASON: "Mastodon publishing is switched off (MASTODON_ENABLED is not true)"
+          NOT_PUBLISHED_WORKFLOW: ${{ github.workflow }}
+          NOT_PUBLISHED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
           MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
@@ -313,6 +317,8 @@ jobs:
         env:
           NOT_PUBLISHED_PLATFORM: bluesky,mastodon
           NOT_PUBLISHED_REASON: "posting is switched off (POST_ENABLED or PUBLISH_SITE is not true), so the job that posts did not run"
+          NOT_PUBLISHED_WORKFLOW: ${{ github.workflow }}
+          NOT_PUBLISHED_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
           MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
