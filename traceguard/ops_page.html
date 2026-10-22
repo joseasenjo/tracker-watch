@@ -424,6 +424,17 @@
     draftsCount.className = waitingDrafts ? 'pill media' : 'muted';
     renderMail(s);
 
+    function renderHealth(h) {
+      if (!h || !h.available) { return []; }
+      var verdictText = { confirmed: 'confirmado', probable_artifact: 'probable artefacto de medición', reverted: 'revertido', unconfirmed: 'sin confirmar' };
+      return [
+        el('div', { class: 'counters' }, [counter(h.scans + ' / ' + h.min_scans, 'escaneos comparables' + (h.preliminary ? ' (preliminar)' : '')),
+          counter(h.stable, 'webs estables'), counter(h.variable, 'webs variables')]),
+        note('Saltos grandes verificados (los mismos que muestra la página Tendencias):'),
+        h.anomalies.length ? table(['Medio', 'Antes', 'Ahora', 'Peticiones', 'Lectura'], h.anomalies.map(function (a) {
+          return [a.name, a.from, a.to, a.requests_change_pct === null ? '–' : (a.requests_change_pct > 0 ? '+' : '') + a.requests_change_pct + '%', verdictText[a.verdict] || a.verdict]; })) : note('Ninguno.') ];
+    }
+
     var sc = s.scan;
     fill('scan', !sc.available ? [note('No hay datos en data/runs.')] : [
       el('div', { class: 'counters' }, [
@@ -433,7 +444,7 @@
       el('div', { class: 'scroll' }, [table(['País', 'Mediana', 'Webs'], Object.keys(sc.medians).map(function (g) { return [g, sc.medians[g].median, sc.medians[g].sites]; }))]),
       note('Cambios grandes desde la medición anterior:'),
       sc.swings.length ? table(['Medio', 'Antes', 'Ahora', 'Cambio'], sc.swings.map(function (x) { return [x.name, x.before, x.after, (x.delta > 0 ? '+' : '') + x.delta]; })) : note('Ninguno.'),
-      note('Más servicios: ' + sc.top.map(function (t) { return t.name + ' ' + t.n; }).join(', ')) ]);
+      note('Más servicios: ' + sc.top.map(function (t) { return t.name + ' ' + t.n; }).join(', ')) ].concat(renderHealth(s.health)));
 
     var b = s.bot;
     fill('bot', !b.available ? [note('No se pudo leer Bluesky.')] : [

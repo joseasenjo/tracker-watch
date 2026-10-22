@@ -148,6 +148,27 @@ def scan_summary(runs_dir: Path | str, sites_file: Path | str = "data/sites.json
     }
 
 
+def data_health(runs_dir: Path | str, sites_file: Path | str = "data/sites.json") -> dict:
+    """The data-quality reading of the series, from the same insights the Trends page shows (one source, two views):
+    how many comparable scans there are, stable and variable sites, and each recent jump with its verdict."""
+    runs = Path(runs_dir)
+    if not runs.is_dir():
+        return {"available": False}
+    from . import insights, trends
+    from .posts import load_groups
+    try:
+        points = trends.summary(runs, load_groups(sites_file))["comparable"]
+    except (OSError, ValueError, KeyError):
+        return {"available": False}
+    if not points:
+        return {"available": False}
+    stability = insights.stability(points)
+    return {"available": True, "scans": len(points), "preliminary": insights.preliminary(len(points)),
+            "min_scans": insights.PRELIMINARY_BELOW, "stable": stability["stable"], "variable": stability["variable"],
+            "anomalies": [{k: a[k] for k in ("name", "from", "to", "delta", "requests_change_pct", "verdict", "until")}
+                          for a in insights.anomalies(points)]}
+
+
 def pending_drafts(drafts_dir: Path | str, today: _date | None = None) -> list[dict]:
     """Drafts on disk that were not published, newest first (those waiting for approval in review mode)."""
     base, today, rows = Path(drafts_dir), today or _date.today(), []
@@ -303,7 +324,9 @@ def build_alerts(state: dict, now: datetime | None = None) -> list[dict]:
         except ValueError:
             pass
         if scan["swings"]:
-            moved = ", ".join(f"{s['name']} {s['before']}→{s['after']}" for s in scan["swings"][:5])
+            verdicts = {a["name"]: a["verdict"] for a in (state.get("health") or {}).get("anomalies", []) if a["until"] == scan["date"]}
+            moved = ", ".join(f"{s['name']} {s['before']}→{s['after']}" + (f" ({verdicts[s['name']].replace('_', ' ')})" if s["name"] in verdicts else "")
+                              for s in scan["swings"][:5])
             more = f" (y {len(scan['swings']) - 5} más)" if len(scan["swings"]) > 5 else ""
             add("media", f"Cambios bruscos de servicios entre el escaneo del {scan.get('previous') or 'anterior'} y el del {scan['date']}: "
                          f"{moved}{more}. Revisar antes de destacarlos: pueden deberse a un banner de consentimiento o a una medición distinta.")
@@ -357,6 +380,7 @@ def get_status(repo: str = DEFAULT_REPO, *, runner: Callable = subprocess.run, h
              "drafts": pending_drafts(drafts_dir), "bot": bot_state(http_get), "mastodon": mastodon_state(http_get), "site": site_state(http_get),
              "git": git_state(runner), "notes": load_notes(), "switches": SWITCHES, "workflows": WORKFLOWS, "secrets_needed": list(SECRETS),
              "schedule": "Escaneo e hilo: lunes 07:00 UTC · Post corto: miércoles 08:00 UTC"}
+    state["health"] = data_health(runs_dir, sites_file)
     state["subscribers"] = subscribers_state(subscribers_file, sync_mark)
     state["digests"] = digest_candidates(drafts_dir, (state["github"] or {}).get("variables") or {}, subscribers_file)
     state["alerts"] = build_alerts(state, now)

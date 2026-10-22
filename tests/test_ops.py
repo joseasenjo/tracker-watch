@@ -438,3 +438,16 @@ def test_the_mail_section_of_the_page_lists_subscribers_and_approves_digests():
         assert api in page
     assert "Aprobar y enviar" in page and "Enviarme una prueba" in page and "Sincronizar con GitHub" in page
     assert "id=\"sec-correo\" open" not in page
+
+
+def test_data_health_reads_the_series_like_the_trends_page_and_labels_the_big_moves(data):
+    from tests.test_trends import report as full_report, write as write_scans
+    write_scans(data.tmp / "full", "2026-10-05", [full_report("https://a/", 10, ["X"])])
+    write_scans(data.tmp / "full", "2026-10-12", [full_report("https://a/", 11, ["X"])])
+    h = ops.data_health(data.tmp / "full" / "runs", data.sites)
+    assert h["available"] and h["scans"] >= 2 and h["preliminary"] and h["stable"] == 0  # too few scans to judge stability
+    s = state(data)
+    s["health"] = {"anomalies": [{"name": "News A", "until": "2026-10-09", "verdict": "probable_artifact"}]}
+    text = [a["text"] for a in ops.build_alerts(s, NOW) if "Cambios bruscos" in a["text"]][0]
+    assert "News A 50→10 (probable artifact)" in text
+    assert ops.data_health(data.tmp / "none") == {"available": False}
