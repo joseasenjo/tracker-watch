@@ -110,7 +110,7 @@ so explicitly in the justification: "processed locally, never transmitted".
   `02-blocking.png` (blocking on, what was stopped), `03-settings.png` (settings). Made by `make_screenshots.py` with the
   real extension on a real page (the panel is composed beside the page because a toolbar popup cannot be photographed
   from outside the browser). Re-make them whenever the interface changes.
-- Chrome small promotional tile 440x280: not made; only needed for the Chrome Web Store.
+- Chrome small promotional tile 440x280: `screenshots/promo-tile-440x280.png`, made on 22 October 2026 by `make_promo_tile.py` (the extension's icon, its name and one plain sentence; no third-party artwork). Only the Chrome Web Store asks for it.
 
 ## Where it is listed (decision of 9 October 2026, to avoid costs for now)
 - **Microsoft Edge Add-ons** and **Firefox Add-ons (AMO)**: free; to submit first. The package for each is the release

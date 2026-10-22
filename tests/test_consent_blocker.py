@@ -305,3 +305,32 @@ def test_subscription_links_outside_the_banner_are_not_a_paid_option(browser):
                               '<footer><p>Datenschutz und Cookies</p><a href="#">Abo kündigen</a></footer>')
     record = act(page, "reject", settle_ms=0)
     assert record["outcome"] == "no_button" and record["paid_option"] is None
+
+
+def test_a_page_that_has_more_with_the_list_than_without_is_marked_as_varying_and_explained(tmp_path):
+    steady = ok_report("News A", "https://a.example/", tracking=10, vantage="github-actions-us")
+    steady["summary"]["metrics"].update(third_party_requests=100)
+    odd = ok_report("News B", "https://b.example/", tracking=2, vantage="github-actions-us")
+    odd["summary"]["metrics"].update(third_party_requests=20)
+    write(tmp_path, "2026-10-04", {"a": steady, "b": odd})
+    protected = {}
+    for stem, name, url, tracking, requests in (("a", "News A", "https://a.example/", 4, 40), ("b", "News B", "https://b.example/", 9, 150)):
+        r = ok_report(name, url, tracking=tracking, vantage="github-actions-us")
+        r["summary"]["metrics"].update(third_party_requests=requests)
+        r["summary"]["protection"] = {"blocked_requests": 5, "blocked_domains": []}
+        r["measurement"]["blocklist"] = {"name": "EasyPrivacy", "url": "", "sha256": "x", "rules_total": 1, "rules_applied": 1}
+        protected[stem] = r
+    folder = tmp_path / "protected" / "github-actions-us" / "2026-10-05"
+    folder.mkdir(parents=True)
+    for stem, r in protected.items():
+        (folder / f"{stem}.json").write_text(json.dumps(r))
+    sites = tmp_path / "sites.json"
+    sites.write_text(json.dumps({"sites": [{"name": "News A", "url": "https://a.example/", "group": "UK"},
+                                           {"name": "News B", "url": "https://b.example/", "group": "DE"}]}))
+    ctx = build_site(tmp_path / "runs", tmp_path / "site", sites_file=str(sites))
+    o = ctx["protection"]["origins"][0]
+    flags = {r["stem"]: r["varies"] for r in o["rows"]}
+    assert flags == {"a": False, "b": True}
+    assert o["stats"]["varied"] == 1 and o["stats"]["median_requests_cut_steady"] == 60
+    page = (tmp_path / "site" / "protection.html").read_text(encoding="utf-8")
+    assert "Read the odd rows with care" in page and "varies" in page and "without them the median drop in third-party requests is 60%" in page

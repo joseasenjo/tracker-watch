@@ -25,6 +25,9 @@
         {% if o.stats.median_bytes_cut is not none %}<div class="counter"><b>{{ '%g'|format(o.stats.median_bytes_cut) }}%</b><span>median drop in third-party data</span></div>{% endif %}
         <div class="counter"><b>{{ '%g'|format(o.stats.median_tracking_passive) }} → {{ '%g'|format(o.stats.median_tracking_protected) }}</b><span>median tracking services, without and with the list</span></div>
       </div>
+      {% if o.stats.varied %}
+      <p class="small"><b>Read the odd rows with care.</b> {{ o.stats.varied }} of the {{ o.stats.paired }} sites show <i>more</i> tracking services or requests with the list than without. Blocking cannot add requests, so on those sites the page itself changed between the two measurements (they are taken on different days, and news pages and their ad auctions vary). They are marked “varies” and kept in the table and in the medians above;{% if o.stats.median_requests_cut_steady is not none %} without them the median drop in third-party requests is {{ '%g'|format(o.stats.median_requests_cut_steady) }}%.{% else %} there are not enough steady sites to give a median without them.{% endif %}</p>
+      {% endif %}
       {% else %}
       <div class="note">No passive measurement from the same origin within a week, so nothing is compared.</div>
       {% endif %}
@@ -41,7 +44,7 @@
               {% if r.paired %}
               <td class="num">{{ r.passive.tracking }} → <b>{{ r.protected.tracking }}</b></td>
               <td class="num">{{ r.passive.requests }} → <b>{{ r.protected.requests }}</b></td>
-              <td class="num">{{ r.requests_cut }}%</td>
+              <td class="num">{{ r.requests_cut }}%{% if r.varies %} <span class="pill warn" title="With the list there is more than without it: the page changed between the two measurements">varies</span>{% endif %}</td>
               <td class="num">{% if r.passive.bytes is not none and r.protected.bytes is not none %}{{ r.passive.bytes|size }} → {{ r.protected.bytes|size }}{% else %}–{% endif %}</td>
               {% else %}
               <td class="num">{{ '– → ' ~ r.protected.tracking if r.protected else '–' }}</td><td class="num">{{ '– → ' ~ r.protected.requests if r.protected else '–' }}</td><td class="num">–</td><td class="num">–</td>

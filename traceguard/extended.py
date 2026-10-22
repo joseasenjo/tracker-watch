@@ -75,6 +75,9 @@ def consent_view(consent_dir: Path | str, labels: dict[str, str], meta: dict[str
     return {"origins": origins, "by_stem": by_stem, "has_data": any(o["stats"]["measured"] for o in origins)}
 
 
+VARIES_BELOW = -25  # percent: a drop below this (requests went UP by a quarter) cannot be caused by blocking
+
+
 def _figures(report: dict | None) -> dict | None:
     if not report or report["summary"]["status"] != "ok":
         return None
@@ -114,6 +117,8 @@ def protection_view(protected_dir: Path | str, baselines: dict[str, dict[str, di
                 row["requests_cut"] = _reduction(passive["requests"], protected["requests"])
                 row["bytes_cut"] = _reduction(passive["bytes"], protected["bytes"])
                 row["tracking_cut"] = passive["tracking"] - protected["tracking"]
+                # Blocking only removes requests: more of them with the list means the page itself changed between the two days.
+                row["varies"] = protected["tracking"] > passive["tracking"] or (row["requests_cut"] is not None and row["requests_cut"] < VARIES_BELOW)
             rows.append(row)
             by_stem.setdefault(stem, []).append({"label": label, "date": date, "base_date": base_date, **row})
         paired = [r for r in rows if r["paired"]]
@@ -127,5 +132,7 @@ def protection_view(protected_dir: Path | str, baselines: dict[str, dict[str, di
                 "median_tracking_passive": _median(r["passive"]["tracking"] for r in paired),
                 "median_tracking_protected": _median(r["protected"]["tracking"] for r in paired),
                 "zero_tracking_protected": sum(1 for r in paired if r["protected"]["tracking"] == 0),
+                "varied": sum(1 for r in paired if r["varies"]),
+                "median_requests_cut_steady": _median(r["requests_cut"] for r in paired if not r["varies"]),
             }})
     return {"origins": origins, "by_stem": by_stem, "has_data": any(o["stats"]["paired"] for o in origins)}
