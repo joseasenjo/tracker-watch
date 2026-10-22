@@ -66,3 +66,60 @@ def line_chart(series: list[tuple[str, list[tuple[str, float | None]]]], *, widt
     label_text = "Line chart. " + "; ".join(description)
     return Markup(f'<svg class="linechart" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" '
                   f'aria-label="{escape(label_text)}">{"".join(parts)}</svg>')
+
+
+def stacked_bars(rows: list[tuple[str, dict[str, int]]], keys: tuple[str, ...], *, width: int = 640, height: int = 240) -> Markup:
+    """One column per scan, split into the bands (A, B, ...) with the number of sites in each. Colours: CSS classes sb-0..sb-4
+    (light and dark); the numbers are written inside the segments and in the accessible description."""
+    if not rows:
+        return Markup("")
+    left, right, top, bottom = 40, 90, 14, 32
+    total = max(sum(counts.get(k, 0) for k in keys) for _, counts in rows) or 1
+    plot_w, plot_h = width - left - right, height - top - bottom
+    slot = plot_w / len(rows)
+    bar = min(70.0, slot * 0.62)
+    parts, description = [], []
+    for i, (label, counts) in enumerate(rows):
+        x = left + slot * i + (slot - bar) / 2
+        y = top + plot_h
+        for index, key in enumerate(keys):
+            n = counts.get(key, 0)
+            if not n:
+                continue
+            h = plot_h * n / total
+            y -= h
+            parts.append(f'<rect class="sb sb-{index % 5}" x="{x:.1f}" y="{y:.1f}" width="{bar:.1f}" height="{h:.1f}"><title>{escape(label)}, band {escape(key)}: {n}</title></rect>')
+            if h >= 14:
+                parts.append(f'<text class="sb-num" x="{x + bar / 2:.1f}" y="{y + h / 2 + 4:.1f}" text-anchor="middle">{n}</text>')
+        parts.append(f'<text class="lc-num" x="{x + bar / 2:.1f}" y="{height - 10}" text-anchor="middle">{escape(label[5:])}</text>')
+        description.append(f"{label}: " + ", ".join(f"{k} {counts.get(k, 0)}" for k in keys))
+    for index, key in enumerate(keys):  # the key, on the right
+        parts.append(f'<rect class="sb sb-{index % 5}" x="{width - right + 14}" y="{top + 6 + 20 * index}" width="12" height="12"/>'
+                     f'<text class="lc-num" x="{width - right + 32}" y="{top + 16 + 20 * index}">Band {escape(key)}</text>')
+    return Markup(f'<svg class="stackbars" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" '
+                  f'aria-label="{escape("Sites per band and scan. " + "; ".join(description))}">{"".join(parts)}</svg>')
+
+
+def heatmap(rows: list[str], columns: list[str], values: list[list[int]], *, extra: list[int] | None = None,
+            extra_label: str = "All sites", unit: str = "%") -> Markup:
+    """Rows x columns of percentages as shaded cells, with the number in each cell; an optional last column (the overall
+    figure). Shading uses one CSS class (hm-cell) with an opacity from the value, so light and dark themes both work."""
+    if not rows or not columns:
+        return Markup("")
+    label_w, cell_w, cell_h, top = 170, 62, 24, 38
+    names = columns + ([extra_label] if extra else [])
+    width, height = label_w + cell_w * len(names) + 8, top + cell_h * len(rows) + 8
+    parts = []
+    for c, name in enumerate(names):
+        parts.append(f'<text class="lc-num" x="{label_w + cell_w * c + cell_w / 2:.1f}" y="{top - 12}" text-anchor="middle">{escape(name)}</text>')
+    for r, row in enumerate(rows):
+        y = top + cell_h * r
+        parts.append(f'<text class="hm-label" x="{label_w - 8}" y="{y + cell_h / 2 + 4:.1f}" text-anchor="end">{escape(row)}</text>')
+        for c in range(len(names)):
+            v = values[r][c] if c < len(columns) else extra[r]
+            x = label_w + cell_w * c
+            cls = "hm-cell hm-extra" if c >= len(columns) else "hm-cell"
+            parts.append(f'<rect class="{cls}" x="{x}" y="{y}" width="{cell_w - 2}" height="{cell_h - 2}" style="--v:{v / 100:.2f}"><title>{escape(row)}, {escape(names[c])}: {v}{escape(unit)}</title></rect>'
+                         f'<text class="hm-num" x="{x + (cell_w - 2) / 2:.1f}" y="{y + cell_h / 2 + 3:.1f}" text-anchor="middle">{v}</text>')
+    return Markup(f'<svg class="heatmap" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" '
+                  f'aria-label="{escape("Share of the sites of each family running each company: " + "; ".join(f"{row}: " + ", ".join(f"{names[c]} {values[r][c] if c < len(columns) else extra[r]}%" for c in range(len(names))) for r, row in enumerate(rows)))}">{"".join(parts)}</svg>')

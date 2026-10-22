@@ -41,6 +41,92 @@
         <p class="small">Share of the measured sites on which the leading company, and the average of the three leading ones, ran a tracking service in every stable pass.</p>
       </div>
 
+      {% set ins = t.insights %}
+      {% if ins.preliminary %}
+      <div class="note"><b>Preliminary.</b> These analyses rest on {{ ins.scans }} scan{{ 's' if ins.scans != 1 }}; they firm up from about {{ ins.min_scans }}. Every statement below is computed from the published reports and can be checked in <a href="{{ root }}data/trends_sites.csv">trends_sites.csv</a>.</div>
+      {% endif %}
+
+      {% if ins.changed %}
+      {% set c = ins.changed %}
+      <div class="card" id="changed">
+        <h3>What changed since the previous scan</h3>
+        <p>Between {{ c.from }} and {{ c.to }}, {{ c.sites_compared }} sites were measured in both. The median went from {{ c.median_from }} to {{ c.median_to }} tracking services per site.</p>
+        <ul>
+          {% if c.sites_up %}<li><b>Sites that rose most:</b> {% for m in c.sites_up %}{{ m.name }} ({{ m.from }} → {{ m.to }}, {{ '%+d'|format(m.delta) }}){% if m.verdict %} <span class="pill warn" title="See the odd jumps below">{{ m.verdict|replace('_', ' ') }}</span>{% endif %}{% if not loop.last %}; {% endif %}{% endfor %}.</li>{% endif %}
+          {% if c.sites_down %}<li><b>Sites that fell most:</b> {% for m in c.sites_down %}{{ m.name }} ({{ m.from }} → {{ m.to }}, {{ '%+d'|format(m.delta) }}){% if m.verdict %} <span class="pill warn" title="See the odd jumps below">{{ m.verdict|replace('_', ' ') }}</span>{% endif %}{% if not loop.last %}; {% endif %}{% endfor %}.</li>{% endif %}
+          {% if c.companies_gained %}<li><b>Companies that reached more sites:</b> {% for m in c.companies_gained %}{{ m.company }} ({{ m.from }} → {{ m.to }}){% if not loop.last %}; {% endif %}{% endfor %}.</li>{% endif %}
+          {% if c.companies_lost %}<li><b>Companies that reached fewer:</b> {% for m in c.companies_lost %}{{ m.company }} ({{ m.from }} → {{ m.to }}){% if not loop.last %}; {% endif %}{% endfor %}.</li>{% endif %}
+        </ul>
+        <p class="small">Small week-to-week moves are normal: pages and their ad auctions vary. A big move is only called a change once the next scan keeps it (see below).</p>
+      </div>
+      {% endif %}
+
+      <div class="card" id="stability">
+        <h3>Stable sites and odd jumps</h3>
+        {% if ins.stability.rows %}
+        <p>Of the {{ ins.stability.rows|length }} sites measured in at least {{ ins.stability.min_scans }} scans, <b>{{ ins.stability.stable }}</b> are <i>stable</i> (their count stayed within 3 services or a quarter of their median) and <b>{{ ins.stability.variable }}</b> are <i>variable</i>{% if ins.stability.variable %}: {% for r in ins.stability.rows if r.label == 'variable' %}{{ r.name }} ({{ r.min }} to {{ r.max }}){% if not loop.last %}, {% endif %}{% endfor %}{% endif %}.</p>
+        {% else %}
+        <p>There are not enough scans yet to tell stable sites from variable ones (at least {{ ins.stability.min_scans }} per site).</p>
+        {% endif %}
+        {% if ins.anomalies %}
+        <p>Jumps of at least 15 services and half of the larger count in the last two scans, each checked against the site's history, its third-party requests and the scan after it:</p>
+        <div class="table-scroll"><table class="t">
+          <thead><tr><th>Site</th><th class="num">Before → after</th><th class="num">Requests</th><th>Reading</th></tr></thead>
+          <tbody>
+          {% for a in ins.anomalies %}
+            <tr><td>{{ a.name }}</td><td class="num">{{ a.from }} → <b>{{ a.to }}</b></td>
+              <td class="num">{{ '%+d'|format(a.requests_change_pct) ~ '%' if a.requests_change_pct is not none else '–' }}</td>
+              <td><span class="pill{{ ' warn' if a.verdict != 'confirmed' }}">{{ a.verdict|replace('_', ' ') }}</span> {{ a.explanation }}.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table></div>
+        {% else %}
+        <p>No site made a jump that big between the last two scans.</p>
+        {% endif %}
+        <p class="small">A measurement can differ from the previous one because the page loaded differently (a consent wall, a bot check, an ad auction), not because the site changed. That is why a jump is called a <i>confirmed</i> change only when it holds in the following scan.</p>
+      </div>
+
+      <div class="card">
+        <h3>Companies over time</h3>
+        {{ t.chart_companies }}
+        <p class="small">Share of the measured sites on which each of today's five leading companies ran a tracking service. Same count as the <a href="{{ root }}companies.html">Companies</a> page.</p>
+      </div>
+
+      <div class="card">
+        <h3>What kind of tracking</h3>
+        {{ t.chart_categories }}
+        <p class="small">Share of the measured sites with at least one service of each category. A site counts in every category it uses, so the lines are not meant to add up to 100%. See <a href="{{ root }}glossary.html">what the categories mean</a>.</p>
+      </div>
+
+      <div class="card">
+        <h3>How the sites are spread, not only the median</h3>
+        {% if ins.quartiles %}
+        <div class="table-scroll"><table class="t">
+          <thead><tr><th>Group</th><th class="num">Sites</th><th class="num">Q1</th><th class="num">Median</th><th class="num">Q3</th><th class="num">Highest</th></tr></thead>
+          <tbody>
+          {% for g, q in ins.quartiles.items() %}<tr><td>{{ g }}</td><td class="num">{{ q.n }}</td><td class="num">{{ q.q1 }}</td><td class="num">{{ q.median }}</td><td class="num">{{ q.q3 }}</td><td class="num">{{ q.max }}</td></tr>{% endfor %}
+          </tbody>
+        </table></div>
+        <p class="small">Tracking services per site in the newest scan. Half of the sites of a group are between its Q1 and Q3.</p>
+        {% endif %}
+        {{ t.chart_bands }}
+        <p class="small">Sites in each band (A: 0 to 2 services, up to E: 50 or more) in each scan. Bands are fixed ranges of a count, not a verdict.</p>
+      </div>
+
+      {% set fam = ins.families %}
+      {% if fam and fam.families %}
+      <div class="card" id="families">
+        <h3>Families of sites by tracker stack</h3>
+        <p>Sites that run a similar set of companies end up together. In the scan of {{ fam.date }}, {{ fam.sites }} sites that contacted at least one tracking company fall into <b>{{ fam.families|length }} families</b>{% if fam.rest %}, and {{ fam.rest|length }} more have a mixed stack that fits none{% endif %}. Each family is described by the companies that mark it: on at least 60% of its sites and well above their share across all sites.</p>
+        {% for f in fam.families %}
+        <h4>{{ f.id }}: {{ f.size }} sites, mostly {{ f.lead_group }} ({{ f.lead_group_n }} of {{ f.size }}), median {{ f.median_tracking }} services ({{ f.min_tracking }} to {{ f.max_tracking }})</h4>
+        <p class="small">{{ f.sites|join(', ') }}.{% if f.signature %} <b>Marked by:</b> {% for m in f.signature %}{{ m.company }} ({{ m.pct_inside }}% here, {{ m.pct_overall }}% overall){% if not loop.last %}; {% endif %}{% endfor %}.{% else %} No company marks this family on its own: its sites share the common stack.{% endif %}</p>
+        {% endfor %}
+        {{ t.chart_families }}
+        <p class="small">Share of each family's sites running each company (the last column is all sites). <b>Read it as co-presence only:</b> it shows which companies tend to appear on the same sites, not that they work together, and the families change as the data does.</p>
+      </div>
+      {% endif %}
+
       <h2>Month by month</h2>
       <div class="table-scroll">
         <table class="t">

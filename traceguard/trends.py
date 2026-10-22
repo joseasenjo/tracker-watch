@@ -58,8 +58,19 @@ def _median(values: list[float]):
     return round(statistics.median(values), 1) if values else None
 
 
-def point(date: str, reports: list[dict], groups: dict[str, str] | None = None) -> dict:
-    """One scan as one point of the series."""
+def _quartiles(values: list[float]) -> dict:
+    """Q1, median, Q3 and the extremes of one group of sites (inclusive method: the quartiles are values of the data's range)."""
+    if not values:
+        return {"n": 0, "q1": None, "median": None, "q3": None, "min": None, "max": None}
+    if len(values) == 1:
+        v = values[0]
+        return {"n": 1, "q1": v, "median": v, "q3": v, "min": v, "max": v}
+    q1, med, q3 = statistics.quantiles(values, n=4, method="inclusive")
+    return {"n": len(values), "q1": round(q1, 1), "median": round(med, 1), "q3": round(q3, 1), "min": min(values), "max": max(values)}
+
+
+def point(date: str, reports: list[dict], groups: dict[str, str] | None = None, stems: list[str] | None = None) -> dict:
+    """One scan as one point of the series. `stems` (the report file names) identify each site; the site URL when absent."""
     use = eligible(reports)
     counts = [r["summary"]["metrics"]["tracking_services"] for r in use]
     first = reports[0]["measurement"] if reports else {}
@@ -74,6 +85,23 @@ def point(date: str, reports: list[dict], groups: dict[str, str] | None = None) 
         if label:
             bands[label] += 1
     c = concentration(reports)
+    names = {id(r): (stems[i] if stems else r["site"]["url"]) for i, r in enumerate(reports)}
+    site_rows, presence, categories = [], {}, {}
+    for r in use:
+        stem = names[id(r)]
+        group = (groups or {}).get(r["site"]["url"].rstrip("/"), "")
+        site_rows.append({"stem": stem, "name": r["site"]["name"], "group": group,
+                          "tracking": r["summary"]["metrics"]["tracking_services"],
+                          "requests": r["summary"]["metrics"]["third_party_requests"], "confidence": r["summary"].get("confidence")})
+        seen_categories = set()
+        for service in r["summary"].get("services", []):
+            if service.get("tracking") and service.get("stable"):
+                presence.setdefault(service["entity"], []).append(stem)
+                seen_categories.add(service.get("category") or "other")
+        for category in seen_categories:
+            categories[category] = categories.get(category, 0) + 1
+    quartiles = {g: _quartiles(v) for g, v in sorted(by_group.items())}
+    quartiles["All"] = _quartiles(counts)
     return {
         "date": date, "vantage": first.get("vantage", ""), "passes": first.get("passes"), "observe_seconds": first.get("observe_seconds"),
         "conditions": conditions(reports[0]) if reports else (None, None, None),
@@ -82,7 +110,9 @@ def point(date: str, reports: list[dict], groups: dict[str, str] | None = None) 
         "by_group": {g: _median(v) for g, v in sorted(by_group.items())},
         "bands": bands, **{k: c[k] for k in ("top_company", "top_company_sites", "top_company_pct", "top3_mean_pct", "companies",
                                               "concentration_index")},
-        "reach": c["reach"][:10],
+        "reach": c["reach"][:10], "reach_all": dict(c["reach"]),
+        "site_rows": sorted(site_rows, key=lambda r: r["stem"]), "quartiles": quartiles, "categories": categories,
+        "presence": {company: sorted(set(stems_)) for company, stems_ in sorted(presence.items())},
     }
 
 
@@ -90,9 +120,10 @@ def load_series(runs_dir: Path | str, groups: dict[str, str] | None = None) -> l
     """One point per scan folder, oldest first. A folder with no usable site is left out."""
     series = []
     for folder in sorted(p for p in Path(runs_dir).iterdir() if p.is_dir()):
-        reports = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(folder.glob("*.json"))]
+        files = sorted(folder.glob("*.json"))
+        reports = [json.loads(p.read_text(encoding="utf-8")) for p in files]
         if reports and eligible(reports):
-            series.append(point(folder.name, reports, groups))
+            series.append(point(folder.name, reports, groups, [p.stem for p in files]))
     return series
 
 

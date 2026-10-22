@@ -10,7 +10,7 @@ def report(url, tracking, entities, *, confidence="high", status="ok", vantage="
         "measurement": {"vantage": vantage, "passes": passes, "observe_seconds": observe},
         "summary": {"status": status, "confidence": confidence,
                     "metrics": {"tracking_services": tracking, "third_party_requests": 10},
-                    "services": [{"entity": e, "tracking": True, "stable": True, "passes_seen": 3, "service": f"{e}.example"}
+                    "services": [{"entity": e, "tracking": True, "stable": True, "passes_seen": 3, "service": f"{e}.example", "category": "advertising"}
                                  for e in entities]},
     }
 

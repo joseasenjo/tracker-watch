@@ -29,7 +29,7 @@ from .community import load_community
 from .entities import horizontal_bars, inferred_entities, leader_story, reach
 from .extended import consent_view, protection_view
 from .filterlist import build as build_filter_lists
-from .bands import band_for, describe as describe_bands
+from .bands import BANDS, band_for, describe as describe_bands
 from .behaviour import phrases as activity_phrases, service_activity, totals as activity_totals
 from .categories import describe as describe_categories, label as category_label
 from .diff import compare_reports
@@ -41,8 +41,8 @@ from .limits import DEFAULTS as DEFAULT_LIMITS, LimitsError, load_limits
 from .links import load_links
 from .report import passive_requests
 from .origins import compare as compare_origins, load_extra, paired_bars
-from . import trends as trends_module
-from .spark import line_chart, sparkline
+from . import insights as insights_module, trends as trends_module
+from .spark import heatmap, line_chart, sparkline, stacked_bars
 
 SRC = Path(__file__).resolve().parent.parent / "site_src"
 GUIDE = Path(__file__).resolve().parent.parent / "extension" / "GUIDE.md"
@@ -212,6 +212,13 @@ def trends_view(runs_dir: Path | str, meta: dict[str, dict]) -> dict:
     view["chart_leader"] = line_chart(
         [("Top company", [(p["date"], p["top_company_pct"]) for p in same]),
          ("Top 3, mean", [(p["date"], p["top3_mean_pct"]) for p in same])], unit="% of sites")
+    labels = {key: category_label(key) for p in same for key in p["categories"]}
+    view["insights"] = ins = insights_module.analyse(same, labels)
+    view["chart_companies"] = line_chart([(c, v) for c, v in ins["company_series"]], unit="% of sites")
+    view["chart_categories"] = line_chart([(c, v) for c, v in ins["category_series"]], unit="% of sites")
+    view["chart_bands"] = stacked_bars(ins["bands"], tuple(label for label, _, _ in BANDS))
+    fam = ins["families"]
+    view["chart_families"] = heatmap(fam["companies"], [f["id"] for f in fam["families"]], fam["heat"], extra=fam["overall"]) if fam else ""
     return view
 
 
@@ -467,6 +474,10 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
             writer.writerow([ctx["date"], r["entity"], r["n"], ctx["entities"]["measured"], r["share"],
                              " ".join(r["services"]), " ".join(r["categories"])])
     trends_module.write_series_csv(ctx["trends"]["series"], data_dir / "trends.csv")
+    with (data_dir / "trends_sites.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(insights_module.SITES_COLUMNS)
+        writer.writerows(insights_module.sites_rows(ctx["trends"]["comparable"]))
     with (data_dir / "consent.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(CONSENT_COLUMNS)
@@ -514,7 +525,7 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         "name": SITE_NAME, "site": base, "licence": "CC BY 4.0 (credit 'Tracker Watch')",
         "schema_version": SCHEMA_VERSION, "latest_date": ctx["date"], "dates": ctx["dates"], "origins": origins,
         "files": {"latest.csv": "data/latest.csv", "history.csv": "data/history.csv",
-                  "entities.csv": "data/entities.csv", "trends.csv": "data/trends.csv", "consent.csv": "data/consent.csv",
+                  "entities.csv": "data/entities.csv", "trends.csv": "data/trends.csv", "trends_sites.csv": "data/trends_sites.csv", "consent.csv": "data/consent.csv",
                   "protection.csv": "data/protection.csv", "index.json": "data/index.json",
                   "trackerwatch-verified.txt": "data/trackerwatch-verified.txt",
                   "trackerwatch-full.txt": "data/trackerwatch-full.txt"},

@@ -366,6 +366,16 @@ def test_the_trends_page_and_its_csv_are_built_and_say_what_the_index_is_not(bui
     assert ctx["trends"]["series"] and "<svg" in str(ctx["trends"]["chart_medians"])
 
 
+def test_the_trends_page_has_the_insight_sections_and_the_sites_csv(built):
+    _, out, ctx = built
+    page = (out / "trends.html").read_text(encoding="utf-8")
+    for anchor in ('id="stability"', "Companies over time", "What kind of tracking", "not only the median"):
+        assert anchor in page
+    assert "Preliminary" in page  # the fixture has far fewer scans than the threshold
+    assert "trends_sites.csv" in page and (out / "data" / "trends_sites.csv").read_text(encoding="utf-8").splitlines()[0].startswith("date,site_id")
+    assert "trends_sites.csv" in json.loads((out / "data" / "index.json").read_text(encoding="utf-8"))["files"]
+
+
 def test_the_line_chart_leaves_a_gap_for_a_missing_value_and_describes_itself():
     from traceguard.spark import line_chart
     svg = str(line_chart([("UK", [("2026-10-05", 60), ("2026-10-12", None), ("2026-10-19", 80)]),
