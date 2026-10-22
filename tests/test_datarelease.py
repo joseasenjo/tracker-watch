@@ -19,11 +19,11 @@ def test_the_zip_holds_the_months_reports_the_trends_and_a_readme_and_not_other_
     names = zipfile.ZipFile(done["zip"]).namelist()
     assert "data/runs/2026-10-05/s0.json" in names and "data/runs/2026-10-12/s0.json" in names
     assert not any("2026-09-28" in n for n in names)
-    assert {"data/trends/series.csv", "data/trends/monthly.json", "README.txt", "DATA_LICENSE.md", "CITATION.cff"} <= set(names)
+    assert {"data/trends/series.csv", "data/trends/monthly.json", "data/trends/sites.csv", "README.txt", "DATA_LICENSE.md", "CITATION.cff"} <= set(names)
     readme = zipfile.ZipFile(done["zip"]).read("README.txt").decode()
     assert "2 scan(s): 2026-10-05, 2026-10-12" in readme and "counts, not legal conclusions" in readme.lower()
     assert (tmp_path / "dist" / "SHA256SUMS.txt").read_text().split()[0] == done["sha256"]
-    assert not (tmp_path / "dist" / "series.csv").exists()  # the temporary files are gone
+    assert not (tmp_path / "dist" / "sites.csv").exists() and not (tmp_path / "dist" / "series.csv").exists()  # the temporary files are gone
 
 
 def test_a_month_without_scans_or_a_bad_month_is_refused(tmp_path, capsys):

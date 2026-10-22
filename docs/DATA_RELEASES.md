@@ -7,7 +7,7 @@ and the lists they were made with, and publishes them as a GitHub release tagged
 ## What a release contains
 
 `tracker-watch-data-YYYY-MM.zip` with the raw report of every site and scan of the month (`data/runs/<date>/<site>.json`),
-the trends (`data/trends/series.csv`, `monthly.json`), the site list, the classification list, the data licence, the
+the trends (`data/trends/series.csv`, `monthly.json`, `sites.csv`: one row per site and scan), the site list, the classification list, the data licence, the
 citation file and a README that says how to read the numbers. `SHA256SUMS.txt` carries the checksum of the zip. The zip is a
 few MB. Nothing private is in it.
 

@@ -10,13 +10,14 @@ Usage:  python -m traceguard.datarelease 2026-10 --out dist
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import re
 import zipfile
 from pathlib import Path
 
-from . import trends as trends_module
+from . import insights as insights_module, trends as trends_module
 from .posts import load_groups
 
 MONTH_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
@@ -43,6 +44,7 @@ Contents
   data/runs/<date>/<site>.json   the raw report of each site and scan (conditions, every pass, the request log)
   data/trends/series.csv         one row per scan under comparable conditions
   data/trends/monthly.json       one row per month, and the change against the previous one
+  data/trends/sites.csv          one row per site and scan: tracking services and third-party requests
   data/sites.json               the 48 sites with their country and type
   data/trackers.seed.json       the classification list used to count tracking services
   DATA_LICENSE.md, CITATION.cff the licence (CC BY 4.0) and how to cite
@@ -79,6 +81,12 @@ def build(month: str, runs_dir: Path | str, out_dir: Path | str, sites_file: str
                                             "excluded_scans": summary["excluded"]}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         add(series_csv, "data/trends/series.csv")
         add(monthly_json, "data/trends/monthly.json")
+        sites_csv = out / "sites.csv"
+        with sites_csv.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(insights_module.SITES_COLUMNS)
+            writer.writerows(insights_module.sites_rows(summary["comparable"]))
+        add(sites_csv, "data/trends/sites.csv")
         for fixed in FIXED:
             path = root / fixed
             if path.exists():
@@ -87,7 +95,7 @@ def build(month: str, runs_dir: Path | str, out_dir: Path | str, sites_file: str
         names.append("README.txt")
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     (out / "SHA256SUMS.txt").write_text(f"{digest}  {archive.name}\n", encoding="utf-8")
-    for temp in (out / "series.csv", out / "monthly.json"):
+    for temp in (out / "series.csv", out / "monthly.json", out / "sites.csv"):
         temp.unlink(missing_ok=True)
     return {"zip": archive, "sha256": digest, "files": names}
 
