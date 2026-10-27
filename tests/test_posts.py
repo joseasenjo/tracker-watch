@@ -339,3 +339,40 @@ def test_the_monthly_post_talks_about_the_last_complete_month_and_compares_it_wi
     assert "2026-10: median tracking services per site 9 (+1.0 on 2026-09)" in text and "99" not in text
     [text] = build_monthly(summary, platform="bluesky", report_url="https://site.example/", month="2026-07")  # no data: the newest month
     assert "2026-11" in text
+
+
+def _series(tmp_path, counts, requests=None):
+    """Weekly scans of one site, 'https://a/', with the given tracking counts (and optional third-party requests)."""
+    from tests.test_insights import report as _report
+    from tests.test_trends import write as _write
+    for i, n in enumerate(counts):
+        r = _report("https://a/", n, ["X"])
+        r["summary"]["metrics"]["third_party_requests"] = (requests or [100] * len(counts))[i]
+        _write(tmp_path, f"2026-10-{5 + 7 * i:02d}", [r])
+    return tmp_path / "runs"
+
+
+def _swing_of(name, previous, current, previous_at, current_at):
+    return {"site": name, "previous": previous, "current": current, "previous_at": previous_at, "current_at": current_at}
+
+
+def test_an_alert_is_dropped_when_the_page_probably_loaded_differently(tmp_path):
+    runs = _series(tmp_path, [55, 56, 2], requests=[400, 410, 40])  # the count fell with the requests
+    swing = _swing_of("https://a/", 56, 2, "2026-10-12", "2026-10-19")
+    kept, why = posts_module.vetted_swings([swing], runs)
+    assert kept == [] and "different page load" in why[0]
+
+
+def test_a_recovery_after_an_odd_reading_is_not_announced_as_a_change(tmp_path):
+    runs = _series(tmp_path, [55, 56, 2, 73], requests=[400, 410, 40, 500])
+    swing = _swing_of("https://a/", 2, 73, "2026-10-19", "2026-10-26")
+    kept, why = posts_module.vetted_swings([swing], runs)
+    assert kept == [] and "recovery" in why[0]
+
+
+def test_a_clean_swing_still_gets_its_alert(tmp_path):
+    runs = _series(tmp_path, [10, 11, 60], requests=[100, 100, 130])
+    swing = _swing_of("https://a/", 11, 60, "2026-10-12", "2026-10-19")
+    kept, why = posts_module.vetted_swings([swing], runs)
+    assert kept == [swing] and why == []
+    assert posts_module.vetted_swings([], runs) == ([], [])

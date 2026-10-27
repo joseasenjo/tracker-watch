@@ -291,6 +291,32 @@ def notable_swings(diffs: list[dict]) -> list[dict]:
     return sorted(swings, key=lambda x: (-abs(x["current"] - x["previous"]), x["site"]))
 
 
+def vetted_swings(swings: list[dict], runs_dir: Path | str, sites_file: Path | str = "data/sites.json") -> tuple[list[dict], list[str]]:
+    """Drop the swings the series itself doubts, using the same checks as the Trends page: a swing whose third-party
+    requests moved with it (the page probably loaded differently), or whose starting point was itself an odd reading
+    (the site had just jumped and come back). Returns (swings kept, why each dropped one was dropped)."""
+    if not swings:
+        return swings, []
+    from . import insights, trends as trends_module
+    try:
+        points = trends_module.summary(runs_dir, load_groups(sites_file))["comparable"]
+    except (OSError, ValueError, KeyError):
+        return swings, []
+    found = insights.anomalies(points)
+    kept, reasons = [], []
+    for w in swings:
+        own = [a for a in found if a["name"] == w["site"]]
+        artifact = any(a["until"] == w["current_at"] and a["verdict"] == "probable_artifact" for a in own)
+        odd_start = any(a["until"] == w["previous_at"] and a["verdict"] in ("probable_artifact", "reverted") for a in own)
+        if odd_start:
+            reasons.append(f"{w['site']}: the earlier reading ({w['previous']}) was itself an odd one, so this is a recovery, not a change")
+        elif artifact:
+            reasons.append(f"{w['site']}: third-party requests moved with the count, probably a different page load")
+        else:
+            kept.append(w)
+    return kept, reasons
+
+
 def build_alert(swings: list[dict], *, platform: str, report_url: str) -> list[str]:
     """One post on the biggest swing. It names an outlet, so it is only ever a draft that a person approves."""
     if not swings:
@@ -437,7 +463,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.kind in ("alert", "hook"):
         if args.kind == "alert":
-            swings = notable_swings(compare_directories(args.runs_dir))
+            swings, dropped = vetted_swings(notable_swings(compare_directories(args.runs_dir)), args.runs_dir, args.sites_file)
+            for reason in dropped:
+                print(f"Not alerted: {reason}")
             if not swings:
                 print("No notable swing since the last measurement: no alert drafted.")
                 return 0
