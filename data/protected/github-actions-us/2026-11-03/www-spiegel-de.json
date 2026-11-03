@@ -1,0 +1,2029 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-11-03T14:03:26+00:00",
+  "site": {
+    "name": "Der Spiegel",
+    "url": "https://www.spiegel.de",
+    "first_party_domains": [
+      "spiegel.de"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 2,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json",
+    "blocklist": {
+      "name": "EasyPrivacy",
+      "url": "https://easylist.to/easylist/easyprivacy.txt",
+      "sha256": "a58191beebfb195ba54f1654276bf305856b6de32bd8b1ba62ac3033f1b2a1f4",
+      "rules_total": 56425,
+      "rules_applied": 47296,
+      "rules_skipped": 9129,
+      "subset": "domain rules (||host^) with party and resource-type options only"
+    }
+  },
+  "summary": {
+    "passes_total": 2,
+    "passes_ok": 2,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.spiegel.de/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 32,
+      "third_party_domains": 6,
+      "tracking_requests": 3,
+      "total_bytes": 6965974,
+      "third_party_bytes": 919270,
+      "tracking_bytes": 284640,
+      "tracking_services": 1,
+      "third_party_cookies": 0,
+      "cookies_total": 2,
+      "storage_items": 10
+    },
+    "third_party_domains": [
+      {
+        "domain": "adobedtm.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "doubleclick.net",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "googleapis.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "jwpcdn.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "jwplayer.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "jwpltx.com",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "adobedtm.com",
+        "entity": "Adobe",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "service": "doubleclick.net",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "adobedtm.com",
+        "party": "third",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "jwplayer.com",
+        "party": "third",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "spiegel.de",
+        "party": "first",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0,
+    "protection": {
+      "blocked_requests": 4,
+      "blocked_domains": [
+        "connatix.com",
+        "spiegel.de"
+      ]
+    }
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 32 requests to 6 third-party domains (median of 2 passes).",
+      "evidence": {
+        "requests": 32,
+        "domains": 6
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 7.0 MB transferred in that window (compressed responses that finished loading), 919 kB (13%) came from third-party domains, 285 kB of it from services classified as tracking (3 requests).",
+      "evidence": {
+        "total_bytes": 6965974,
+        "third_party_bytes": 919270,
+        "tracking_bytes": 284640,
+        "tracking_requests": 3
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "1 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: doubleclick.net (Google, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 2,
+            "stable": true
+          }
+        ]
+      }
+    },
+    {
+      "code": "PROTECTION_LIST_APPLIED",
+      "severity": "info",
+      "text": "With the EasyPrivacy filter list applied (domain rules only, 47296 rules), 4 requests were blocked. The page still made 32 requests to 6 third-party domains, including 1 tracking services in our list.",
+      "evidence": {
+        "blocked_requests": 4,
+        "blocked_domains": [
+          "connatix.com",
+          "spiegel.de"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.spiegel.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 143,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.spiegel.de/",
+          "host": "www.spiegel.de",
+          "bytes": 274850,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 921,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cdn.prod.www.spiegel.de/public/spon/generated/css/styles.fd90bc5c86e098684efc.css",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 23927,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 922,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/commons.48817a473f0d95985f32.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 32077,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 923,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/header.af7813b321e8c09ff9b7.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 3674,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 924,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/vendors.40170a23403dfb7c11c2.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 34502,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 925,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/index.74a1157c195f462ca483.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 57195,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 926,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSlab4UICd-ExtraBold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 32923,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 927,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-Regular.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 41044,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 928,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-Italic.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 33477,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 928,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-Bold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 31711,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 929,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-BoldItalic.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 34124,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 930,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifDisplayUI-BoldItalic.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 34563,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 931,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSans4UI-Regular.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 38773,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 932,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSans4UI-Bold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 40000,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 932,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSans4-6SemiBold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 11634,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 933,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/88c1c719-353b-4512-839a-121e98ff8880_w720_r1.5_fpx50_fpy50.webp",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 37500,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1129,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://interactive.spiegel.de/int/pub/ressort/ausland/2026/us-midterms-polls/v0/congress-overview-widget.css",
+          "host": "interactive.spiegel.de",
+          "bytes": 2640,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1130,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://interactive.spiegel.de/int/pub/ressort/ausland/2026/us-midterms-polls/v0/congress-overview-widget.js",
+          "host": "interactive.spiegel.de",
+          "bytes": 26681,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1143,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.spiegel.de/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6",
+          "host": "www.spiegel.de",
+          "bytes": 61672,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1309,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.data-interactive.spiegel.de/cron/us-polls/public/ratings_aggregates.json",
+          "host": "cdn.data-interactive.spiegel.de",
+          "bytes": 2075,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1310,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://interactive.spiegel.de/gra/apps/geschichte/2026/files/images/ss.widget.smaller.jpg",
+          "host": "interactive.spiegel.de",
+          "bytes": 31874,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1311,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://interactive.spiegel.de/gra/apps/geschichte/2026/files/video/ss.widget.320.mp4",
+          "host": "interactive.spiegel.de",
+          "bytes": 2420161,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1314,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://interactive.spiegel.de/gra/apps/geschichte/2026/files/video/ss.widget.mp4",
+          "host": "interactive.spiegel.de",
+          "bytes": 2142007,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1578,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.prod.www.spiegel.de/assets/news/breakingnews.json",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 186,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1802,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 44398,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1803,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/assets/iqd/cdn_iqdspiegel/iqadcontroller.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 82032,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1825,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/cc10f7b4369d/32ae8c3350c5/launch-8a2e39fde471.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 128951,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1826,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/14bd31d94-b9d54-3c95-f0b1-3ebf054fb460_w910h_600_fpx29.95_fpy44.94.jpg",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 299,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1827,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/309ff148-7a12-468c-b8a3-e3e4406a29c8_w40_r1_fpx51_fpy45.webp",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 20987,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1828,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/ae868c21-7aae-4d51-bbdb-27e4436c0d1d_w640_r1.5_fpx64.35_fpy44.99.webp",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 31882,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1829,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/dc786574-647d-4af5-8bb9-fea7b81efd40_w288_r0.667_fpx55.01_fpy36.57.jpg",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 19369,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1860,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://cdn.jwplayer.com/v2/media/t7RYSwzF/poster.mp4",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1901,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/unified/4.41.0/gdpr-tcf.e7290277d588e0de9bb9.bundle.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 25526,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1902,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sp-spiegel-de.spiegel.de/mms/v2/get_site_data",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 715,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1963,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sp-spiegel-de.spiegel.de/wrapper/v2/meta-data",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 867,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2373,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://sams.spiegel.de/ee/v1/identity/acquire",
+          "host": "sams.spiegel.de",
+          "blocked_by_list": true,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2375,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/cc10f7b4369d/32ae8c3350c5/972e8a3fef52/RC0118948576ac4d62a83d547c23bb667f-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 538,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 2376,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sp-spiegel-de.spiegel.de/wrapper/v2/messages",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 259651,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2378,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/partner-taboola-api-media-video/bfc6716d8-56353-9bd5-8f75-dd1f664fb460_w910h_600_fpx29.95_fpy44.94.jpg.jpg",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 299,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2753,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://sams.spiegel.de/ee/v1/interact",
+          "host": "sams.spiegel.de",
+          "blocked_by_list": true,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2756,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sp-spiegel-de.spiegel.de/index.html",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 2422,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2784,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://sp-spiegel-de.spiegel.de/Notice.9cce2.css",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 7058,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2786,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/polyfills.01516.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 2473,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2787,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/Notice.fcfb9.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 97413,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2904,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sp-spiegel-de.spiegel.de/consent/tcfv2/vendor-list/categories",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 2132,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3682,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.jwplayer.com/v2/sites/TU3g8fgU/placements/WSwWMedB/embed.js",
+          "host": "cdn.jwplayer.com",
+          "bytes": 39224,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3807,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ssl.p.jwpcdn.com/player/services/ab-config/v/1/config.js",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 426,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3808,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.jwplayer.com/v2/geo.json",
+          "host": "cdn.jwplayer.com",
+          "bytes": 311,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3809,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ssl.p.jwpcdn.com/player/services/jwpsrv/v/4/index.js",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 20580,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3835,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ssl.p.jwpcdn.com/player/services/vertical-video/v/0/ab/index.js",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 78866,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3911,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 202,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3912,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 203,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3913,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 203,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3917,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css",
+          "host": "fonts.googleapis.com",
+          "bytes": 2028,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4018,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pl.connatix.com/",
+          "host": "pl.connatix.com",
+          "blocked_by_list": true,
+          "domain": "connatix.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4020,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.jwplayer.com/v2/sites/TU3g8fgU/player.js",
+          "host": "cdn.jwplayer.com",
+          "bytes": 338387,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4210,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.jwplayer.com/v2/media/t7RYSwzF",
+          "host": "cdn.jwplayer.com",
+          "bytes": 1645,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4235,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.jwplayer.com/v2/playlists/gO8c12kh",
+          "host": "cdn.jwplayer.com",
+          "bytes": 20452,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4380,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://entitlements.jwplayer.com/c4m5vso+Eem4QzrJUeOcUg.json",
+          "host": "entitlements.jwplayer.com",
+          "bytes": 431,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4381,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://ssl.p.jwpcdn.com/player/v/8.51.13/bundle/jwplayer-hlsjs-nocontrols-ads/translations/de.json",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 1799,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4382,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/t7RYSwzF/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4383,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/nvwPLV6K/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4384,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/Ttnavudo/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4385,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/0azaNL5S/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4386,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/Qsi4Rmjt/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4386,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/lKnRR4K8/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4387,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/vB1aBLpi/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4388,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/r13BFM1j/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4389,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/OrmZ6oQ1/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4390,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/OmJrBTOV/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4563,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://prd.jwpltx.com/v1/jwplayer6/ping.gif",
+          "host": "prd.jwpltx.com",
+          "bytes": 203,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4596,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 39816,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4597,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 202,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4699,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202610300101/pubads_impl.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 219991,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4715,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://sams.spiegel.de/ee/v1/interact",
+          "host": "sams.spiegel.de",
+          "blocked_by_list": true,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 4717,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610290101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 24833,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "SPGR-User",
+          "domain": "spiegel.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 396
+        },
+        {
+          "name": "_sp_su",
+          "domain": "spiegel.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 8,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "spiegel.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "adobedtm.com",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "jwplayer.com",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.spiegel.de/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 37,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.spiegel.de/",
+          "host": "www.spiegel.de",
+          "bytes": 274893,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 608,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cdn.prod.www.spiegel.de/public/spon/generated/css/styles.fd90bc5c86e098684efc.css",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 23927,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 609,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/commons.48817a473f0d95985f32.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 32077,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 610,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/header.af7813b321e8c09ff9b7.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 3674,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 611,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/vendors.40170a23403dfb7c11c2.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 34502,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 612,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/generated/js/index.74a1157c195f462ca483.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 57195,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 613,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSlab4UICd-ExtraBold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 32923,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 614,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-Regular.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 41044,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 614,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-Italic.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 33477,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 615,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-Bold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 31711,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 616,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifTextUI-BoldItalic.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 34124,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 617,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSerifDisplayUI-BoldItalic.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 34563,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 618,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSans4UI-Regular.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 38773,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 619,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSans4UI-Bold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 40000,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 620,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://cdn.prod.www.spiegel.de/public/shared/fonts/SpiegelSans4-6SemiBold.woff2",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 11634,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 622,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/88c1c719-353b-4512-839a-121e98ff8880_w720_r1.5_fpx50_fpy50.webp",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 37500,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 622,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://interactive.spiegel.de/int/pub/ressort/ausland/2026/us-midterms-polls/v0/congress-overview-widget.css",
+          "host": "interactive.spiegel.de",
+          "bytes": 2640,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 623,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://interactive.spiegel.de/int/pub/ressort/ausland/2026/us-midterms-polls/v0/congress-overview-widget.js",
+          "host": "interactive.spiegel.de",
+          "bytes": 26681,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 753,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.data-interactive.spiegel.de/cron/us-polls/public/ratings_aggregates.json",
+          "host": "cdn.data-interactive.spiegel.de",
+          "bytes": 2070,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 788,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://interactive.spiegel.de/gra/apps/geschichte/2026/files/images/ss.widget.smaller.jpg",
+          "host": "interactive.spiegel.de",
+          "bytes": 31874,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 804,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://interactive.spiegel.de/gra/apps/geschichte/2026/files/video/ss.widget.320.mp4",
+          "host": "interactive.spiegel.de",
+          "bytes": 2420161,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 896,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://interactive.spiegel.de/gra/apps/geschichte/2026/files/video/ss.widget.mp4",
+          "host": "interactive.spiegel.de",
+          "bytes": 2142007,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1061,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.spiegel.de/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6",
+          "host": "www.spiegel.de",
+          "bytes": 61672,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1239,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.prod.www.spiegel.de/assets/news/breakingnews.json",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 187,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1250,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/unified/wrapperMessagingWithoutDetection.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 44407,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1272,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.prod.www.spiegel.de/assets/iqd/cdn_iqdspiegel/iqadcontroller.js",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 82032,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1273,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/cc10f7b4369d/32ae8c3350c5/launch-8a2e39fde471.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 128951,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1338,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/14bd31d94-b9d54-3c95-f0b1-3ebf05ebc9b7_w910h_600_fpx29.95_fpy44.94.jpg",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 299,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1344,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/309ff148-7a12-468c-b8a3-e3e4406a29c8_w40_r1_fpx51_fpy45.webp",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 20987,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1345,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/ae868c21-7aae-4d51-bbdb-27e4436c0d1d_w640_r1.5_fpx64.35_fpy44.99.webp",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 31882,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1345,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/dc786574-647d-4af5-8bb9-fea7b81efd40_w288_r0.667_fpx55.01_fpy36.57.jpg",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 19369,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1372,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/unified/4.41.0/gdpr-tcf.e7290277d588e0de9bb9.bundle.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 25526,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1374,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sp-spiegel-de.spiegel.de/mms/v2/get_site_data",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 714,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1389,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://cdn.jwplayer.com/v2/media/t7RYSwzF/poster.mp4",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1436,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sp-spiegel-de.spiegel.de/wrapper/v2/meta-data",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 874,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1462,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://sp-spiegel-de.spiegel.de/wrapper/v2/messages",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 259477,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1558,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://sp-spiegel-de.spiegel.de/index.html",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 2422,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1609,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://sams.spiegel.de/ee/v1/identity/acquire",
+          "host": "sams.spiegel.de",
+          "blocked_by_list": true,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1622,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://sp-spiegel-de.spiegel.de/Notice.9cce2.css",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 7059,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1623,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/polyfills.01516.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 2484,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1623,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://sp-spiegel-de.spiegel.de/Notice.fcfb9.js",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 97416,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1624,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/cc10f7b4369d/32ae8c3350c5/972e8a3fef52/RC0118948576ac4d62a83d547c23bb667f-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 538,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1746,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://sp-spiegel-de.spiegel.de/consent/tcfv2/vendor-list/categories",
+          "host": "sp-spiegel-de.spiegel.de",
+          "bytes": 2148,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1802,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://sams.spiegel.de/ee/v1/interact",
+          "host": "sams.spiegel.de",
+          "blocked_by_list": true,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1804,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.prod.www.spiegel.de/images/partner-taboola-api-media-video/bfc6716d8-56353-9bd5-8f75-dd1f66ebc9b7_w910h_600_fpx29.95_fpy44.94.jpg.jpg",
+          "host": "cdn.prod.www.spiegel.de",
+          "bytes": 299,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3408,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.jwplayer.com/v2/sites/TU3g8fgU/placements/WSwWMedB/embed.js",
+          "host": "cdn.jwplayer.com",
+          "bytes": 39223,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3462,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ssl.p.jwpcdn.com/player/services/ab-config/v/1/config.js",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 381,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3463,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.jwplayer.com/v2/geo.json",
+          "host": "cdn.jwplayer.com",
+          "bytes": 310,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3464,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ssl.p.jwpcdn.com/player/services/jwpsrv/v/4/index.js",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 20626,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3490,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://ssl.p.jwpcdn.com/player/services/vertical-video/v/0/ab/index.js",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 78866,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3494,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 203,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3495,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 202,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3496,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 201,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3554,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css",
+          "host": "fonts.googleapis.com",
+          "bytes": 2028,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3555,
+          "method": "POST",
+          "resource_type": "ping",
+          "url": "https://pl.connatix.com/",
+          "host": "pl.connatix.com",
+          "blocked_by_list": true,
+          "domain": "connatix.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3556,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.jwplayer.com/v2/sites/TU3g8fgU/player.js",
+          "host": "cdn.jwplayer.com",
+          "bytes": 338370,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3610,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://sams.spiegel.de/ee/v1/interact",
+          "host": "sams.spiegel.de",
+          "blocked_by_list": true,
+          "domain": "spiegel.de",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 3746,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.jwplayer.com/v2/media/t7RYSwzF",
+          "host": "cdn.jwplayer.com",
+          "bytes": 1644,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3797,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.jwplayer.com/v2/playlists/gO8c12kh",
+          "host": "cdn.jwplayer.com",
+          "bytes": 20455,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3859,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://entitlements.jwplayer.com/c4m5vso+Eem4QzrJUeOcUg.json",
+          "host": "entitlements.jwplayer.com",
+          "bytes": 431,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3860,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://ssl.p.jwpcdn.com/player/v/8.51.13/bundle/jwplayer-hlsjs-nocontrols-ads/translations/de.json",
+          "host": "ssl.p.jwpcdn.com",
+          "bytes": 1798,
+          "domain": "jwpcdn.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3861,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/t7RYSwzF/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3862,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/nvwPLV6K/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3863,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/Ttnavudo/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3864,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/0azaNL5S/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3864,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/Qsi4Rmjt/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3865,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/lKnRR4K8/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3866,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/vB1aBLpi/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3867,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/r13BFM1j/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3868,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/OrmZ6oQ1/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3868,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://cdn.jwplayer.com/v2/media/OmJrBTOV/poster.jpg",
+          "host": "cdn.jwplayer.com",
+          "bytes": 0,
+          "domain": "jwplayer.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3974,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://prd.jwpltx.com/v1/jwplayer6/ping.gif",
+          "host": "prd.jwpltx.com",
+          "bytes": 202,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 3976,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 39816,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 3977,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://placement-prd.jwpltx.com/v1/placement/ping.gif",
+          "host": "placement-prd.jwpltx.com",
+          "bytes": 201,
+          "domain": "jwpltx.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 4086,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202610300101/pubads_impl.js",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 219991,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 4093,
+          "method": "GET",
+          "resource_type": "other",
+          "url": "https://securepubads.g.doubleclick.net/pagead/managed/dict/m202610290101/gpt",
+          "host": "securepubads.g.doubleclick.net",
+          "bytes": 24833,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "SPGR-User",
+          "domain": "spiegel.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 396
+        },
+        {
+          "name": "_sp_su",
+          "domain": "spiegel.de",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        }
+      ],
+      "storage_items": {
+        "local": 8,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "spiegel.de",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "adobedtm.com",
+          "party": "third"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "jwplayer.com",
+          "party": "third"
+        }
+      ]
+    }
+  ]
+}

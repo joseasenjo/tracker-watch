@@ -1,0 +1,1620 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-11-03T14:02:52+00:00",
+  "site": {
+    "name": "Sky Sports",
+    "url": "https://www.skysports.com",
+    "first_party_domains": [
+      "sky.com",
+      "skysports.com"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 2,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json",
+    "blocklist": {
+      "name": "EasyPrivacy",
+      "url": "https://easylist.to/easylist/easyprivacy.txt",
+      "sha256": "a58191beebfb195ba54f1654276bf305856b6de32bd8b1ba62ac3033f1b2a1f4",
+      "rules_total": 56425,
+      "rules_applied": 47296,
+      "rules_skipped": 9129,
+      "subset": "domain rules (||host^) with party and resource-type options only"
+    }
+  },
+  "summary": {
+    "passes_total": 2,
+    "passes_ok": 2,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://www.skysports.com/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": true,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 21,
+      "third_party_domains": 5,
+      "tracking_requests": 0,
+      "total_bytes": 1176032,
+      "third_party_bytes": 516218,
+      "tracking_bytes": 0,
+      "tracking_services": 0,
+      "third_party_cookies": 0,
+      "cookies_total": 5,
+      "storage_items": 5
+    },
+    "third_party_domains": [
+      {
+        "domain": "365dm.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "adobedtm.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "privacy-mgmt.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "skyassets.com",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "domain": "skycdp.com",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "adobedtm.com",
+        "entity": "Adobe",
+        "category": "tag_manager",
+        "tracking": false,
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "service": "privacy-mgmt.com",
+        "entity": "Sourcepoint",
+        "category": "consent_management",
+        "tracking": false,
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "canvas_read",
+        "script_domain": "skysports.com",
+        "party": "first",
+        "passes_seen": 2,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "skysports.com",
+        "party": "first",
+        "passes_seen": 2,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0,
+    "protection": {
+      "blocked_requests": 2,
+      "blocked_domains": [
+        "covatic.io",
+        "dotmetrics.net"
+      ]
+    }
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 21 requests to 5 third-party domains (median of 2 passes).",
+      "evidence": {
+        "requests": 21,
+        "domains": 5
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 1.2 MB transferred in that window (compressed responses that finished loading), 516 kB (44%) came from third-party domains, 0 B of it from services classified as tracking (0 requests).",
+      "evidence": {
+        "total_bytes": 1176032,
+        "third_party_bytes": 516218,
+        "tracking_bytes": 0,
+        "tracking_requests": 0
+      }
+    },
+    {
+      "code": "PROTECTION_LIST_APPLIED",
+      "severity": "info",
+      "text": "With the EasyPrivacy filter list applied (domain rules only, 47296 rules), 2 requests were blocked. The page still made 21 requests to 5 third-party domains, including 0 tracking services in our list.",
+      "evidence": {
+        "blocked_requests": 2,
+        "blocked_domains": [
+          "covatic.io",
+          "dotmetrics.net"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.skysports.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 99,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.skysports.com/",
+          "host": "www.skysports.com",
+          "bytes": 51599,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 257,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-regular.woff2",
+          "host": "www.skysports.com",
+          "bytes": 22797,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 258,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-display-medium.woff2",
+          "host": "www.skysports.com",
+          "bytes": 17417,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 259,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-medium.woff2",
+          "host": "www.skysports.com",
+          "bytes": 22497,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 260,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-light.woff2",
+          "host": "www.skysports.com",
+          "bytes": 38881,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 261,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-light-italic.woff2",
+          "host": "www.skysports.com",
+          "bytes": 40538,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 262,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-medium.woff2",
+          "host": "www.skysports.com",
+          "bytes": 39397,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 263,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-medium-italic.woff2",
+          "host": "www.skysports.com",
+          "bytes": 41162,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 263,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.skysports.com/css/min/site-main-sass-5f8fd0e06f2dc974e9f1e4aa2b77a4e4.css",
+          "host": "www.skysports.com",
+          "bytes": 85843,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 264,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.skysports.com/css/min/site-main-550ee07467f03643430ddeb73300ce70.css",
+          "host": "www.skysports.com",
+          "bytes": 12704,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 265,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/ui-graphics/ui-site-header-sky-sports-uk-logo.svg",
+          "host": "www.skysports.com",
+          "bytes": 2834,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 371,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://img.skysports.com/commercial/logos/sky-bet-logo.svg",
+          "host": "img.skysports.com",
+          "bytes": 2779,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 481,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/logos/sky-news-logo.svg",
+          "host": "e0.365dm.com",
+          "bytes": 3367,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 483,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/tvlogos/channels/Sky-Sports-Logo.svg",
+          "host": "e0.365dm.com",
+          "bytes": 2486,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 542,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 44379,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 604,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/eee7eee0aaaa/b9a19a97841a/launch-ENd3e4df0dfde7473d823092cac7cd0611.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 92354,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 605,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/Q1Fti/Tid/6llR/MjTDpv/ZA/h4J7ztLYaY5Y/aG5zNgFaBQ/dzRz/UlAHKE4Z",
+          "host": "www.skysports.com",
+          "bytes": 181503,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 608,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/ui-graphics/ui-site-header-noise.png",
+          "host": "www.skysports.com",
+          "bytes": 23253,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 609,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/local-component-graphics/ui-tile-live-event/tennis.webp",
+          "host": "www.skysports.com",
+          "bytes": 16631,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 612,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/local-component-graphics/ui-tile-live-event/horse-racing.webp",
+          "host": "www.skysports.com",
+          "bytes": 9172,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 719,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://img001-eu-mo-prd.delivery.skycdp.com/select/logo",
+          "host": "img001-eu-mo-prd.delivery.skycdp.com",
+          "bytes": 4694,
+          "domain": "skycdp.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 873,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/door.js",
+          "host": "uk-script.dotmetrics.net",
+          "blocked_by_list": true,
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 874,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-analytics-data-layer-CUpK30cc.js",
+          "host": "www.skysports.com",
+          "bytes": 7140,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1130,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://browser.covatic.io/sdk/v1/sky.js",
+          "host": "browser.covatic.io",
+          "blocked_by_list": true,
+          "domain": "covatic.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1136,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/unified/4.41.0/gdpr-tcf.e7290277d588e0de9bb9.bundle.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 25509,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1137,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cdn.privacy-mgmt.com/wrapper/v2/meta-data",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 868,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1142,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/26/11/768x432/skysports-efl-championship_7395597.jpg",
+          "host": "e0.365dm.com",
+          "bytes": 50706,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1142,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/26/11/384x216/skysports-f1-george-russell_7395117.jpg",
+          "host": "e0.365dm.com",
+          "bytes": 12701,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1143,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/26/11/384x216/skysports-football-scotland_7395646.jpg",
+          "host": "e0.365dm.com",
+          "bytes": 21234,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1146,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-tool-pub-sub-D1tiqlsG.js",
+          "host": "www.skysports.com",
+          "bytes": 718,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1146,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/live-components-5PciWkA8.js",
+          "host": "www.skysports.com",
+          "bytes": 24720,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1183,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/eee7eee0aaaa/b9a19a97841a/b1181e00535f/RC77cb1dbb86fd49dbb5cdceb7bd9f8fb0-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 1934,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 1195,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-tiles-rail-C2wDZvN3.js",
+          "host": "www.skysports.com",
+          "bytes": 935,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1196,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-token-refresh-L131Gkxa.js",
+          "host": "www.skysports.com",
+          "bytes": 790,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1197,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-analytics-data-layer-viewer-C1LkBygV.js",
+          "host": "www.skysports.com",
+          "bytes": 1938,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1199,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-digrev-footer-DU8YZtcF.js",
+          "host": "www.skysports.com",
+          "bytes": 1291,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1200,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-digrev-header-nxEn3mLd.js",
+          "host": "www.skysports.com",
+          "bytes": 2012,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1200,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-qualtrics-DwvFdgsm.js",
+          "host": "www.skysports.com",
+          "bytes": 819,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1201,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-a11y-skip-links-DyFiNUd1.js",
+          "host": "www.skysports.com",
+          "bytes": 465,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1202,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-carousel-CsPTQHRS.js",
+          "host": "www.skysports.com",
+          "bytes": 1409,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1203,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-dynamic-tile-BdjSg26z.js",
+          "host": "www.skysports.com",
+          "bytes": 4161,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1357,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cdn.privacy-mgmt.com/wrapper/v2/messages",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 8360,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1552,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn.privacy-mgmt.com/index.html",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 2412,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1580,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cdn.privacy-mgmt.com/Notice.9cce2.css",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 7050,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1581,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/polyfills.01516.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 2475,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1582,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/Notice.fcfb9.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 97481,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1673,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.privacy-mgmt.com/consent/tcfv2/vendor-list/categories",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 1191,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1861,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.privacy-mgmt.com/consent/tcfv2/vendor-list/categories",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 1192,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1862,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/skysports/primary_logo.png",
+          "host": "e0.365dm.com",
+          "bytes": 83940,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1941,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://static.skyassets.com/fonts/sky-medium.woff2",
+          "host": "static.skyassets.com",
+          "bytes": 25817,
+          "domain": "skyassets.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1942,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://static.skyassets.com/fonts/sky-regular.woff2",
+          "host": "static.skyassets.com",
+          "bytes": 26068,
+          "domain": "skyassets.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1945,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-advert-manager-DkY818AM.js",
+          "host": "www.skysports.com",
+          "bytes": 3011,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2022,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.skysports.com/Q1Fti/Tid/6llR/MjTDpv/ZA/h4J7ztLYaY5Y/aG5zNgFaBQ/dzRz/UlAHKE4Z",
+          "host": "www.skysports.com",
+          "bytes": 1398,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "bm_so",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 1
+        },
+        {
+          "name": "bm_lso",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_sp_su",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "ak_bmsc",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": true,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "bm_s",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax",
+          "lifetime_days": 31
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "skysports.com",
+          "party": "first"
+        },
+        {
+          "kind": "canvas_read",
+          "script_domain": "skysports.com",
+          "party": "first"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://www.skysports.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": true,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 35,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://www.skysports.com/",
+          "host": "www.skysports.com",
+          "bytes": 51586,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 315,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-regular.woff2",
+          "host": "www.skysports.com",
+          "bytes": 22797,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 316,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-display-medium.woff2",
+          "host": "www.skysports.com",
+          "bytes": 17417,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 317,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-medium.woff2",
+          "host": "www.skysports.com",
+          "bytes": 22497,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 317,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-light.woff2",
+          "host": "www.skysports.com",
+          "bytes": 38881,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 318,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-light-italic.woff2",
+          "host": "www.skysports.com",
+          "bytes": 40538,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 319,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-medium.woff2",
+          "host": "www.skysports.com",
+          "bytes": 39397,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 320,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://www.skysports.com/assets/fonts/sky-sports-brand-2026-medium-italic.woff2",
+          "host": "www.skysports.com",
+          "bytes": 41162,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 321,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.skysports.com/css/min/site-main-sass-5f8fd0e06f2dc974e9f1e4aa2b77a4e4.css",
+          "host": "www.skysports.com",
+          "bytes": 85834,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 323,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://www.skysports.com/css/min/site-main-550ee07467f03643430ddeb73300ce70.css",
+          "host": "www.skysports.com",
+          "bytes": 12704,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 324,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/ui-graphics/ui-site-header-sky-sports-uk-logo.svg",
+          "host": "www.skysports.com",
+          "bytes": 2834,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 329,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://img.skysports.com/commercial/logos/sky-bet-logo.svg",
+          "host": "img.skysports.com",
+          "bytes": 2779,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 401,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/logos/sky-news-logo.svg",
+          "host": "e0.365dm.com",
+          "bytes": 3367,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 417,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/tvlogos/channels/Sky-Sports-Logo.svg",
+          "host": "e0.365dm.com",
+          "bytes": 2486,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 418,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/unified/wrapperMessagingWithoutDetection.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 44382,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 419,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/eee7eee0aaaa/b9a19a97841a/launch-ENd3e4df0dfde7473d823092cac7cd0611.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 92354,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 420,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/Q1Fti/Tid/6llR/MjTDpv/ZA/h4J7ztLYaY5Y/aG5zNgFaBQ/dzRz/UlAHKE4Z",
+          "host": "www.skysports.com",
+          "bytes": 181503,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 435,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://uk-script.dotmetrics.net/door.js",
+          "host": "uk-script.dotmetrics.net",
+          "blocked_by_list": true,
+          "domain": "dotmetrics.net",
+          "party": "third",
+          "tracker": {
+            "service": "dotmetrics.net",
+            "entity": "Ipsos (Dotmetrics)",
+            "category": "audience_measurement"
+          }
+        },
+        {
+          "t_ms": 441,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-analytics-data-layer-CUpK30cc.js",
+          "host": "www.skysports.com",
+          "bytes": 7140,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 442,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://browser.covatic.io/sdk/v1/sky.js",
+          "host": "browser.covatic.io",
+          "blocked_by_list": true,
+          "domain": "covatic.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 479,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/ui-graphics/ui-site-header-noise.png",
+          "host": "www.skysports.com",
+          "bytes": 23253,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 480,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/local-component-graphics/ui-tile-live-event/tennis.webp",
+          "host": "www.skysports.com",
+          "bytes": 16631,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 481,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.skysports.com/assets/local-component-graphics/ui-tile-live-event/horse-racing.webp",
+          "host": "www.skysports.com",
+          "bytes": 9172,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 630,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-tool-pub-sub-D1tiqlsG.js",
+          "host": "www.skysports.com",
+          "bytes": 718,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 631,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/live-components-5PciWkA8.js",
+          "host": "www.skysports.com",
+          "bytes": 24720,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 649,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://img001-eu-mo-prd.delivery.skycdp.com/select/logo",
+          "host": "img001-eu-mo-prd.delivery.skycdp.com",
+          "bytes": 4694,
+          "domain": "skycdp.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 675,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/unified/4.41.0/gdpr-tcf.e7290277d588e0de9bb9.bundle.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 25512,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 676,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cdn.privacy-mgmt.com/wrapper/v2/meta-data",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 875,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 712,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-tiles-rail-C2wDZvN3.js",
+          "host": "www.skysports.com",
+          "bytes": 935,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 713,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-token-refresh-L131Gkxa.js",
+          "host": "www.skysports.com",
+          "bytes": 790,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 714,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-analytics-data-layer-viewer-C1LkBygV.js",
+          "host": "www.skysports.com",
+          "bytes": 1938,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 715,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-digrev-footer-DU8YZtcF.js",
+          "host": "www.skysports.com",
+          "bytes": 1291,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 716,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-digrev-header-nxEn3mLd.js",
+          "host": "www.skysports.com",
+          "bytes": 2012,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 717,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-qualtrics-DwvFdgsm.js",
+          "host": "www.skysports.com",
+          "bytes": 819,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 718,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-a11y-skip-links-DyFiNUd1.js",
+          "host": "www.skysports.com",
+          "bytes": 465,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 719,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-carousel-CsPTQHRS.js",
+          "host": "www.skysports.com",
+          "bytes": 1409,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 720,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-sitewide-dynamic-tile-BdjSg26z.js",
+          "host": "www.skysports.com",
+          "bytes": 4161,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 774,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cdn.privacy-mgmt.com/wrapper/v2/messages",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 8356,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 799,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://assets.adobedtm.com/eee7eee0aaaa/b9a19a97841a/b1181e00535f/RC77cb1dbb86fd49dbb5cdceb7bd9f8fb0-source.min.js",
+          "host": "assets.adobedtm.com",
+          "bytes": 1934,
+          "domain": "adobedtm.com",
+          "party": "third",
+          "tracker": {
+            "service": "adobedtm.com",
+            "entity": "Adobe",
+            "category": "tag_manager"
+          }
+        },
+        {
+          "t_ms": 840,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://cdn.privacy-mgmt.com/index.html",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 2411,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 912,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://cdn.privacy-mgmt.com/Notice.9cce2.css",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 7051,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 913,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/polyfills.01516.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 2476,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 914,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.privacy-mgmt.com/Notice.fcfb9.js",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 97480,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 930,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/26/11/768x432/skysports-efl-championship_7395597.jpg",
+          "host": "e0.365dm.com",
+          "bytes": 50706,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 931,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/26/11/384x216/skysports-f1-george-russell_7395117.jpg",
+          "host": "e0.365dm.com",
+          "bytes": 12701,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 933,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/26/11/384x216/skysports-football-scotland_7395646.jpg",
+          "host": "e0.365dm.com",
+          "bytes": 21234,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1039,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.privacy-mgmt.com/consent/tcfv2/vendor-list/categories",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 1198,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1106,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://cdn.privacy-mgmt.com/consent/tcfv2/vendor-list/categories",
+          "host": "cdn.privacy-mgmt.com",
+          "bytes": 1196,
+          "domain": "privacy-mgmt.com",
+          "party": "third",
+          "tracker": {
+            "service": "privacy-mgmt.com",
+            "entity": "Sourcepoint",
+            "category": "consent_management"
+          }
+        },
+        {
+          "t_ms": 1107,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://e0.365dm.com/skysports/primary_logo.png",
+          "host": "e0.365dm.com",
+          "bytes": 83940,
+          "domain": "365dm.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1108,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://static.skyassets.com/fonts/sky-medium.woff2",
+          "host": "static.skyassets.com",
+          "bytes": 25817,
+          "domain": "skyassets.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1111,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://static.skyassets.com/fonts/sky-regular.woff2",
+          "host": "static.skyassets.com",
+          "bytes": 26068,
+          "domain": "skyassets.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1655,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.skysports.com/Q1Fti/Tid/6llR/MjTDpv/ZA/h4J7ztLYaY5Y/aG5zNgFaBQ/dzRz/UlAHKE4Z",
+          "host": "www.skysports.com",
+          "bytes": 1396,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1937,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://www.skysports.com/js/modules-es6/ui-advert-manager-DkY818AM.js",
+          "host": "www.skysports.com",
+          "bytes": 3011,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 2631,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://www.skysports.com/Q1Fti/Tid/6llR/MjTDpv/ZA/h4J7ztLYaY5Y/aG5zNgFaBQ/dzRz/UlAHKE4Z",
+          "host": "www.skysports.com",
+          "bytes": 953,
+          "domain": "skysports.com",
+          "party": "first",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "bm_so",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 1
+        },
+        {
+          "name": "bm_lso",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 30
+        },
+        {
+          "name": "_sp_su",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "ak_bmsc",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": true,
+          "same_site": "Lax",
+          "lifetime_days": 0
+        },
+        {
+          "name": "bm_s",
+          "domain": "skysports.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "Lax",
+          "lifetime_days": 31
+        }
+      ],
+      "storage_items": {
+        "local": 3,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "skysports.com",
+          "party": "first"
+        },
+        {
+          "kind": "canvas_read",
+          "script_domain": "skysports.com",
+          "party": "first"
+        }
+      ]
+    }
+  ]
+}
