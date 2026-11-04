@@ -5,7 +5,7 @@ Passive, reproducible measurement of third-party tracking on news websites. Ever
 > **Early version (v0.1).** The method and the classification list are small and still changing. Read the method page and its limits before drawing conclusions from any number.
 
 - **Code:** source available under the PolyForm Noncommercial License 1.0.0 (`LICENSE`): free to read, audit and use for noncommercial purposes, including by public bodies, universities and non-profits. The browser extension and the website are free to use for everyone, companies included; copying, redistributing or selling the software needs a commercial licence (asenjo.jose@hotmail.com). Versions published up to the tag `last-mit-2026-10-14` stay under the MIT licence (`LICENSE-MIT-historico`).
-- **Data** (`data/`): CC BY 4.0 (`DATA_LICENSE.md`). Please credit "Tracker Watch".
+- **Data** (`data/`): CC BY 4.0 (`DATA_LICENSE.md`). Please credit "Tracker Watch". Each month's data is archived as a GitHub release (`data-YYYY-MM`) and on Zenodo; cite the project with the DOI [10.5281/zenodo.23956405](https://doi.org/10.5281/zenodo.23956405), which always points at the latest version (`CITATION.cff` has the full reference).
 - **Corrections and suggestions:** open an issue.
 
 ## Tracker Watch Lens (browser extension)
