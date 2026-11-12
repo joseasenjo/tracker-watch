@@ -508,12 +508,14 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         origins.append({"id": vantage, "label": ctx["origin_labels"].get(vantage, vantage),
                         "kind": "community-unverified" if unverified else "extra"})
     sites = []
+    main_published = set(published_dates(ctx["history"], RAW_REPORT_SCANS))
     for e in sorted(ctx["entries"], key=lambda x: x["name"]):
         reports = [{"date": d, "origin": ctx["primary_vantage"], "path": f"data/{d}/{e['stem']}.json"}
-                   for d, rs in ctx["history"].items() if e["stem"] in rs]
+                   for d, rs in ctx["history"].items() if e["stem"] in rs and d in main_published]
         for vantage, by_date in ctx["extra_origins"].items():
+            keep = set(published_dates(by_date, RAW_REPORT_EXTRA_DATES))
             reports += [{"date": d, "origin": vantage, "path": f"data/origins/{vantage}/{d}/{e['stem']}.json"}
-                        for d, rs in by_date.items() if e["stem"] in rs]
+                        for d, rs in by_date.items() if e["stem"] in rs and d in keep]
         sites.append({"id": e["stem"], "name": e["name"], "url": e["url"], "country": e["group"], "type": e["kind"],
                       "latest": {"date": ctx["date"], "status": e["status"], "confidence": e["confidence"],
                                  "tracking_services": e["tracking"], "band": e["band"],
@@ -532,11 +534,24 @@ def _write_downloads(ctx: dict, data_dir: Path, base: str) -> None:
         "notes": ["Counts are minimums: the classification list is limited.",
                   "Byte figures are compressed transfer sizes of responses that finished inside the observation "
                   "window; reports made before sizes were collected leave them blank.",
+                  f"The website keeps the raw reports of the newest {RAW_REPORT_SCANS} scans only; every earlier one is in the "
+                  "repository and attached to the monthly data releases (tag data-YYYY-MM). history.csv covers all of them.",
                   "Community origins are unverified.",
                   "consent.csv and protection.csv come from optional, separate measurements (see the method page); "
                   "they never change the main figures."],
         "sites": sites}
     (data_dir / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False), encoding="utf-8")
+
+
+# The raw reports on the website: only the newest scans (about 16 MB each); the complete history stays in the repository and in
+# the monthly data releases. Without a cap the site would reach GitHub Pages' 1 GB limit in about a year.
+RAW_REPORT_SCANS = 8
+RAW_REPORT_EXTRA_DATES = 4   # per origin of the other series (origins, consent, protected)
+
+
+def published_dates(dates, keep: int) -> list[str]:
+    """The newest `keep` dates (YYYY-MM-DD strings), oldest first."""
+    return sorted(dates)[-keep:]
 
 
 COUNTRIES = {"US": "United States", "UK": "United Kingdom", "DE": "Germany", "ES": "Spain"}
@@ -584,6 +599,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
     ctx["share_origins_image"], ctx["share_origins_alt"] = "", origins_alt_text(ctx)
     ctx["site_base"] = base
+    ctx["raw_report_scans"] = RAW_REPORT_SCANS
     ctx["subscribe_url"], ctx["subscribe_host"] = _check_subscribe_url(subscribe_url)
     ctx["analytics_url"] = _check_analytics_url(analytics_url)
     ctx["repo_url"] = (repo_url or "").strip()
@@ -634,7 +650,8 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     for entry in ctx["entries"]:
         render("site.html", out / "sites" / f"{entry['stem']}.html", page="site", s=entry)
     (out / "feed.xml").write_text(_feed(ctx, base_url), encoding="utf-8")
-    for date, reports in ctx["history"].items():
+    for date in published_dates(ctx["history"], RAW_REPORT_SCANS):
+        reports = ctx["history"][date]
         (out / "data" / date).mkdir(parents=True, exist_ok=True)
         for stem, report in reports.items():
             (out / "data" / date / f"{stem}.json").write_text(json.dumps(report, ensure_ascii=False), encoding="utf-8")
@@ -642,7 +659,8 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
                  ("protected", load_extra(ctx["protected_dir"]))]
     for folder, data in published:
         for vantage, by_date in data.items():
-            for date, reports in by_date.items():
+            for date in published_dates(by_date, RAW_REPORT_EXTRA_DATES):
+                reports = by_date[date]
                 (out / "data" / folder / vantage / date).mkdir(parents=True, exist_ok=True)
                 for stem, report in reports.items():
                     (out / "data" / folder / vantage / date / f"{stem}.json").write_text(

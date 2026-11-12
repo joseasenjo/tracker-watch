@@ -1,14 +1,14 @@
 # Once a month, packs the weekly reports of the previous month with the trends and the lists they were made with, and
 # publishes them as a GitHub release (tag data-YYYY-MM). Once the repository is linked to Zenodo (see
 # docs/DATA_RELEASES.md) Zenodo archives every release and gives it a DOI, so each month's data can be cited.
-# Day 4 at 10:00 UTC, after the monthly report. A month that already has its release is left alone.
+# Day 4 at 08:41 UTC, after the monthly report. A month that already has its release is left alone.
 # The release is created with --latest=false ON PURPOSE: the extension page links to releases/latest/download/..., which
 # must keep pointing at the extension and never at a data release.
 name: data-release
 
 on:
   schedule:
-    - cron: "0 10 4 * *"
+    - cron: "41 8 4 * *"
   workflow_dispatch:
     inputs:
       month:

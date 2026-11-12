@@ -196,6 +196,38 @@ def test_midweek_post_ranks_companies_by_sites_reached_and_names_no_outlet():
     assert "Alpha 3 of 3" in post and "News A" not in post and "@" not in post and len(post) <= LIMITS["bluesky"]
 
 
+def test_midweek_says_how_each_company_moved_since_the_previous_scan_and_reads_well():
+    now = [_with_services(report("News A", 2), "Alpha", "Beta"), _with_services(report("News B", 1), "Alpha"),
+           _with_services(report("News C", 1), "Alpha")]
+    before = [_with_services(report("News A", 2), "Alpha", "Beta"), _with_services(report("News B", 1), "Beta"),
+              _with_services(report("News C", 1), "Alpha")]
+    (post,) = posts_module.build_midweek("2026-10-11", now, platform="bluesky", report_url="https://x.test/", previous=before)
+    assert "Alpha 3 of 3 (+1)" in post and "Beta 1 of 3 (-1)" in post and "vs last scan" in post
+    assert "on the most sites" in post and "the most of the" not in post and len(post) <= LIMITS["bluesky"]
+    (plain,) = posts_module.build_midweek("2026-10-11", now, platform="bluesky", report_url="https://x.test/")
+    assert "vs last scan" not in plain and "(+" not in plain
+
+
+def test_midweek_keeps_the_label_and_fits_the_limit_with_movement():
+    reports = [_with_services(report(f"News {i}", 1), "Google Advertising", "Amazon Technologies", "Comscore Audience") for i in range(30)]
+    (post,) = posts_module.build_midweek("2026-10-14", reports, platform="bluesky", report_url="https://joseasenjo.github.io/tracker-watch/",
+                                         previous=reports[:25])
+    assert len(post) <= LIMITS["bluesky"] and "Automated post." in post
+
+
+def test_previous_reports_reads_the_scan_before_the_given_date(tmp_path):
+    for day, name in (("2026-10-04", "old"), ("2026-10-11", "new")):
+        (tmp_path / day).mkdir()
+        (tmp_path / day / "a.json").write_text(json.dumps(report(name, 1)), encoding="utf-8")
+    assert [r["site"]["name"] for r in posts_module.previous_reports(tmp_path, "2026-10-11")] == ["old"]
+    assert posts_module.previous_reports(tmp_path, "2026-10-04") == []
+
+
+def test_hook_reads_well():
+    (post,) = posts_module.build_hook("2026-10-11", [report("News A", 9), report("News B", 4)], platform="bluesky", report_url="https://x.test/")
+    assert "the most among the 2 news sites" in post
+
+
 def test_midweek_cli_writes_its_own_folder(tmp_path):
     folder = tmp_path / "runs" / "2026-10-11"
     folder.mkdir(parents=True)

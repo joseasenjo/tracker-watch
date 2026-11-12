@@ -1,0 +1,36 @@
+# Emails the owner when a scheduled workflow did NOT run at all (alert-failure only speaks about runs that end in failure).
+# Wednesday and Friday evening: by then the Monday scan and the Wednesday post must have started, and from the 4th/5th of
+# the month the monthly report and the data release too. Read-only: it only reads the run lists. Needs the same mail
+# settings as the failure notice; without them it says so in its log and the run turns red.
+name: watchdog
+
+on:
+  schedule:
+    - cron: "17 19 * * 3,5"   # odd minute: GitHub delays runs at minute 0
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Check that the scheduled workflows ran
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          WATCHDOG_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          MAIL_SMTP_HOST: ${{ secrets.MAIL_SMTP_HOST }}
+          MAIL_SMTP_PORT: ${{ vars.MAIL_SMTP_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || vars.CONTACT_EMAIL }}
+        run: python -m traceguard.watchdog

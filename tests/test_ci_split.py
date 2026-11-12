@@ -94,7 +94,7 @@ def test_a_test_run_posts_nothing_but_a_scheduled_run_still_posts():
 def test_the_monthly_report_compiles_before_it_drafts_and_never_posts_in_a_test_run():
     import yaml
     data = yaml.safe_load((ROOT / ".github/workflows/monthly-report.yml").read_text(encoding="utf-8"))
-    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "0 9 3 * *"}]
+    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "13 7 3 * *"}]
     steps = data["jobs"]["post"]["steps"]
     runs = [s.get("run", "") for s in steps]
     compile_at = next(i for i, r in enumerate(runs) if "traceguard.trends" in r)
@@ -108,13 +108,13 @@ def test_the_data_release_is_never_marked_latest_and_is_created_once_per_month()
     text = (ROOT / ".github/workflows/data-release.yml").read_text(encoding="utf-8")
     assert "--latest=false" in text and 'gh release view "$tag"' in text  # the extension page links to releases/latest/...
     data = yaml.safe_load(text)
-    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "0 10 4 * *"}]
+    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "41 8 4 * *"}]
 
 
 def test_the_monthly_blocking_list_test_runs_only_on_the_first_tuesday_and_never_the_consent_one():
     import yaml
     data = yaml.safe_load((ROOT / ".github/workflows/extra-tests.yml").read_text(encoding="utf-8"))
-    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "0 6 * * 2"}]
+    assert (data.get("on") or data.get(True))["schedule"] == [{"cron": "47 3 * * 2"}]
     steps = data["jobs"]["run"]["steps"]
     gate = next(s for s in steps if s.get("id") == "gate")
     assert "-le 7" in gate["run"]

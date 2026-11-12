@@ -400,3 +400,26 @@ def test_the_companies_page_explains_the_leader_from_the_data_and_agrees_with_tr
     assert index_reading(115).startswith("the presence is spread") and index_reading(1500).startswith("the presence is moderately")
     assert index_reading(4000) == "the presence is concentrated in a few companies"
     assert leader_story({}, {"rows": [], "measured": 0, "operators": 0}) is None
+
+
+def test_website_keeps_the_raw_reports_of_the_newest_scans_only_but_history_csv_has_them_all(tmp_path, monkeypatch):
+    import csv as csvmod
+    from traceguard import site as site_module
+    monkeypatch.setattr(site_module, "RAW_REPORT_SCANS", 3)
+    days = [f"2026-09-{d:02d}" for d in (6, 13, 20, 27)] + ["2026-10-04", "2026-10-11"]
+    for day in days:
+        write(tmp_path, day, {"a": ok_report(tracking=2, vantage="github-actions-us")})
+    sites = tmp_path / "sites.json"
+    sites.write_text(json.dumps({"sites": [{"name": "News A", "url": "https://a.example/", "group": "US", "kind": "news"}]}))
+    out = tmp_path / "site"
+    build_site(tmp_path / "runs", out, sites_file=str(sites), base_url="https://example.org/tw/")
+    kept = sorted(p.name for p in (out / "data").iterdir() if p.is_dir() and p.name.startswith("2026-"))
+    assert kept == days[-3:]
+    rows = list(csvmod.DictReader((out / "data" / "history.csv").open(encoding="utf-8")))
+    assert sorted({r["date"] for r in rows}) == days
+    index = json.loads((out / "data" / "index.json").read_text(encoding="utf-8"))
+    (entry,) = index["sites"]
+    assert [r["date"] for r in entry["reports"]] == days[-3:]
+    assert all((out / r["path"]).exists() for r in entry["reports"])
+    assert any("data releases" in n for n in index["notes"])
+    assert "data release" in (out / "method.html").read_text(encoding="utf-8")

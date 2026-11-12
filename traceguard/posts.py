@@ -199,22 +199,48 @@ def company_reach(reports: list[dict]) -> list[tuple[str, int]]:
     return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
 
 
-def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: str) -> list[str]:
+def previous_reports(runs_dir: Path | str, date: str) -> list[dict]:
+    """The reports of the scan before `date` (empty if there is none), to say how the figures moved since then."""
+    folders = sorted(p for p in Path(runs_dir).iterdir() if p.is_dir() and p.name < date)
+    if not folders:
+        return []
+    return [json.loads(p.read_text(encoding="utf-8")) for p in sorted(folders[-1].glob("*.json"))]
+
+
+def _move(now: int, before: int | None) -> str:
+    """' (+2)', ' (-1)' or ' (±0)' against the previous scan; nothing when there is no previous figure."""
+    if before is None:
+        return ""
+    delta = now - before
+    return f" ({delta:+d})" if delta else " (±0)"
+
+
+def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: str,
+                  previous: list[dict] | None = None) -> list[str]:
     """One mid-week post from the same measurement: which companies' tracking services reach the most sites.
+    `previous` (the reports of the scan before) adds how many sites more or fewer each company reached since then.
     Names companies, never outlets; counts, not verdicts."""
     limit, usable = LIMITS[platform], len(eligible(reports))
     reach = company_reach(reports)
     if not reach:
         raise ValueError("no company contacted on any measured site: nothing to post")
-    # "Automated post." is kept before a longer company list: only if even one company does not fit is it dropped.
-    for top in (3, 2, 1):
-        listing = "; ".join(f"{c} {n} of {usable}" for c, n in reach[:top])
-        text = (f"Midweek: companies whose tracking services were contacted before any click on the most of the "
-                f"{usable} news sites measured with enough confidence ({date}). {listing}. Counts of sites, not verdicts. Data: {report_url}")
-        for tags in ROOT_TAGS[:2] + (ROOT_TAGS[2:] if top == 1 else ()):
-            candidate = f"{text} {tags}" if tags else text
-            if len(candidate) <= limit:
-                return [candidate]
+    before = dict(company_reach(previous)) if previous else None
+    # Too long: the third company goes first, then the second; the movement against the previous scan (what makes the
+    # post different each week) stays as long as one company fits with it. "Automated post." is dropped only if even
+    # one company without movement does not fit.
+    for with_move in ((True, False) if before is not None else (False,)):
+        for top in (3, 2, 1):
+            listing = "; ".join(f"{c} {n} of {usable}" + (_move(n, before.get(c, 0)) if with_move else "")
+                                for c, n in reach[:top])
+            tail = " vs last scan" if with_move else ""
+            text = (f"Midweek: companies whose tracking services were contacted before any click on the most sites "
+                    f"({date}, {usable} news sites measured with enough confidence). {listing}{tail}. "
+                    f"Counts, not verdicts. Data: {report_url}")
+            last_resort = top == 1 and not with_move
+            for tags in ROOT_TAGS[:2] + (ROOT_TAGS[2:] if last_resort else ()):
+                candidate = f"{text} {tags}" if tags else text
+                if len(candidate) <= limit:
+                    return [candidate]
     raise PostTooLong("the midweek post does not fit the limit")
 
 
@@ -264,7 +290,7 @@ def build_hook(date: str, reports: list[dict], *, platform: str, report_url: str
         raise ValueError("no measured site contacted a tracking service: nothing to post")
     top, limit = rows[0], LIMITS[platform]
     text = (f"{top['name']}: {top['tracking_services']} third-party tracking services contacted before any click, "
-            f"the most of the {len(eligible(reports))} news sites measured with enough confidence ({date}, from "
+            f"the most among the {len(eligible(reports))} news sites measured with enough confidence ({date}, from "
             f"{_vantage(reports)}). Counts, not verdicts. Data: {report_url}")
     for tags in ROOT_TAGS[:2]:
         candidate = f"{text} {tags}"
@@ -449,7 +475,8 @@ def main(argv: list[str] | None = None) -> int:
                 encoding="utf-8")
         return 0
     if args.kind == "midweek":
-        posts = build_midweek(date, reports, platform=args.platform, report_url=args.report_url)
+        posts = build_midweek(date, reports, platform=args.platform, report_url=args.report_url,
+                              previous=previous_reports(args.runs_dir, date))
         markdown = render_markdown(date, args.platform, posts, "", None)
         print(markdown)
         if not args.dry_run:

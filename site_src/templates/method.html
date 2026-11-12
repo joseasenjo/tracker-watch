@@ -68,10 +68,11 @@
         <tr><td><a href="{{ root }}data/protection.csv">protection.csv</a></td><td>The blocking-list test: per site and origin, the figures without and with the list.</td></tr>
         <tr><td><a href="{{ root }}data/trackerwatch-verified.txt">trackerwatch-verified.txt</a>, <a href="{{ root }}data/trackerwatch-full.txt">trackerwatch-full.txt</a></td><td>Our tracking domains as filter lists for ad and tracker blockers (<a href="{{ root }}filters.html">how to use them</a>).</td></tr>
         <tr><td><a href="{{ root }}data/index.json">index.json</a></td><td>Machine-readable index: origins, dates, every site with its latest figures and the path of each raw report.</td></tr>
-        <tr><td><code>data/&lt;date&gt;/&lt;site&gt;.json</code></td><td>The raw report of the main series: measurement conditions (tool version, browser, locale, time zone, origin, user agent) and the request log of every pass, without query strings or cookie values.</td></tr>
+        <tr><td><code>data/&lt;date&gt;/&lt;site&gt;.json</code></td><td>The raw report of the main series: measurement conditions (tool version, browser, locale, time zone, origin, user agent) and the request log of every pass, without query strings or cookie values. This website keeps the newest {{ raw_report_scans }} scans; the earlier ones are in the repository and in the monthly data releases.</td></tr>
         <tr><td><code>data/origins/&lt;origin&gt;/&lt;date&gt;/&lt;site&gt;.json</code></td><td>Raw reports of the other origins (for community ones, recomputed with our list).</td></tr>
       </tbody>
     </table></div>
+    <p class="small">Older raw reports are not lost: <code>history.csv</code> keeps every figure, and each month's complete reports are attached to a data release{% if repo_url %} (<a href="{{ repo_url }}/releases">releases</a>){% endif %}, which is the version to cite.</p>
     <p class="small">Blank cells mean not measured (or, for byte figures, not recorded by older reports). Counts are minimums because the classification list is limited.</p>
 
     <h2>Classification list</h2>

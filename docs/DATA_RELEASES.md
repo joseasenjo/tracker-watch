@@ -1,6 +1,6 @@
 # Monthly data releases and the DOI
 
-Every month the `data-release` workflow (day 4, 10:00 UTC) packs the weekly reports of the previous month with the trends
+Every month the `data-release` workflow (day 4, 08:41 UTC) packs the weekly reports of the previous month with the trends
 and the lists they were made with, and publishes them as a GitHub release tagged `data-YYYY-MM`. It never takes the
 "latest" mark: the extension page links to `releases/latest/download/...`, which must keep pointing at the extension.
 

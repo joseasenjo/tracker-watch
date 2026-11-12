@@ -1,4 +1,4 @@
-# The two separate tests: on demand, and the blocking-list test also once a month (the first Tuesday, 06:00 UTC, the day
+# The two separate tests: on demand, and the blocking-list test also once a month (the first Tuesday, 03:47 UTC, the day
 # after the weekly scan so the two can be paired), which keeps the
 # "how many tracking services does a blocking list stop" figures of the protection page fresh. The monthly run measures
 # only the blocking-list test and republishes the site afterwards. The two separate tests, run on demand. They never touch data/runs (the weekly ranking) and never publish:
@@ -10,7 +10,7 @@ name: extra-tests
 
 on:
   schedule:
-    - cron: "0 6 * * 2"   # every Tuesday; the gate step below lets only the first one of the month through
+    - cron: "47 3 * * 2"   # every Tuesday; the gate step below lets only the first one of the month through
   workflow_dispatch:
     inputs:
       test:
