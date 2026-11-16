@@ -1,0 +1,4711 @@
+{
+  "schema_version": "0.2",
+  "tool": {
+    "name": "traceguard",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-11-16T16:41:48+00:00",
+  "site": {
+    "name": "CNN",
+    "url": "https://edition.cnn.com",
+    "first_party_domains": [
+      "cnn.com"
+    ]
+  },
+  "measurement": {
+    "vantage": "github-actions-us",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 TraceGuard/0.1.0",
+    "browser": "chromium 153.0.8010.12",
+    "playwright": "1.63.0",
+    "passes": 3,
+    "observe_seconds": 12.0,
+    "min_requests": 5,
+    "pause_seconds": 3.0,
+    "interaction": "none",
+    "tracker_list": "trackers.seed.json"
+  },
+  "summary": {
+    "passes_total": 3,
+    "passes_ok": 3,
+    "status": "ok",
+    "confidence": "high",
+    "failed_passes": {},
+    "http_status": 200,
+    "final_url": "https://edition.cnn.com/",
+    "navigation_redirects": [],
+    "security_headers": {
+      "strict_transport_security": false,
+      "content_security_policy": "header"
+    },
+    "tls_protocol": "TLS 1.3",
+    "metrics": {
+      "third_party_requests": 38,
+      "third_party_domains": 13,
+      "tracking_requests": 7,
+      "total_bytes": 16485662,
+      "third_party_bytes": 4494374,
+      "tracking_bytes": 221146,
+      "tracking_services": 3,
+      "third_party_cookies": 1,
+      "cookies_total": 17,
+      "storage_items": 8
+    },
+    "third_party_domains": [
+      {
+        "domain": "brightline.tv",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "cnn.io",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "doubleclick.net",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "google.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "googleapis.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "googlesyndication.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "gstatic.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "max.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "mediamelon.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "onetrust.io",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "optimizely.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "stripe.com",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "domain": "stripe.network",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "services": [
+      {
+        "service": "doubleclick.net",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "googlesyndication.com",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "service": "imasdk.googleapis.com",
+        "entity": "Google",
+        "category": "advertising",
+        "tracking": true,
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "key_listener",
+        "script_domain": "cnn.com",
+        "party": "first",
+        "passes_seen": 3,
+        "stable": true
+      },
+      {
+        "kind": "key_listener",
+        "script_domain": "cnn.io",
+        "party": "third",
+        "passes_seen": 3,
+        "stable": true
+      }
+    ],
+    "internal_requests_blocked": 0
+  },
+  "findings": [
+    {
+      "code": "THIRD_PARTY_REQUESTS",
+      "severity": "info",
+      "text": "During a 12-second window with no user interaction, the page made 38 requests to 13 third-party domains (median of 3 passes).",
+      "evidence": {
+        "requests": 38,
+        "domains": 13
+      }
+    },
+    {
+      "code": "THIRD_PARTY_WEIGHT",
+      "severity": "info",
+      "text": "Of 16.5 MB transferred in that window (compressed responses that finished loading), 4.5 MB (27%) came from third-party domains, 221 kB of it from services classified as tracking (7 requests).",
+      "evidence": {
+        "total_bytes": 16485662,
+        "third_party_bytes": 4494374,
+        "tracking_bytes": 221146,
+        "tracking_requests": 7
+      }
+    },
+    {
+      "code": "TRACKING_SERVICES",
+      "severity": "notable",
+      "text": "3 third-party services classified as advertising, analytics, social or audience measurement were contacted before any interaction: doubleclick.net (Google, advertising), googlesyndication.com (Google, advertising), imasdk.googleapis.com (Google, advertising).",
+      "evidence": {
+        "services": [
+          {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          },
+          {
+            "service": "imasdk.googleapis.com",
+            "entity": "Google",
+            "category": "advertising",
+            "tracking": true,
+            "passes_seen": 3,
+            "stable": true
+          }
+        ]
+      }
+    },
+    {
+      "code": "THIRD_PARTY_COOKIES",
+      "severity": "notable",
+      "text": "1 cookies were set by third-party domains (17 cookies in total).",
+      "evidence": {
+        "third_party": 1,
+        "total": 17
+      }
+    },
+    {
+      "code": "NO_HSTS",
+      "severity": "info",
+      "text": "The main document response did not include a Strict-Transport-Security header.",
+      "evidence": {}
+    }
+  ],
+  "runs": [
+    {
+      "pass": 1,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://edition.cnn.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 46,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://edition.cnn.com/",
+          "host": "edition.cnn.com",
+          "bytes": 640778,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 103,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 46852,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 104,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-medium-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 46850,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 105,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-bold-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 48094,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 105,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/noto_serif_display-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 133568,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 182,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://lightning.cnn.com/launch/7be62238e4c3/97fa00444124/launch-2878c87af5e3.min.js",
+          "host": "lightning.cnn.com",
+          "bytes": 77608,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 183,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-41088f557462fde981445fa7055f73bbcdce93fe0dfe99c13ecc14d127167bd6.min.js",
+          "host": "edition.cnn.com",
+          "bytes": 34212,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 184,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-body-f5f29a92b42af7c045a57b85f77667e4f871a89098f7fff2468fd5b7c9fcd250.min.js",
+          "host": "edition.cnn.com",
+          "bytes": 45782,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 186,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.optimizely.com/public/125375509/s/landingprod.js",
+          "host": "cdn.optimizely.com",
+          "bytes": 123694,
+          "domain": "optimizely.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 205,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2304498761-20261116083259148.jpg",
+          "host": "media.cnn.com",
+          "bytes": 123283,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 206,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2304617171.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18698,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 243,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/trump-faa.jpg",
+          "host": "media.cnn.com",
+          "bytes": 17155,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 271,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2303375833.jpg",
+          "host": "media.cnn.com",
+          "bytes": 59953,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 272,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2026-11-15t112739z-857398562-rc2138aw8tlp-rtrmadp-3-nvidia-ceo.JPG",
+          "host": "media.cnn.com",
+          "bytes": 110726,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 308,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/latest-4.x/js",
+          "host": "registry.api.cnn.io",
+          "bytes": 64288,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 309,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2212184816.jpg",
+          "host": "media.cnn.com",
+          "bytes": 12418,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 310,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/trump-111626-white-house-departure.jpg",
+          "host": "media.cnn.com",
+          "bytes": 11867,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 310,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-2026-10-28t152100z-1037520640-rc2gonaz49rj-rtrmadp-3-usa-congo-sanctions.jpg",
+          "host": "media.cnn.com",
+          "bytes": 7092,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 311,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png",
+          "host": "media.cnn.com",
+          "bytes": 28698,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 312,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2266353043.jpg",
+          "host": "media.cnn.com",
+          "bytes": 11672,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 312,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2244297959.jpg",
+          "host": "media.cnn.com",
+          "bytes": 13194,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 313,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23165529-pow-cricket-vv-00-00-01-13-still003.jpg",
+          "host": "media.cnn.com",
+          "bytes": 8406,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 313,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2296957808.jpg",
+          "host": "media.cnn.com",
+          "bytes": 4046,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 314,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/google-play-cnn-app-qr-code.png",
+          "host": "edition.cnn.com",
+          "bytes": 22878,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 315,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/app-store-cnn-app-qr-code.png",
+          "host": "edition.cnn.com",
+          "bytes": 23506,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 315,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://lightning.cnn.com/launch/7be62238e4c3/97fa00444124/c5cbddd2b322/EX3369274195e2430d9d8ea7012971cb11-libraryCode_source.min.js",
+          "host": "lightning.cnn.com",
+          "bytes": 14397,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 372,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1427,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 372,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/audio-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1604,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 374,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/live-tv-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1210,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 375,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-speech-bubble.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1294,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 375,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video-dark.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1457,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 376,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/video-placeholder.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1736,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 376,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-gettyimages-2302112284.jpg",
+          "host": "media.cnn.com",
+          "bytes": 23529,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 377,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2206416161.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18792,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 377,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-gettyimages-2302112284.jpg",
+          "host": "media.cnn.com",
+          "bytes": 42203,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 378,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2227536341.jpg",
+          "host": "media.cnn.com",
+          "bytes": 10207,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 379,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2280291555.jpg",
+          "host": "media.cnn.com",
+          "bytes": 9881,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 379,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/shutterstock-editorial-15123259g.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18133,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 381,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2301978377.jpg",
+          "host": "media.cnn.com",
+          "bytes": 71793,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 382,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23-giraffe-moon-namibrand-1.jpg",
+          "host": "media.cnn.com",
+          "bytes": 3904,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 410,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1454,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 410,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/visual-cues/play-icon.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1450,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 432,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2-linehouse-macau-kam-pek-market-exterior-elevation-hi-res-jonathan-leijonhufvud.jpg",
+          "host": "media.cnn.com",
+          "bytes": 7049,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 433,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2246746879.jpg",
+          "host": "media.cnn.com",
+          "bytes": 135123,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 434,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/ap26316803792166.jpg",
+          "host": "media.cnn.com",
+          "bytes": 27825,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 435,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/01-gettyimages-2247828363.jpg",
+          "host": "media.cnn.com",
+          "bytes": 25496,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 436,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2026-10-26t130315z-1514576356-rc2ist9h28yr-rtrmadp-3-russia-oil-diesel-usa.JPG",
+          "host": "media.cnn.com",
+          "bytes": 13276,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 437,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-261105-as-enterprise-susansmithparole-dsc00147.jpg",
+          "host": "media.cnn.com",
+          "bytes": 24820,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 437,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/110226-gd-plymouth-clancy-16.jpg",
+          "host": "media.cnn.com",
+          "bytes": 4424,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 438,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/01-182590-1136-v1.JPG",
+          "host": "media.cnn.com",
+          "bytes": 61361,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 439,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2v5a5360.JPG",
+          "host": "media.cnn.com",
+          "bytes": 47304,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 439,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/20261014-perimenopause-body-language-final.jpg",
+          "host": "media.cnn.com",
+          "bytes": 66351,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 442,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://media.cnn.com/api/v1/loops/stellar/prod/desktop-collectors-patrizia-sandretto-re-rebaudengo-6-imageslideshow-fade.mp4",
+          "host": "media.cnn.com",
+          "bytes": 2212216,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 478,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-search.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1381,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 478,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23164621-waves-west-coast-cln-00-00-03-15-still001.jpg",
+          "host": "media.cnn.com",
+          "bytes": 51151,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 479,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/noto_serif-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 161387,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 519,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://fave.api.cnn.io/v1/runtime-configs",
+          "host": "fave.api.cnn.io",
+          "bytes": 867,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 521,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://media.cnn.com/api/v1/loops/stellar/prod/pope-argentina-crowds.mp4",
+          "host": "media.cnn.com",
+          "bytes": 6485394,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 743,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/gray-caret.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1235,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 744,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/public/api/alerts",
+          "host": "edition.cnn.com",
+          "bytes": 1102,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 744,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-caret-left-thick.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1341,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 745,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-caret-right-thick.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1384,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 747,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js.stripe.com/dahlia/stripe.js",
+          "host": "js.stripe.com",
+          "bytes": 271069,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 773,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/css",
+          "host": "registry.api.cnn.io",
+          "bytes": 41235,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 773,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/vendorHashes",
+          "host": "registry.api.cnn.io",
+          "bytes": 468,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 807,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css2",
+          "host": "fonts.googleapis.com",
+          "bytes": 2064,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 845,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://accounts.google.com/gsi/client",
+          "host": "accounts.google.com",
+          "bytes": 103666,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 873,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/otSDKStub.js",
+          "host": "edition.cnn.com",
+          "bytes": 13923,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 876,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.cnn.com/media/sites/cnn/cnn.svg",
+          "host": "www.cnn.com",
+          "bytes": 2414,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 880,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://imasdk.googleapis.com/js/sdkloader/ima3.js",
+          "host": "imasdk.googleapis.com",
+          "bytes": 162402,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": {
+            "service": "imasdk.googleapis.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 881,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/vendor-ccb335e9/vendor",
+          "host": "registry.api.cnn.io",
+          "bytes": 372943,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 882,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/app",
+          "host": "registry.api.cnn.io",
+          "bytes": 4490,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 964,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/3d9a6f21-8e47-43f8-8d58-d86150f3e92b.json",
+          "host": "edition.cnn.com",
+          "bytes": 2714,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 977,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/boltPlayer-6e360a3f/boltPlayer",
+          "host": "registry.api.cnn.io",
+          "bytes": 793392,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 978,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/boltInstance-2fa5724d/boltInstance",
+          "host": "registry.api.cnn.io",
+          "bytes": 67788,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1065,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/otBannerSdk.js",
+          "host": "edition.cnn.com",
+          "bytes": 130001,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1158,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/v2_token",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 4070,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1189,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/en.json",
+          "host": "edition.cnn.com",
+          "bytes": 52163,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1222,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://accounts.google.com/gsi/style",
+          "host": "accounts.google.com",
+          "bytes": 642,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1225,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://accounts.google.com/gsi/status",
+          "host": "accounts.google.com",
+          "bytes": 556,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1229,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/otGPP.js",
+          "host": "edition.cnn.com",
+          "bytes": 22096,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1232,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/session-context/headwaiter/v1/bootstrap",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 2377,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1276,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://cookies-data.onetrust.io/cfw/cmp/v1/session",
+          "host": "cookies-data.onetrust.io",
+          "bytes": 181,
+          "domain": "onetrust.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1276,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/otFlat.json",
+          "host": "edition.cnn.com",
+          "bytes": 4669,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1277,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/v2/otPcCenter.json",
+          "host": "edition.cnn.com",
+          "bytes": 15137,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1277,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/otCommonStyles.css",
+          "host": "edition.cnn.com",
+          "bytes": 5029,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1278,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/labs/api/v1/sessions/feature-flags/decisions",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 5179,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1304,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/static/ot_guard_logo.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1004,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1313,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/9651e1f6-c35b-4377-be7f-5a0c93f0ecb8/340b7de8-e27e-4a18-a654-e023d134ac8c/1a4ea38d-576d-408b-ac1c-1c125ebd6277/CNN_logo.png",
+          "host": "edition.cnn.com",
+          "bytes": 4406,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1313,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/static/powered_by_logo.svg",
+          "host": "edition.cnn.com",
+          "bytes": 3024,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1400,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cdn-media.brightline.tv/config/v3/1018.json",
+          "host": "cdn-media.brightline.tv",
+          "bytes": 3848,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1407,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/ui-f1f63a35/ui",
+          "host": "registry.api.cnn.io",
+          "bytes": 2351116,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1410,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/labs/api/v1/sessions/feature-flags/decisions",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 5179,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1474,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://register.mediamelon.com/mm-apis/register/1910217647",
+          "host": "register.mediamelon.com",
+          "bytes": 598,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1476,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://pagead2.googlesyndication.com/getconfig/sodar",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 9198,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1480,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://pubads.g.doubleclick.net/adsid/integrator.json",
+          "host": "pubads.g.doubleclick.net",
+          "bytes": 433,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1525,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png",
+          "host": "media.cnn.com",
+          "bytes": 612164,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1531,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tpc.googlesyndication.com/sodar/xdEizrWJ.js",
+          "host": "tpc.googlesyndication.com",
+          "bytes": 15740,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1538,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/any/playback/v1/playbackInfo",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 4312,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1578,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://tpc.googlesyndication.com/sodar/LVEN46HQ.html",
+          "host": "tpc.googlesyndication.com",
+          "bytes": 8634,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1598,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://pagead2.googlesyndication.com/bg/YC4cvvPCcO6zpl31_HqSlR-4DGjX47P6s4RY9JXpviA.js",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 24719,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1632,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://events.brightline.tv/track",
+          "host": "events.brightline.tv",
+          "bytes": 142,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1633,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://events.brightline.tv/track",
+          "host": "events.brightline.tv",
+          "bytes": 141,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1657,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 73,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1722,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://pagead2.googlesyndication.com/pagead/gen_204",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 20,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1784,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cf.live.cnn.us.prd.media.max.com/live/use1/d17_CixjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEtdXMtZWFzdBINYm9sdC1nbG8tcHJvZBoTEhFwYWNrYWdlci1tcDQtY2VuYw/token=Expires=1794933666&KeyName=e10c734a-961e-44fc-9de7-719c7a9f7be0&Info=eyJ1c2VySWQiOiJiYzVkYWFhMS1hOTJjLTRlOWItYWRkMy05YmI5NGVmM2YzNTMiLCAiZGV2aWNlIjoiYmM1ZGFhYTEtYTkyYy00ZTliLWFkZDMtOWJiOTRlZjNmMzUzIiwgInNlc3Npb25JZCI6IjgwMjdmMWFkLTg4NzctNGI4ZC1iODg1LWU2MDVmODNkMTEwNyIsICJlZGl0SWQiOiJjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEiLCAiZ2VvIjoiVVMiLCAidGltZXN0YW1wIjoiMjAyNi0xMS0xNlQxNjo0MTowNloiLCAidGVuYW50IjoiY25uIn0=&Signature=9199d3abc7feda49b2d18bf1907953cbadf45e163adcea7093abd0943f925d8d/main.mpd",
+          "host": "cf.live.cnn.us.prd.media.max.com",
+          "bytes": 26473,
+          "domain": "max.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1922,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cf.live.cnn.us.prd.media.max.com/live/use1/d17_CixjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEtdXMtZWFzdBINYm9sdC1nbG8tcHJvZBoTEhFwYWNrYWdlci1tcDQtY2VuYw/token=Expires=1794933666&KeyName=e10c734a-961e-44fc-9de7-719c7a9f7be0&Info=eyJ1c2VySWQiOiJiYzVkYWFhMS1hOTJjLTRlOWItYWRkMy05YmI5NGVmM2YzNTMiLCAiZGV2aWNlIjoiYmM1ZGFhYTEtYTkyYy00ZTliLWFkZDMtOWJiOTRlZjNmMzUzIiwgInNlc3Npb25JZCI6IjgwMjdmMWFkLTg4NzctNGI4ZC1iODg1LWU2MDVmODNkMTEwNyIsICJlZGl0SWQiOiJjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEiLCAiZ2VvIjoiVVMiLCAidGltZXN0YW1wIjoiMjAyNi0xMS0xNlQxNjo0MTowNloiLCAidGVuYW50IjoiY25uIn0=&Signature=9199d3abc7feda49b2d18bf1907953cbadf45e163adcea7093abd0943f925d8d/fallback.mpd",
+          "host": "cf.live.cnn.us.prd.media.max.com",
+          "bytes": 25512,
+          "domain": "max.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2060,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.gstatic.com/generate_204",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2066,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://js.stripe.com/v3/m-outer-0edadf75b42c6ef7240c043f3272f3f9.html",
+          "host": "js.stripe.com",
+          "bytes": 857,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2102,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js.stripe.com/v3/fingerprinted/js/m-outer-df5ee3b49f88025f22168cdfc5823764.js",
+          "host": "js.stripe.com",
+          "bytes": 618,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2110,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 72,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2124,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://m.stripe.network/inner.html",
+          "host": "m.stripe.network",
+          "bytes": 1172,
+          "domain": "stripe.network",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2143,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://m.stripe.network/out-4.5.45.js",
+          "host": "m.stripe.network",
+          "bytes": 14611,
+          "domain": "stripe.network",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2247,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://m.stripe.com/6",
+          "host": "m.stripe.com",
+          "bytes": 580,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2248,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 72,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "wbdFch",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "SecGpc",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "countryCode",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "stateCode",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "FastAB",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "usprivacy",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "st",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "gi_ls",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "g_state",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 180
+        },
+        {
+          "name": "OTGPPConsent",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "OptanonControl",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "OptanonConsent",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "_OT_sm",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 1
+        },
+        {
+          "name": "geoData",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "m",
+          "domain": "stripe.com",
+          "party": "third",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "__stripe_mid",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__stripe_sid",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 0
+        }
+      ],
+      "storage_items": {
+        "local": 6,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "cnn.com",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "cnn.io",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 2,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://edition.cnn.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 25,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://edition.cnn.com/",
+          "host": "edition.cnn.com",
+          "bytes": 640779,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 79,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 47328,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 79,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-medium-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 46795,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 80,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-bold-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 47668,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 81,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/noto_serif_display-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 133488,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 118,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://lightning.cnn.com/launch/7be62238e4c3/97fa00444124/launch-2878c87af5e3.min.js",
+          "host": "lightning.cnn.com",
+          "bytes": 77609,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 118,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-41088f557462fde981445fa7055f73bbcdce93fe0dfe99c13ecc14d127167bd6.min.js",
+          "host": "edition.cnn.com",
+          "bytes": 34212,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 119,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-body-f5f29a92b42af7c045a57b85f77667e4f871a89098f7fff2468fd5b7c9fcd250.min.js",
+          "host": "edition.cnn.com",
+          "bytes": 45782,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 119,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.optimizely.com/public/125375509/s/landingprod.js",
+          "host": "cdn.optimizely.com",
+          "bytes": 123694,
+          "domain": "optimizely.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 128,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2304498761-20261116083259148.jpg",
+          "host": "media.cnn.com",
+          "bytes": 123736,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 128,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2304617171.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18245,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 180,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/trump-faa.jpg",
+          "host": "media.cnn.com",
+          "bytes": 17155,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 182,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2303375833.jpg",
+          "host": "media.cnn.com",
+          "bytes": 59546,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 208,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2026-11-15t112739z-857398562-rc2138aw8tlp-rtrmadp-3-nvidia-ceo.JPG",
+          "host": "media.cnn.com",
+          "bytes": 110726,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 210,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/latest-4.x/js",
+          "host": "registry.api.cnn.io",
+          "bytes": 64288,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 242,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2212184816.jpg",
+          "host": "media.cnn.com",
+          "bytes": 12418,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 242,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/trump-111626-white-house-departure.jpg",
+          "host": "media.cnn.com",
+          "bytes": 11867,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 242,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-2026-10-28t152100z-1037520640-rc2gonaz49rj-rtrmadp-3-usa-congo-sanctions.jpg",
+          "host": "media.cnn.com",
+          "bytes": 7092,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 243,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png",
+          "host": "media.cnn.com",
+          "bytes": 28699,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 245,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2266353043.jpg",
+          "host": "media.cnn.com",
+          "bytes": 11672,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 245,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2244297959.jpg",
+          "host": "media.cnn.com",
+          "bytes": 13193,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 246,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23165529-pow-cricket-vv-00-00-01-13-still003.jpg",
+          "host": "media.cnn.com",
+          "bytes": 8406,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 246,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2296957808.jpg",
+          "host": "media.cnn.com",
+          "bytes": 4047,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 247,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/google-play-cnn-app-qr-code.png",
+          "host": "edition.cnn.com",
+          "bytes": 22878,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 247,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/app-store-cnn-app-qr-code.png",
+          "host": "edition.cnn.com",
+          "bytes": 23506,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 247,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://lightning.cnn.com/launch/7be62238e4c3/97fa00444124/c5cbddd2b322/EX3369274195e2430d9d8ea7012971cb11-libraryCode_source.min.js",
+          "host": "lightning.cnn.com",
+          "bytes": 14398,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 317,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1426,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 317,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/audio-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1604,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 318,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/live-tv-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1210,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 319,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-speech-bubble.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1294,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 319,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1454,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 324,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video-dark.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1457,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 325,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/video-placeholder.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1734,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 325,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-gettyimages-2302112284.jpg",
+          "host": "media.cnn.com",
+          "bytes": 23528,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 325,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/visual-cues/play-icon.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1450,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 326,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2206416161.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18792,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 327,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-gettyimages-2302112284.jpg",
+          "host": "media.cnn.com",
+          "bytes": 42202,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 329,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2227536341.jpg",
+          "host": "media.cnn.com",
+          "bytes": 10206,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 329,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2280291555.jpg",
+          "host": "media.cnn.com",
+          "bytes": 9881,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 330,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/shutterstock-editorial-15123259g.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18132,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 333,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2301978377.jpg",
+          "host": "media.cnn.com",
+          "bytes": 71788,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 334,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23-giraffe-moon-namibrand-1.jpg",
+          "host": "media.cnn.com",
+          "bytes": 3904,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 334,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2-linehouse-macau-kam-pek-market-exterior-elevation-hi-res-jonathan-leijonhufvud.jpg",
+          "host": "media.cnn.com",
+          "bytes": 7048,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 334,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2246746879.jpg",
+          "host": "media.cnn.com",
+          "bytes": 135123,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 335,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/ap26316803792166.jpg",
+          "host": "media.cnn.com",
+          "bytes": 27822,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 339,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/01-gettyimages-2247828363.jpg",
+          "host": "media.cnn.com",
+          "bytes": 25496,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 339,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2026-10-26t130315z-1514576356-rc2ist9h28yr-rtrmadp-3-russia-oil-diesel-usa.JPG",
+          "host": "media.cnn.com",
+          "bytes": 13276,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 339,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-261105-as-enterprise-susansmithparole-dsc00147.jpg",
+          "host": "media.cnn.com",
+          "bytes": 24821,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 340,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/110226-gd-plymouth-clancy-16.jpg",
+          "host": "media.cnn.com",
+          "bytes": 4424,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 340,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/01-182590-1136-v1.JPG",
+          "host": "media.cnn.com",
+          "bytes": 61360,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 341,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2v5a5360.JPG",
+          "host": "media.cnn.com",
+          "bytes": 47303,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 344,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/20261014-perimenopause-body-language-final.jpg",
+          "host": "media.cnn.com",
+          "bytes": 66351,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 345,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://media.cnn.com/api/v1/loops/stellar/prod/desktop-collectors-patrizia-sandretto-re-rebaudengo-6-imageslideshow-fade.mp4",
+          "host": "media.cnn.com",
+          "bytes": 2212196,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 361,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-search.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1380,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 362,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23164621-waves-west-coast-cln-00-00-03-15-still001.jpg",
+          "host": "media.cnn.com",
+          "bytes": 51151,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 363,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/noto_serif-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 161386,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 401,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://fave.api.cnn.io/v1/runtime-configs",
+          "host": "fave.api.cnn.io",
+          "bytes": 868,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 421,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://media.cnn.com/api/v1/loops/stellar/prod/pope-argentina-crowds.mp4",
+          "host": "media.cnn.com",
+          "bytes": 6485409,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 633,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/gray-caret.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1235,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 633,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/public/api/alerts",
+          "host": "edition.cnn.com",
+          "bytes": 1102,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 634,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-caret-left-thick.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1341,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 635,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-caret-right-thick.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1384,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 636,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js.stripe.com/dahlia/stripe.js",
+          "host": "js.stripe.com",
+          "bytes": 292796,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 666,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/css",
+          "host": "registry.api.cnn.io",
+          "bytes": 41213,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 667,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/vendorHashes",
+          "host": "registry.api.cnn.io",
+          "bytes": 468,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 699,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css2",
+          "host": "fonts.googleapis.com",
+          "bytes": 2064,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 741,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://accounts.google.com/gsi/client",
+          "host": "accounts.google.com",
+          "bytes": 103678,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 768,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/otSDKStub.js",
+          "host": "edition.cnn.com",
+          "bytes": 13923,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 768,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.cnn.com/media/sites/cnn/cnn.svg",
+          "host": "www.cnn.com",
+          "bytes": 2413,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 769,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://imasdk.googleapis.com/js/sdkloader/ima3.js",
+          "host": "imasdk.googleapis.com",
+          "bytes": 162397,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": {
+            "service": "imasdk.googleapis.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 772,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/vendor-ccb335e9/vendor",
+          "host": "registry.api.cnn.io",
+          "bytes": 372943,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 773,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/app",
+          "host": "registry.api.cnn.io",
+          "bytes": 4490,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 862,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/3d9a6f21-8e47-43f8-8d58-d86150f3e92b.json",
+          "host": "edition.cnn.com",
+          "bytes": 2714,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 874,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/boltPlayer-6e360a3f/boltPlayer",
+          "host": "registry.api.cnn.io",
+          "bytes": 793394,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 874,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/boltInstance-2fa5724d/boltInstance",
+          "host": "registry.api.cnn.io",
+          "bytes": 67788,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 950,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/otBannerSdk.js",
+          "host": "edition.cnn.com",
+          "bytes": 130000,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1044,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/v2_token",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 4066,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1075,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/en.json",
+          "host": "edition.cnn.com",
+          "bytes": 52162,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1096,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://accounts.google.com/gsi/style",
+          "host": "accounts.google.com",
+          "bytes": 665,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1099,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://accounts.google.com/gsi/status",
+          "host": "accounts.google.com",
+          "bytes": 557,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1103,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/otGPP.js",
+          "host": "edition.cnn.com",
+          "bytes": 22096,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1120,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/session-context/headwaiter/v1/bootstrap",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 2369,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1140,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://cookies-data.onetrust.io/cfw/cmp/v1/session",
+          "host": "cookies-data.onetrust.io",
+          "bytes": 181,
+          "domain": "onetrust.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1141,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/otFlat.json",
+          "host": "edition.cnn.com",
+          "bytes": 4669,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1141,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/v2/otPcCenter.json",
+          "host": "edition.cnn.com",
+          "bytes": 15137,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1142,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/otCommonStyles.css",
+          "host": "edition.cnn.com",
+          "bytes": 5030,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1162,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/labs/api/v1/sessions/feature-flags/decisions",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 5187,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1170,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/static/ot_guard_logo.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1003,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1179,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/9651e1f6-c35b-4377-be7f-5a0c93f0ecb8/340b7de8-e27e-4a18-a654-e023d134ac8c/1a4ea38d-576d-408b-ac1c-1c125ebd6277/CNN_logo.png",
+          "host": "edition.cnn.com",
+          "bytes": 4405,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1180,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/static/powered_by_logo.svg",
+          "host": "edition.cnn.com",
+          "bytes": 3023,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1256,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cdn-media.brightline.tv/config/v3/1018.json",
+          "host": "cdn-media.brightline.tv",
+          "bytes": 3848,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1284,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/ui-f1f63a35/ui",
+          "host": "registry.api.cnn.io",
+          "bytes": 2351116,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1287,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/labs/api/v1/sessions/feature-flags/decisions",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 5187,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1338,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://register.mediamelon.com/mm-apis/register/1910217647",
+          "host": "register.mediamelon.com",
+          "bytes": 598,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1352,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://pagead2.googlesyndication.com/getconfig/sodar",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 9236,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1353,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://pubads.g.doubleclick.net/adsid/integrator.json",
+          "host": "pubads.g.doubleclick.net",
+          "bytes": 433,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1398,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png",
+          "host": "media.cnn.com",
+          "bytes": 612179,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1414,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tpc.googlesyndication.com/sodar/xdEizrWJ.js",
+          "host": "tpc.googlesyndication.com",
+          "bytes": 15740,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1415,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/any/playback/v1/playbackInfo",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 4308,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1461,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://tpc.googlesyndication.com/sodar/LVEN46HQ.html",
+          "host": "tpc.googlesyndication.com",
+          "bytes": 8634,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1462,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://events.brightline.tv/track",
+          "host": "events.brightline.tv",
+          "bytes": 142,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1463,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://events.brightline.tv/track",
+          "host": "events.brightline.tv",
+          "bytes": 141,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1482,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://pagead2.googlesyndication.com/bg/YC4cvvPCcO6zpl31_HqSlR-4DGjX47P6s4RY9JXpviA.js",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 24719,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1530,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 73,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1586,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://pagead2.googlesyndication.com/pagead/gen_204",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 20,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1656,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://fly.live.cnn.us.prd.media.max.com/live/use1/d17_CixjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEtdXMtZWFzdBINYm9sdC1nbG8tcHJvZBoTEhFwYWNrYWdlci1tcDQtY2VuYw/token=Expires=1794933681&KeyName=e10c734a-961e-44fc-9de7-719c7a9f7be0&Info=eyJ1c2VySWQiOiJmMTQ0MWY3MC04OWQzLTQxZDItODc3Zi1jM2JjMTg4NjVhODEiLCAiZGV2aWNlIjoiZjE0NDFmNzAtODlkMy00MWQyLTg3N2YtYzNiYzE4ODY1YTgxIiwgInNlc3Npb25JZCI6Ijg3NzI2NGRjLWRhNzUtNDQwYS1iMjIzLTFiZTk1NDdhYmZkZSIsICJlZGl0SWQiOiJjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEiLCAiZ2VvIjoiVVMiLCAidGltZXN0YW1wIjoiMjAyNi0xMS0xNlQxNjo0MToyMVoiLCAidGVuYW50IjoiY25uIn0=&Signature=21d642987329121e9ff0ded8ddfa12189c51e47a77cb5d717b28e3ca8c295e70/main.mpd",
+          "host": "fly.live.cnn.us.prd.media.max.com",
+          "bytes": 3880,
+          "domain": "max.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1741,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://fly.live.cnn.us.prd.media.max.com/live/use1/d17_CixjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEtdXMtZWFzdBINYm9sdC1nbG8tcHJvZBoTEhFwYWNrYWdlci1tcDQtY2VuYw/token=Expires=1794933681&KeyName=e10c734a-961e-44fc-9de7-719c7a9f7be0&Info=eyJ1c2VySWQiOiJmMTQ0MWY3MC04OWQzLTQxZDItODc3Zi1jM2JjMTg4NjVhODEiLCAiZGV2aWNlIjoiZjE0NDFmNzAtODlkMy00MWQyLTg3N2YtYzNiYzE4ODY1YTgxIiwgInNlc3Npb25JZCI6Ijg3NzI2NGRjLWRhNzUtNDQwYS1iMjIzLTFiZTk1NDdhYmZkZSIsICJlZGl0SWQiOiJjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEiLCAiZ2VvIjoiVVMiLCAidGltZXN0YW1wIjoiMjAyNi0xMS0xNlQxNjo0MToyMVoiLCAidGVuYW50IjoiY25uIn0=&Signature=21d642987329121e9ff0ded8ddfa12189c51e47a77cb5d717b28e3ca8c295e70/fallback.mpd",
+          "host": "fly.live.cnn.us.prd.media.max.com",
+          "bytes": 3592,
+          "domain": "max.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1768,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.gstatic.com/generate_204",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1822,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 72,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1938,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 72,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1948,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://js.stripe.com/v3/m-outer-0edadf75b42c6ef7240c043f3272f3f9.html",
+          "host": "js.stripe.com",
+          "bytes": 1258,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1985,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js.stripe.com/v3/fingerprinted/js/m-outer-df5ee3b49f88025f22168cdfc5823764.js",
+          "host": "js.stripe.com",
+          "bytes": 891,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2038,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://m.stripe.network/inner.html",
+          "host": "m.stripe.network",
+          "bytes": 1362,
+          "domain": "stripe.network",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2078,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://m.stripe.network/out-4.5.45.js",
+          "host": "m.stripe.network",
+          "bytes": 14383,
+          "domain": "stripe.network",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2186,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://m.stripe.com/6",
+          "host": "m.stripe.com",
+          "bytes": 580,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "wbdFch",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "SecGpc",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "countryCode",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "stateCode",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "FastAB",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "usprivacy",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "g_state",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 180
+        },
+        {
+          "name": "st",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "gi_ls",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "OTGPPConsent",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "OptanonControl",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "OptanonConsent",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "_OT_sm",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 1
+        },
+        {
+          "name": "geoData",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "m",
+          "domain": "stripe.com",
+          "party": "third",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "__stripe_mid",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__stripe_sid",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 0
+        }
+      ],
+      "storage_items": {
+        "local": 6,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "cnn.com",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "cnn.io",
+          "party": "third"
+        }
+      ]
+    },
+    {
+      "pass": 3,
+      "status": "ok",
+      "http_status": 200,
+      "error": null,
+      "final_url": "https://edition.cnn.com/",
+      "navigation_redirects": [],
+      "security_headers": {
+        "strict_transport_security": false,
+        "content_security_policy": "header"
+      },
+      "tls_protocol": "TLS 1.3",
+      "requests": [
+        {
+          "t_ms": 26,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://edition.cnn.com/",
+          "host": "edition.cnn.com",
+          "bytes": 640780,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 80,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 47562,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 81,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-medium-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 46616,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 81,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/cnn_sans_display-bold-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 47616,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 82,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/noto_serif_display-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 133514,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 111,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://lightning.cnn.com/launch/7be62238e4c3/97fa00444124/launch-2878c87af5e3.min.js",
+          "host": "lightning.cnn.com",
+          "bytes": 77610,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 111,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-41088f557462fde981445fa7055f73bbcdce93fe0dfe99c13ecc14d127167bd6.min.js",
+          "host": "edition.cnn.com",
+          "bytes": 34212,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 112,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/media/sites/js/bundles/cnn-edition-adfuel-body-f5f29a92b42af7c045a57b85f77667e4f871a89098f7fff2468fd5b7c9fcd250.min.js",
+          "host": "edition.cnn.com",
+          "bytes": 45783,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 117,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://cdn.optimizely.com/public/125375509/s/landingprod.js",
+          "host": "cdn.optimizely.com",
+          "bytes": 123694,
+          "domain": "optimizely.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 128,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2304498761-20261116083259148.jpg",
+          "host": "media.cnn.com",
+          "bytes": 123736,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 129,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2304617171.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18245,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 179,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/trump-faa.jpg",
+          "host": "media.cnn.com",
+          "bytes": 17155,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 180,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2303375833.jpg",
+          "host": "media.cnn.com",
+          "bytes": 59547,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 205,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2026-11-15t112739z-857398562-rc2138aw8tlp-rtrmadp-3-nvidia-ceo.JPG",
+          "host": "media.cnn.com",
+          "bytes": 110726,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 205,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/latest-4.x/js",
+          "host": "registry.api.cnn.io",
+          "bytes": 64289,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 240,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2212184816.jpg",
+          "host": "media.cnn.com",
+          "bytes": 12419,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 240,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/trump-111626-white-house-departure.jpg",
+          "host": "media.cnn.com",
+          "bytes": 11867,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 241,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-2026-10-28t152100z-1037520640-rc2gonaz49rj-rtrmadp-3-usa-congo-sanctions.jpg",
+          "host": "media.cnn.com",
+          "bytes": 7092,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 241,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png",
+          "host": "media.cnn.com",
+          "bytes": 28698,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 242,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2266353043.jpg",
+          "host": "media.cnn.com",
+          "bytes": 11672,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 242,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2244297959.jpg",
+          "host": "media.cnn.com",
+          "bytes": 13194,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 244,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23165529-pow-cricket-vv-00-00-01-13-still003.jpg",
+          "host": "media.cnn.com",
+          "bytes": 8406,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 244,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2296957808.jpg",
+          "host": "media.cnn.com",
+          "bytes": 4046,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 245,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/google-play-cnn-app-qr-code.png",
+          "host": "edition.cnn.com",
+          "bytes": 22878,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 245,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/app-store-cnn-app-qr-code.png",
+          "host": "edition.cnn.com",
+          "bytes": 23506,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 246,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://lightning.cnn.com/launch/7be62238e4c3/97fa00444124/c5cbddd2b322/EX3369274195e2430d9d8ea7012971cb11-libraryCode_source.min.js",
+          "host": "lightning.cnn.com",
+          "bytes": 14398,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 306,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1426,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 306,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/audio-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1604,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 307,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/live-tv-icon-header.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1210,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 307,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-speech-bubble.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1294,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 310,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video-dark.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1457,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 311,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/video-placeholder.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1734,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 311,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-gettyimages-2302112284.jpg",
+          "host": "media.cnn.com",
+          "bytes": 23528,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 312,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/visual-cues/play-icon.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1450,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 312,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2206416161.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18792,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 312,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-gettyimages-2302112284.jpg",
+          "host": "media.cnn.com",
+          "bytes": 42202,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 313,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2227536341.jpg",
+          "host": "media.cnn.com",
+          "bytes": 10206,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 314,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2280291555.jpg",
+          "host": "media.cnn.com",
+          "bytes": 9882,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 315,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/shutterstock-editorial-15123259g.jpg",
+          "host": "media.cnn.com",
+          "bytes": 18133,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 315,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2301978377.jpg",
+          "host": "media.cnn.com",
+          "bytes": 71788,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 315,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23-giraffe-moon-namibrand-1.jpg",
+          "host": "media.cnn.com",
+          "bytes": 3904,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 316,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2-linehouse-macau-kam-pek-market-exterior-elevation-hi-res-jonathan-leijonhufvud.jpg",
+          "host": "media.cnn.com",
+          "bytes": 7048,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 316,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/gettyimages-2246746879.jpg",
+          "host": "media.cnn.com",
+          "bytes": 135123,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 317,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/ap26316803792166.jpg",
+          "host": "media.cnn.com",
+          "bytes": 27822,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 318,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/01-gettyimages-2247828363.jpg",
+          "host": "media.cnn.com",
+          "bytes": 25496,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 318,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2026-10-26t130315z-1514576356-rc2ist9h28yr-rtrmadp-3-russia-oil-diesel-usa.JPG",
+          "host": "media.cnn.com",
+          "bytes": 13276,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 318,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/c-261105-as-enterprise-susansmithparole-dsc00147.jpg",
+          "host": "media.cnn.com",
+          "bytes": 24821,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 319,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/110226-gd-plymouth-clancy-16.jpg",
+          "host": "media.cnn.com",
+          "bytes": 4425,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 320,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/01-182590-1136-v1.JPG",
+          "host": "media.cnn.com",
+          "bytes": 61360,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 321,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/2v5a5360.JPG",
+          "host": "media.cnn.com",
+          "bytes": 47303,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 321,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/20261014-perimenopause-body-language-final.jpg",
+          "host": "media.cnn.com",
+          "bytes": 66351,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 322,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://media.cnn.com/api/v1/loops/stellar/prod/desktop-collectors-patrizia-sandretto-re-rebaudengo-6-imageslideshow-fade.mp4",
+          "host": "media.cnn.com",
+          "bytes": 2212181,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 351,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/video.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1455,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 352,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-search.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1381,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 352,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/23164621-waves-west-coast-cln-00-00-03-15-still001.jpg",
+          "host": "media.cnn.com",
+          "bytes": 51151,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 353,
+          "method": "GET",
+          "resource_type": "font",
+          "url": "https://edition.cnn.com/fonts/cnn/noto_serif-v1.woff2",
+          "host": "edition.cnn.com",
+          "bytes": 161387,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 397,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://fave.api.cnn.io/v1/runtime-configs",
+          "host": "fave.api.cnn.io",
+          "bytes": 868,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 415,
+          "method": "GET",
+          "resource_type": "media",
+          "url": "https://media.cnn.com/api/v1/loops/stellar/prod/pope-argentina-crowds.mp4",
+          "host": "media.cnn.com",
+          "bytes": 6485374,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 634,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/gray-caret.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1236,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 635,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/public/api/alerts",
+          "host": "edition.cnn.com",
+          "bytes": 1102,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 635,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-caret-left-thick.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1341,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 636,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/media/sites/cnn/icons/ui-caret-right-thick.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1385,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 636,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js.stripe.com/dahlia/stripe.js",
+          "host": "js.stripe.com",
+          "bytes": 292797,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 679,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/css",
+          "host": "registry.api.cnn.io",
+          "bytes": 41212,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 680,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/vendorHashes",
+          "host": "registry.api.cnn.io",
+          "bytes": 468,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 713,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://fonts.googleapis.com/css2",
+          "host": "fonts.googleapis.com",
+          "bytes": 2064,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 751,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://accounts.google.com/gsi/client",
+          "host": "accounts.google.com",
+          "bytes": 103687,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 776,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/otSDKStub.js",
+          "host": "edition.cnn.com",
+          "bytes": 13923,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 776,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://www.cnn.com/media/sites/cnn/cnn.svg",
+          "host": "www.cnn.com",
+          "bytes": 2415,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 777,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://imasdk.googleapis.com/js/sdkloader/ima3.js",
+          "host": "imasdk.googleapis.com",
+          "bytes": 162397,
+          "domain": "googleapis.com",
+          "party": "third",
+          "tracker": {
+            "service": "imasdk.googleapis.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 780,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/vendor-ccb335e9/vendor",
+          "host": "registry.api.cnn.io",
+          "bytes": 372943,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 781,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/4.72.2/app",
+          "host": "registry.api.cnn.io",
+          "bytes": 4490,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 863,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/3d9a6f21-8e47-43f8-8d58-d86150f3e92b.json",
+          "host": "edition.cnn.com",
+          "bytes": 2715,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 870,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/boltPlayer-6e360a3f/boltPlayer",
+          "host": "registry.api.cnn.io",
+          "bytes": 793393,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 871,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/boltInstance-2fa5724d/boltInstance",
+          "host": "registry.api.cnn.io",
+          "bytes": 67789,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 958,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/otBannerSdk.js",
+          "host": "edition.cnn.com",
+          "bytes": 130001,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1048,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/v2_token",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 4071,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1072,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/en.json",
+          "host": "edition.cnn.com",
+          "bytes": 52162,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1109,
+          "method": "GET",
+          "resource_type": "stylesheet",
+          "url": "https://accounts.google.com/gsi/style",
+          "host": "accounts.google.com",
+          "bytes": 665,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1112,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://accounts.google.com/gsi/status",
+          "host": "accounts.google.com",
+          "bytes": 557,
+          "domain": "google.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1116,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/otGPP.js",
+          "host": "edition.cnn.com",
+          "bytes": 22096,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1119,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/session-context/headwaiter/v1/bootstrap",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 2375,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1153,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://cookies-data.onetrust.io/cfw/cmp/v1/session",
+          "host": "cookies-data.onetrust.io",
+          "bytes": 182,
+          "domain": "onetrust.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1153,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/otFlat.json",
+          "host": "edition.cnn.com",
+          "bytes": 4669,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1154,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/v2/otPcCenter.json",
+          "host": "edition.cnn.com",
+          "bytes": 15137,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1154,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/scripttemplates/202610.1.0/assets/otCommonStyles.css",
+          "host": "edition.cnn.com",
+          "bytes": 5030,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1159,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/labs/api/v1/sessions/feature-flags/decisions",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 5193,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1180,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/static/ot_guard_logo.svg",
+          "host": "edition.cnn.com",
+          "bytes": 1003,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1188,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/9651e1f6-c35b-4377-be7f-5a0c93f0ecb8/340b7de8-e27e-4a18-a654-e023d134ac8c/1a4ea38d-576d-408b-ac1c-1c125ebd6277/CNN_logo.png",
+          "host": "edition.cnn.com",
+          "bytes": 4404,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1189,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://edition.cnn.com/wbdotp/consent/3d9a6f21-8e47-43f8-8d58-d86150f3e92b/01a15a17-c45c-79f6-92bd-6261aa46d343/logos/static/powered_by_logo.svg",
+          "host": "edition.cnn.com",
+          "bytes": 3022,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1257,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cdn-media.brightline.tv/config/v3/1018.json",
+          "host": "cdn-media.brightline.tv",
+          "bytes": 3848,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1283,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://registry.api.cnn.io/bundles/fave/ui-f1f63a35/ui",
+          "host": "registry.api.cnn.io",
+          "bytes": 2351111,
+          "domain": "cnn.io",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1286,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/labs/api/v1/sessions/feature-flags/decisions",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 5186,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1335,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://register.mediamelon.com/mm-apis/register/1910217647",
+          "host": "register.mediamelon.com",
+          "bytes": 598,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1344,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://pagead2.googlesyndication.com/getconfig/sodar",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 9193,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1344,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://pubads.g.doubleclick.net/adsid/integrator.json",
+          "host": "pubads.g.doubleclick.net",
+          "bytes": 433,
+          "domain": "doubleclick.net",
+          "party": "third",
+          "tracker": {
+            "service": "doubleclick.net",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1390,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://media.cnn.com/api/v1/images/stellar/prod/cnn-headlines-international-logo-v2.png",
+          "host": "media.cnn.com",
+          "bytes": 612163,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1401,
+          "method": "POST",
+          "resource_type": "fetch",
+          "url": "https://default.any-any.prd.api.bolt.cnn.com/any/playback/v1/playbackInfo",
+          "host": "default.any-any.prd.api.bolt.cnn.com",
+          "bytes": 4307,
+          "domain": "cnn.com",
+          "party": "first",
+          "tracker": null
+        },
+        {
+          "t_ms": 1403,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://tpc.googlesyndication.com/sodar/xdEizrWJ.js",
+          "host": "tpc.googlesyndication.com",
+          "bytes": 15740,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1447,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://tpc.googlesyndication.com/sodar/LVEN46HQ.html",
+          "host": "tpc.googlesyndication.com",
+          "bytes": 8634,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1538,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://pagead2.googlesyndication.com/bg/YC4cvvPCcO6zpl31_HqSlR-4DGjX47P6s4RY9JXpviA.js",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 24719,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1538,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://events.brightline.tv/track",
+          "host": "events.brightline.tv",
+          "bytes": 141,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1538,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://events.brightline.tv/track",
+          "host": "events.brightline.tv",
+          "bytes": 142,
+          "domain": "brightline.tv",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1539,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 73,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1623,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cf.live.cnn.us.prd.media.max.com/live/use1/d17_CixjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEtdXMtZWFzdBINYm9sdC1nbG8tcHJvZBoTEhFwYWNrYWdlci1tcDQtY2VuYw/token=Expires=1794933697&KeyName=e10c734a-961e-44fc-9de7-719c7a9f7be0&Info=eyJ1c2VySWQiOiI5YmMxNTAwZC1lNzc0LTQ1NDMtYjgxZC1mNzczMTIzOTI1YTYiLCAiZGV2aWNlIjoiOWJjMTUwMGQtZTc3NC00NTQzLWI4MWQtZjc3MzEyMzkyNWE2IiwgInNlc3Npb25JZCI6Ijg2MjY3ODRkLTVmMTctNDk1OS1iYTQ4LTNiMzk2YTkxMWRhNyIsICJlZGl0SWQiOiJjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEiLCAiZ2VvIjoiVVMiLCAidGltZXN0YW1wIjoiMjAyNi0xMS0xNlQxNjo0MTozN1oiLCAidGVuYW50IjoiY25uIn0=&Signature=61c20a9ff5593ee5f731a108d24a6f5b5da09f8bf2a2f9242a5c91c2c6ad1c7f/main.mpd",
+          "host": "cf.live.cnn.us.prd.media.max.com",
+          "bytes": 26473,
+          "domain": "max.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1683,
+          "method": "GET",
+          "resource_type": "image",
+          "url": "https://pagead2.googlesyndication.com/pagead/gen_204",
+          "host": "pagead2.googlesyndication.com",
+          "bytes": 20,
+          "domain": "googlesyndication.com",
+          "party": "third",
+          "tracker": {
+            "service": "googlesyndication.com",
+            "entity": "Google",
+            "category": "advertising"
+          }
+        },
+        {
+          "t_ms": 1788,
+          "method": "GET",
+          "resource_type": "xhr",
+          "url": "https://cf.live.cnn.us.prd.media.max.com/live/use1/d17_CixjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEtdXMtZWFzdBINYm9sdC1nbG8tcHJvZBoTEhFwYWNrYWdlci1tcDQtY2VuYw/token=Expires=1794933697&KeyName=e10c734a-961e-44fc-9de7-719c7a9f7be0&Info=eyJ1c2VySWQiOiI5YmMxNTAwZC1lNzc0LTQ1NDMtYjgxZC1mNzczMTIzOTI1YTYiLCAiZGV2aWNlIjoiOWJjMTUwMGQtZTc3NC00NTQzLWI4MWQtZjc3MzEyMzkyNWE2IiwgInNlc3Npb25JZCI6Ijg2MjY3ODRkLTVmMTctNDk1OS1iYTQ4LTNiMzk2YTkxMWRhNyIsICJlZGl0SWQiOiJjNDllYjI0My1lM2I2LTU3ODUtOGI0Yi0xNGQwNDE2YzgzNGEiLCAiZ2VvIjoiVVMiLCAidGltZXN0YW1wIjoiMjAyNi0xMS0xNlQxNjo0MTozN1oiLCAidGVuYW50IjoiY25uIn0=&Signature=61c20a9ff5593ee5f731a108d24a6f5b5da09f8bf2a2f9242a5c91c2c6ad1c7f/fallback.mpd",
+          "host": "cf.live.cnn.us.prd.media.max.com",
+          "bytes": 25515,
+          "domain": "max.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1880,
+          "method": "GET",
+          "resource_type": "fetch",
+          "url": "https://www.gstatic.com/generate_204",
+          "host": "www.gstatic.com",
+          "domain": "gstatic.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1929,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 72,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1956,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://js.stripe.com/v3/m-outer-0edadf75b42c6ef7240c043f3272f3f9.html",
+          "host": "js.stripe.com",
+          "bytes": 1257,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 1997,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://js.stripe.com/v3/fingerprinted/js/m-outer-df5ee3b49f88025f22168cdfc5823764.js",
+          "host": "js.stripe.com",
+          "bytes": 893,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2014,
+          "method": "GET",
+          "resource_type": "document",
+          "url": "https://m.stripe.network/inner.html",
+          "host": "m.stripe.network",
+          "bytes": 1868,
+          "domain": "stripe.network",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2087,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://beacons-wbd.mediamelon.com/MultiStreamProducer",
+          "host": "beacons-wbd.mediamelon.com",
+          "bytes": 72,
+          "domain": "mediamelon.com",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2088,
+          "method": "GET",
+          "resource_type": "script",
+          "url": "https://m.stripe.network/out-4.5.45.js",
+          "host": "m.stripe.network",
+          "bytes": 15030,
+          "domain": "stripe.network",
+          "party": "third",
+          "tracker": null
+        },
+        {
+          "t_ms": 2163,
+          "method": "POST",
+          "resource_type": "xhr",
+          "url": "https://m.stripe.com/6",
+          "host": "m.stripe.com",
+          "bytes": 580,
+          "domain": "stripe.com",
+          "party": "third",
+          "tracker": null
+        }
+      ],
+      "internal_requests_blocked": [],
+      "cookies": [
+        {
+          "name": "wbdFch",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 0
+        },
+        {
+          "name": "SecGpc",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "countryCode",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "stateCode",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "FastAB",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 365
+        },
+        {
+          "name": "usprivacy",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "g_state",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 180
+        },
+        {
+          "name": "st",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "gi_ls",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 30
+        },
+        {
+          "name": "OTGPPConsent",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "OptanonControl",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "OptanonConsent",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "_OT_sm",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": false,
+          "http_only": false,
+          "same_site": "Lax",
+          "lifetime_days": 1
+        },
+        {
+          "name": "geoData",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": true,
+          "secure": true,
+          "http_only": false,
+          "same_site": "None"
+        },
+        {
+          "name": "m",
+          "domain": "stripe.com",
+          "party": "third",
+          "session": false,
+          "secure": true,
+          "http_only": true,
+          "same_site": "None",
+          "lifetime_days": 400
+        },
+        {
+          "name": "__stripe_mid",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 365
+        },
+        {
+          "name": "__stripe_sid",
+          "domain": "cnn.com",
+          "party": "first",
+          "session": false,
+          "secure": true,
+          "http_only": false,
+          "same_site": "Strict",
+          "lifetime_days": 0
+        }
+      ],
+      "storage_items": {
+        "local": 6,
+        "session": 2
+      },
+      "observations": [
+        {
+          "kind": "key_listener",
+          "script_domain": "cnn.com",
+          "party": "first"
+        },
+        {
+          "kind": "key_listener",
+          "script_domain": "cnn.io",
+          "party": "third"
+        }
+      ]
+    }
+  ]
+}
