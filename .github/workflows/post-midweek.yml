@@ -48,6 +48,12 @@ jobs:
         continue-on-error: true
         run: python -m traceguard.posts data/runs --platform mastodon --max-chars 300 --kind midweek --report-url "$SITE_URL" || echo "no mastodon post drafted"
 
+      - name: Draft the next explanation for your approval (never posted by itself; only one waits at a time)
+        continue-on-error: true
+        run: |
+          python -m traceguard.posts data/runs --platform bluesky --kind explainer --report-url "$SITE_URL" || echo "no explainer drafted"
+          python -m traceguard.posts data/runs --platform mastodon --max-chars 300 --kind explainer --report-url "$SITE_URL" || echo "no mastodon explainer drafted"
+
       - name: Waiting for your approval (review mode is on)
         if: ${{ (vars.POST_REVIEW == 'true' || github.event.inputs.publish == 'false') }}
         run: |

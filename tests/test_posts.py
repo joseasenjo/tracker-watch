@@ -1,4 +1,5 @@
 import json
+import re
 
 import pytest
 
@@ -31,7 +32,7 @@ def test_ranking_excludes_low_confidence_failed_and_zero_sites_and_sorts_by_coun
 def test_threads_fit_the_platform_limit_without_mentions(platform):
     posts = build_thread("2026-10-11", REPORTS, [DIFF_NOTABLE], platform=platform,
                          report_url="https://example.org/report/2026-10-11")
-    assert len(posts) == 3
+    assert len(posts) == 4   # headline, changes, method and the post that points to the extension
     assert all(len(p) <= LIMITS[platform] for p in posts)
     assert not any("@" in p for p in posts)
 
@@ -82,7 +83,7 @@ def test_cli_dry_run_writes_nothing_and_normal_run_writes_a_draft(tmp_path, caps
     assert not drafts.exists()
     assert main([str(tmp_path / "runs"), "--out", str(drafts), "--no-image", *isolated]) == 0
     saved = json.loads((drafts / "2026-10-11" / "bluesky.json").read_text(encoding="utf-8"))
-    assert saved["status"] == "draft" and len(saved["posts"]) == 3 and saved["image"] is None
+    assert saved["status"] == "draft" and len(saved["posts"]) == 4 and saved["image"] is None
     assert not (drafts / "2026-10-11" / "chart.png").exists()
     assert "NOT PUBLISHED" in capsys.readouterr().out
 
@@ -277,10 +278,10 @@ def test_max_chars_keeps_mastodon_posts_inside_the_bluesky_limit(tmp_path, monke
                  "--out", str(tmp_path / "d"), "--sites-file", none]) == 0
     saved = json.loads((tmp_path / "d" / "2026-10-26-hook" / "mastodon.json").read_text(encoding="utf-8"))
     assert saved["platform"] == "mastodon" and all(len(p) <= 300 for p in saved["posts"])
-    assert posts_module.LIMITS["mastodon"] == 300
+    assert posts_module.LIMITS["mastodon"] == 500   # the lowered limit lasts for one run only
     # asking for more than the platform allows never raises its limit
     main([str(runs), "--platform", "mastodon", "--kind", "hook", "--max-chars", "9999", "--out", str(tmp_path / "d2"), "--sites-file", none])
-    assert posts_module.LIMITS["mastodon"] == 300
+    assert posts_module.LIMITS["mastodon"] == 500
 
 
 def test_the_scheduled_workflows_publish_on_mastodon_after_bluesky_and_never_fail_bluesky_for_it():
@@ -440,3 +441,103 @@ def test_hook_cli_writes_a_draft_only_for_a_qualifying_leader(tmp_path):
     assert main([str(_race(tmp_path / "l", ["a"] * 4)), "--kind", "hook", "--out", str(tmp_path / "d2"), "--sites-file", none]) == 0
     saved = json.loads((tmp_path / "d2" / "2026-10-26-hook" / "bluesky.json").read_text(encoding="utf-8"))
     assert saved["status"] == "draft" and saved["image"] is None and "4 scans in a row" in saved["posts"][0]
+
+
+def _scans_with_requests(tmp_path, counts, requests, confidences=None):
+    from datetime import date, timedelta
+    from tests.test_trends import report as scan_report, write as scan_write
+    for i, n in enumerate(counts):
+        r = scan_report("https://a/", n, ["X"], confidence=(confidences or ["high"] * len(counts))[i])
+        r["summary"]["metrics"]["third_party_requests"] = requests[i]
+        scan_write(tmp_path, (date(2026, 10, 5) + timedelta(days=7 * i)).isoformat(), [r])
+    return tmp_path / "runs"
+
+
+def _change_diff(name="https://a/"):
+    return [{"site": name, "comparable": True, "notable": True}]
+
+
+def test_a_small_change_on_a_steady_full_reading_stays_in_the_weekly_changes(tmp_path):
+    runs = _scans_with_requests(tmp_path, [50, 51, 50, 52], [100] * 4)
+    kept, why = posts_module.vetted_changes(_change_diff(), runs, tmp_path / "none.json")
+    assert kept[0]["notable"] is True and why == []
+
+
+def test_a_change_with_a_reading_that_was_not_full_is_left_out_of_the_public_list(tmp_path):
+    runs = _scans_with_requests(tmp_path, [50, 51, 50, 52], [100] * 4, confidences=["high", "high", "high", "medium"])
+    kept, why = posts_module.vetted_changes(_change_diff(), runs, tmp_path / "none.json")
+    assert kept[0]["notable"] is False and "not every reading was a full one" in why[0] and kept[0]["left_out"]
+
+
+def test_a_big_move_is_left_out_when_the_requests_moved_with_it_or_the_site_was_never_steady(tmp_path):
+    with_requests = _scans_with_requests(tmp_path / "a", [50, 51, 50, 12], [400, 410, 400, 100])
+    kept, why = posts_module.vetted_changes(_change_diff(), with_requests, tmp_path / "none.json")
+    assert kept[0]["notable"] is False and "third-party requests moved" in why[0]
+    swinging = _scans_with_requests(tmp_path / "b", [90, 20, 95, 15], [100] * 4)
+    kept, why = posts_module.vetted_changes(_change_diff(), swinging, tmp_path / "none.json")
+    assert kept[0]["notable"] is False and "without a steady record" in why[0]
+
+
+def test_a_big_move_with_steady_record_and_unchanged_requests_is_kept(tmp_path):
+    runs = _scans_with_requests(tmp_path, [50, 51, 50, 12], [100] * 4)
+    kept, why = posts_module.vetted_changes(_change_diff(), runs, tmp_path / "none.json")
+    assert kept[0]["notable"] is True and why == []
+
+
+def test_changes_that_are_not_notable_pass_through_untouched(tmp_path):
+    runs = _scans_with_requests(tmp_path, [50, 51, 50, 52], [100] * 4)
+    diffs = [{"site": "https://a/", "comparable": True, "notable": False}, {"site": "x", "comparable": False, "reasons": ["y"]}]
+    assert posts_module.vetted_changes(diffs, runs, tmp_path / "none.json") == (diffs, [])
+
+
+def test_the_weekly_thread_ends_with_the_post_that_points_to_the_extension():
+    thread = build_thread("d", REPORTS, [], platform="bluesky", report_url="https://x.test/tw/")
+    assert thread[-1].endswith("https://x.test/tw/extension.html") and "free browser extension" in thread[-1]
+    assert all(len(p) <= LIMITS["bluesky"] for p in thread)
+    assert "extension" not in build_thread("d", REPORTS, [], platform="bluesky", report_url="")[-1].lower()   # no address: no post
+
+
+def test_every_explainer_fits_both_networks_names_no_outlet_and_links_only_to_the_site(monkeypatch):
+    monkeypatch.setitem(posts_module.LIMITS, "mastodon", 300)   # the workflows write Mastodon posts within 300 characters
+    entries = posts_module.load_explainers("data/explainers.json")
+    assert len(entries) >= 6 and len({e["id"] for e in entries}) == len(entries)
+    outlets = ("Independent", "BBC", "Mirror", "New York", "Guardian", "Times", "El Pa", "Zeit", "AS ")
+    for e in entries:
+        for platform, cap in (("bluesky", 300), ("mastodon", 300)):
+            (text,) = posts_module.build_explainer(e, platform=platform, report_url="https://joseasenjo.github.io/tracker-watch/")
+            assert len(text) <= cap and "{site}" not in text and "@" not in text and "Automated post." in text
+            assert not any(o in text for o in outlets), e["id"]
+            assert all(u.startswith("https://joseasenjo.github.io/tracker-watch/") for u in re.findall(r"https?://\S+", text))
+
+
+def test_one_explainer_waits_at_a_time_and_the_next_one_follows_once_it_is_published(tmp_path):
+    entries = [{"id": "a", "text": "A {site}"}, {"id": "b", "text": "B"}]
+    drafts = tmp_path / "drafts"
+    assert posts_module.next_explainer(entries, drafts)[0]["id"] == "a"
+    old = drafts / "2026-11-02-explainer"
+    old.mkdir(parents=True)
+    (old / "bluesky.json").write_text(json.dumps({"explainer": "a"}), encoding="utf-8")
+    entry, why = posts_module.next_explainer(entries, drafts)
+    assert entry is None and "waiting for approval" in why
+    (old / "bluesky.posted.json").write_text("{}", encoding="utf-8")
+    assert posts_module.next_explainer(entries, drafts)[0]["id"] == "b"
+    new = drafts / "2026-11-09-explainer"
+    new.mkdir()
+    (new / "bluesky.json").write_text(json.dumps({"explainer": "b"}), encoding="utf-8")
+    (new / "bluesky.posted.json").write_text("{}", encoding="utf-8")
+    assert posts_module.next_explainer(entries, drafts)[0]["id"] == "a"   # all used: evergreen, start again
+
+
+def test_explainer_cli_drafts_the_same_text_on_both_networks_and_never_a_second_one(tmp_path):
+    runs = _scans(tmp_path / "r", [10, 11])
+    out, file = tmp_path / "d", tmp_path / "e.json"
+    file.write_text(json.dumps({"explainers": [{"id": "one", "text": "One {site}"}, {"id": "two", "text": "Two"}]}), encoding="utf-8")
+    common = [str(runs), "--kind", "explainer", "--out", str(out), "--explainers-file", str(file), "--report-url", "https://x.test/"]
+    assert main(common + ["--platform", "bluesky"]) == 0
+    assert main(common + ["--platform", "mastodon", "--max-chars", "300"]) == 0
+    folder = out / "2026-10-12-explainer"
+    bluesky, mastodon = (json.loads((folder / f"{p}.json").read_text(encoding="utf-8")) for p in ("bluesky", "mastodon"))
+    assert bluesky["explainer"] == mastodon["explainer"] == "one" and bluesky["status"] == "draft"
+    assert bluesky["posts"][0].startswith("One https://x.test/")
+    assert main(common + ["--platform", "bluesky"]) == 0
+    assert sorted(p.name for p in out.iterdir()) == ["2026-10-12-explainer"]   # still the same single draft

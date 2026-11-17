@@ -14,6 +14,7 @@ import sys
 from datetime import date as _date, datetime, timedelta, timezone
 from pathlib import Path
 
+from . import autonomy
 from .diff import compare_directories
 
 LIMITS = {"bluesky": 300, "mastodon": 500}
@@ -158,6 +159,17 @@ def _method(reports: list[dict], report_url: str) -> str:
             f"Method and data: {report_url}")
 
 
+def _extension(report_url: str, limit: int) -> str:
+    """The last post of the weekly thread: the free extension, with its page (the one place the thread points to it)."""
+    link = f"{report_url.rstrip('/')}/extension.html"
+    for text in (f"Want to see this on the pages you read? Tracker Watch Lens is a free browser extension (Edge, Firefox): it shows "
+                 f"which companies track you on a page and lets you block them. {link}",
+                 f"See this on the pages you read: Tracker Watch Lens, a free extension for Edge and Firefox. {link}"):
+        if len(text) <= limit:
+            return text
+    return link
+
+
 def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform: str, report_url: str,
                  groups: dict[str, str] | None = None,
                  spain: tuple[str, list[dict]] | None = None) -> list[str]:
@@ -181,6 +193,8 @@ def build_thread(date: str, reports: list[dict], diffs: list[dict], *, platform:
     if spanish:
         posts.append(spanish)
     posts += [_changes(diffs, limit, report_url), _method(reports, report_url)]
+    if report_url.startswith("http"):
+        posts.append(_extension(report_url, limit))
     for index, post in enumerate(posts, 1):
         if len(post) > limit:
             raise PostTooLong(f"post {index} has {len(post)} characters (limit {limit})")
@@ -240,6 +254,42 @@ def build_midweek(date: str, reports: list[dict], *, platform: str, report_url: 
                 if len(candidate) <= limit:
                     return [candidate]
     raise PostTooLong("the midweek post does not fit the limit")
+
+
+EXPLAINERS_FILE = Path("data/explainers.json")
+
+
+def load_explainers(path: Path | str = EXPLAINERS_FILE) -> list[dict]:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    return [e for e in data.get("explainers", []) if e.get("id") and e.get("text")]
+
+
+def build_explainer(entry: dict, *, platform: str, report_url: str) -> list[str]:
+    """One short explanation of how tracking works or how to read the figures. Not tied to a scan; a person approves it."""
+    limit = LIMITS[platform]
+    text = entry["text"].replace("{site}", report_url.rstrip("/") + "/")
+    for tags in ROOT_TAGS[:2]:
+        candidate = f"{text} {tags}"
+        if len(candidate) <= limit:
+            return [candidate]
+    raise PostTooLong(f"the explainer {entry['id']!r} does not fit the limit")
+
+
+def next_explainer(entries: list[dict], drafts_dir: Path | str) -> tuple[dict | None, str]:
+    """The first explainer not yet drafted, or (None, why): one that still waits for approval blocks the next, so the
+    approval list never fills up. When all have been drafted the first is offered again (they are evergreen)."""
+    folders = sorted(Path(drafts_dir).glob("*-explainer")) if Path(drafts_dir).exists() else []
+    used, waiting = [], False
+    for folder in folders:
+        try:
+            used.append(json.loads((folder / "bluesky.json").read_text(encoding="utf-8")).get("explainer"))
+        except (OSError, ValueError):
+            continue
+        waiting = waiting or not any((folder / f"{p}.posted.json").exists() for p in ("bluesky", "mastodon"))
+    if waiting:
+        return None, "an explainer draft is already waiting for approval"
+    fresh = [e for e in entries if e["id"] not in used]
+    return (fresh or entries or [None])[0], ""
 
 
 def previous_month(today: _date | None = None) -> str:
@@ -386,6 +436,47 @@ def confirmed_swings(runs_dir: Path | str, sites_file: Path | str = "data/sites.
     return sorted(swings, key=lambda x: (-abs(x["current"] - x["previous"]), x["site"])), reasons
 
 
+def vetted_changes(diffs: list[dict], runs_dir: Path | str, sites_file: Path | str = "data/sites.json") -> tuple[list[dict], list[str]]:
+    """The week's per-site changes with the doubtful ones taken out of the public list (they stay on the changes page).
+    A change is left out when either reading was not a full one (every pass measured); and, for a big move (at least 15
+    services and half of the larger count), when the site was not steady before it or when its third-party requests moved
+    the same way by half or more (the page probably loaded differently). Returns (diffs, one reason per site left out)."""
+    from . import insights, trends as trends_module
+    try:
+        points = trends_module.summary(runs_dir, load_groups(sites_file))["comparable"]
+    except (OSError, ValueError, KeyError):
+        return diffs, []
+    if len(points) < 2:
+        return diffs, []
+    old_rows = {r["name"]: r for r in points[-2]["site_rows"]}
+    new_rows = {r["name"]: r for r in points[-1]["site_rows"]}
+    histories = {h[-1]["name"]: h for h in insights.site_histories(points).values() if h}
+    kept, reasons = [], []
+    for d in diffs:
+        if not (d.get("comparable") and d.get("notable")):
+            kept.append(d)
+            continue
+        name, old, new = d["site"], old_rows.get(d["site"]), new_rows.get(d["site"])
+        why = None
+        if old is None or new is None or old.get("confidence") != "high" or new.get("confidence") != "high":
+            why = "not every reading was a full one (all passes measured)"
+        else:
+            delta = new["tracking"] - old["tracking"]
+            if abs(delta) >= insights.JUMP_MIN and abs(delta) >= insights.JUMP_RATIO * max(new["tracking"], old["tracking"]):
+                before = [h["tracking"] for h in histories.get(name, []) if h["date"] <= points[-2]["date"]]
+                moved = (new["requests"] - old["requests"]) / old["requests"] if old["requests"] else None
+                if len(before) < MIN_STEADY_SCANS or max(before) - min(before) > insights.tolerance(statistics.median(before)):
+                    why = "a big move on a site without a steady record, so it may be the page and not the trackers"
+                elif moved is not None and abs(moved) >= insights.JUMP_RATIO and (delta < 0) == (moved < 0):
+                    why = f"third-party requests moved {moved:+.0%} with it: the page probably loaded differently"
+        if why:
+            reasons.append(f"{name}: {why}")
+            kept.append({**d, "notable": False, "left_out": why})
+        else:
+            kept.append(d)
+    return kept, reasons
+
+
 def build_alert(swings: list[dict], *, platform: str, report_url: str) -> list[str]:
     """One post on the biggest swing. It names an outlet, so it is only announced once the next scan has confirmed it."""
     if not swings:
@@ -474,6 +565,14 @@ def load_spain(spain_dir: Path | str, groups: dict[str, str], main_date: str) ->
 
 
 def main(argv: list[str] | None = None) -> int:
+    saved = dict(LIMITS)
+    try:
+        return _main(argv)
+    finally:
+        LIMITS.update(saved)   # --max-chars lowers a limit for this run only
+
+
+def _main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="traceguard.posts", description=__doc__)
     parser.add_argument("runs_dir", nargs="?", default="data/runs")
     parser.add_argument("--platform", choices=sorted(LIMITS), default="bluesky")
@@ -489,11 +588,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--month", default="", metavar="YYYY-MM",
                         help="monthly kind only: the month to talk about (default: the last complete month; the newest "
                              "month with data when that one has none)")
+    parser.add_argument("--explainers-file", default=str(EXPLAINERS_FILE), help="explainer kind only: the list of explanations")
     parser.add_argument("--dry-run", action="store_true", help="print the draft and write nothing (no image either)")
     parser.add_argument("--min-measured", type=float, default=0.0, metavar="FRACTION",
                         help="stop (exit 2, no draft) when fewer than this share of the sites were measured well "
                              "(a broken scan must not become a post)")
-    parser.add_argument("--kind", choices=("weekly", "midweek", "alert", "hook", "monthly"), default="weekly",
+    parser.add_argument("--kind", choices=("weekly", "midweek", "alert", "hook", "monthly", "explainer"), default="weekly",
                         help="weekly: the full thread; midweek: one post on the companies reaching the most sites "
                              "(written to <date>-midweek, no image); alert: one post on the biggest jump that the "
                              "newest scan has confirmed (written to <date>-alert; none when no jump is confirmed); hook: one post "
@@ -519,6 +619,31 @@ def main(argv: list[str] | None = None) -> int:
                 "status": "draft", "posts": posts, "image": None, "alt_text": ""}, indent=2, ensure_ascii=False),
                 encoding="utf-8")
         return 0
+    if args.kind == "explainer":
+        entries = load_explainers(args.explainers_file)
+        today_draft = Path(args.out) / f"{date}-explainer" / "bluesky.json"
+        chosen = None
+        if args.platform != "bluesky" and today_draft.exists():   # the same explanation on every network
+            try:
+                chosen = next((e for e in entries if e["id"] == json.loads(today_draft.read_text(encoding="utf-8")).get("explainer")), None)
+            except (OSError, ValueError):
+                chosen = None
+        entry, why = (chosen, "") if chosen else next_explainer(entries, args.out)
+        if entry is None:
+            print(f"No explainer drafted: {why or 'the explainers file is empty'}.")
+            return 0
+        posts = build_explainer(entry, platform=args.platform, report_url=args.report_url)
+        markdown = render_markdown(date, args.platform, posts, "", None)
+        print(markdown)
+        if not args.dry_run:
+            out_dir = Path(args.out) / f"{date}-explainer"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / f"{args.platform}.md").write_text(markdown, encoding="utf-8")
+            (out_dir / f"{args.platform}.json").write_text(json.dumps({
+                "date": date, "platform": args.platform, "generated_at": datetime.now(timezone.utc).isoformat(),
+                "status": "draft", "posts": posts, "image": None, "alt_text": "", "explainer": entry["id"]},
+                indent=2, ensure_ascii=False), encoding="utf-8")
+        return 0
     if args.kind == "midweek":
         posts = build_midweek(date, reports, platform=args.platform, report_url=args.report_url,
                               previous=previous_reports(args.runs_dir, date))
@@ -538,6 +663,8 @@ def main(argv: list[str] | None = None) -> int:
             swings, dropped = confirmed_swings(args.runs_dir, args.sites_file)
             for reason in dropped:
                 print(f"Not alerted: {reason}")
+                if not args.dry_run:
+                    autonomy.note(date, "alert", reason, Path(args.out).parent / "autonomy")
             if not swings:
                 print("No jump confirmed by the newest scan: no alert drafted.")
                 return 0
@@ -546,6 +673,8 @@ def main(argv: list[str] | None = None) -> int:
             leader, why = stable_leader(args.runs_dir, args.sites_file)
             for reason in why:
                 print(f"No hook: {reason}")
+                if not args.dry_run:
+                    autonomy.note(date, "hook", reason, Path(args.out).parent / "autonomy")
             if leader is None:
                 print("No outlet qualifies for a hook this week: no hook drafted.")
                 return 0
@@ -569,6 +698,11 @@ def main(argv: list[str] | None = None) -> int:
               f"the minimum is {args.min_measured:.0%}).", file=sys.stderr)
         return 2
     diffs = compare_directories(args.runs_dir)
+    diffs, left_out = vetted_changes(diffs, args.runs_dir, args.sites_file)
+    for reason in left_out:
+        print(f"Left out of the changes post: {reason}")
+        if not args.dry_run:
+            autonomy.note(date, "changes", reason, Path(args.out).parent / "autonomy")
     groups = load_groups(args.sites_file)
     spain = load_spain(args.spain_dir, groups, date)
     posts = build_thread(date, reports, diffs, platform=args.platform, report_url=args.report_url,

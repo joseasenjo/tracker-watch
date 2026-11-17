@@ -40,7 +40,7 @@ SWITCHES = {
 WORKFLOWS = {"weekly-scan.yml": "Escaneo semanal + hilo", "post-midweek.yml": "Post de media semana"}
 SECRETS = ("BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD")
 SITE_URL = "https://joseasenjo.github.io/tracker-watch/"
-DRAFT_RE = re.compile(r"^data/drafts/\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce|-monthly)?$")
+DRAFT_RE = re.compile(r"^data/drafts/\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce|-monthly|-explainer)?$")
 SWING = 30            # a change of this many tracking services between two scans is worth a look
 MIN_SHARE = 0.6       # below this share of measured sites the weekly thread is not drafted
 STALE_DAYS = 9        # a weekly scan older than this means the schedule did not run
@@ -174,7 +174,7 @@ def pending_drafts(drafts_dir: Path | str, today: _date | None = None) -> list[d
     base, today, rows = Path(drafts_dir), today or _date.today(), []
     if not base.is_dir():
         return rows
-    for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce|-monthly)?", p.name)),
+    for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce|-monthly|-explainer)?", p.name)),
                          reverse=True):
         draft_file = folder / "bluesky.json"
         has_mastodon = (folder / "mastodon.json").exists()
@@ -196,7 +196,8 @@ def pending_drafts(drafts_dir: Path | str, today: _date | None = None) -> list[d
                                  "alerta de cambio" if folder.name.endswith("alert") else
                                  "post de gancho" if folder.name.endswith("hook") else
                                  "anuncio" if folder.name.endswith("announce") else
-                                 "tendencias del mes" if folder.name.endswith("monthly") else "hilo semanal"),
+                                 "tendencias del mes" if folder.name.endswith("monthly") else
+                                 "explicación" if folder.name.endswith("explainer") else "hilo semanal"),
                      "date": draft.get("date"), "posts": draft.get("posts", []), "image": bool(draft.get("image")),
                      "posted": posted, "age_days": age, "stale": age is not None and age > 14,
                      "bluesky": draft_file.exists(), "mastodon": has_mastodon, "mastodon_posted": mastodon_posted})
@@ -732,7 +733,7 @@ def digest_candidates(drafts_dir: Path | str = "data/drafts", variables: dict | 
     except (mailing.MailingError, ValueError):
         confirmed = 0
     kinds = digest_module.allowed_kinds(env)
-    for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce|-monthly)?", p.name)),
+    for folder in sorted((p for p in base.iterdir() if p.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}(-midweek|-alert|-hook|-announce|-monthly|-explainer)?", p.name)),
                          reverse=True):
         kind = digest_module.kind_of(folder.name)
         state = digest_module.published_state(folder)

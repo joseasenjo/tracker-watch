@@ -423,3 +423,19 @@ def test_website_keeps_the_raw_reports_of_the_newest_scans_only_but_history_csv_
     assert all((out / r["path"]).exists() for r in entry["reports"])
     assert any("data releases" in n for n in index["notes"])
     assert "data release" in (out / "method.html").read_text(encoding="utf-8")
+
+
+def test_autonomy_page_lists_scans_posts_and_what_was_held_back(built):
+    tmp_path, out, _ = built
+    draft = tmp_path / "drafts" / "2026-10-04"
+    draft.mkdir(parents=True)
+    (draft / "bluesky.posted.json").write_text(json.dumps({"complete": True, "posts": [1, 2, 3, 4]}), encoding="utf-8")
+    from traceguard import autonomy
+    autonomy.note("2026-10-04", "alert", "News A jumped but the next scan did not confirm it", tmp_path / "autonomy")
+    build_site(tmp_path / "runs", out, sites_file=str(tmp_path / "sites.json"), base_url="https://example.org/tw/")
+    html = (out / "autonomy.html").read_text(encoding="utf-8")
+    assert "2026-10-04" in html and "2026-09-27" in html
+    assert "1 of 2" in html and "News B" in html
+    assert "Weekly thread" in html and "Bluesky ✓" in html and "Mastodon –" in html
+    assert "did not confirm it" in html
+    assert 'href="autonomy.html"' in (out / "index.html").read_text(encoding="utf-8")

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Autonomy log{% endblock %}
+{% block content %}
+<section>
+  <div class="wrap narrow">
+    <h1>Autonomy log</h1>
+    <p class="sub">Tracker Watch measures and posts by itself. This page is built from the same files the pipeline leaves in the repository: what each weekly scan measured, which posts went out on which network, and what was held back on purpose because the measurement was not reliable enough to name a site. Nothing here is written by hand.</p>
+    {% if autonomy_weeks %}
+    <div class="table-scroll">
+      <table class="t">
+        <thead><tr><th>Scan</th><th>Measured</th><th>Published</th><th>Held back (and why)</th></tr></thead>
+        <tbody>
+        {% for w in autonomy_weeks %}
+          <tr>
+            <td>{{ w.date }}{% if w.finished_at %}<br><small>finished {{ w.finished_at }} UTC</small>{% endif %}</td>
+            <td>{{ w.measured }} of {{ w.sites }}{% if w.unmeasured %}<br><small>not measured: {{ w.unmeasured|join(", ") }}</small>{% endif %}</td>
+            <td>
+              {% for p in w.posts %}
+                {{ p.label }}:
+                {% for net, st in p.networks.items() %}{% if st %}{{ net|capitalize }} {% if st.complete %}✓{% else %}(partial){% endif %}{% else %}{{ net|capitalize }} –{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}<br>
+              {% else %}<small>no post recorded</small>{% endfor %}
+            </td>
+            <td>{% for n in w.held_back %}<small><b>{{ n.kind }}:</b> {{ n.text }}</small><br>{% else %}<small>nothing</small>{% endfor %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">A dash means that network did not receive that post (for example because it is switched off or the post was not approved). "Held back" lists readings left out of a public post on purpose, such as an outlet whose count jumped but whose reading was not confirmed by the following scan.</p>
+    {% else %}
+      <div class="card">No scans yet.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

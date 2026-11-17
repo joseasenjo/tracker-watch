@@ -24,6 +24,7 @@ from jinja2 import Environment, FileSystemLoader, pass_context, select_autoescap
 from markupsafe import Markup
 
 from . import SCHEMA_VERSION
+from . import autonomy as autonomy_module
 from .classify import DEFAULT_TRACKER_LIST, TrackerList
 from .community import load_community
 from .entities import horizontal_bars, inferred_entities, leader_story, reach
@@ -594,6 +595,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     ctx = build_context(runs_dir, sites_file, extra_dir, community_dir, consent_dir, protected_dir)
     ctx["limits"] = load_limits(limits_file if limits_file is not None else Path(runs_dir).parent / "limits.json")
     ctx["links"] = load_links(links_file if links_file is not None else Path(runs_dir).parent / "links.json")
+    ctx["autonomy_weeks"] = autonomy_module.weeks(runs_dir)
     base = base_url if base_url.endswith("/") else base_url + "/"
     ctx["demos"] = demo_cards(ctx, (urlsplit(base).hostname or "").removeprefix("www."))
     ctx["share_image"], ctx["share_alt"] = "", ranking_alt_text(ctx)
@@ -635,6 +637,7 @@ def build_site(runs_dir: Path | str, out_dir: Path | str, *, sites_file: str | N
     render("protection.html", out / "protection.html", page="protection")
     render("changes.html", out / "changes.html", page="changes")
     render("unmeasured.html", out / "unmeasured.html", page="unmeasured")
+    render("autonomy.html", out / "autonomy.html", page="autonomy")
     render("method.html", out / "method.html", page="method")
     render("privacy.html", out / "privacy.html", page="privacy")
     render("subscribe.html", out / "subscribe.html", page="subscribe")
