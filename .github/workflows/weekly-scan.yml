@@ -153,12 +153,12 @@ jobs:
           python -m traceguard.posts data/runs --platform bluesky --min-measured 0.6
           --report-url "$SITE_URL"
 
-      - name: Draft an alert and a hook post (never published automatically)
+      - name: Draft an alert (only for a jump the newest scan confirms) and a hook post (both published on their own only if ALERTS_AUTO is "true")
         run: |
           python -m traceguard.posts data/runs --platform bluesky --kind alert --report-url "$SITE_URL" || echo "no alert drafted"
           python -m traceguard.posts data/runs --platform bluesky --kind hook --report-url "$SITE_URL" || echo "no hook drafted"
 
-      - name: Draft the same posts for Mastodon (same limit as Bluesky; alerts and hooks are never published automatically)
+      - name: Draft the same posts for Mastodon (same limit as Bluesky; alerts and hooks follow ALERTS_AUTO)
         continue-on-error: true
         run: |
           python -m traceguard.posts data/runs --platform mastodon --max-chars 300 --min-measured 0.6 --report-url "$SITE_URL" || echo "no mastodon thread drafted"

@@ -22,8 +22,6 @@ USABLE_CONFIDENCE = ("high", "medium")
 SPAIN_GROUP = "ES"
 SPAIN_MAX_AGE_DAYS = 7  # a Spain measurement older than this (against the main one) is left out of the thread
 ROOT_TAGS = ("Automated post. #privacy #adtech #GDPR", "Automated post.", "")  # tried in this order, longest first
-ALERT_MIN_DELTA = 15  # a site's tracking services must change by at least this many ...
-ALERT_MIN_RATIO = 0.5  # ... and by at least this share of the larger of the two counts, to be worth an alert
 CHART_FILE = "chart.png"
 MAX_IMAGE_BYTES = 950_000  # Bluesky refuses images over about 1 MB
 MAX_ALT_CHARS = 1500  # Mastodon's default limit for an image description
@@ -299,59 +297,63 @@ def build_hook(date: str, reports: list[dict], *, platform: str, report_url: str
     raise PostTooLong("the hook post does not fit the limit")
 
 
-def _day(stamp: str) -> str:
-    return str(stamp)[:10]
+MIN_STEADY_SCANS = 3   # scans up to and including the one before the jump that must stay within the usual range
 
 
-def notable_swings(diffs: list[dict]) -> list[dict]:
-    """Comparable sites whose tracking-service count moved a lot between two measurements, biggest first."""
-    swings = []
-    for d in diffs:
-        if not d.get("comparable"):
-            continue
-        m = d["metrics"]["tracking_services"]
-        top = max(m["previous"], m["current"])
-        if abs(m["delta"]) >= ALERT_MIN_DELTA and top and abs(m["delta"]) / top >= ALERT_MIN_RATIO:
-            swings.append({"site": d["site"], "previous": m["previous"], "current": m["current"],
-                           "previous_at": _day(d["previous_at"]), "current_at": _day(d["current_at"])})
-    return sorted(swings, key=lambda x: (-abs(x["current"] - x["previous"]), x["site"]))
+def confirmed_swings(runs_dir: Path | str, sites_file: Path | str = "data/sites.json") -> tuple[list[dict], list[str]]:
+    """The big jumps that the newest scan has CONFIRMED: a site whose tracking-service count jumped between the two scans
+    before the newest one (at least 15 services and half of the larger count) and stayed at the new level in the newest scan.
 
-
-def vetted_swings(swings: list[dict], runs_dir: Path | str, sites_file: Path | str = "data/sites.json") -> tuple[list[dict], list[str]]:
-    """Drop the swings the series itself doubts, using the same checks as the Trends page: a swing whose third-party
-    requests moved with it (the page probably loaded differently), or whose starting point was itself an odd reading
-    (the site had just jumped and come back). Returns (swings kept, why each dropped one was dropped)."""
-    if not swings:
-        return swings, []
+    A jump seen in one scan only is not announced: it is often the page loading differently (a consent wall, a bot check, a
+    partial load), and an alert names an outlet. All three readings (before, after and the confirming scan) must be full
+    ones (every pass measured), and the site must have been steady in the scans before the jump: a site that swings from week to
+    week (one that serves a different page each time) makes no news by swinging again. Returns (swings, why each other jump
+    was left out). Same verdicts as the Trends page."""
     from . import insights, trends as trends_module
     try:
         points = trends_module.summary(runs_dir, load_groups(sites_file))["comparable"]
     except (OSError, ValueError, KeyError):
-        return swings, []
-    found = insights.anomalies(points)
-    kept, reasons = [], []
-    for w in swings:
-        own = [a for a in found if a["name"] == w["site"]]
-        artifact = any(a["until"] == w["current_at"] and a["verdict"] == "probable_artifact" for a in own)
-        odd_start = any(a["until"] == w["previous_at"] and a["verdict"] in ("probable_artifact", "reverted") for a in own)
-        if odd_start:
-            reasons.append(f"{w['site']}: the earlier reading ({w['previous']}) was itself an odd one, so this is a recovery, not a change")
-        elif artifact:
-            reasons.append(f"{w['site']}: third-party requests moved with the count, probably a different page load")
-        else:
-            kept.append(w)
-    return kept, reasons
+        return [], []
+    if len(points) < 3:
+        return [], []
+    jump_until, newest = points[-2]["date"], points[-1]["date"]
+    histories = insights.site_histories(points)
+    swings, reasons = [], []
+    for a in insights.anomalies(points):
+        if a["until"] != jump_until:
+            continue
+        if a["verdict"] != "confirmed":
+            reasons.append(f"{a['name']}: {a['from']} to {a['to']} was not confirmed by the next scan ({a['explanation']})")
+            continue
+        history = histories[a["stem"]]
+        before = [h["tracking"] for h in history if h["date"] <= a["since"]]
+        if len(before) < MIN_STEADY_SCANS:
+            reasons.append(f"{a['name']}: {a['from']} to {a['to']} held, but there are too few earlier scans to know its usual level")
+            continue
+        if max(before) - min(before) > insights.tolerance(statistics.median(before)):
+            reasons.append(f"{a['name']}: {a['from']} to {a['to']} held, but the site already swung between {min(before)} and "
+                           f"{max(before)} before: a jump is not news there")
+            continue
+        rows = {h["date"]: h for h in history}
+        needed = (a["since"], a["until"], newest)
+        if any(rows.get(day) is None or rows[day].get("confidence") != "high" for day in needed):
+            reasons.append(f"{a['name']}: {a['from']} to {a['to']} held, but not every reading was a full one (all passes measured)")
+            continue
+        swings.append({"site": a["name"], "previous": a["from"], "current": a["to"], "previous_at": a["since"],
+                       "current_at": a["until"], "held": rows[newest]["tracking"], "held_at": newest})
+    return sorted(swings, key=lambda x: (-abs(x["current"] - x["previous"]), x["site"])), reasons
 
 
 def build_alert(swings: list[dict], *, platform: str, report_url: str) -> list[str]:
-    """One post on the biggest swing. It names an outlet, so it is only ever a draft that a person approves."""
+    """One post on the biggest swing. It names an outlet, so it is only announced once the next scan has confirmed it."""
     if not swings:
         raise ValueError("no notable swing: nothing to post")
     limit, w = LIMITS[platform], swings[0]
     link = f"{report_url.rstrip('/')}/changes.html"
-    for note in (" A consent banner or measurement difference could explain it.", ""):
+    still = f", still {w['held']} on {w['held_at']}" if w.get("held_at") else ""
+    for note in ((" A consent banner or measurement difference could explain it.", "") if not still else ("",)):
         text = (f"Notable change: tracking services contacted by {w['site']} before any click went from "
-                f"{w['previous']} ({w['previous_at']}) to {w['current']} ({w['current_at']}). "
+                f"{w['previous']} ({w['previous_at']}) to {w['current']} ({w['current_at']}){still}. "
                 f"Same method and vantage point.{note} "
                 f"Counts, not verdicts. Data: {link}")
         for tags in ROOT_TAGS[:2]:
@@ -451,9 +453,10 @@ def main(argv: list[str] | None = None) -> int:
                              "(a broken scan must not become a post)")
     parser.add_argument("--kind", choices=("weekly", "midweek", "alert", "hook", "monthly"), default="weekly",
                         help="weekly: the full thread; midweek: one post on the companies reaching the most sites "
-                             "(written to <date>-midweek, no image); alert: one post on the biggest swing since the "
-                             "last measurement (written to <date>-alert); hook: one post on the most-tracked outlet of the "
-                             "week (written to <date>-hook). Alerts and hooks are never published automatically")
+                             "(written to <date>-midweek, no image); alert: one post on the biggest jump that the "
+                             "newest scan has confirmed (written to <date>-alert; none when no jump is confirmed); hook: one post "
+                             "on the most-tracked outlet of the week (written to <date>-hook). Alerts and hooks are published on "
+                             "their own only when the workflow switch ALERTS_AUTO is on; otherwise they wait for approval")
     args = parser.parse_args(argv)
     if args.max_chars:
         LIMITS[args.platform] = min(LIMITS[args.platform], args.max_chars)  # the builders read the limit at call time
@@ -490,11 +493,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.kind in ("alert", "hook"):
         if args.kind == "alert":
-            swings, dropped = vetted_swings(notable_swings(compare_directories(args.runs_dir)), args.runs_dir, args.sites_file)
+            swings, dropped = confirmed_swings(args.runs_dir, args.sites_file)
             for reason in dropped:
                 print(f"Not alerted: {reason}")
             if not swings:
-                print("No notable swing since the last measurement: no alert drafted.")
+                print("No jump confirmed by the newest scan: no alert drafted.")
                 return 0
             posts = build_alert(swings, platform=args.platform, report_url=args.report_url)
         else:

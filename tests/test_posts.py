@@ -251,37 +251,6 @@ def test_changes_post_lists_added_and_dropped_per_site_with_a_link_and_fits():
     assert len(text) <= LIMITS["bluesky"] and "All 12 changes: https://x.test/changes.html" in text
 
 
-def _swing(site, previous, current, comparable=True):
-    if not comparable:
-        return {"site": site, "comparable": False, "reasons": ["x"]}
-    return {"site": site, "comparable": True, "previous_at": "2026-10-05T07:00:00", "current_at": "2026-10-12T07:00:00",
-            "metrics": {"tracking_services": {"previous": previous, "current": current, "delta": current - previous}}}
-
-
-def test_alert_picks_only_big_swings_and_names_the_dates():
-    diffs = [_swing("BBC News", 52, 3), _swing("Small", 10, 4), _swing("Skipped", 90, 1, comparable=False),
-             _swing("Slight", 80, 90)]
-    swings = posts_module.notable_swings(diffs)
-    assert [s["site"] for s in swings] == ["BBC News"]
-    (post,) = posts_module.build_alert(swings, platform="bluesky", report_url="https://x.test/")
-    assert "from 52 (2026-10-05) to 3 (2026-10-12)" in post and len(post) <= LIMITS["bluesky"] and "@" not in post
-
-
-def test_alert_cli_writes_its_own_folder_only_when_there_is_a_swing(tmp_path):
-    runs = tmp_path / "runs"
-    for day, n in (("2026-10-05", 40), ("2026-10-12", 5)):
-        (runs / day).mkdir(parents=True)
-        r = report("News A", n)
-        r["generated_at"] = day
-        r["summary"].update(services=[], third_party_domains=[])
-        from traceguard.diff import METRICS
-        r["summary"]["metrics"].update({m: r["summary"]["metrics"].get(m, 0) for m in METRICS})
-        (runs / day / "a.json").write_text(json.dumps(r), encoding="utf-8")
-    assert main([str(runs), "--kind", "alert", "--out", str(tmp_path / "d")]) == 0
-    saved = json.loads((tmp_path / "d" / "2026-10-12-alert" / "bluesky.json").read_text(encoding="utf-8"))
-    assert saved["status"] == "draft" and "from 40" in saved["posts"][0]
-
-
 def test_hook_names_only_the_most_tracked_outlet_and_is_a_draft(tmp_path):
     reports = [report("News A", 9), report("News B", 4), report("News C", 0)]
     (post,) = posts_module.build_hook("2026-10-11", reports, platform="bluesky", report_url="https://x.test/")
@@ -373,38 +342,59 @@ def test_the_monthly_post_talks_about_the_last_complete_month_and_compares_it_wi
     assert "2026-11" in text
 
 
-def _series(tmp_path, counts, requests=None):
-    """Weekly scans of one site, 'https://a/', with the given tracking counts (and optional third-party requests)."""
-    from tests.test_insights import report as _report
-    from tests.test_trends import write as _write
+
+
+def _scans(tmp_path, counts, confidences=None):
+    """Weekly scans of one site, 'https://a/', with the given tracking counts (and optional confidence of each scan)."""
+    from datetime import date, timedelta
+    from tests.test_trends import report as scan_report, write as scan_write
     for i, n in enumerate(counts):
-        r = _report("https://a/", n, ["X"])
-        r["summary"]["metrics"]["third_party_requests"] = (requests or [100] * len(counts))[i]
-        _write(tmp_path, f"2026-10-{5 + 7 * i:02d}", [r])
+        scan_write(tmp_path, (date(2026, 10, 5) + timedelta(days=7 * i)).isoformat(),
+                   [scan_report("https://a/", n, ["X"], confidence=(confidences or ["high"] * len(counts))[i])])
     return tmp_path / "runs"
 
 
-def _swing_of(name, previous, current, previous_at, current_at):
-    return {"site": name, "previous": previous, "current": current, "previous_at": previous_at, "current_at": current_at}
+def test_a_jump_is_announced_only_once_the_next_scan_has_confirmed_it(tmp_path):
+    runs = _scans(tmp_path, [10, 11, 12, 60, 61])
+    swings, why = posts_module.confirmed_swings(runs, tmp_path / "none.json")
+    assert [(s["site"], s["previous"], s["current"], s["held"]) for s in swings] == [("https://a/", 12, 60, 61)]
+    assert swings[0]["previous_at"] == "2026-10-19" and swings[0]["current_at"] == "2026-10-26" and swings[0]["held_at"] == "2026-11-02"
+    (post,) = posts_module.build_alert(swings, platform="bluesky", report_url="https://x.test/")
+    assert "from 12 (2026-10-19) to 60 (2026-10-26), still 61 on 2026-11-02" in post
+    assert len(post) <= LIMITS["bluesky"] and "consent banner" not in post and "@" not in post
 
 
-def test_an_alert_is_dropped_when_the_page_probably_loaded_differently(tmp_path):
-    runs = _series(tmp_path, [55, 56, 2], requests=[400, 410, 40])  # the count fell with the requests
-    swing = _swing_of("https://a/", 56, 2, "2026-10-12", "2026-10-19")
-    kept, why = posts_module.vetted_swings([swing], runs)
-    assert kept == [] and "different page load" in why[0]
+def test_a_jump_seen_in_one_scan_only_is_not_announced(tmp_path):
+    runs = _scans(tmp_path, [10, 11, 12, 60])   # the jump is in the newest scan: nothing can confirm it yet
+    assert posts_module.confirmed_swings(runs, tmp_path / "none.json") == ([], [])
+    reverted = _scans(tmp_path / "b", [10, 11, 12, 60, 11])
+    swings, why = posts_module.confirmed_swings(reverted, tmp_path / "none.json")
+    assert swings == [] and "not confirmed" in why[0]
 
 
-def test_a_recovery_after_an_odd_reading_is_not_announced_as_a_change(tmp_path):
-    runs = _series(tmp_path, [55, 56, 2, 73], requests=[400, 410, 40, 500])
-    swing = _swing_of("https://a/", 2, 73, "2026-10-19", "2026-10-26")
-    kept, why = posts_module.vetted_swings([swing], runs)
-    assert kept == [] and "recovery" in why[0]
+def test_a_confirmed_jump_needs_three_full_readings(tmp_path):
+    runs = _scans(tmp_path, [10, 11, 12, 60, 61], confidences=["high", "high", "high", "medium", "high"])   # 2 of 3 passes in the jump scan
+    swings, why = posts_module.confirmed_swings(runs, tmp_path / "none.json")
+    assert swings == [] and "not every reading was a full one" in why[0]
 
 
-def test_a_clean_swing_still_gets_its_alert(tmp_path):
-    runs = _series(tmp_path, [10, 11, 60], requests=[100, 100, 130])
-    swing = _swing_of("https://a/", 11, 60, "2026-10-12", "2026-10-19")
-    kept, why = posts_module.vetted_swings([swing], runs)
-    assert kept == [swing] and why == []
-    assert posts_module.vetted_swings([], runs) == ([], [])
+def test_a_site_that_already_swings_from_week_to_week_makes_no_alert_by_swinging_again(tmp_path):
+    runs = _scans(tmp_path, [52, 3, 55, 2, 73, 60, 2, 2])   # the pattern of a site that serves a different page each time
+    swings, why = posts_module.confirmed_swings(runs, tmp_path / "none.json")
+    assert swings == [] and "already swung" in why[0]
+
+
+def test_a_site_with_too_little_history_is_not_judged(tmp_path):
+    swings, why = posts_module.confirmed_swings(_scans(tmp_path, [57, 17, 17]), tmp_path / "none.json")
+    assert swings == [] and "too few earlier scans" in why[0]
+    assert posts_module.confirmed_swings(_scans(tmp_path / "b", [10, 60]), tmp_path / "none.json") == ([], [])
+
+
+def test_alert_cli_writes_its_own_folder_only_for_a_confirmed_jump(tmp_path):
+    quiet = _scans(tmp_path / "q", [10, 11, 12, 60])
+    assert main([str(quiet), "--kind", "alert", "--out", str(tmp_path / "d1"), "--sites-file", str(tmp_path / "none.json")]) == 0
+    assert not (tmp_path / "d1").exists()
+    loud = _scans(tmp_path / "l", [10, 11, 12, 60, 61])
+    assert main([str(loud), "--kind", "alert", "--out", str(tmp_path / "d2"), "--sites-file", str(tmp_path / "none.json")]) == 0
+    saved = json.loads((tmp_path / "d2" / "2026-11-02-alert" / "bluesky.json").read_text(encoding="utf-8"))
+    assert saved["status"] == "draft" and "from 12" in saved["posts"][0]
