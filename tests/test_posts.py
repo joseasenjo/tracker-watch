@@ -256,12 +256,8 @@ def test_hook_names_only_the_most_tracked_outlet_and_is_a_draft(tmp_path):
     (post,) = posts_module.build_hook("2026-10-11", reports, platform="bluesky", report_url="https://x.test/")
     assert post.startswith("News A: 9 third-party tracking services") and "News B" not in post
     assert len(post) <= LIMITS["bluesky"] and "@" not in post and "Automated post." in post
-    folder = tmp_path / "runs" / "2026-10-11"
-    folder.mkdir(parents=True)
-    (folder / "a.json").write_text(json.dumps(reports[0]), encoding="utf-8")
-    assert main([str(tmp_path / "runs"), "--kind", "hook", "--out", str(tmp_path / "d")]) == 0
-    saved = json.loads((tmp_path / "d" / "2026-10-11-hook" / "bluesky.json").read_text(encoding="utf-8"))
-    assert saved["status"] == "draft" and saved["image"] is None
+    (streaky,) = posts_module.build_hook("2026-10-11", reports, platform="bluesky", report_url="https://x.test/", streak=4)
+    assert "4 scans in a row" in streaky and len(streaky) <= LIMITS["bluesky"] and "Automated post." in streaky
 
 
 def test_midweek_keeps_automated_post_and_drops_a_company_before_dropping_it():
@@ -275,18 +271,15 @@ def test_midweek_keeps_automated_post_and_drops_a_company_before_dropping_it():
 
 def test_max_chars_keeps_mastodon_posts_inside_the_bluesky_limit(tmp_path, monkeypatch):
     monkeypatch.setitem(posts_module.LIMITS, "mastodon", 500)  # restored after the test: main() lowers it at run time
-    reports = [report(f"News {c}", 9 - i) for i, c in enumerate("ABCDEF")]
-    folder = tmp_path / "runs" / "2026-10-11"
-    folder.mkdir(parents=True)
-    for i, r in enumerate(reports):
-        (folder / f"{i}.json").write_text(json.dumps(r), encoding="utf-8")
-    assert main([str(tmp_path / "runs"), "--platform", "mastodon", "--kind", "hook", "--max-chars", "300",
-                 "--out", str(tmp_path / "d")]) == 0
-    saved = json.loads((tmp_path / "d" / "2026-10-11-hook" / "mastodon.json").read_text(encoding="utf-8"))
+    runs = _race(tmp_path, ["a"] * 4)   # a steady leader on its 4th scan in a row: the hook is drafted
+    none = str(tmp_path / "none.json")
+    assert main([str(runs), "--platform", "mastodon", "--kind", "hook", "--max-chars", "300",
+                 "--out", str(tmp_path / "d"), "--sites-file", none]) == 0
+    saved = json.loads((tmp_path / "d" / "2026-10-26-hook" / "mastodon.json").read_text(encoding="utf-8"))
     assert saved["platform"] == "mastodon" and all(len(p) <= 300 for p in saved["posts"])
     assert posts_module.LIMITS["mastodon"] == 300
     # asking for more than the platform allows never raises its limit
-    main([str(tmp_path / "runs"), "--platform", "mastodon", "--kind", "hook", "--max-chars", "9999", "--out", str(tmp_path / "d2")])
+    main([str(runs), "--platform", "mastodon", "--kind", "hook", "--max-chars", "9999", "--out", str(tmp_path / "d2"), "--sites-file", none])
     assert posts_module.LIMITS["mastodon"] == 300
 
 
@@ -398,3 +391,52 @@ def test_alert_cli_writes_its_own_folder_only_for_a_confirmed_jump(tmp_path):
     assert main([str(loud), "--kind", "alert", "--out", str(tmp_path / "d2"), "--sites-file", str(tmp_path / "none.json")]) == 0
     saved = json.loads((tmp_path / "d2" / "2026-11-02-alert" / "bluesky.json").read_text(encoding="utf-8"))
     assert saved["status"] == "draft" and "from 12" in saved["posts"][0]
+
+
+def _race(tmp_path, leaders, confidences=None):
+    """Weekly scans of two sites: 'https://a/' (51 services) and 'https://b/' (40); the one named in `leaders` leads each scan."""
+    from datetime import date, timedelta
+    from tests.test_trends import report as scan_report, write as scan_write
+    for i, who in enumerate(leaders):
+        conf = (confidences or ["high"] * len(leaders))[i]
+        counts = {"https://a/": 51, "https://b/": 40} if who == "a" else {"https://a/": 40, "https://b/": 51}
+        scan_write(tmp_path, (date(2026, 10, 5) + timedelta(days=7 * i)).isoformat(),
+                   [scan_report(url, n, ["X"], confidence=conf) for url, n in counts.items()])
+    return tmp_path / "runs"
+
+
+def test_a_steady_leader_gets_a_hook_only_on_every_fourth_scan_in_a_row(tmp_path):
+    none = tmp_path / "none.json"
+    leader, why = posts_module.stable_leader(_race(tmp_path / "x", ["a", "a", "a", "a"]), none)
+    assert leader == {"name": "https://a/", "tracking": 51, "streak": 4} and why == []
+    for n in (3, 5):
+        leader, why = posts_module.stable_leader(_race(tmp_path / f"n{n}", ["a"] * n), none)
+        assert leader is None and "in a row" in why[0]
+    leader, why = posts_module.stable_leader(_race(tmp_path / "short", ["a", "a"]), none)
+    assert leader is None and "not been steady" in why[0]   # too few scans to call anything steady
+
+
+def test_a_leader_that_changed_recently_has_a_short_streak(tmp_path):
+    leader, why = posts_module.stable_leader(_race(tmp_path, ["b", "b", "a", "a"]), tmp_path / "none.json")
+    assert leader is None and "led 2 scans in a row" in why[0]
+
+
+def test_no_hook_for_a_leader_that_is_not_steady_or_not_fully_measured(tmp_path):
+    from datetime import date, timedelta
+    from tests.test_trends import report as scan_report, write as scan_write
+    for i, n in enumerate([90, 20, 95, 15]):   # always the top of the list, but it swings week to week
+        scan_write(tmp_path / "w", (date(2026, 10, 5) + timedelta(days=7 * i)).isoformat(), [scan_report("https://a/", n, ["X"])])
+    leader, why = posts_module.stable_leader(tmp_path / "w" / "runs", tmp_path / "none.json")
+    assert leader is None and "not been steady" in why[0]
+    medium = _race(tmp_path / "m", ["a"] * 4, confidences=["high", "high", "high", "medium"])
+    leader, why = posts_module.stable_leader(medium, tmp_path / "none.json")
+    assert leader is None and "not a full one" in why[0]
+
+
+def test_hook_cli_writes_a_draft_only_for_a_qualifying_leader(tmp_path):
+    none = str(tmp_path / "none.json")
+    assert main([str(_race(tmp_path / "s", ["a", "a", "a"])), "--kind", "hook", "--out", str(tmp_path / "d1"), "--sites-file", none]) == 0
+    assert not (tmp_path / "d1").exists()
+    assert main([str(_race(tmp_path / "l", ["a"] * 4)), "--kind", "hook", "--out", str(tmp_path / "d2"), "--sites-file", none]) == 0
+    saved = json.loads((tmp_path / "d2" / "2026-10-26-hook" / "bluesky.json").read_text(encoding="utf-8"))
+    assert saved["status"] == "draft" and saved["image"] is None and "4 scans in a row" in saved["posts"][0]

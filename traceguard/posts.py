@@ -280,21 +280,63 @@ def build_monthly(summary: dict, *, platform: str, report_url: str, month: str |
     raise PostTooLong("the monthly post does not fit the limit")
 
 
-def build_hook(date: str, reports: list[dict], *, platform: str, report_url: str) -> list[str]:
+def build_hook(date: str, reports: list[dict], *, platform: str, report_url: str, streak: int | None = None) -> list[str]:
     """One standalone post on the single most-tracked outlet of the week (the rule fixed by the maintainer).
-    It names an outlet, so it is only ever a draft that a person approves."""
+    `streak`: how many scans in a row that outlet has led (stable_leader decides when a hook is worth posting at all).
+    It names an outlet, so only a leader that stable_leader vouches for gets one."""
     rows = ranking(reports)
     if not rows:
         raise ValueError("no measured site contacted a tracking service: nothing to post")
     top, limit = rows[0], LIMITS[platform]
+    row = f", {streak} scans in a row" if streak and streak > 1 else ""
     text = (f"{top['name']}: {top['tracking_services']} third-party tracking services contacted before any click, "
-            f"the most among the {len(eligible(reports))} news sites measured with enough confidence ({date}, from "
+            f"the most among the {len(eligible(reports))} news sites measured with enough confidence{row} ({date}, from "
             f"{_vantage(reports)}). Counts, not verdicts. Data: {report_url}")
     for tags in ROOT_TAGS[:2]:
         candidate = f"{text} {tags}"
         if len(candidate) <= limit:
             return [candidate]
     raise PostTooLong("the hook post does not fit the limit")
+
+
+HOOK_EVERY = 4   # a leader that keeps leading gets a hook on every 4th scan in a row, not every week
+
+
+def stable_leader(runs_dir: Path | str, sites_file: Path | str = "data/sites.json") -> tuple[dict | None, list[str]]:
+    """The outlet that a hook may name, or None with the reasons. It must lead the newest scan with a full reading (every
+    pass measured), have been steady in its last scans (a site that swings from week to week can top the list by chance),
+    and be on a streak that is a multiple of HOOK_EVERY: the weekly thread already names the leader every week, so a second
+    post is only worth it for something the thread does not say."""
+    from . import insights, trends as trends_module
+    try:
+        points = trends_module.summary(runs_dir, load_groups(sites_file))["comparable"]
+    except (OSError, ValueError, KeyError):
+        return None, []
+
+    def leader(point):
+        rows = sorted((r for r in point["site_rows"] if r["tracking"] > 0),
+                      key=lambda r: (-r["tracking"], -r["requests"], r["name"]))
+        return rows[0] if rows else None
+
+    top = leader(points[-1]) if points else None
+    if top is None:
+        return None, ["no measured site contacted a tracking service"]
+    streak = 0
+    for point in reversed(points):
+        current = leader(point)
+        if current is None or current["stem"] != top["stem"]:
+            break
+        streak += 1
+    history = insights.site_histories(points)[top["stem"]]
+    recent = [h["tracking"] for h in history][-MIN_STEADY_SCANS:]
+    if top.get("confidence") != "high":
+        return None, [f"{top['name']} leads, but its newest reading was not a full one (all passes measured)"]
+    if len(recent) < MIN_STEADY_SCANS or max(recent) - min(recent) > insights.tolerance(statistics.median(recent)):
+        return None, [f"{top['name']} leads, but it has not been steady in its last {MIN_STEADY_SCANS} scans ({recent})"]
+    if streak % HOOK_EVERY:
+        return None, [f"{top['name']} has led {streak} scan{'s' if streak != 1 else ''} in a row: a hook goes out every "
+                      f"{HOOK_EVERY}th (the weekly thread already names the leader)"]
+    return {"name": top["name"], "tracking": top["tracking"], "streak": streak}, []
 
 
 MIN_STEADY_SCANS = 3   # scans up to and including the one before the jump that must stay within the usual range
@@ -455,7 +497,7 @@ def main(argv: list[str] | None = None) -> int:
                         help="weekly: the full thread; midweek: one post on the companies reaching the most sites "
                              "(written to <date>-midweek, no image); alert: one post on the biggest jump that the "
                              "newest scan has confirmed (written to <date>-alert; none when no jump is confirmed); hook: one post "
-                             "on the most-tracked outlet of the week (written to <date>-hook). Alerts and hooks are published on "
+                             "on the most-tracked outlet, only when it is a steady leader on every 4th scan in a row (written to <date>-hook). Alerts and hooks are published on "
                              "their own only when the workflow switch ALERTS_AUTO is on; otherwise they wait for approval")
     args = parser.parse_args(argv)
     if args.max_chars:
@@ -501,7 +543,15 @@ def main(argv: list[str] | None = None) -> int:
                 return 0
             posts = build_alert(swings, platform=args.platform, report_url=args.report_url)
         else:
-            posts = build_hook(date, reports, platform=args.platform, report_url=args.report_url)
+            leader, why = stable_leader(args.runs_dir, args.sites_file)
+            for reason in why:
+                print(f"No hook: {reason}")
+            if leader is None:
+                print("No outlet qualifies for a hook this week: no hook drafted.")
+                return 0
+            posts = build_hook(date, reports, platform=args.platform, report_url=args.report_url, streak=leader["streak"])
+            if not posts[0].startswith(f"{leader['name']}:"):
+                raise ValueError("the leader of the series is not the leader of the newest scan: no hook drafted")
         markdown = render_markdown(date, args.platform, posts, "", None)
         print(markdown)
         if not args.dry_run:
