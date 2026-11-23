@@ -43,6 +43,7 @@ from .links import load_links
 from .report import passive_requests
 from .origins import compare as compare_origins, load_extra, paired_bars
 from . import insights as insights_module, trends as trends_module
+from .posts import groups_from_entries
 from .spark import heatmap, line_chart, sparkline, stacked_bars
 
 SRC = Path(__file__).resolve().parent.parent / "site_src"
@@ -204,7 +205,7 @@ def _entry(stem: str, report: dict, meta: dict, history: dict, date: str, diff: 
 
 def trends_view(runs_dir: Path | str, meta: dict[str, dict]) -> dict:
     """The series, the monthly rows and the two charts of the trends page, from the reports alone."""
-    groups = {url.rstrip("/"): e["group"] for url, e in meta.items() if e.get("group")}
+    groups = groups_from_entries(meta.values())
     view = trends_module.summary(runs_dir, groups)
     same = view["comparable"]
     view["chart_medians"] = line_chart(  # the four countries first: "All" comes last and gets the dashed style

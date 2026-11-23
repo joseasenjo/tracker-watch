@@ -1,5 +1,6 @@
 {
   "_note": "Outlet list (92 sites: 19 US, 18 UK, 17 DE, 33 ES, 5 IT; mostly general news plus some sports sites). The 12 Spanish sites (7 general, 5 sports) were added on 2026-10-07: sports outlets were included on purpose because they tend to load many tracking services; their own-domain declarations rest on public knowledge of each publishing group (Unidad Editorial, Prisa Media, Vocento, Grupo Godo, Prensa Iberica) and were checked against a test scan, which also showed that El Pais refuses the automated browser (HTTP 403) and that Relevo shows almost no third-party requests before any interaction. Chosen by judgement, not by traffic data: verify against a current ranking before publishing anything. first_party_domains lists only domains believed to belong to the outlet; refine it from scan results (inspect third_party_domains and move the outlet's own CDNs here). The site's own host is always first party. First-party additions of 2026-10-04 rest on public knowledge of each group's own domains plus traffic patterns in the first scan; unidentified domains (e.g. asadcdn.com, greenvideo.io, html-load.com, ebxcdn.com) are deliberately left as third party. asadcdn.com (paths /adlib/..., seen only on Bild and Die Welt) is treated as Axel Springer's own ad-delivery code: inferred from the 'AdLib' tool Axel Springer is documented to run, not confirmed. On 2026-11-24 34 outlets were ADDED (not substituted) after a probe from GitHub servers showed them measurable: 7 Basque and 14 other Spanish outlets, 6 UK and 8 US; the 12 original sites per country stay, including the ones that refuse the scan. Cadena SER, Forbes and Politico answered 403 in the probe and were left out for now. On 2026-11-24 five German outlets (Stern, RTL, Handelsblatt, Der Tagesspiegel, Merkur) and five Italian ones (a new group IT: Corriere della Sera, la Repubblica, La Stampa, Il Sole 24 Ore, La Gazzetta dello Sport) were added after the same probe; ZDFheute, Berliner Zeitung, ANSA, Il Fatto Quotidiano and Il Messaggero were also measurable and are kept as reserves in data/candidates.json.",
+  "_panels": "core = the 48 outlets measured since 2026-10 (12 per country in US, UK, DE, ES): the headline series (median, bands, concentration, country medians, monthly trend) is computed on them only, so it stays comparable. extended = outlets added on 2026-11-24 (first measured 2026-11-30): they appear in every post, page and per-site series, and in the 'extended panel' columns of the trends, but never change the headline series.",
   "sites": [
     {
       "name": "The New York Times",
@@ -9,21 +10,24 @@
         "nytimg.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "The Washington Post",
       "url": "https://www.washingtonpost.com",
       "first_party_domains": [],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "CNN",
       "url": "https://edition.cnn.com",
       "first_party_domains": [],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Fox News",
@@ -32,7 +36,8 @@
         "fncstatic.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "USA Today",
@@ -42,7 +47,8 @@
         "gannettdigital.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "NBC News",
@@ -51,7 +57,8 @@
         "s-nbcnews.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "The Wall Street Journal",
@@ -60,28 +67,32 @@
         "dowjones.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Associated Press",
       "url": "https://apnews.com",
       "first_party_domains": [],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "New York Post",
       "url": "https://nypost.com",
       "first_party_domains": [],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Los Angeles Times",
       "url": "https://www.latimes.com",
       "first_party_domains": [],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "ESPN",
@@ -91,7 +102,8 @@
         "go.com"
       ],
       "group": "US",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "CBS Sports",
@@ -101,7 +113,8 @@
         "cbsimg.net"
       ],
       "group": "US",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "BBC News",
@@ -111,7 +124,8 @@
         "bbci.co.uk"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "The Guardian",
@@ -121,28 +135,32 @@
         "guardianapis.com"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Daily Mail",
       "url": "https://www.dailymail.co.uk",
       "first_party_domains": [],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "The Telegraph",
       "url": "https://www.telegraph.co.uk",
       "first_party_domains": [],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "The Sun",
       "url": "https://www.thesun.co.uk",
       "first_party_domains": [],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "The Independent",
@@ -151,21 +169,24 @@
         "the-independent.com"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Daily Mirror",
       "url": "https://www.mirror.co.uk",
       "first_party_domains": [],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "The Times",
       "url": "https://www.thetimes.co.uk",
       "first_party_domains": [],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Sky News",
@@ -174,14 +195,16 @@
         "sky.com"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Evening Standard",
       "url": "https://www.standard.co.uk",
       "first_party_domains": [],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Financial Times",
@@ -190,7 +213,8 @@
         "ftcdn.net"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Sky Sports",
@@ -199,14 +223,16 @@
         "sky.com"
       ],
       "group": "UK",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "Der Spiegel",
       "url": "https://www.spiegel.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Bild",
@@ -217,28 +243,32 @@
         "asadcdn.com"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Die Zeit",
       "url": "https://www.zeit.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Frankfurter Allgemeine (FAZ)",
       "url": "https://www.faz.net",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Süddeutsche Zeitung",
       "url": "https://www.sueddeutsche.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Die Welt",
@@ -248,14 +278,16 @@
         "asadcdn.com"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Tagesschau",
       "url": "https://www.tagesschau.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Focus Online",
@@ -264,35 +296,40 @@
         "burda-forward.de"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "t-online",
       "url": "https://www.t-online.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "n-tv",
       "url": "https://www.n-tv.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "kicker",
       "url": "https://www.kicker.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "Sport1",
       "url": "https://www.sport1.de",
       "first_party_domains": [],
       "group": "DE",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "El Mundo",
@@ -302,14 +339,16 @@
         "unidadeditorial.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "El País",
       "url": "https://elpais.com",
       "first_party_domains": [],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "ABC",
@@ -320,7 +359,8 @@
         "vocento.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "La Vanguardia",
@@ -329,7 +369,8 @@
         "grupogodo.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "El Confidencial",
@@ -338,7 +379,8 @@
         "ecestaticos.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "20minutos",
@@ -347,14 +389,16 @@
         "20m.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "elDiario.es",
       "url": "https://www.eldiario.es",
       "first_party_domains": [],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "core"
     },
     {
       "name": "Marca",
@@ -365,7 +409,8 @@
         "estaticos-marca.com"
       ],
       "group": "ES",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "AS",
@@ -376,7 +421,8 @@
         "prisamedia.com"
       ],
       "group": "ES",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "Mundo Deportivo",
@@ -385,7 +431,8 @@
         "grupogodo.com"
       ],
       "group": "ES",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "SPORT",
@@ -395,14 +442,16 @@
         "elperiodico.com"
       ],
       "group": "ES",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "Relevo",
       "url": "https://www.relevo.com",
       "first_party_domains": [],
       "group": "ES",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "core"
     },
     {
       "name": "El Correo",
@@ -411,7 +460,8 @@
         "elcorreo.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "El Diario Vasco",
@@ -420,7 +470,8 @@
         "diariovasco.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Deia",
@@ -429,7 +480,8 @@
         "deia.eus"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Noticias de Gipuzkoa",
@@ -438,7 +490,8 @@
         "noticiasdegipuzkoa.eus"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Naiz",
@@ -447,7 +500,8 @@
         "naiz.eus"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Berria",
@@ -456,7 +510,8 @@
         "berria.eus"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "EITB",
@@ -465,7 +520,8 @@
         "eitb.eus"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "RTVE",
@@ -474,7 +530,8 @@
         "rtve.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Público",
@@ -483,7 +540,8 @@
         "publico.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "La Razón",
@@ -492,7 +550,8 @@
         "larazon.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "El Español",
@@ -501,7 +560,8 @@
         "elespanol.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "El Periódico",
@@ -510,7 +570,8 @@
         "elperiodico.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "OKDiario",
@@ -519,7 +580,8 @@
         "okdiario.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Libertad Digital",
@@ -528,7 +590,8 @@
         "libertaddigital.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "COPE",
@@ -537,7 +600,8 @@
         "cope.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Europa Press",
@@ -546,7 +610,8 @@
         "europapress.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Expansión",
@@ -555,7 +620,8 @@
         "expansion.com"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "La Voz de Galicia",
@@ -564,7 +630,8 @@
         "lavozdegalicia.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Heraldo",
@@ -573,7 +640,8 @@
         "heraldo.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Las Provincias",
@@ -582,7 +650,8 @@
         "lasprovincias.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Diario de Sevilla",
@@ -591,7 +660,8 @@
         "diariodesevilla.es"
       ],
       "group": "ES",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Metro",
@@ -600,7 +670,8 @@
         "metro.co.uk"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Daily Express",
@@ -609,7 +680,8 @@
         "express.co.uk"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Daily Record",
@@ -618,7 +690,8 @@
         "dailyrecord.co.uk"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Manchester Evening News",
@@ -627,7 +700,8 @@
         "manchestereveningnews.co.uk"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "GB News",
@@ -636,7 +710,8 @@
         "gbnews.com"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "The Scotsman",
@@ -645,7 +720,8 @@
         "scotsman.com"
       ],
       "group": "UK",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Newsweek",
@@ -654,7 +730,8 @@
         "newsweek.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "HuffPost",
@@ -663,7 +740,8 @@
         "huffpost.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Business Insider",
@@ -672,7 +750,8 @@
         "businessinsider.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Axios",
@@ -681,7 +760,8 @@
         "axios.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "NPR",
@@ -690,7 +770,8 @@
         "npr.org"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "ABC News",
@@ -699,7 +780,8 @@
         "abcnews.go.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "CBS News",
@@ -708,7 +790,8 @@
         "cbsnews.com"
       ],
       "group": "US",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Corriere della Sera",
@@ -717,7 +800,8 @@
         "corriere.it"
       ],
       "group": "IT",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "la Repubblica",
@@ -726,7 +810,8 @@
         "repubblica.it"
       ],
       "group": "IT",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "La Stampa",
@@ -735,7 +820,8 @@
         "lastampa.it"
       ],
       "group": "IT",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Il Sole 24 Ore",
@@ -744,7 +830,8 @@
         "ilsole24ore.com"
       ],
       "group": "IT",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "La Gazzetta dello Sport",
@@ -753,7 +840,8 @@
         "gazzetta.it"
       ],
       "group": "IT",
-      "kind": "sports"
+      "kind": "sports",
+      "panel": "extended"
     },
     {
       "name": "Stern",
@@ -762,7 +850,8 @@
         "stern.de"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "RTL",
@@ -771,7 +860,8 @@
         "rtl.de"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Handelsblatt",
@@ -780,7 +870,8 @@
         "handelsblatt.com"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Der Tagesspiegel",
@@ -789,7 +880,8 @@
         "tagesspiegel.de"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     },
     {
       "name": "Merkur",
@@ -798,7 +890,8 @@
         "merkur.de"
       ],
       "group": "DE",
-      "kind": "news"
+      "kind": "news",
+      "panel": "extended"
     }
   ]
 }

@@ -534,13 +534,31 @@ def render_markdown(date: str, platform: str, posts: list[str], alt: str, image:
     return "\n".join(lines)
 
 
-def load_groups(sites_file: Path | str) -> dict[str, str]:
-    """site URL (without a trailing slash) -> group; empty when the file is missing."""
+class Groups(dict):
+    """site URL (without a trailing slash) -> group, exactly like the plain dict it replaces, that also carries `panels`:
+    site URL -> "core" (the 48 outlets of the original list: the headline series is computed on them only) or "extended"
+    (outlets added later: everywhere else, never in the headline). Code that only reads groups sees an ordinary dict."""
+    panels: dict
+
+
+def groups_from_entries(entries) -> Groups:
+    groups = Groups()
+    groups.panels = {}
+    for s in entries:
+        url = s["url"].rstrip("/")
+        if s.get("group"):
+            groups[url] = s["group"]
+        groups.panels[url] = s.get("panel", "core")
+    return groups
+
+
+def load_groups(sites_file: Path | str) -> Groups:
+    """site URL (without a trailing slash) -> group (with .panels); empty when the file is missing."""
     path = Path(sites_file)
     if not path.exists():
-        return {}
+        return groups_from_entries([])
     data = json.loads(path.read_text(encoding="utf-8"))
-    return {s["url"].rstrip("/"): s["group"] for s in data.get("sites", []) if s.get("group")}
+    return groups_from_entries(data.get("sites", []))
 
 
 def load_spain(spain_dir: Path | str, groups: dict[str, str], main_date: str) -> tuple[str, list[dict]] | None:

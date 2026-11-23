@@ -155,10 +155,27 @@
           </tbody>
         </table>
       </div>
+      {% set ext_points = t.comparable|selectattr('extended')|list %}
+      {% if ext_points %}
+      <h2>Extended panel (outlets added on 2026-11-24)</h2>
+      <p class="small">On 2026-11-24 the list grew from the original 48 outlets (12 each in the US, UK, Germany and Spain) to {{ ext_points[-1].extended.sites }}, adding Basque, Spanish, UK, US and German outlets and a new country, Italy. The figures above, the charts and the month-by-month table keep using <b>only the original 48</b>, so the series does not jump because the sample changed. The figures below count <b>every listed outlet</b>, start on 2026-11-30 and form their own, shorter series; the number in brackets is how many outlets were measured in each country.</p>
+      <div class="table-scroll">
+        <table class="t">
+          <thead><tr><th>Date</th><th class="num">Sites measured</th><th class="num">Median</th><th class="num">US</th><th class="num">UK</th><th class="num">DE</th><th class="num">ES</th><th class="num">IT</th></tr></thead>
+          <tbody>
+          {% for p in ext_points|reverse %}
+            <tr><td>{{ p.date }}</td><td class="num">{{ p.extended.usable }} of {{ p.extended.sites }}</td><td class="num">{{ p.extended.median_tracking }}</td>
+              {% for g in ['US', 'UK', 'DE', 'ES', 'IT'] %}<td class="num">{% if p.extended.by_group.get(g) is not none %}{{ p.extended.by_group.get(g) }} ({{ p.extended.n_group.get(g) }}){% endif %}</td>{% endfor %}</tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
       <p><a class="btn sec" href="{{ root }}data/trends.csv">Download trends.csv</a></p>
 
       <h2>How to read this</h2>
       <ul>
+        <li><b>Two panels:</b> the headline series uses the original 48 outlets only; outlets added later are shown in the extended panel and in every post and per-site page, but never change the headline. Comparing the two panels is comparing different samples.</li>
         <li><b>Median per scan:</b> the middle value of the tracking services each site contacted before any click. A scan with fewer sites measured is noted in the table; early scans did not include every country.</li>
         <li><b>Leading company reach:</b> on how many of the measured sites a company's tracking services ran in every stable pass. It names companies, never outlets. It is the same count as on the <a href="{{ root }}companies.html#reading">Companies</a> page, where the leader's figure is explained service by service.</li>
         <li><b>Concentration index:</b> for each scan, a company's share is its presences divided by all presences on the measured sites; the index is the sum of the squared shares times 10,000 (the Herfindahl-Hirschman form). 10,000 would be a single company present everywhere; a low number means the presence is spread over many. It describes how concentrated the presence on these news sites is. It is <b>not</b> an economic market share and says nothing about what any company does with the data.</li>

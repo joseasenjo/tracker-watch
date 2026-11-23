@@ -25,10 +25,11 @@ from pathlib import Path
 from .bands import BANDS, band_for
 from .posts import company_reach, eligible, load_groups, measured
 
-SERIES_COLUMNS = ["date", "vantage", "passes", "observe_seconds", "sites", "measured", "usable", "median_tracking", "mean_tracking",
-                  "median_US", "median_UK", "median_DE", "median_ES", "band_A", "band_B", "band_C", "band_D", "band_E",
-                  "top_company", "top_company_sites", "top_company_pct", "top3_mean_pct", "companies", "concentration_index"]
 GROUP_ORDER = ("US", "UK", "DE", "ES", "IT")
+SERIES_COLUMNS = ["date", "vantage", "passes", "observe_seconds", "sites", "measured", "usable", "median_tracking", "mean_tracking",
+                  *[f"median_{g}" for g in GROUP_ORDER], "band_A", "band_B", "band_C", "band_D", "band_E",
+                  "top_company", "top_company_sites", "top_company_pct", "top3_mean_pct", "companies", "concentration_index",
+                  "ext_sites", "ext_usable", "ext_median_tracking", *[f"ext_median_{g}" for g in GROUP_ORDER]]
 
 
 def conditions(report: dict) -> tuple:
@@ -69,8 +70,32 @@ def _quartiles(values: list[float]) -> dict:
     return {"n": len(values), "q1": round(q1, 1), "median": round(med, 1), "q3": round(q3, 1), "min": min(values), "max": max(values)}
 
 
+def _extended_view(reports: list[dict], groups) -> dict:
+    """The same scan counted over every listed site: how many, the overall median and the median of each country with its n."""
+    use = eligible(reports)
+    by_group: dict[str, list[int]] = {}
+    for r in use:
+        group = groups.get(r["site"]["url"].rstrip("/"))
+        if group:
+            by_group.setdefault(group, []).append(r["summary"]["metrics"]["tracking_services"])
+    counts = [r["summary"]["metrics"]["tracking_services"] for r in use]
+    return {"sites": len(reports), "usable": len(use), "median_tracking": _median(counts),
+            "by_group": {g: _median(v) for g, v in sorted(by_group.items())},
+            "n_group": {g: len(v) for g, v in sorted(by_group.items())}}
+
+
 def point(date: str, reports: list[dict], groups: dict[str, str] | None = None, stems: list[str] | None = None) -> dict:
     """One scan as one point of the series. `stems` (the report file names) identify each site; the site URL when absent."""
+    full, full_stems = reports, stems
+    panels = getattr(groups, "panels", None) or {}
+    core_at = [i for i, r in enumerate(full) if panels.get(r["site"]["url"].rstrip("/"), "core") == "core"]
+    extended = None
+    if panels and len(core_at) < len(full):
+        # The headline is computed on the core panel only, so adding outlets never moves the series by itself.
+        extended = _extended_view(full, groups)
+        if core_at:
+            reports = [full[i] for i in core_at]
+            stems = [full_stems[i] for i in core_at] if full_stems else None
     use = eligible(reports)
     counts = [r["summary"]["metrics"]["tracking_services"] for r in use]
     first = reports[0]["measurement"] if reports else {}
@@ -86,13 +111,16 @@ def point(date: str, reports: list[dict], groups: dict[str, str] | None = None, 
             bands[label] += 1
     c = concentration(reports)
     names = {id(r): (stems[i] if stems else r["site"]["url"]) for i, r in enumerate(reports)}
+    full_names = {id(r): (full_stems[i] if full_stems else r["site"]["url"]) for i, r in enumerate(full)}
     site_rows, presence, categories = [], {}, {}
-    for r in use:
-        stem = names[id(r)]
-        group = (groups or {}).get(r["site"]["url"].rstrip("/"), "")
-        site_rows.append({"stem": stem, "name": r["site"]["name"], "group": group,
+    for r in eligible(full):   # every site has its own per-site series, in either panel
+        url = r["site"]["url"].rstrip("/")
+        site_rows.append({"stem": full_names[id(r)], "name": r["site"]["name"], "group": (groups or {}).get(url, ""),
+                          "panel": panels.get(url, "core"),
                           "tracking": r["summary"]["metrics"]["tracking_services"],
                           "requests": r["summary"]["metrics"]["third_party_requests"], "confidence": r["summary"].get("confidence")})
+    for r in use:   # companies and categories describe the headline panel
+        stem = names[id(r)]
         seen_categories = set()
         for service in r["summary"].get("services", []):
             if service.get("tracking") and service.get("stable"):
@@ -113,6 +141,7 @@ def point(date: str, reports: list[dict], groups: dict[str, str] | None = None, 
         "reach": c["reach"][:10], "reach_all": dict(c["reach"]),
         "site_rows": sorted(site_rows, key=lambda r: r["stem"]), "quartiles": quartiles, "categories": categories,
         "presence": {company: sorted(set(stems_)) for company, stems_ in sorted(presence.items())},
+        "extended": extended,
     }
 
 
@@ -176,13 +205,21 @@ def month_over_month(rows: list[dict]) -> dict | None:
             "delta_concentration": new["concentration_index"] - old["concentration_index"]}
 
 
+def _extended_cells(p: dict) -> list:
+    e = p.get("extended")
+    if not e:
+        return ["", "", "", *[""] * len(GROUP_ORDER)]
+    return [e["sites"], e["usable"], e["median_tracking"], *[e["by_group"].get(g, "") for g in GROUP_ORDER]]
+
+
 def series_rows(series: list[dict]) -> list[list]:
     out = []
     for p in series:
         out.append([p["date"], p["vantage"], p["passes"], p["observe_seconds"], p["sites"], p["measured"], p["usable"],
                     p["median_tracking"], p["mean_tracking"], *[p["by_group"].get(g, "") for g in GROUP_ORDER],
                     *[p["bands"].get(label, 0) for label, _, _ in BANDS], p["top_company"], p["top_company_sites"],
-                    p["top_company_pct"], p["top3_mean_pct"], p["companies"], p["concentration_index"]])
+                    p["top_company_pct"], p["top3_mean_pct"], p["companies"], p["concentration_index"],
+                    *_extended_cells(p)])
     return out
 
 

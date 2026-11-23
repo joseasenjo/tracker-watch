@@ -439,3 +439,20 @@ def test_autonomy_page_lists_scans_posts_and_what_was_held_back(built):
     assert "Weekly thread" in html and "Bluesky ✓" in html and "Mastodon –" in html
     assert "did not confirm it" in html
     assert 'href="autonomy.html"' in (out / "index.html").read_text(encoding="utf-8")
+
+
+def test_trends_page_keeps_the_headline_on_the_core_panel_and_shows_the_extended_one(tmp_path):
+    write(tmp_path, "2026-10-04", {"a": ok_report(tracking=2, vantage="github-actions-us")})
+    write(tmp_path, "2026-10-11", {"a": ok_report(tracking=2, vantage="github-actions-us"),
+                                   "c": ok_report("News C", "https://c.example/", tracking=9, vantage="github-actions-us")})
+    sites = tmp_path / "sites.json"
+    sites.write_text(json.dumps({"sites": [
+        {"name": "News A", "url": "https://a.example/", "group": "US", "kind": "news", "panel": "core"},
+        {"name": "News C", "url": "https://c.example/", "group": "IT", "kind": "news", "panel": "extended"}]}))
+    out = tmp_path / "site"
+    ctx = build_site(tmp_path / "runs", out, sites_file=str(sites), base_url="https://example.org/tw/")
+    last = ctx["trends"]["comparable"][-1]
+    assert last["usable"] == 1 and last["median_tracking"] == 2 and last["extended"]["usable"] == 2
+    html = (out / "trends.html").read_text(encoding="utf-8")
+    assert "Extended panel" in html and "2 of 2" in html and "Two panels" in html
+    assert "ext_median_IT" in (out / "data" / "trends.csv").read_text(encoding="utf-8")

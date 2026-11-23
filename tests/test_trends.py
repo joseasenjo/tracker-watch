@@ -77,3 +77,39 @@ def test_a_scan_with_no_usable_site_is_left_out_and_the_cli_writes_both_files(tm
     assert json.loads((out / "monthly.json").read_text(encoding="utf-8"))["scans"] == 1
     (tmp_path / "empty-runs").mkdir()
     assert trends.main([str(tmp_path / "empty-runs"), "--out", str(tmp_path / "x")]) == 2
+
+
+def test_every_row_of_series_csv_has_as_many_cells_as_the_header_so_a_new_country_cannot_shift_the_columns(tmp_path):
+    import csv
+    write(tmp_path, "2026-10-05", [report("https://a/", 7, ["X"])])
+    out = tmp_path / "out"
+    assert trends.main([str(tmp_path / "runs"), "--sites-file", str(tmp_path / "none.json"), "--out", str(out)]) == 0
+    rows = list(csv.reader((out / "series.csv").read_text(encoding="utf-8").splitlines()))
+    assert len(rows) == 2 and len(rows[0]) == len(rows[1]) and "median_IT" in rows[0]
+
+
+def test_outlets_added_later_never_move_the_headline_series_but_have_their_own_columns_and_rows(tmp_path):
+    import csv
+    from traceguard.posts import groups_from_entries
+    groups = groups_from_entries([
+        {"url": "https://a/", "group": "US", "panel": "core"}, {"url": "https://b/", "group": "US", "panel": "core"},
+        {"url": "https://c/", "group": "IT", "panel": "extended"}, {"url": "https://d/", "group": "US", "panel": "extended"}])
+    core_only = [report("https://a/", 10, ["X"]), report("https://b/", 20, ["X"])]
+    both = core_only + [report("https://c/", 90, ["Y"]), report("https://d/", 80, ["Y"])]
+    before = trends.point("2026-11-23", core_only, groups, ["a", "b"])
+    after = trends.point("2026-11-30", both, groups, ["a", "b", "c", "d"])
+    # the headline is the same with and without the new outlets
+    for key in ("sites", "usable", "median_tracking", "mean_tracking", "by_group", "top_company", "concentration_index", "bands"):
+        assert after[key] == before[key], key
+    assert before["extended"] is None
+    assert after["extended"]["usable"] == 4 and after["extended"]["median_tracking"] == 50.0
+    assert after["extended"]["by_group"] == {"IT": 90.0, "US": 20.0} and after["extended"]["n_group"] == {"IT": 1, "US": 3}
+    # every outlet keeps its own per-site row, tagged with its panel
+    assert {r["stem"]: r["panel"] for r in after["site_rows"]} == {"a": "core", "b": "core", "c": "extended", "d": "extended"}
+    out = tmp_path / "series.csv"
+    trends.write_series_csv([before, after], out)
+    rows = list(csv.DictReader(out.open(encoding="utf-8")))
+    assert [r["median_tracking"] for r in rows] == ["15.0", "15.0"] and [r["ext_usable"] for r in rows] == ["", "4"]
+    assert rows[1]["ext_median_tracking"] == "50.0" and float(rows[1]["ext_median_IT"]) == 90
+    # without panels nothing changes (older callers)
+    assert trends.point("2026-11-30", both, {"https://a/": "US"}, ["a", "b", "c", "d"])["extended"] is None
