@@ -52,12 +52,14 @@ def test_main_sends_one_notice_below_the_level_and_records_it(tmp_path, monkeypa
     assert autonomy.load_notes(tmp_path / "autonomy")["2026-11-16"][0]["kind"] == "coverage"
 
 
-def test_main_is_silent_when_the_level_is_met_and_defaults_to_38(tmp_path, monkeypatch):
+def test_main_is_silent_when_the_level_is_met_and_defaults_to_70_percent_of_the_list(tmp_path, monkeypatch):
     runs = two_scans(tmp_path, {"s1"})
     sent = []
     monkeypatch.setattr(coverage_check.notify, "send", lambda config, message, **kw: sent.append(message))
     assert coverage_check.main(env=dict(MAIL, COVERAGE_MIN="9"), runs_dir=str(runs)) == 0 and not sent
-    assert coverage_check.main(env=dict(MAIL), runs_dir=str(runs)) == 0 and len(sent) == 1   # 9 of 10 is below the default 38
+    assert coverage_check.main(env=dict(MAIL), runs_dir=str(runs)) == 0 and not sent   # 9 of 10 is above the default (70 % = 7)
+    bad = two_scans(tmp_path / "b", {"s1", "s2", "s3", "s4"})   # 6 of 10 is below it
+    assert coverage_check.main(env=dict(MAIL), runs_dir=str(bad)) == 0 and len(sent) == 1
     assert coverage_check.main(env=dict(MAIL, COVERAGE_MIN="x"), runs_dir=str(runs)) == 2
 
 

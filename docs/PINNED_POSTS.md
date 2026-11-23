@@ -4,7 +4,7 @@ Pinning needs your accounts, so it is not automated. Post these, then pin them (
 
 **Bluesky / Mastodon (English, under 300 characters)**
 
-> Tracker Watch measures, every week, which third-party tracking services 48 news sites contact before you click anything. Counts, not verdicts. Data, method and every limit: https://joseasenjo.github.io/tracker-watch/
+> Tracker Watch measures, every week, which third-party tracking services more than 80 news sites contact before you click anything. Counts, not verdicts. Data, method and every limit: https://joseasenjo.github.io/tracker-watch/
 
 **Extension post (second pinned, optional)**
 

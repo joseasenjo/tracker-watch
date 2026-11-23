@@ -555,7 +555,7 @@ def published_dates(dates, keep: int) -> list[str]:
     return sorted(dates)[-keep:]
 
 
-COUNTRIES = {"US": "United States", "UK": "United Kingdom", "DE": "Germany", "ES": "Spain"}
+COUNTRIES = {"US": "United States", "UK": "United Kingdom", "DE": "Germany", "ES": "Spain", "IT": "Italy"}
 
 
 def demo_cards(ctx: dict, own_host: str = "") -> list[dict]:

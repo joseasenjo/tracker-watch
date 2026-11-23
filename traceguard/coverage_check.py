@@ -1,13 +1,14 @@
 """Emails the owner when a weekly scan measured too few of the sites.
 
 The weekly thread is only stopped when fewer than 60% of the sites were measured (`--min-measured 0.6`), which is far below
-the usual 38 to 40 of 48. A slow slide (GitHub's addresses getting blocked by more outlets) would never trip that, so this
-check warns earlier: below COVERAGE_MIN usable sites (default 33) it names the sites that were lost since the scan before.
+the usual 80 % of the list. A slow slide (GitHub's addresses getting blocked by more outlets) would never trip that, so this
+check warns earlier: below COVERAGE_MIN usable sites (default: 70 % of the listed sites) it names the sites that were lost since the scan before.
 
 It never stops anything: the scan and the posts go on, and the e-mail is the whole effect.
 """
 from __future__ import annotations
 
+import math
 import os
 import sys
 from email.message import EmailMessage
@@ -16,7 +17,7 @@ from pathlib import Path
 from . import autonomy, notify
 from .posts import eligible, load_latest_reports
 
-DEFAULT_MINIMUM = 33
+DEFAULT_SHARE = 0.70   # warn below 70 % of the listed sites (33 of 48 when the list had 48): it follows the list when it grows
 
 
 def usable_names(reports: list[dict]) -> set[str]:
@@ -28,8 +29,10 @@ def previous_reports(runs_dir: Path | str, date: str) -> list[dict]:
     return earlier(runs_dir, date)
 
 
-def assess(runs_dir: Path | str, minimum: int = DEFAULT_MINIMUM) -> dict:
+def assess(runs_dir: Path | str, minimum: int | None = None) -> dict:
     date, reports = load_latest_reports(runs_dir)
+    if minimum is None:
+        minimum = math.ceil(DEFAULT_SHARE * len(reports))
     now_ok = usable_names(reports)
     before_ok = usable_names(previous_reports(runs_dir, date))
     return {"date": date, "measured": len(now_ok), "total": len(reports), "minimum": minimum,
@@ -59,11 +62,12 @@ def build_message(result: dict, run_url: str, config: dict) -> EmailMessage:
 def main(argv: list[str] | None = None, env=None, *, runs_dir: str = "data/runs") -> int:
     env = os.environ if env is None else env
     try:
-        minimum = int((env.get("COVERAGE_MIN") or "").strip() or DEFAULT_MINIMUM)
+        minimum = int((env.get("COVERAGE_MIN") or "").strip() or 0) or None
     except ValueError:
         print("COVERAGE_MIN must be a whole number", file=sys.stderr)
         return 2
     result = assess(runs_dir, minimum)
+    minimum = result["minimum"]
     print(f"{result['date']}: {result['measured']} of {result['total']} sites measured (warning below {minimum})")
     if not result["low"]:
         return 0

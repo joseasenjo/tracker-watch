@@ -33,11 +33,12 @@ def month_folders(runs_dir: Path | str, month: str) -> list[Path]:
 def readme(month: str, folders: list[Path], summary: dict) -> str:
     row = next((m for m in summary["monthly"] if m["month"] == month), None)
     scans = ", ".join(f.name for f in folders)
+    count = len(list(folders[-1].glob("*.json"))) if folders else 0
     figures = (f"Median tracking services per site (mean of the weekly medians): {row['median_tracking']}. "
                f"Concentration index: {row['concentration_index']}.") if row else "No scan of this month is comparable with the latest one."
     return f"""Tracker Watch: data of {month}
 
-What this is: the weekly measurements of the third-party tracking services that 48 news websites contact before any
+What this is: the weekly measurements of the third-party tracking services that {count} news websites contact before any
 interaction, taken in {month} ({len(folders)} scan(s): {scans}), plus the trends compiled from the whole series.
 
 Contents
@@ -45,7 +46,7 @@ Contents
   data/trends/series.csv         one row per scan under comparable conditions
   data/trends/monthly.json       one row per month, and the change against the previous one
   data/trends/sites.csv          one row per site and scan: tracking services and third-party requests
-  data/sites.json               the 48 sites with their country and type
+  data/sites.json               the {count} sites with their country and type
   data/trackers.seed.json       the classification list used to count tracking services
   DATA_LICENSE.md, CITATION.cff the licence (CC BY 4.0) and how to cite
 

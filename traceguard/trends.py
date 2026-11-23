@@ -28,7 +28,7 @@ from .posts import company_reach, eligible, load_groups, measured
 SERIES_COLUMNS = ["date", "vantage", "passes", "observe_seconds", "sites", "measured", "usable", "median_tracking", "mean_tracking",
                   "median_US", "median_UK", "median_DE", "median_ES", "band_A", "band_B", "band_C", "band_D", "band_E",
                   "top_company", "top_company_sites", "top_company_pct", "top3_mean_pct", "companies", "concentration_index"]
-GROUP_ORDER = ("US", "UK", "DE", "ES")
+GROUP_ORDER = ("US", "UK", "DE", "ES", "IT")
 
 
 def conditions(report: dict) -> tuple:

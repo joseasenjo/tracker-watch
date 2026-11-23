@@ -130,11 +130,11 @@
       <h2>Month by month</h2>
       <div class="table-scroll">
         <table class="t">
-          <thead><tr><th>Month</th><th class="num">Scans</th><th class="num">Median</th><th class="num">US</th><th class="num">UK</th><th class="num">DE</th><th class="num">ES</th><th class="num">Concentration</th><th>Leading companies (mean reach)</th></tr></thead>
+          <thead><tr><th>Month</th><th class="num">Scans</th><th class="num">Median</th><th class="num">US</th><th class="num">UK</th><th class="num">DE</th><th class="num">ES</th><th class="num">IT</th><th class="num">Concentration</th><th>Leading companies (mean reach)</th></tr></thead>
           <tbody>
           {% for m in t.monthly %}
             <tr><td>{{ m.month }}</td><td class="num">{{ m.scans }}</td><td class="num">{{ m.median_tracking }}</td>
-              {% for g in ['US', 'UK', 'DE', 'ES'] %}<td class="num">{{ m.by_group.get(g, '') }}</td>{% endfor %}
+              {% for g in ['US', 'UK', 'DE', 'ES', 'IT'] %}<td class="num">{{ m.by_group.get(g, '') }}</td>{% endfor %}
               <td class="num">{{ m.concentration_index }}</td>
               <td>{% for l in m.leaders %}{{ l.company }} {{ l.mean_pct_of_sites }}%{% if not loop.last %}; {% endif %}{% endfor %}</td></tr>
           {% endfor %}
@@ -145,11 +145,11 @@
       <h2>Every scan</h2>
       <div class="table-scroll">
         <table class="t">
-          <thead><tr><th>Date</th><th class="num">Sites measured</th><th class="num">Median</th><th class="num">US</th><th class="num">UK</th><th class="num">DE</th><th class="num">ES</th><th>Leading company</th><th class="num">Concentration</th></tr></thead>
+          <thead><tr><th>Date</th><th class="num">Sites measured</th><th class="num">Median</th><th class="num">US</th><th class="num">UK</th><th class="num">DE</th><th class="num">ES</th><th class="num">IT</th><th>Leading company</th><th class="num">Concentration</th></tr></thead>
           <tbody>
           {% for p in t.comparable|reverse %}
             <tr><td>{{ p.date }}</td><td class="num">{{ p.usable }} of {{ p.sites }}</td><td class="num">{{ p.median_tracking }}</td>
-              {% for g in ['US', 'UK', 'DE', 'ES'] %}<td class="num">{{ p.by_group.get(g, '') }}</td>{% endfor %}
+              {% for g in ['US', 'UK', 'DE', 'ES', 'IT'] %}<td class="num">{{ p.by_group.get(g, '') }}</td>{% endfor %}
               <td>{{ p.top_company }} {{ p.top_company_pct }}%</td><td class="num">{{ p.concentration_index }}</td></tr>
           {% endfor %}
           </tbody>
