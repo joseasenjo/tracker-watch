@@ -1,0 +1,60 @@
+# Tries to measure a batch of CANDIDATE outlets (data/candidates.json) from a GitHub machine and prints which ones could be
+# measured. It writes nothing to the repository and posts nothing: it only tells you which candidates are worth adding to
+# data/sites.json before they join the weekly scan. Run it by hand (Actions > probe-candidates > Run workflow).
+name: probe-candidates
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: "Batch in data/candidates.json: vascos, espanoles, uk or us"
+        default: "vascos"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies and Chromium
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Scan the batch (nothing is saved in the repository)
+        env:
+          BATCH: ${{ github.event.inputs.batch }}
+        run: |
+          python - <<'PY'
+          import json, os
+          batch = os.environ["BATCH"].strip()
+          data = json.load(open("data/candidates.json", encoding="utf-8"))["batches"]
+          if batch not in data:
+              raise SystemExit(f"unknown batch {batch!r}; choose one of {', '.join(data)}")
+          json.dump({"sites": data[batch]}, open("probe_sites.json", "w", encoding="utf-8"))
+          PY
+          python -m traceguard --sites-file probe_sites.json --vantage github-actions-us --out "$RUNNER_TEMP/probe" | tee probe.log
+
+      - name: Summary
+        run: |
+          python - <<'PY'
+          import glob, json, os
+          rows = []
+          for path in sorted(glob.glob(os.environ["RUNNER_TEMP"] + "/probe/*/*.json")):
+              r = json.load(open(path, encoding="utf-8")); s = r["summary"]
+              ok = s["status"] == "ok" and s.get("confidence", "high") in ("high", "medium")
+              m = s.get("metrics", {})
+              rows.append(f"| {r['site']['name']} | {'MEASURABLE' if ok else 'no'} | {s['status']} {s.get('http_status') or ''} | {s.get('confidence', '-')} | {m.get('tracking_services', '-')} | {m.get('third_party_requests', '-')} |")
+          table = "| Site | Verdict | Status | Confidence | Tracking services | Third-party requests |\n|---|---|---|---|---|---|\n" + "\n".join(rows)
+          print(table)
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8").write(table + "\n")
+          PY
