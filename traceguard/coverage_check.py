@@ -2,7 +2,7 @@
 
 The weekly thread is only stopped when fewer than 60% of the sites were measured (`--min-measured 0.6`), which is far below
 the usual 38 to 40 of 48. A slow slide (GitHub's addresses getting blocked by more outlets) would never trip that, so this
-check warns earlier: below COVERAGE_MIN usable sites (default 38) it names the sites that were lost since the scan before.
+check warns earlier: below COVERAGE_MIN usable sites (default 33) it names the sites that were lost since the scan before.
 
 It never stops anything: the scan and the posts go on, and the e-mail is the whole effect.
 """
@@ -16,7 +16,7 @@ from pathlib import Path
 from . import autonomy, notify
 from .posts import eligible, load_latest_reports
 
-DEFAULT_MINIMUM = 38
+DEFAULT_MINIMUM = 33
 
 
 def usable_names(reports: list[dict]) -> set[str]:

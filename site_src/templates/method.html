@@ -35,7 +35,7 @@
       <li>The measurement runs from <b>{{ vantage }}</b>. Banners, consent walls and redirects differ by country, so results can differ for a reader elsewhere.</li>
       <li>The classification list is limited and hand-built. Domains missing from it appear as “Unclassified” and are not counted. Entries marked <i>inferred</i> rest on request paths or host names, not on a statement by the operator.</li>
       <li>Ownership of a site's own domains is declared by us and can be wrong. We take the outlet's side when unsure.</li>
-      <li>Some sites refuse automated browsers. We report that instead of bypassing it. A failed pass lowers the <b>confidence</b> of a result: <i>high</i> means every pass worked, <i>medium</i> a majority, <i>low</i> a minority (indicative only, never compared).</li>
+      <li>Some sites refuse automated browsers. We report that instead of bypassing it. A site that refused the Monday scan gets <b>one second attempt the next day</b>, from another GitHub machine and with the same honest browser (no other identity, no proxies); a site that refused the four previous scans is not asked again. A reading obtained that way says so in its report (<code>retry</code>) and in the <a href="{{ root }}autonomy.html">autonomy log</a>. A failed pass lowers the <b>confidence</b> of a result: <i>high</i> means every pass worked, <i>medium</i> a majority, <i>low</i> a minority (indicative only, never compared).</li>
       <li>Script behaviour (canvas reads, geolocation, WebRTC) is recorded with the calling script's domain. These APIs have many legitimate uses.</li>
     </ul>
 

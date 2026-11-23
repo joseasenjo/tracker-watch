@@ -1,0 +1,57 @@
+# Tuesday: a second attempt, from another GitHub machine, at the sites Monday's scan could not measure. A retry replaces
+# a report only when it is usable, and the autonomy log says which sites were recovered. Same honest browser as the scan:
+# no other identity, no proxies. Sites refused in the four scans before are not asked again (see traceguard/retry_blocked.py).
+# After committing it rebuilds the site (publish-site), which only publishes when PUBLISH_SITE is "true".
+name: retry-blocked
+
+on:
+  schedule:
+    - cron: "11 8 * * 2"   # odd minute: GitHub delays runs at minute 0. If Monday's scan is older than 3 days it does nothing.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: weekly-scan
+  cancel-in-progress: false
+
+jobs:
+  retry:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies and Chromium
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Measure again the sites that were not measured
+        run: python -m traceguard.retry_blocked data/runs
+
+      - name: Commit what was recovered
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python extension/tools/build_data.py   # the extension's data embeds the weekly numbers; a stale copy fails the tests
+          mkdir -p data/autonomy
+          git add data/runs data/autonomy extension/data extension/tests/fixtures/parity.json
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git commit -m "retry: sites measured on a second attempt $(date -u +%F)"
+          bash scripts/push_with_retry.sh
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Rebuild and publish the site
+        if: ${{ steps.commit.outputs.changed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publish-site.yml

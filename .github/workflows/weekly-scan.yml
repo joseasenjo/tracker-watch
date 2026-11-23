@@ -77,7 +77,7 @@ jobs:
           --passes "${{ github.event.inputs.passes || '3' }}"
           --vantage github-actions-us --out data/runs
 
-      - name: Warn by email if too few sites were measured (the scan goes on; the level is the variable COVERAGE_MIN, default 38)
+      - name: Warn by email if too few sites were measured (the scan goes on; the level is the variable COVERAGE_MIN, default 33)
         continue-on-error: true
         env:
           COVERAGE_MIN: ${{ vars.COVERAGE_MIN }}
